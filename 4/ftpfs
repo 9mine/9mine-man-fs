@@ -1,0 +1,75 @@
+<action name=FTPFS(4)>FTPFS(4)</action>                                                 <action name=FTPFS(4)>FTPFS(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ftpfs - file transfer protocol (FTP) file server
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ftpfs \[ -/dpq \] \[ -m mountpoint \] \[ -a password \] ftphost
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ftpfs connects to ftphost using the Internet's File Transfer
+<style color=#00ffffff size=1>.</style>            Protocol, and makes the remote files visible at mountpoint
+<style color=#00ffffff size=1>.</style>            (default: /n/ftp) in the current name space, for access by
+<style color=#00ffffff size=1>.</style>            ordinary Inferno file operations. In other words, it is a
+<style color=#00ffffff size=1>.</style>            protocol translator between FTP and 9P. The connection is
+<style color=#00ffffff size=1>.</style>            shut down by unmounting the mount point\; see <action name=bind(1)>bind(1)</action>. The
+<style color=#00ffffff size=1>.</style>            ftphost can be any address acceptable to <action name=cs(8)>cs(8)</action>\; the default
+<style color=#00ffffff size=1>.</style>            network is tcp, and the default service is ftp (port 21).
+
+<style color=#00ffffff size=1>.</style>            Ftpfs will prompt for a user name and password as ftphost
+<style color=#00ffffff size=1>.</style>            demands. If the FTP host supports `anonymous FTP' (ie, guest
+<style color=#00ffffff size=1>.</style>            access), it will accept the user name ``anonymous'' and a
+<style color=#00ffffff size=1>.</style>            conventional password (notionally the user's e-mail
+<style color=#00ffffff size=1>.</style>            address). Given the -a option, ftpfs automatically logs in
+<style color=#00ffffff size=1>.</style>            as ``anonymous'' with the password supplied, avoiding
+<style color=#00ffffff size=1>.</style>            prompting.
+
+<style color=#00ffffff size=1>.</style>            By default, ftpfs uses a `passive' connection for file
+<style color=#00ffffff size=1>.</style>            transfer: the remote system gives the local system a new
+<style color=#00ffffff size=1>.</style>            address to call to fetch the data. This often works best for
+<style color=#00ffffff size=1>.</style>            local systems behind firewalls that block incoming calls to
+<style color=#00ffffff size=1>.</style>            arbitrary ports, but can fail for instance if the remote
+<style color=#00ffffff size=1>.</style>            system does not support passive mode, or is itself behind
+<style color=#00ffffff size=1>.</style>            such a firewall. The -p option forces `active' connection:
+<style color=#00ffffff size=1>.</style>            the local system gives the remote machine an address on
+<style color=#00ffffff size=1>.</style>            which to call it back to transfer the data.
+
+<style color=#00ffffff size=1>.</style>            Other options are:
+
+<style color=#00ffffff size=1>.</style>            -/   Mount the remote machine's root directory on mountpoint
+<style color=#00ffffff size=1>.</style>                 , not the user's home directory (which is used by
+<style color=#00ffffff size=1>.</style>                 default).
+
+<style color=#00ffffff size=1>.</style>            -q   Suppress the printing of chatter (`informational
+<style color=#00ffffff size=1>.</style>                 messages') from the remote server.
+
+<style color=#00ffffff size=1>.</style>            -d   Display all FTP protocol transactions to allow a
+<style color=#00ffffff size=1>.</style>                 failure to connect to be debugged.
+
+<style color=#00ffffff size=1>.</style>            Ftpfs keeps a limited local cache of remote files and
+<style color=#00ffffff size=1>.</style>            directories. The cache is kept consistent with file and
+<style color=#00ffffff size=1>.</style>            directory operations by the local user through the current
+<style color=#00ffffff size=1>.</style>            connection, but not with changes made by others on the
+<style color=#00ffffff size=1>.</style>            remote site. Cached entries for a given directory can be
+<style color=#00ffffff size=1>.</style>            flushed explicitly by accessing the name .flush.ftpfs in
+<style color=#00ffffff size=1>.</style>            that directory.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Mount a remote machine and copy files from there to here.
+
+<style color=#00ffffff size=1>.</style>                 mkdir here
+<style color=#00ffffff size=1>.</style>                 ftpfs -a 'bloggs@' ftp.vitanuova.com
+<style color=#00ffffff size=1>.</style>                 cp /n/ftp/package.tgz here
+<style color=#00ffffff size=1>.</style>                 unmount /n/ftp
+
+FILES
+<style color=#00ffffff size=1>.</style>            /tmp/ftp.*  Temporarily cached files
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ftpfs.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Symbolic links are not supported.
+<style color=#00ffffff size=1>.</style>            Ftpfs does not implement `rename', forcing <action name=mv(1)>mv(1)</action> to rename
+<style color=#00ffffff size=1>.</style>            by copying.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

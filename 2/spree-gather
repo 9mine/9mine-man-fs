@@ -1,0 +1,65 @@
+<action name=SPREE-GATHER(2)>SPREE-GATHER(2)</action>                                   <action name=SPREE-GATHER(2)>SPREE-GATHER(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Gatherengine - module interface for pre-assembled groups.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            implement Gatherengine\;
+
+<style color=#00ffffff size=1>.</style>            include "spree.m"\;
+<style color=#00ffffff size=1>.</style>            include "spree/gather.m"\;
+<style color=#00ffffff size=1>.</style>            Clique, Member: import Spree\;
+
+<style color=#00ffffff size=1>.</style>            init:			fn(m: Spree, c: ref Clique, argv: list of string, archived: int): string\;
+<style color=#00ffffff size=1>.</style>            clienttype:	fn(): string\;
+<style color=#00ffffff size=1>.</style>            maxmembers:	fn(): int\;
+<style color=#00ffffff size=1>.</style>            propose:		fn(members: array of string): string\;
+<style color=#00ffffff size=1>.</style>            start:			fn(members: array of ref Member, archived: int)\;
+<style color=#00ffffff size=1>.</style>            command:	fn(member: ref Member, c: string): string\;
+<style color=#00ffffff size=1>.</style>            archive:		fn()\;
+<style color=#00ffffff size=1>.</style>            readfile:		fn(f: int, offset: big, n: int): array of byte\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            When implementing a <action name=spree(2)>spree(2)</action> engine, it is common to have
+<style color=#00ffffff size=1>.</style>            the requirement that a certain number of members are grouped
+<style color=#00ffffff size=1>.</style>            together before actually starting the engine. Spree provides
+<style color=#00ffffff size=1>.</style>            no support for this directly\; instead the gather module acts
+<style color=#00ffffff size=1>.</style>            as an intermediate layer: engines that wish this
+<style color=#00ffffff size=1>.</style>            functionality should implement the Gatherengine interface.
+<style color=#00ffffff size=1>.</style>            The gather module also provides facilities for the automatic
+<style color=#00ffffff size=1>.</style>            suspension and resumption of players, clique archival, and
+<style color=#00ffffff size=1>.</style>            members that watch but do not participate.
+
+<style color=#00ffffff size=1>.</style>            Init is called first, with m, the spree module, and c, the
+<style color=#00ffffff size=1>.</style>            new clique. Argv gives a list of arguments to the engine
+<style color=#00ffffff size=1>.</style>            (the first being the name of the engine itself)\; archived is
+<style color=#00ffffff size=1>.</style>            non-zero if the engine has been restored from an archive. If
+<style color=#00ffffff size=1>.</style>            init returns a non-nil string, it is taken to describe an
+<style color=#00ffffff size=1>.</style>            error, and the engine will be discarded. Maxmembers should
+<style color=#00ffffff size=1>.</style>            return the maximum number of members that the engine can
+<style color=#00ffffff size=1>.</style>            accept\; clienttype should return the kind of client that is
+<style color=#00ffffff size=1>.</style>            expected by the engine (e.g. cards for a card game engine).
+
+<style color=#00ffffff size=1>.</style>            Propose proposes that a clique consisting of members (the
+<style color=#00ffffff size=1>.</style>            names of the proposed members) be started. It returns an
+<style color=#00ffffff size=1>.</style>            error string: if this is non-nil, then the clique is not
+<style color=#00ffffff size=1>.</style>            started, otherwise the proposed members are accepted into
+<style color=#00ffffff size=1>.</style>            the clique, and start is called, where members is the array
+<style color=#00ffffff size=1>.</style>            of actual members (corresponding to the members passed to
+<style color=#00ffffff size=1>.</style>            propose), and archived is non-zero if the clique is being
+<style color=#00ffffff size=1>.</style>            restored from an archive (same as passed to init).
+
+<style color=#00ffffff size=1>.</style>            Once a clique has been successfully started, command is
+<style color=#00ffffff size=1>.</style>            called when a member sends a command to the engine\; member
+<style color=#00ffffff size=1>.</style>            has sent the command, and c is the command itself. Command
+<style color=#00ffffff size=1>.</style>            should return a non-nil error string if the command fails.
+
+<style color=#00ffffff size=1>.</style>            When a clique is being archived, archive will be called to
+<style color=#00ffffff size=1>.</style>            request the engine to store all its internal state into the
+<style color=#00ffffff size=1>.</style>            object hierarchy (this is the moment, for instance, to call
+<style color=#00ffffff size=1>.</style>            cardlib->archive).
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=spree(2)>spree(2)</action>,
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

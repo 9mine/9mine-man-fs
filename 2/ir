@@ -1,0 +1,183 @@
+<action name=IR(2)>IR(2)</action>                                                       <action name=IR(2)>IR(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ir - infrared remote control module
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include     "ir.m"\;
+
+<style color=#00ffffff size=1>.</style>            ir    := load Ir Ir->PATH\; # for real remotes
+<style color=#00ffffff size=1>.</style>            simir := load Ir Ir->SIMPATH\; # for keyboard simulator
+
+<style color=#00ffffff size=1>.</style>            init:       fn(irc: chan of int, pidc: chan of int): int\;
+<style color=#00ffffff size=1>.</style>            translate:  fn(key: int): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Programs running with the Prefab toolkit (see prefab-intro
+<style color=#00ffffff size=1>.</style>            (2)) are controlled by an infrared remote control device. If
+<style color=#00ffffff size=1>.</style>            such a device is not present, the system may simulate it
+<style color=#00ffffff size=1>.</style>            from the keyboard by loading the module in file Ir->SIMPATH.
+<style color=#00ffffff size=1>.</style>            Although originally designed for use with Prefab, these
+<style color=#00ffffff size=1>.</style>            modules are general enough to be used directly by non-Prefab
+<style color=#00ffffff size=1>.</style>            applications.
+
+<style color=#00ffffff size=1>.</style>            The Ir module defines codes for representing the remote
+<style color=#00ffffff size=1>.</style>            control keys. Whether the remote is real or simulated, the
+<style color=#00ffffff size=1>.</style>            init function does the appropriate actions to initialize the
+<style color=#00ffffff size=1>.</style>            device, and then spawns a process to return the codes on the
+<style color=#00ffffff size=1>.</style>            irc channel. The process ID of that process is sent on the
+<style color=#00ffffff size=1>.</style>            channel pidc when the process starts\; init's caller must
+<style color=#00ffffff size=1>.</style>            receive it. It can be used to kill the controlling process
+<style color=#00ffffff size=1>.</style>            when the application finishes.
+
+<style color=#00ffffff size=1>.</style>            The codes are:
+
+<style color=#00ffffff size=1>.</style>            Ir->ChanUP, Ir->ChanDN
+<style color=#00ffffff size=1>.</style>                 The Channel-Up and Channel-Down buttons. The keyboard
+<style color=#00ffffff size=1>.</style>                 equivalents are r and c.
+
+<style color=#00ffffff size=1>.</style>            Ir->Enter
+<style color=#00ffffff size=1>.</style>                 The Enter button. The keyboard equivalent is the
+<style color=#00ffffff size=1>.</style>                 \s-1SPACE\s0 bar.
+
+<style color=#00ffffff size=1>.</style>            Ir->EOF
+<style color=#00ffffff size=1>.</style>                 An end of file from the remote device. After sending
+<style color=#00ffffff size=1>.</style>                 one, no more codes will be sent on irc.
+
+<style color=#00ffffff size=1>.</style>            Ir->Error
+<style color=#00ffffff size=1>.</style>                 An unknown or invalid input from the remote device.
+
+<style color=#00ffffff size=1>.</style>            Ir->FF, Ir->Rew
+<style color=#00ffffff size=1>.</style>                 The Fast-Forward and Rewind buttons. The keyboard
+<style color=#00ffffff size=1>.</style>                 equivalents are k and j.
+
+<style color=#00ffffff size=1>.</style>            Ir->Mute
+<style color=#00ffffff size=1>.</style>                 The Mute button. There is no keyboard equivalent.
+
+<style color=#00ffffff size=1>.</style>            Ir->Power
+<style color=#00ffffff size=1>.</style>                 The Power button. The keyboard equivalent is the Delete
+<style color=#00ffffff size=1>.</style>                 key.
+
+<style color=#00ffffff size=1>.</style>            Ir->Rcl
+<style color=#00ffffff size=1>.</style>                 The Recall button. The keyboard equivalent is x.
+
+<style color=#00ffffff size=1>.</style>            Ir->Record
+<style color=#00ffffff size=1>.</style>                 The Record button. There is no keyboard equivalent.
+
+<style color=#00ffffff size=1>.</style>            Ir->Select
+<style color=#00ffffff size=1>.</style>                 The Select button. The keyboard equivalent is the
+<style color=#00ffffff size=1>.</style>                 Return or Enter key.
+
+<style color=#00ffffff size=1>.</style>            Ir->Up, Ir->Dn
+<style color=#00ffffff size=1>.</style>                 The Up and Down buttons. The keyboard equivalents are i
+<style color=#00ffffff size=1>.</style>                 and m.
+
+<style color=#00ffffff size=1>.</style>            Ir->VolUP, Ir->VolDN
+<style color=#00ffffff size=1>.</style>                 The Volume-Up and Volume-Down buttons. The keyboard
+<style color=#00ffffff size=1>.</style>                 equivalents are t and v.
+
+<style color=#00ffffff size=1>.</style>                 Ir->Zero, Ir->One, Ir->Two, etc. The digit buttons, 0
+<style color=#00ffffff size=1>.</style>                 through 9. The keyboard equivalents are the
+<style color=#00ffffff size=1>.</style>                 corresponding numeral keys.
+
+<style color=#00ffffff size=1>.</style>            The translate function converts the device's raw codes into
+<style color=#00ffffff size=1>.</style>            the constants defined by the module. For example, with the
+<style color=#00ffffff size=1>.</style>            simulated remote control, translate('3') returns Ir->Three.
+<style color=#00ffffff size=1>.</style>            Translate is only necessary for programs that wish to manage
+<style color=#00ffffff size=1>.</style>            their own simulation of the remote.
+
+<style color=#00ffffff size=1>.</style>            Programs that  drive the remote control directly, must load
+<style color=#00ffffff size=1>.</style>            the appropriate Ir implementation module and initialise it.
+<style color=#00ffffff size=1>.</style>            The following example uses the absence of a simulator module
+<style color=#00ffffff size=1>.</style>            to infer that a real remote control is available.
+
+<style color=#00ffffff size=1>.</style>            implement Irtest\;
+
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            include "ir.m"\;
+
+<style color=#00ffffff size=1>.</style>            Irtest: module
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>               init:  fn(ctxt: ref Draw->Context, argv: list of string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init(nil: ref Draw->Context, nil: list of string)
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>                # First try the keyboard Ir simulator.
+<style color=#00ffffff size=1>.</style>                # If that is not present, use Ir directly.
+
+<style color=#00ffffff size=1>.</style>                ir := load Ir Ir->SIMPATH\;
+<style color=#00ffffff size=1>.</style>                if(ir == nil)
+<style color=#00ffffff size=1>.</style>                    ir = load Ir Ir->PATH\;
+<style color=#00ffffff size=1>.</style>                if(ir == nil){
+<style color=#00ffffff size=1>.</style>                    sys->print("Ir module not loaded: %r\n")\;
+<style color=#00ffffff size=1>.</style>                    return\;
+<style color=#00ffffff size=1>.</style>                }
+<style color=#00ffffff size=1>.</style>                irc := chan of int\;
+<style color=#00ffffff size=1>.</style>                pidc := chan of int\;
+<style color=#00ffffff size=1>.</style>                if(ir->init(irc, pidc) < 0){
+<style color=#00ffffff size=1>.</style>                    sys->print("Can't initialize Ir device: %r\n")\;
+<style color=#00ffffff size=1>.</style>                    return\;
+<style color=#00ffffff size=1>.</style>                }
+<style color=#00ffffff size=1>.</style>                pid := <-pidc\;
+<style color=#00ffffff size=1>.</style>                while((irraw := <-irc) != Ir->EOF) {
+<style color=#00ffffff size=1>.</style>                    irval := ir->translate(irraw)\;
+<style color=#00ffffff size=1>.</style>                    if(irval == Ir->Power)
+<style color=#00ffffff size=1>.</style>                        break\;
+<style color=#00ffffff size=1>.</style>                    sys->print("command %d -> %d\n", irraw, irval)\;
+<style color=#00ffffff size=1>.</style>                }
+<style color=#00ffffff size=1>.</style>                kill(pid)\;
+<style color=#00ffffff size=1>.</style>            }
+
+<style color=#00ffffff size=1>.</style>            <action name=Mux(1)>Mux(1)</action> provides one model for the use of an infrared remote
+<style color=#00ffffff size=1>.</style>            control to control a group of applications. Init is invoked
+<style color=#00ffffff size=1>.</style>            once by mux, and the codes then multiplexed between its
+<style color=#00ffffff size=1>.</style>            applications as follows. Mux creates a graphics context for
+<style color=#00ffffff size=1>.</style>            each application (see <action name=draw-context(2)>draw-context(2)</action>). This context
+<style color=#00ffffff size=1>.</style>            includes channels to the mux program and to the Ir device:
+<style color=#00ffffff size=1>.</style>            Draw->Context.ctomux and Draw->Context.cinput. Applications
+<style color=#00ffffff size=1>.</style>            do not see the Ir->Rcl command. Instead, mux program
+<style color=#00ffffff size=1>.</style>            intercepts it and reactivates its own menu. The following
+<style color=#00ffffff size=1>.</style>            example establishes communication with mux and then reads Ir
+<style color=#00ffffff size=1>.</style>            commands until it see Ir->Enter.
+
+<style color=#00ffffff size=1>.</style>            implement Command\;
+
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            include "ir.m"\;
+
+<style color=#00ffffff size=1>.</style>            Command: module
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>              init: fn(ref Draw->Context\; list of string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init(ctxt: ref Draw->Context\; argv: list of string)
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>              sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>              # Tell mux to start sending input.
+<style color=#00ffffff size=1>.</style>              ctxt.ctomux <-= Draw->AMstartinput\;
+<style color=#00ffffff size=1>.</style>              for(\;\;) {
+<style color=#00ffffff size=1>.</style>                key := <-ctxt.cinput\;
+<style color=#00ffffff size=1>.</style>                sys->print("command %d\n", key)\;
+<style color=#00ffffff size=1>.</style>                if(key == Ir->Enter)
+<style color=#00ffffff size=1>.</style>                  break\;
+<style color=#00ffffff size=1>.</style>              }
+
+<style color=#00ffffff size=1>.</style>              #  Tell mux this thread is going away.
+<style color=#00ffffff size=1>.</style>              ctxt.ctomux <-= Draw->AMexit\;
+<style color=#00ffffff size=1>.</style>            }
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/ir.b
+<style color=#00ffffff size=1>.</style>            /appl/lib/irmpath.b
+<style color=#00ffffff size=1>.</style>            /appl/lib/irsim.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=limbo(1)>limbo(1)</action>, <action name=mux(1)>mux(1)</action>, <action name=intro(2)>intro(2)</action>, <action name=draw-<action name=intro(2)>intro(2)</action>>draw-<action name=intro(2)>intro(2)</action></action>, <action name=prefab-<action name=intro(2)>intro(2)</action>>prefab-<action name=intro(2)>intro(2)</action></action>  
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,85 @@
+<action name=DRAW-SCREEN(2)>DRAW-SCREEN(2)</action>                                     <action name=DRAW-SCREEN(2)>DRAW-SCREEN(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Screen - windows and subwindows on a display
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include	"draw.m"\;
+<style color=#00ffffff size=1>.</style>            draw := load Draw Draw->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Screen: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>              id:        int\;
+<style color=#00ffffff size=1>.</style>              image:     ref Image\;
+<style color=#00ffffff size=1>.</style>              fill:      ref Image\;
+<style color=#00ffffff size=1>.</style>              display:   ref Display\;
+
+<style color=#00ffffff size=1>.</style>              allocate:  fn(image, fill: ref Image, public: int): ref Screen\;
+<style color=#00ffffff size=1>.</style>              newwindow: fn(screen: self ref Screen, r: Rect,
+<style color=#00ffffff size=1>.</style>                            backing:int, rgba: int): ref Image\;
+<style color=#00ffffff size=1>.</style>              top:       fn(screen: self ref Screen, wins: array of ref Image)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A Screen is the data structure representing a set of windows
+<style color=#00ffffff size=1>.</style>            visible on a particular Image such as the display or a
+<style color=#00ffffff size=1>.</style>            parent window.
+
+<style color=#00ffffff size=1>.</style>            id        When a Screen object is allocated (see allocate
+<style color=#00ffffff size=1>.</style>                      below), the system assigns it a unique integer, id
+<style color=#00ffffff size=1>.</style>                      . It may be declared ``public'' and accessible to
+<style color=#00ffffff size=1>.</style>                      arbitrary processes and machines with access to
+<style color=#00ffffff size=1>.</style>                      the screen's Display. The id value may be used as
+<style color=#00ffffff size=1>.</style>                      an argument to Display.publicscreen\; see
+<style color=#00ffffff size=1>.</style>                      <action name=draw-display(2)>draw-display(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            fill      When windows are deleted from a screen, the system
+<style color=#00ffffff size=1>.</style>                      uses the fill image to repaint the screen's base
+<style color=#00ffffff size=1>.</style>                      image.
+
+<style color=#00ffffff size=1>.</style>            image     The image upon which the windows appear.
+
+<style color=#00ffffff size=1>.</style>            display   The display upon which the screen resides.
+
+<style color=#00ffffff size=1>.</style>            allocate(image, fill, public)
+<style color=#00ffffff size=1>.</style>                      Allocate makes a new Screen object. The image
+<style color=#00ffffff size=1>.</style>                      argument provides the base image on which the
+<style color=#00ffffff size=1>.</style>                      windows will be made. The fill argument provides
+<style color=#00ffffff size=1>.</style>                      the Screen.fill image. Allocate does not affect
+<style color=#00ffffff size=1>.</style>                      the contents of image\; it may be necessary after
+<style color=#00ffffff size=1>.</style>                      allocation to paint the base image with fill.
+
+<style color=#00ffffff size=1>.</style>                 Using a non-zero public argument allocates a public
+<style color=#00ffffff size=1>.</style>                 screen\; zero requests a private screen. Public screens
+<style color=#00ffffff size=1>.</style>                 may be attached by any process on any machine with
+<style color=#00ffffff size=1>.</style>                 access to the Display upon which the screen is
+<style color=#00ffffff size=1>.</style>                 allocated, enabling remote processes to create windows
+<style color=#00ffffff size=1>.</style>                 on the screen. Knowing only the id field of the
+<style color=#00ffffff size=1>.</style>                 original Screen, the remote process can call the
+<style color=#00ffffff size=1>.</style>                 Display.publicscreen function to acquire a handle to
+<style color=#00ffffff size=1>.</style>                 the screen. The image and fill fields of a Screen
+<style color=#00ffffff size=1>.</style>                 obtained this way are nil, but they are not needed for
+<style color=#00ffffff size=1>.</style>                 ordinary window management.
+
+<style color=#00ffffff size=1>.</style>            screen.newwindow(r, backing, rgba)
+<style color=#00ffffff size=1>.</style>                 Allocates a window on the display at the specified
+<style color=#00ffffff size=1>.</style>                 rectangle with the background colour rgba, expressed in
+<style color=#00ffffff size=1>.</style>                 32-bit RGBA format\; the return value is an Image that
+<style color=#00ffffff size=1>.</style>                 may be used like any other. The backing parameter can
+<style color=#00ffffff size=1>.</style>                 be Draw->Refbackup, which provides backing store to
+<style color=#00ffffff size=1>.</style>                 store obscured parts of the window when necessary, and
+<style color=#00ffffff size=1>.</style>                 is used by the window manager and its clients\; or
+<style color=#00ffffff size=1>.</style>                 Draw->Refnone, which provides no refresh, and is used
+<style color=#00ffffff size=1>.</style>                 for windows that are transient, or are already
+<style color=#00ffffff size=1>.</style>                 protected by backing store.
+
+<style color=#00ffffff size=1>.</style>            screen.top(wins)
+<style color=#00ffffff size=1>.</style>                 Top organizes a group of windows on a screen. Given
+<style color=#00ffffff size=1>.</style>                 wins, an array of window images, it places the wins\[0\]
+<style color=#00ffffff size=1>.</style>                 element at the top, wins\[1\] behind that, and so on,
+<style color=#00ffffff size=1>.</style>                 with the last element of wins in front of the all the
+<style color=#00ffffff size=1>.</style>                 windows on the screen not in wins. Images in the array
+<style color=#00ffffff size=1>.</style>                 must be on the specified screen (nil elements are
+<style color=#00ffffff size=1>.</style>                 ignored).
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

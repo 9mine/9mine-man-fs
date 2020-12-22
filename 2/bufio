@@ -1,0 +1,194 @@
+<action name=BUFIO(2)>BUFIO(2)</action>                                                 <action name=BUFIO(2)>BUFIO(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            bufio, bufiofill - buffered input/output module
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "bufio.m"\;
+
+<style color=#00ffffff size=1>.</style>            bufio := load Bufio Bufio->PATH\;
+<style color=#00ffffff size=1>.</style>            Iobuf: import bufio\;
+
+<style color=#00ffffff size=1>.</style>            SEEKSTART:  con Sys->SEEKSTART\;
+<style color=#00ffffff size=1>.</style>            SEEKRELA:   con Sys->SEEKRELA\;
+<style color=#00ffffff size=1>.</style>            SEEKEND:    con Sys->SEEKEND\;
+
+<style color=#00ffffff size=1>.</style>            OREAD:      con Sys->OREAD\;
+<style color=#00ffffff size=1>.</style>            OWRITE:     con Sys->OWRITE\;
+<style color=#00ffffff size=1>.</style>            ORDWR:      con Sys->ORDWR\;
+
+<style color=#00ffffff size=1>.</style>            EOF:        con -1\;
+<style color=#00ffffff size=1>.</style>            ERROR:      con -2\;
+
+<style color=#00ffffff size=1>.</style>            Iobuf: adt {
+<style color=#00ffffff size=1>.</style>                seek:   fn(b: self ref Iobuf, n: big, where: int): big\;
+<style color=#00ffffff size=1>.</style>                offset: fn(b: self ref Iobuf): big\;
+
+<style color=#00ffffff size=1>.</style>                read:   fn(b: self ref Iobuf, a: array of byte, n: int): int\;
+<style color=#00ffffff size=1>.</style>                write:  fn(b: self ref Iobuf, a: array of byte, n: int): int\;
+
+<style color=#00ffffff size=1>.</style>                getb:   fn(b: self ref Iobuf): int\;
+<style color=#00ffffff size=1>.</style>                getc:   fn(b: self ref Iobuf): int\;
+<style color=#00ffffff size=1>.</style>                gets:   fn(b: self ref Iobuf, sepchar: int): string\;
+<style color=#00ffffff size=1>.</style>                gett:   fn(b: self ref Iobuf, sepstring: string): string\;
+
+<style color=#00ffffff size=1>.</style>                ungetb: fn(b: self ref Iobuf): int\;
+<style color=#00ffffff size=1>.</style>                ungetc: fn(b: self ref Iobuf): int\;
+
+<style color=#00ffffff size=1>.</style>                putb:   fn(b: self ref Iobuf, b: byte): int\;
+<style color=#00ffffff size=1>.</style>                putc:   fn(b: self ref Iobuf, c: int): int\;
+<style color=#00ffffff size=1>.</style>                puts:   fn(b: self ref Iobuf, s: string): int\;
+
+<style color=#00ffffff size=1>.</style>                flush:  fn(b: self ref Iobuf): int\;
+<style color=#00ffffff size=1>.</style>                close:  fn(b: self ref Iobuf)\;
+
+<style color=#00ffffff size=1>.</style>                setfill: fn(b: self ref Iobuf, f: BufioFill)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            open:   fn(name: string, mode: int): ref Iobuf\;
+<style color=#00ffffff size=1>.</style>            create: fn(name: string, mode, perm: int): ref Iobuf\;
+<style color=#00ffffff size=1>.</style>            fopen:  fn(fd: ref Sys->FD, mode: int): ref Iobuf\;
+<style color=#00ffffff size=1>.</style>            aopen: fn(a: array of byte): ref Iobuf\;
+<style color=#00ffffff size=1>.</style>            sopen:  fn(s: string): ref Iobuf\;
+
+<style color=#00ffffff size=1>.</style>            BufioFill: module
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                fill:   fn(b: ref Bufio->Iobuf): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Bufio provides an interface for buffered I/O. A buffer is an
+<style color=#00ffffff size=1>.</style>            adt which is created with open, fopen, create, aopen and
+<style color=#00ffffff size=1>.</style>            sopen.
+
+<style color=#00ffffff size=1>.</style>            Open takes two parameters, a filename and a mode. The mode
+<style color=#00ffffff size=1>.</style>            must be one of OREAD, OWRITE, or ORDWR (also defined in the
+<style color=#00ffffff size=1>.</style>            Sys module).
+
+<style color=#00ffffff size=1>.</style>            Create is similar, but creates a new file if necessary, with
+<style color=#00ffffff size=1>.</style>            file permissions specified by perm (see create in sys-open
+<style color=#00ffffff size=1>.</style>            (2)), or truncates an existing file (without changing its
+<style color=#00ffffff size=1>.</style>            permissions), before opening it in the given mode, and
+<style color=#00ffffff size=1>.</style>            returning a reference to an Iobuf instance.
+
+<style color=#00ffffff size=1>.</style>            Buffered I/O on an already open file is made possible using
+<style color=#00ffffff size=1>.</style>            fopen, which takes a file descriptor fd and an open mode,
+<style color=#00ffffff size=1>.</style>            which must be compatible with the mode of the file
+<style color=#00ffffff size=1>.</style>            descriptor.
+
+<style color=#00ffffff size=1>.</style>            The file open functions return a ref Iobuf to be used in
+<style color=#00ffffff size=1>.</style>            subsequent calls.  Thus:
+
+<style color=#00ffffff size=1>.</style>            	lc := bufio->open("/net/tcp/0/local", bufio->OREAD)\;
+<style color=#00ffffff size=1>.</style>            	addr := lc.gets('\n')\;
+<style color=#00ffffff size=1>.</style>            	lc = nil\;
+
+<style color=#00ffffff size=1>.</style>            will open the file /net/tcp/0/local and read a line
+<style color=#00ffffff size=1>.</style>            (including the terminating newline character) from this file
+<style color=#00ffffff size=1>.</style>            to initialize the string variable addr. The file is closed
+<style color=#00ffffff size=1>.</style>            implicitly by discarding (assigning nil to) the only
+<style color=#00ffffff size=1>.</style>            reference to its Iobuf.
+
+<style color=#00ffffff size=1>.</style>            The function aopen makes the contents of an array of byte a
+<style color=#00ffffff size=1>.</style>            readable through an Iobuf (it may not be written). The
+<style color=#00ffffff size=1>.</style>            function sopen similarly makes the contents of a string s
+<style color=#00ffffff size=1>.</style>            readable.
+
+<style color=#00ffffff size=1>.</style>            Processes can share the same instance of Bufio and safely
+<style color=#00ffffff size=1>.</style>            open and close different files concurrently, but two
+<style color=#00ffffff size=1>.</style>            processes must not access the same Iobuf concurrently\; they
+<style color=#00ffffff size=1>.</style>            must coordinate their access using some external mechanism
+<style color=#00ffffff size=1>.</style>            (eg, <action name=lock(2)>lock(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            Each output file must be flushed or closed individually (see
+<style color=#00ffffff size=1>.</style>            flush and close operations below).
+
+<style color=#00ffffff size=1>.</style>            The calls implemented by Iobuf are:
+
+<style color=#00ffffff size=1>.</style>            seek, read, and write
+<style color=#00ffffff size=1>.</style>                     Each has the same parameters as its complement in
+<style color=#00ffffff size=1>.</style>                     Sys (see <action name=sys-seek(2)>sys-seek(2)</action>, <action name=sys-read(2)>sys-read(2)</action>). Note that
+<style color=#00ffffff size=1>.</style>                     SEEKSTART etc. are defined by Bufio as well as by
+<style color=#00ffffff size=1>.</style>                     Sys, for use by seek.
+
+<style color=#00ffffff size=1>.</style>            offset   Return the current file offset in bytes, taking
+<style color=#00ffffff size=1>.</style>                     account of buffered data.
+
+<style color=#00ffffff size=1>.</style>            getb     Read a single byte from the buffered stream and
+<style color=#00ffffff size=1>.</style>                     return its value as an int.
+
+<style color=#00ffffff size=1>.</style>            getc     Read a single Unicode character, encoded in UTF
+<style color=#00ffffff size=1>.</style>                     (see <action name=utf(6)>utf(6)</action>), and return its value as an int.
+
+<style color=#00ffffff size=1>.</style>            gets     Read a line, up to and including a character
+<style color=#00ffffff size=1>.</style>                     specified by sepchar, typically a newline. If none
+<style color=#00ffffff size=1>.</style>                     is found, read to the end of the file. The returned
+<style color=#00ffffff size=1>.</style>                     string includes the terminating character.
+
+<style color=#00ffffff size=1>.</style>            gett     Read characters until one of the characters in
+<style color=#00ffffff size=1>.</style>                     sepstring. The returned string includes the
+<style color=#00ffffff size=1>.</style>                     separator. If none of the separator characters is
+<style color=#00ffffff size=1>.</style>                     found, read to the end of the file.
+
+<style color=#00ffffff size=1>.</style>            ungetb, ungetc
+<style color=#00ffffff size=1>.</style>                     Undoes the effect of the last getb or getc, so that
+<style color=#00ffffff size=1>.</style>                     a subsequent read will reread the byte (ungetb), or
+<style color=#00ffffff size=1>.</style>                     reread the byte(s) of a UTF-encoded character (
+<style color=#00ffffff size=1>.</style>                     ungetc)
+
+<style color=#00ffffff size=1>.</style>            putb, putc, and puts
+<style color=#00ffffff size=1>.</style>                     Each writes its argument, a byte, a character, or a
+<style color=#00ffffff size=1>.</style>                     string, respectively. Text is encoded in UTF.
+
+<style color=#00ffffff size=1>.</style>            setfill  Associates a BufioFill module instance f with Iobuf
+<style color=#00ffffff size=1>.</style>                     b\; discussed below.
+
+<style color=#00ffffff size=1>.</style>            flush    Flush remaining data in the buffer, if necessary.
+<style color=#00ffffff size=1>.</style>                     For files opened for writing, data is flushed to
+<style color=#00ffffff size=1>.</style>                     the file. For files opened for reading, any
+<style color=#00ffffff size=1>.</style>                     internally buffered data is discarded, and the next
+<style color=#00ffffff size=1>.</style>                     read will read from the file.
+
+<style color=#00ffffff size=1>.</style>            close    Flush remaining data in the buffer, if necessary,
+<style color=#00ffffff size=1>.</style>                     close the associated file, and discard buffers
+<style color=#00ffffff size=1>.</style>                     associated with the file. After close, no further
+<style color=#00ffffff size=1>.</style>                     method calls are allowed on the iobuf adt.
+
+<style color=#00ffffff size=1>.</style>            The BufioFill module interface can be ignored by most
+<style color=#00ffffff size=1>.</style>            applications. It allows an Iobuf to be used to read data
+<style color=#00ffffff size=1>.</style>            from an arbitrary source. There is no `standard'
+<style color=#00ffffff size=1>.</style>            implementation to load. Instead, an application using this
+<style color=#00ffffff size=1>.</style>            interface uses a separate BufioFill module instance such as
+<style color=#00ffffff size=1>.</style>            <action name=bufio-chanfill(2)>bufio-chanfill(2)</action>, or provides one itself using <action name=sys-self(2)>sys-self(2)</action>.
+<style color=#00ffffff size=1>.</style>            The resulting module reference is associated, using setfill,
+<style color=#00ffffff size=1>.</style>            with an Iobuf previously obtained by sopen (the string
+<style color=#00ffffff size=1>.</style>            parameter limits the buffer space allocated). It is up to
+<style color=#00ffffff size=1>.</style>            the BufioFill module's implementation how its fill function
+<style color=#00ffffff size=1>.</style>            replenishes the buffer\; it should return the number of bytes
+<style color=#00ffffff size=1>.</style>            now in the buffer, or Bufio->EOF.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/bufio.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bufio-chanfill(2)>bufio-chanfill(2)</action>, <action name=intro(2)>intro(2)</action>, <action name=sys-open(2)>sys-open(2)</action>, <action name=sys-read(2)>sys-read(2)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=sys-seek(2)>sys-seek(2)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Calls that return a ref type (eg. open, fopen, gets, and
+<style color=#00ffffff size=1>.</style>            gett) return nil when encountering end of file or errors.
+<style color=#00ffffff size=1>.</style>            When an error occurs, the error string, printable with the
+<style color=#00ffffff size=1>.</style>            %r format, will usually be set as a consequence of an error
+<style color=#00ffffff size=1>.</style>            in the underlying Sys module. The other calls return EOF
+<style color=#00ffffff size=1>.</style>            upon encountering end of file, and ERROR when encountering
+<style color=#00ffffff size=1>.</style>            other errors.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            A given Iobuf instance may not be accessed concurrently.
+
+<style color=#00ffffff size=1>.</style>            An Iobuf instance must be manipulated by the same module
+<style color=#00ffffff size=1>.</style>            instance that created it.
+
+<style color=#00ffffff size=1>.</style>            The BufioFill interface is subject to change.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

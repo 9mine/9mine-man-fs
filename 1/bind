@@ -1,0 +1,138 @@
+<action name=BIND(1)>BIND(1)</action>                                                   <action name=BIND(1)>BIND(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            bind, mount, unmount - change name space
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind \[ option ... \] source target
+
+<style color=#00ffffff size=1>.</style>            mount \[ option ... \] source target \[ spec \]
+
+<style color=#00ffffff size=1>.</style>            unmount \[ source \] target
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The bind and mount commands modify the file name space of
+<style color=#00ffffff size=1>.</style>            the current process and other processes in the same name
+<style color=#00ffffff size=1>.</style>            space group (see <action name=sys-pctl(2)>sys-pctl(2)</action>). For both calls, target is the
+<style color=#00ffffff size=1>.</style>            name of an existing file or directory in the current name
+<style color=#00ffffff size=1>.</style>            space where the modification is to be made.
+
+<style color=#00ffffff size=1>.</style>            For bind, source is the name of an existing file or
+<style color=#00ffffff size=1>.</style>            directory in the current name space. After a successful bind
+<style color=#00ffffff size=1>.</style>            , the file name target is an alias for the object originally
+<style color=#00ffffff size=1>.</style>            named by source\; if the modification doesn't hide it, source
+<style color=#00ffffff size=1>.</style>            will also still refer to its original file. The evaluation
+<style color=#00ffffff size=1>.</style>            of source (see <action name=sys-intro(2)>sys-intro(2)</action>) happens at the time of the bind
+<style color=#00ffffff size=1>.</style>            , not when the binding is later used.
+
+<style color=#00ffffff size=1>.</style>            Both source and target files must be of the same type:
+<style color=#00ffffff size=1>.</style>            either both directories or both files.
+
+<style color=#00ffffff size=1>.</style>            For mount, source can be a shell command, a network address,
+<style color=#00ffffff size=1>.</style>            or a file name. If source is surrounded by brace characters
+<style color=#00ffffff size=1>.</style>            ({ and }), it is invoked as a <action name=sh(1)>sh(1)</action> command and its standard
+<style color=#00ffffff size=1>.</style>            input is mounted (no authentication takes place in this
+<style color=#00ffffff size=1>.</style>            case). If source contains an exclamation mark (!), or there
+<style color=#00ffffff size=1>.</style>            is no file of that name, it is assumed to be a network
+<style color=#00ffffff size=1>.</style>            address for a machine acting as a file server. This argument
+<style color=#00ffffff size=1>.</style>            should then conform to the conventions described in <action name=dial(2)>dial(2)</action>.
+<style color=#00ffffff size=1>.</style>            Otherwise source should be the name of a file that when
+<style color=#00ffffff size=1>.</style>            opened gives a connection to a file server, something
+<style color=#00ffffff size=1>.</style>            serving the 9P protocol described in <action name=intro(5)>intro(5)</action>, formerly
+<style color=#00ffffff size=1>.</style>            called `Styx'. The optional spec argument to mount is passed
+<style color=#00ffffff size=1>.</style>            in the <action name=attach(5)>attach(5)</action> message and selects amongst different file
+<style color=#00ffffff size=1>.</style>            trees offered by the server.
+
+<style color=#00ffffff size=1>.</style>            The effects of bind and mount can be undone by unmount. If
+<style color=#00ffffff size=1>.</style>            two arguments are given to unmount, the effect is to undo a
+<style color=#00ffffff size=1>.</style>            bind or mount with the same arguments. If only one argument
+<style color=#00ffffff size=1>.</style>            is given, everything bound to or mounted on target is
+<style color=#00ffffff size=1>.</style>            unmounted.
+
+<style color=#00ffffff size=1>.</style>            By default, bind and mount replace the target file by the
+<style color=#00ffffff size=1>.</style>            new one, source. Henceforth, an evaluation of the pathname
+<style color=#00ffffff size=1>.</style>            target will be translated to the new file. If they are
+<style color=#00ffffff size=1>.</style>            directories (for mount, this condition is true by
+<style color=#00ffffff size=1>.</style>            definition), target becomes a union directory consisting of
+<style color=#00ffffff size=1>.</style>            one directory (the source directory).
+
+<style color=#00ffffff size=1>.</style>            A union directory unites the contents of the source and
+<style color=#00ffffff size=1>.</style>            target directories. If the same name appears in both
+<style color=#00ffffff size=1>.</style>            directories, the name used is the one in the directory that
+<style color=#00ffffff size=1>.</style>            is bound before the other. In particular, if the directories
+<style color=#00ffffff size=1>.</style>            have subdirectories of the same name, only the contents of
+<style color=#00ffffff size=1>.</style>            the subdirectory in the top directory will be seen. If the
+<style color=#00ffffff size=1>.</style>            subdirectory contents are themselves to be united, that must
+<style color=#00ffffff size=1>.</style>            be done first in a separate bind or mount.
+
+<style color=#00ffffff size=1>.</style>            Note that the # character in the name of a kernel device
+<style color=#00ffffff size=1>.</style>            must be quoted when used in a bind or unmount command, or
+<style color=#00ffffff size=1>.</style>            the shell will take it as the start of a comment.
+
+<style color=#00ffffff size=1>.</style>            Options control aspects of the modification to the name
+<style color=#00ffffff size=1>.</style>            space:
+
+<style color=#00ffffff size=1>.</style>            -b   Both files must be directories. Add the source
+<style color=#00ffffff size=1>.</style>                 directory to the beginning of the union directory
+<style color=#00ffffff size=1>.</style>                 represented by the target directory.
+
+<style color=#00ffffff size=1>.</style>            -a   Both files must be directories. Add the source 
+<style color=#00ffffff size=1>.</style>                 directory to the end of the union directory represented
+<style color=#00ffffff size=1>.</style>                 by the target directory.
+
+<style color=#00ffffff size=1>.</style>            -c   This can be used in addition to any of the above to
+<style color=#00ffffff size=1>.</style>                 permit creation in a union directory. When a new file
+<style color=#00ffffff size=1>.</style>                 is created in a union directory, it is placed in the
+<style color=#00ffffff size=1>.</style>                 first element of the union that has been bound or
+<style color=#00ffffff size=1>.</style>                 mounted with the -c option. If that directory has not
+<style color=#00ffffff size=1>.</style>                 got write permission, the create fails.
+
+<style color=#00ffffff size=1>.</style>            -q   Exit quietly without printing a diagnostic if the bind
+<style color=#00ffffff size=1>.</style>                 or mount fails.
+
+<style color=#00ffffff size=1>.</style>            -A   For mount only. Do not authenticate the connection to
+<style color=#00ffffff size=1>.</style>                 the server before proceeding with mount. Otherwise the
+<style color=#00ffffff size=1>.</style>                 connection is authenticated by <action name=security-auth(2)>security-auth(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            -C alg
+<style color=#00ffffff size=1>.</style>                 For mount only, specify the algorithm, alg, to be used
+<style color=#00ffffff size=1>.</style>                 following authentication for digesting or encryption.
+<style color=#00ffffff size=1>.</style>                 See <action name=ssl(3)>ssl(3)</action> for the supported algorithms. The default is
+<style color=#00ffffff size=1>.</style>                 none: <action name=ssl(3)>ssl(3)</action> is not used after authentication.
+
+<style color=#00ffffff size=1>.</style>            -k kfile 
+<style color=#00ffffff size=1>.</style>                 For mount only, specify the keyfile to be used when
+<style color=#00ffffff size=1>.</style>                 authenticating. The default is /usr/user
+<style color=#00ffffff size=1>.</style>                 /keyring/default. See <action name=keyring-auth(2)>keyring-auth(2)</action> for more details.
+<style color=#00ffffff size=1>.</style>                 (If the -9 option is given, this option is interpreted
+<style color=#00ffffff size=1>.</style>                 differently: see below.)
+
+<style color=#00ffffff size=1>.</style>            -9   For mount only, and only when hosted on Plan 9. Source
+<style color=#00ffffff size=1>.</style>                 is a Plan 9 file server\; use Plan 9's factotum as
+<style color=#00ffffff size=1>.</style>                 authentication agent to authenticate the mount. (Note
+<style color=#00ffffff size=1>.</style>                 that a Plan 9 file service that is known not to
+<style color=#00ffffff size=1>.</style>                 authenticate can be mounted from any Inferno host, by
+<style color=#00ffffff size=1>.</style>                 using the -A option to suppress Inferno
+<style color=#00ffffff size=1>.</style>                 authentication.) The existing Plan 9 file servers do
+<style color=#00ffffff size=1>.</style>                 not encrypt connections, so the -C option is ignored.
+<style color=#00ffffff size=1>.</style>                 The value of the -k option is added to the key
+<style color=#00ffffff size=1>.</style>                 specification for <action name=factotum(4)>factotum(4)</action> for authentication.
+
+<style color=#00ffffff size=1>.</style>            -P   When source is a network address, use <action name=styxpersist(2)>styxpersist(2)</action> to
+<style color=#00ffffff size=1>.</style>                 try to simulate a permanent connection, even should the
+<style color=#00ffffff size=1>.</style>                 server reboot. Note the caveats on that page.
+
+<style color=#00ffffff size=1>.</style>            -o   For mount only, the file server serves the 1995 version
+<style color=#00ffffff size=1>.</style>                 of Inferno's Styx protocol, and mount inserts a process
+<style color=#00ffffff size=1>.</style>                 that translates to the current version.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/bind.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/mount.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/unmount.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=dial(2)>dial(2)</action>, <action name=keyring-auth(2)>keyring-auth(2)</action>, <action name=security-auth(2)>security-auth(2)</action>, sys-intro
+<style color=#00ffffff size=1>.</style>            (2), <action name=sys-bind(2)>sys-bind(2)</action>, <action name=intro(3)>intro(3)</action>, <action name=getauthinfo(8)>getauthinfo(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

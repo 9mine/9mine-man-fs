@@ -1,0 +1,242 @@
+<action name=SEXPRS(2)>SEXPRS(2)</action>                                               <action name=SEXPRS(2)>SEXPRS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Sexprs: Sexp - S-expressions
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "bufio.m"\;
+<style color=#00ffffff size=1>.</style>            include "sexprs.m"\;
+<style color=#00ffffff size=1>.</style>            sexprs := load Sexprs Sexprs->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Sexp: adt {
+<style color=#00ffffff size=1>.</style>                pick {
+<style color=#00ffffff size=1>.</style>                String =>
+<style color=#00ffffff size=1>.</style>                    s:    string\;
+<style color=#00ffffff size=1>.</style>                    hint: string\;
+<style color=#00ffffff size=1>.</style>                Binary =>
+<style color=#00ffffff size=1>.</style>                    data: array of byte\;
+<style color=#00ffffff size=1>.</style>                    hint: string\;
+<style color=#00ffffff size=1>.</style>                List =>
+<style color=#00ffffff size=1>.</style>                    l:    cyclic list of ref Sexp\;
+<style color=#00ffffff size=1>.</style>                }
+
+<style color=#00ffffff size=1>.</style>                read:   fn(b: ref Bufio->Iobuf): (ref Sexp, string)\;
+<style color=#00ffffff size=1>.</style>                parse:  fn(s: string): (ref Sexp, string, string)\;
+<style color=#00ffffff size=1>.</style>                pack:   fn(e: self ref Sexp): array of byte\;
+<style color=#00ffffff size=1>.</style>                packedsize: fn(e: self ref Sexp): int\;
+<style color=#00ffffff size=1>.</style>                text:   fn(e: self ref Sexp): string\;
+<style color=#00ffffff size=1>.</style>                b64text: fn(e: self ref Sexp): string\;
+<style color=#00ffffff size=1>.</style>                unpack: fn(a: array of byte): (ref Sexp, array of byte, string)\;
+
+<style color=#00ffffff size=1>.</style>                eq:     fn(e: self ref Sexp, t: ref Sexp): int\;
+<style color=#00ffffff size=1>.</style>                copy:   fn(e: self ref Sexp): ref Sexp\;
+
+<style color=#00ffffff size=1>.</style>                astext: fn(e: self ref Sexp): string\;
+<style color=#00ffffff size=1>.</style>                asdata: fn(e: self ref Sexp): array of byte\;
+
+<style color=#00ffffff size=1>.</style>                islist: fn(e: self ref Sexp): int\;
+<style color=#00ffffff size=1>.</style>                els:    fn(e: self ref Sexp): list of ref Sexp\;
+<style color=#00ffffff size=1>.</style>                op:     fn(e: self ref Sexp): string\;
+<style color=#00ffffff size=1>.</style>                args:   fn(e: self ref Sexp): list of ref Sexp\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:   fn()\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Sexprs provides a data type and I/O for S-expressions, or
+<style color=#00ffffff size=1>.</style>            `symbolic expressions', which represent complex data as
+<style color=#00ffffff size=1>.</style>            trees. This implementation provides the variant defined by
+<style color=#00ffffff size=1>.</style>            Rivest in Internet Draft ``draft-rivest-sexp-00.txt'' (4 May
+<style color=#00ffffff size=1>.</style>            1997), as used for instance by the Simple Public Key
+<style color=#00ffffff size=1>.</style>            Infrastructure (SPKI). It offers a basic set of operations
+<style color=#00ffffff size=1>.</style>            on the internal representation, and input and output in both
+<style color=#00ffffff size=1>.</style>            canonical and advanced transport encodings. Canonical form
+<style color=#00ffffff size=1>.</style>            conveys binary data directly and efficiently (unlike some
+<style color=#00ffffff size=1>.</style>            other schemes such as XML). Canonical encoding must be used
+<style color=#00ffffff size=1>.</style>            when exchanging S-expressions between computers, and when
+<style color=#00ffffff size=1>.</style>            digitally signing an expression. Advanced encoding is a more
+<style color=#00ffffff size=1>.</style>            elaborate form similar to that used by Lisp interpreters,
+<style color=#00ffffff size=1>.</style>            typically using only printable characters: representing any
+<style color=#00ffffff size=1>.</style>            binary data in hexadecimal or base 64 encodings, and quoting
+<style color=#00ffffff size=1>.</style>            strings containing special characters, using escape
+<style color=#00ffffff size=1>.</style>            sequences as required. Unquoted text is called a token,
+<style color=#00ffffff size=1>.</style>            restricted by the standard to a specific alphabet: it must
+<style color=#00ffffff size=1>.</style>            start with a letter or a character from the set `-./_:*+=',
+<style color=#00ffffff size=1>.</style>            and contain only letters, digits and characters from that
+<style color=#00ffffff size=1>.</style>            set. Upper- and lower-case letters are distinct. See sexprs
+<style color=#00ffffff size=1>.</style>            (6) for a precise description.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before invoking any other operation of
+<style color=#00ffffff size=1>.</style>            the module.
+
+<style color=#00ffffff size=1>.</style>            Sexp is the internal representation of S-expression data, as
+<style color=#00ffffff size=1>.</style>            lists and non-list values (atoms) that in general can form a
+<style color=#00ffffff size=1>.</style>            tree structure\; that is, a list may contain not just atoms
+<style color=#00ffffff size=1>.</style>            but other lists as its elements, and so on recursively. The
+<style color=#00ffffff size=1>.</style>            atoms are strings of text or binary. A well-formed
+<style color=#00ffffff size=1>.</style>            S-expression might be a tree, but cannot contain cycles.
+
+<style color=#00ffffff size=1>.</style>            For convenience in processing, Sexp distinguishes three
+<style color=#00ffffff size=1>.</style>            variants represented in a pick adt:
+
+<style color=#00ffffff size=1>.</style>            Sexp.String
+<style color=#00ffffff size=1>.</style>                 An atom that can be represented as a textual string s,
+<style color=#00ffffff size=1>.</style>                 including all tokens but also any other data that
+<style color=#00ffffff size=1>.</style>                 contains no characters outside the 7-bit ASCII set and
+<style color=#00ffffff size=1>.</style>                 no control-characters other than space. Hint is the
+<style color=#00ffffff size=1>.</style>                 `display hint', typically nil (see the Internet Draft
+<style color=#00ffffff size=1>.</style>                 for its intended use).
+
+<style color=#00ffffff size=1>.</style>            Sexp.Binary
+<style color=#00ffffff size=1>.</style>                 An atom that must be represented as an array of bytes
+<style color=#00ffffff size=1>.</style>                 data (typically because it is purely binary data or
+<style color=#00ffffff size=1>.</style>                 contains non-space control-characters). Hint again is
+<style color=#00ffffff size=1>.</style>                 the display hint.
+
+<style color=#00ffffff size=1>.</style>            Sexp.List
+<style color=#00ffffff size=1>.</style>                 A list of S-expression values, l.
+
+<style color=#00ffffff size=1>.</style>            Sexp provides the following operations for input and output,
+<style color=#00ffffff size=1>.</style>            using <action name=bufio(2)>bufio(2)</action>'s buffered channels (directly or indirectly):
+
+<style color=#00ffffff size=1>.</style>            read(b)
+<style color=#00ffffff size=1>.</style>                 Read one S-expression (a list or a single token) from
+<style color=#00ffffff size=1>.</style>                 Iobuf b. Return a tuple of the form (e,err), where e is
+<style color=#00ffffff size=1>.</style>                 the Sexp representing the data just read, and err is
+<style color=#00ffffff size=1>.</style>                 nil on success\; b is positioned at the first character
+<style color=#00ffffff size=1>.</style>                 after the end of the S-expression. On an error, e is
+<style color=#00ffffff size=1>.</style>                 nil, and err contains the diagnostic string. On
+<style color=#00ffffff size=1>.</style>                 end-of-file, both e and err are nil.
+
+<style color=#00ffffff size=1>.</style>            parse(s)
+<style color=#00ffffff size=1>.</style>                 Parse the first S-expression in string s, and return a
+<style color=#00ffffff size=1>.</style>                 tuple (e,t,err), where e is the Sexp representating
+<style color=#00ffffff size=1>.</style>                 that expression, t is the unparsed tail of string s,
+<style color=#00ffffff size=1>.</style>                 and err is a diagnostic string that is nil on success.
+<style color=#00ffffff size=1>.</style>                 On an error, e is nil, t is as before, and err contains
+<style color=#00ffffff size=1>.</style>                 the diagnostic.
+
+<style color=#00ffffff size=1>.</style>            e.pack()
+<style color=#00ffffff size=1>.</style>                 Return an array of byte that represents Sexp e as an
+<style color=#00ffffff size=1>.</style>                 S-expression in canonical transport form.
+
+<style color=#00ffffff size=1>.</style>            e.packedsize()
+<style color=#00ffffff size=1>.</style>                 Return the size in bytes of the canonical transport
+<style color=#00ffffff size=1>.</style>                 representation of e.
+
+<style color=#00ffffff size=1>.</style>            e.b64text()
+<style color=#00ffffff size=1>.</style>                 Return a string that contains the base-64
+<style color=#00ffffff size=1>.</style>                 representation of the canonical representation of e,
+<style color=#00ffffff size=1>.</style>                 surrounded by braces.
+
+<style color=#00ffffff size=1>.</style>            e.text()
+<style color=#00ffffff size=1>.</style>                 Return a string that represents e as an S-expression in
+<style color=#00ffffff size=1>.</style>                 advanced (`human-readable') transport form containing
+<style color=#00ffffff size=1>.</style>                 no newlines. The result of text can always be
+<style color=#00ffffff size=1>.</style>                 interpreted by Sexp.read and Sexp.parse, and
+<style color=#00ffffff size=1>.</style>                 furthermore Sexp.parse(e.text()) yields the same tree
+<style color=#00ffffff size=1>.</style>                 value as e (similarly for Sexp.read).
+
+<style color=#00ffffff size=1>.</style>            unpack(a)
+<style color=#00ffffff size=1>.</style>                 Parse the first S-expression in array of byte a, and
+<style color=#00ffffff size=1>.</style>                 return a tuple (e,r,err), where e is the Sexp
+<style color=#00ffffff size=1>.</style>                 representing the S-expression, r is a slice of a giving
+<style color=#00ffffff size=1>.</style>                 the portion of a after the S-expression, and err is nil
+<style color=#00ffffff size=1>.</style>                 on success. On error, e is nil, r is as before, and err
+<style color=#00ffffff size=1>.</style>                 contains a diagnostic string. The data in a is
+<style color=#00ffffff size=1>.</style>                 typically in canonical transport form, read from a file
+<style color=#00ffffff size=1>.</style>                 or network connection.
+
+<style color=#00ffffff size=1>.</style>            All input functions accept S-expression in either canonical
+<style color=#00ffffff size=1>.</style>            or advanced form, or any legal mixture of forms. Expressions
+<style color=#00ffffff size=1>.</style>            can cross line boundaries. For output in canonical form, use
+<style color=#00ffffff size=1>.</style>            pack\; for output in advanced form (similar to Lisp's
+<style color=#00ffffff size=1>.</style>            S-expressions), use text.
+
+<style color=#00ffffff size=1>.</style>            Sexp provides a further small collection of operations:
+
+<style color=#00ffffff size=1>.</style>            e1.eq(e2)
+<style color=#00ffffff size=1>.</style>                 Return non-zero if expression e1 and e2 are identical
+<style color=#00ffffff size=1>.</style>                 (isomorphic in tree structure and atoms in
+<style color=#00ffffff size=1>.</style>                 corresponding positions in e1 and e2 equal)\; return 0
+<style color=#00ffffff size=1>.</style>                 otherwise.
+
+<style color=#00ffffff size=1>.</style>            e.copy()
+<style color=#00ffffff size=1>.</style>                 Return a new Sexp value equal to e, but sharing no
+<style color=#00ffffff size=1>.</style>                 storage with it. (In other words, it returns a copy of
+<style color=#00ffffff size=1>.</style>                 the whole tree e).
+
+<style color=#00ffffff size=1>.</style>            e.islist()
+<style color=#00ffffff size=1>.</style>                 Return true iff e is a list (ie, a value of type
+<style color=#00ffffff size=1>.</style>                 Sexp.List).
+
+<style color=#00ffffff size=1>.</style>            Two operations provide a shorthand for fetching the value of
+<style color=#00ffffff size=1>.</style>            an atom, returning nil if applied to a list:
+
+<style color=#00ffffff size=1>.</style>            e.astext()
+<style color=#00ffffff size=1>.</style>                 Return the value of e as a string\; binary data is
+<style color=#00ffffff size=1>.</style>                 assumed to be a string in <action name=utf(6)>utf(6)</action> representation.
+
+<style color=#00ffffff size=1>.</style>            e.asdata()
+<style color=#00ffffff size=1>.</style>                 Return the value of e as an array of bytes. A String
+<style color=#00ffffff size=1>.</style>                 value will be converted to an array of bytes giving its
+<style color=#00ffffff size=1>.</style>                 <action name=utf(6)>utf(6)</action>.
+
+<style color=#00ffffff size=1>.</style>            The remaining operations extract values from lists, and
+<style color=#00ffffff size=1>.</style>            return nil if applied to an atom:
+
+<style color=#00ffffff size=1>.</style>            e.els()
+<style color=#00ffffff size=1>.</style>                 Return the elements of list e\; return nil if e is not a
+<style color=#00ffffff size=1>.</style>                 list.
+
+<style color=#00ffffff size=1>.</style>            e.op()
+<style color=#00ffffff size=1>.</style>                 Return the first token of list e, if it is a string\;
+<style color=#00ffffff size=1>.</style>                 return nil if it is not a string or e is not a list.
+<style color=#00ffffff size=1>.</style>                 The first token of a list often gives an operation
+<style color=#00ffffff size=1>.</style>                 name.
+
+<style color=#00ffffff size=1>.</style>            e.args()
+<style color=#00ffffff size=1>.</style>                 Return a list containing the second and subsequent
+<style color=#00ffffff size=1>.</style>                 values in list e\; useful when the first value is an
+<style color=#00ffffff size=1>.</style>                 operation name and the rest represent parameters
+<style color=#00ffffff size=1>.</style>                 (arguments) to that operation.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            The following S-expression is in advanced transport form:
+
+<style color=#00ffffff size=1>.</style>                 (snicker "abc" (#03# |YWJj|))
+
+<style color=#00ffffff size=1>.</style>            It represents a list of three elements: the token `snicker',
+<style color=#00ffffff size=1>.</style>            the token `abc', and a sub-list with two elements (a
+<style color=#00ffffff size=1>.</style>            hexadecimal constant representing the byte `03', and a
+<style color=#00ffffff size=1>.</style>            base-64 constant ``YWjj'' that represents the bytes `abc').
+
+<style color=#00ffffff size=1>.</style>            Here is another in advanced form with two sublists:
+
+<style color=#00ffffff size=1>.</style>                 (certificate
+<style color=#00ffffff size=1>.</style>                      (issuer bob)
+<style color=#00ffffff size=1>.</style>                      (subject "alice b"))
+
+<style color=#00ffffff size=1>.</style>            Its equivalent in canonical form (as produced by pack) is
+<style color=#00ffffff size=1>.</style>            shown below:
+
+<style color=#00ffffff size=1>.</style>                 (11:certificate(6:issuer3:bob)(7:subject7:alice b))
+
+<style color=#00ffffff size=1>.</style>            Nesting parentheses still mark the start and end of lists,
+<style color=#00ffffff size=1>.</style>            but there is no other punctuation or white space, and the
+<style color=#00ffffff size=1>.</style>            byte sequence representing each atom is preceded by a
+<style color=#00ffffff size=1>.</style>            decimal count, so that binary values appear unencoded, and
+<style color=#00ffffff size=1>.</style>            for instance the space in the last string is not a delimiter
+<style color=#00ffffff size=1>.</style>            but part of the token.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/sexprs.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bufio(2)>bufio(2)</action>, <action name=xml(2)>xml(2)</action>, <action name=sexprs(6)>sexprs(6)</action>
+
+<style color=#00ffffff size=1>.</style>            R. Rivest, ``S-expressions'', Network Working Group Internet
+<style color=#00ffffff size=1>.</style>            Draft, ``http://theory.lcs.mit.edu/~rivest/sexp.txt'' (4 May
+<style color=#00ffffff size=1>.</style>            1997), reproduced in /lib/sexp.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,211 @@
+<action name=SYS-INTRO(2)>SYS-INTRO(2)</action>                                         <action name=SYS-INTRO(2)>SYS-INTRO(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Sys: intro - introduction to the Sys module
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Inferno system calls are provided by the built-in module
+<style color=#00ffffff size=1>.</style>            declared by sys.m. It contains the fundamental system data
+<style color=#00ffffff size=1>.</style>            structures and interfaces. There are currently 42 calls,
+<style color=#00ffffff size=1>.</style>            providing: file access\; basic I/O\; name space manipulation\;
+<style color=#00ffffff size=1>.</style>            formatted output for Limbo\; and basic character and string
+<style color=#00ffffff size=1>.</style>            manipulation.
+
+<style color=#00ffffff size=1>.</style>         File Name Space
+<style color=#00ffffff size=1>.</style>            Files are collected into a hierarchical organization called
+<style color=#00ffffff size=1>.</style>            a file tree starting in a directory called the root.
+<style color=#00ffffff size=1>.</style>            Filenames, also called paths, consist of a number of /
+<style color=#00ffffff size=1>.</style>            -separated path elements with the slashes corresponding to
+<style color=#00ffffff size=1>.</style>            directories. A path element must contain only printable
+<style color=#00ffffff size=1>.</style>            characters (those outside ASCII and Latin-1 control space).
+<style color=#00ffffff size=1>.</style>            A path element cannot contain a slash. The path element ..
+<style color=#00ffffff size=1>.</style>            refers to the parent directory of the directory containing
+<style color=#00ffffff size=1>.</style>            that element.
+
+<style color=#00ffffff size=1>.</style>            When a process presents a file name to Inferno, it is
+<style color=#00ffffff size=1>.</style>            evaluated by the following algorithm.
+
+<style color=#00ffffff size=1>.</style>            1.   Start with a directory that depends on the first
+<style color=#00ffffff size=1>.</style>                 character of the path: / means the root of the main
+<style color=#00ffffff size=1>.</style>                 hierarchy, # means the separate root of a kernel
+<style color=#00ffffff size=1>.</style>                 device's file tree (see Section 3), and anything else
+<style color=#00ffffff size=1>.</style>                 means the process's current working directory.
+
+<style color=#00ffffff size=1>.</style>            2.   For each path element, look up the element in the
+<style color=#00ffffff size=1>.</style>                 directory, advance to that directory, do a possible
+<style color=#00ffffff size=1>.</style>                 translation (see below).
+
+<style color=#00ffffff size=1>.</style>            3.   Repeat. The last step may yield a directory or regular
+<style color=#00ffffff size=1>.</style>                 file.
+
+<style color=#00ffffff size=1>.</style>            The collection of files reachable from the root is called
+<style color=#00ffffff size=1>.</style>            the name space of a process.
+
+<style color=#00ffffff size=1>.</style>            A program can use bind or mount (see <action name=sys-bind(2)>sys-bind(2)</action>) to say
+<style color=#00ffffff size=1>.</style>            that whenever a specified file is reached during an
+<style color=#00ffffff size=1>.</style>            evaluation, that evaluation continues instead from a second
+<style color=#00ffffff size=1>.</style>            specified file. Also, these same calls create union
+<style color=#00ffffff size=1>.</style>            directories, which are concatenations of ordinary
+<style color=#00ffffff size=1>.</style>            directories that are searched sequentially until the desired
+<style color=#00ffffff size=1>.</style>            element is found. Using bind and mount to do name space
+<style color=#00ffffff size=1>.</style>            adjustment affects only the current name space group (see
+<style color=#00ffffff size=1>.</style>            below, and <action name=sys-pctl(2)>sys-pctl(2)</action>). Certain conventions about the
+<style color=#00ffffff size=1>.</style>            layout of the name space should be preserved\; see namespace
+<style color=#00ffffff size=1>.</style>            (4).
+
+<style color=#00ffffff size=1>.</style>            The operating system kernel records the file name used to
+<style color=#00ffffff size=1>.</style>            access each open file or directory. If the file is opened by
+<style color=#00ffffff size=1>.</style>            a relative path name (one that does not begin / or #), the
+<style color=#00ffffff size=1>.</style>            system makes the stored name absolute by prefixing the
+<style color=#00ffffff size=1>.</style>            string associated with the current directory. Similar
+<style color=#00ffffff size=1>.</style>            lexical adjustments are made for path names containing .
+<style color=#00ffffff size=1>.</style>            (dot) or .. (dot-dot). By this process, the system maintains
+<style color=#00ffffff size=1>.</style>            a record of the route by which each file was accessed.
+<style color=#00ffffff size=1>.</style>            Although there is a possibility for error—the name is not
+<style color=#00ffffff size=1>.</style>            maintained after the file is opened, so removals and
+<style color=#00ffffff size=1>.</style>            renamings can confound it—this simple method usually permits
+<style color=#00ffffff size=1>.</style>            the system to return, via <action name=sys-fd2path(2)>sys-fd2path(2)</action> and related calls
+<style color=#00ffffff size=1>.</style>            such as those of <action name=workdir(2)>workdir(2)</action>, a valid name that may be used
+<style color=#00ffffff size=1>.</style>            to find a file again. This is also the source of the names
+<style color=#00ffffff size=1>.</style>            reported in the name space listing of <action name=ns(1)>ns(1)</action> or the ns file
+<style color=#00ffffff size=1>.</style>            of <action name=prog(3)>prog(3)</action>.
+
+<style color=#00ffffff size=1>.</style>            Inferno gives special meaning in path names only to `/' and
+<style color=#00ffffff size=1>.</style>            an initial `#', but individual file servers might impose
+<style color=#00ffffff size=1>.</style>            further restrictions or conventions of their own. For
+<style color=#00ffffff size=1>.</style>            instance, the set of characters allowed in names by <action name=fs(3)>fs(3)</action>
+<style color=#00ffffff size=1>.</style>            ultimately depends on the host operating system\; and <action name=dial(2)>dial(2)</action>
+<style color=#00ffffff size=1>.</style>            and <action name=cs(8)>cs(8)</action> amongst others use `!' as a delimiter in network
+<style color=#00ffffff size=1>.</style>            names, preventing their use in the names of network devices.
+
+<style color=#00ffffff size=1>.</style>         File I/O
+<style color=#00ffffff size=1>.</style>            Files are opened for input or output by open or create (see
+<style color=#00ffffff size=1>.</style>            <action name=sys-open(2)>sys-open(2)</action>). These calls return a reference to an object of
+<style color=#00ffffff size=1>.</style>            type FD (file descriptor) that identifies the file to
+<style color=#00ffffff size=1>.</style>            subsequent I/O calls, notably read and write (see sys-read
+<style color=#00ffffff size=1>.</style>            (2)). When the last reference to an FD disappears, the file
+<style color=#00ffffff size=1>.</style>            descriptor is released—closed, in Unix parlance. The FD
+<style color=#00ffffff size=1>.</style>            contains an integer file descriptor, similar to those in
+<style color=#00ffffff size=1>.</style>            Unix, but the FD type is the one passed to Limbo I/O
+<style color=#00ffffff size=1>.</style>            routines.
+
+<style color=#00ffffff size=1>.</style>            Integer file descriptor values range from 0 to n in the
+<style color=#00ffffff size=1>.</style>            current system, where the upper bound depends on the
+<style color=#00ffffff size=1>.</style>            underlying operating system. The system allocates the
+<style color=#00ffffff size=1>.</style>            numbers by selecting the lowest unused descriptor. They may
+<style color=#00ffffff size=1>.</style>            be reassigned using dup (see <action name=sys-dup(2)>sys-dup(2)</action>). Integer file
+<style color=#00ffffff size=1>.</style>            descriptor values are indices into a kernel-resident file
+<style color=#00ffffff size=1>.</style>            descriptor table, which is inherited from the parent when a
+<style color=#00ffffff size=1>.</style>            process is created by a Limbo spawn operation. A set of
+<style color=#00ffffff size=1>.</style>            processes, called a file descriptor group, shares that
+<style color=#00ffffff size=1>.</style>            table, so files opened by one process may be read and
+<style color=#00ffffff size=1>.</style>            written by other processes in the group.  See <action name=sys-pctl(2)>sys-pctl(2)</action>
+<style color=#00ffffff size=1>.</style>            for more information.
+
+<style color=#00ffffff size=1>.</style>            By convention, file descriptor 0 is the standard input, 1 is
+<style color=#00ffffff size=1>.</style>            the standard output, and 2 is the standard error output. The
+<style color=#00ffffff size=1>.</style>            operating system is unaware of these conventions\; it is
+<style color=#00ffffff size=1>.</style>            permissible to close file 0, or even to replace it by a file
+<style color=#00ffffff size=1>.</style>            open only for writing, but many programs will be confused by
+<style color=#00ffffff size=1>.</style>            such chicanery.
+
+<style color=#00ffffff size=1>.</style>            Files are normally read or written in sequential order. The
+<style color=#00ffffff size=1>.</style>            I/O position in the file is called the file offset and may
+<style color=#00ffffff size=1>.</style>            be set arbitrarily using the seek system call (<action name=sys-seek(2)>sys-seek(2)</action>).
+<style color=#00ffffff size=1>.</style>            An offset can also be passed as a parameter to pread and
+<style color=#00ffffff size=1>.</style>            pwrite (see sys-read (2)).
+
+<style color=#00ffffff size=1>.</style>            Inferno provides no guarantee of consistency should several
+<style color=#00ffffff size=1>.</style>            processes access a file concurrently. Guaranteed synchronous
+<style color=#00ffffff size=1>.</style>            writes are not available. Whether the exclusive-use
+<style color=#00ffffff size=1>.</style>            attributes described in <action name=sys-open(2)>sys-open(2)</action> and <action name=sys-stat(2)>sys-stat(2)</action> will be
+<style color=#00ffffff size=1>.</style>            honoured for a file depends entirely on the underlying file
+<style color=#00ffffff size=1>.</style>            server (eg, <action name=fs(3)>fs(3)</action>). Record locking in the underlying file
+<style color=#00ffffff size=1>.</style>            system is not supported by Inferno. Processes can coordinate
+<style color=#00ffffff size=1>.</style>            their file operations by other mechanisms.
+
+<style color=#00ffffff size=1>.</style>            Atomicity is guaranteed for byte counts no larger than the
+<style color=#00ffffff size=1>.</style>            9P message size\; see <action name=read(5)>read(5)</action>.
+
+<style color=#00ffffff size=1>.</style>            Directories may be opened and read much like regular files
+<style color=#00ffffff size=1>.</style>            (see <action name=sys-dirread(2)>sys-dirread(2)</action>). They contain an integral number of
+<style color=#00ffffff size=1>.</style>            records, called directory entries. Each entry is a
+<style color=#00ffffff size=1>.</style>            machine-independent representation of the information about
+<style color=#00ffffff size=1>.</style>            an existing file in the directory, including the name,
+<style color=#00ffffff size=1>.</style>            ownership, permission, access dates, and so on.
+
+<style color=#00ffffff size=1>.</style>            The entry corresponding to an arbitrary file can be
+<style color=#00ffffff size=1>.</style>            retrieved by stat or fstat (see <action name=sys-stat(2)>sys-stat(2)</action>)\; wstat and
+<style color=#00ffffff size=1>.</style>            fwstat write back entries, thus changing the properties of a
+<style color=#00ffffff size=1>.</style>            file.
+
+<style color=#00ffffff size=1>.</style>            New files are made with create and deleted with remove (see
+<style color=#00ffffff size=1>.</style>            <action name=sys-open(2)>sys-open(2)</action> and <action name=sys-remove(2)>sys-remove(2)</action>). Directories may not directly
+<style color=#00ffffff size=1>.</style>            be written\; create, remove, wstat, and fwstat change them.
+
+<style color=#00ffffff size=1>.</style>         Process execution and control
+<style color=#00ffffff size=1>.</style>            A Limbo process, also called a thread, is the basic unit of
+<style color=#00ffffff size=1>.</style>            computation for Limbo application programming in the Inferno
+<style color=#00ffffff size=1>.</style>            operating system.
+
+<style color=#00ffffff size=1>.</style>            A newly spawned thread shares the same address space as that
+<style color=#00ffffff size=1>.</style>            of its creator thread. That is, the set of global  variables
+<style color=#00ffffff size=1>.</style>            that is in scope to one is in scope to the other. A change
+<style color=#00ffffff size=1>.</style>            made by one can be detected by the other. Since they are
+<style color=#00ffffff size=1>.</style>            scheduled independently, they should synchronize their
+<style color=#00ffffff size=1>.</style>            actions to share this data coherently.
+
+<style color=#00ffffff size=1>.</style>            The newly created thread also shares the same set of open
+<style color=#00ffffff size=1>.</style>            file descriptors and the current working directory.
+
+<style color=#00ffffff size=1>.</style>            Processes are also organized into process groups (pgrps)
+<style color=#00ffffff size=1>.</style>            that represent the set of threads of a single application
+<style color=#00ffffff size=1>.</style>            and can be terminated by a single kill request\; see <action name=prog(3)>prog(3)</action>.
+
+<style color=#00ffffff size=1>.</style>            A newly-spawned thread automatically inherits the following
+<style color=#00ffffff size=1>.</style>            attributes: file name space (including shared current
+<style color=#00ffffff size=1>.</style>            directory)\; file descriptor group\; and process group. A
+<style color=#00ffffff size=1>.</style>            thread can subsequently acquire a new, independent name
+<style color=#00ffffff size=1>.</style>            space, new or modified file descriptor group, or new process
+<style color=#00ffffff size=1>.</style>            group. See <action name=sys-pctl(2)>sys-pctl(2)</action>.
+
+<style color=#00ffffff size=1>.</style>         User/Group Identity
+<style color=#00ffffff size=1>.</style>            The Inferno operating system maintains user identifier (uid)
+<style color=#00ffffff size=1>.</style>            and group identifier (gid) strings for each process. These
+<style color=#00ffffff size=1>.</style>            values are also attributes of files and directories. See
+<style color=#00ffffff size=1>.</style>            <action name=sys-stat(2)>sys-stat(2)</action> and <action name=stat(5)>stat(5)</action>. A comparison of process and file
+<style color=#00ffffff size=1>.</style>            identities take place when a process attempts to open or
+<style color=#00ffffff size=1>.</style>            create a file.
+
+<style color=#00ffffff size=1>.</style>            When a path name crosses from one server to another the
+<style color=#00ffffff size=1>.</style>            process identities are mapped by each server receiving a
+<style color=#00ffffff size=1>.</style>            file request.
+
+<style color=#00ffffff size=1>.</style>            The uid and gid strings are assigned to the thread created
+<style color=#00ffffff size=1>.</style>            when a user logs into Inferno and cannot be changed.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/inferno.c
+<style color=#00ffffff size=1>.</style>            /os/port/inferno.c
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            System calls often return an integer status, or tuples
+<style color=#00ffffff size=1>.</style>            containing results and an integer status, and follow the
+<style color=#00ffffff size=1>.</style>            convention that a status of -1 is returned when an error
+<style color=#00ffffff size=1>.</style>            occurred\; a non-negative value (usually 0) is returned on
+<style color=#00ffffff size=1>.</style>            success. If an error occurred, a detailed error message can
+<style color=#00ffffff size=1>.</style>            be obtained for the most recent error, using the `%r' format
+<style color=#00ffffff size=1>.</style>            of <action name=sys-print(2)>sys-print(2)</action>. Exceptions to this general rule are noted
+<style color=#00ffffff size=1>.</style>            in the `DIAGNOSTICS' sections.
+
+<style color=#00ffffff size=1>.</style>            From Limbo, system calls that return values on the heap, for
+<style color=#00ffffff size=1>.</style>            instance strings in Dir structures returned by <action name=sys-stat(2)>sys-stat(2)</action>,
+<style color=#00ffffff size=1>.</style>            and arrays of directory entries returned by <action name=sys-readdir(2)>sys-readdir(2)</action>,
+<style color=#00ffffff size=1>.</style>            can also raise ``out of memory: heap'' exceptions when
+<style color=#00ffffff size=1>.</style>            attempting to create the return value.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

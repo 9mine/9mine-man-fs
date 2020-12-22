@@ -1,0 +1,124 @@
+<action name=NDB(6)>NDB(6)</action>                                                     <action name=NDB(6)>NDB(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ndb - network data base
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            /lib/ndb/local
+<style color=#00ffffff size=1>.</style>            /lib/ndb/inferno
+<style color=#00ffffff size=1>.</style>            /lib/ndb/dns
+<style color=#00ffffff size=1>.</style>            /lib/ndb/common
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Network configuration data is stored in one or more files in
+<style color=#00ffffff size=1>.</style>            the directory /lib/ndb, in the attribute data base format
+<style color=#00ffffff size=1>.</style>            defined by <action name=attrdb(6)>attrdb(6)</action>. Most applications that use it start
+<style color=#00ffffff size=1>.</style>            with /lib/ndb/local by default. That can refer (using a
+<style color=#00ffffff size=1>.</style>            database entry) to other files that form part of the same
+<style color=#00ffffff size=1>.</style>            logical database. They are stored in distinct files to allow
+<style color=#00ffffff size=1>.</style>            different configurations to avoid duplicating data by
+<style color=#00ffffff size=1>.</style>            sharing some common content. For example, /lib/ndb/common
+<style color=#00ffffff size=1>.</style>            associates service names with port numbers for Internet
+<style color=#00ffffff size=1>.</style>            protocols, and /lib/ndb/inferno provides the
+<style color=#00ffffff size=1>.</style>            Inferno-specific port mapping. A database is automatically
+<style color=#00ffffff size=1>.</style>            reread if any component file has changed since it was last
+<style color=#00ffffff size=1>.</style>            read (based on its modification time).
+
+<style color=#00ffffff size=1>.</style>            A network database gives particular meaning to the following
+<style color=#00ffffff size=1>.</style>            attributes:
+<style color=#00ffffff size=1>.</style>            auth         name or address of authentication server
+<style color=#00ffffff size=1>.</style>            bootf        name of the file to send to a device on request
+<style color=#00ffffff size=1>.</style>                         when booting
+<style color=#00ffffff size=1>.</style>            dns          name or address of DNS resolver (see also the
+<style color=#00ffffff size=1>.</style>                         ns attribute below)
+<style color=#00ffffff size=1>.</style>            dnsdomain    domain in which the local host lives (used to
+<style color=#00ffffff size=1>.</style>                         qualify unqualified names)
+<style color=#00ffffff size=1>.</style>            dom          Internet domain name (host or DNS zone)
+<style color=#00ffffff size=1>.</style>            ether        Ethernet address in the form accepted by ether
+<style color=#00ffffff size=1>.</style>                         (2)
+<style color=#00ffffff size=1>.</style>            fs           name or address of file server
+<style color=#00ffffff size=1>.</style>            il           IL service name
+<style color=#00ffffff size=1>.</style>            infernosite  empty-valued attribute that labels default site
+<style color=#00ffffff size=1>.</style>                         parameters
+<style color=#00ffffff size=1>.</style>            ip           Internet address
+<style color=#00ffffff size=1>.</style>            ipgw         name or address of Internet gateway
+<style color=#00ffffff size=1>.</style>            ipmask       Internet network mask
+<style color=#00ffffff size=1>.</style>            ipnet        network or subnetwork name
+<style color=#00ffffff size=1>.</style>            ipv4proto    IPv4 protocol number (see also protocol)
+<style color=#00ffffff size=1>.</style>            mx           mail exchanger
+<style color=#00ffffff size=1>.</style>            ns           name of a DNS name server for an associated dom
+<style color=#00ffffff size=1>.</style>            port         port number for a service
+<style color=#00ffffff size=1>.</style>            protocol     protocol name
+<style color=#00ffffff size=1>.</style>            soa          start of area (value is empty if locally
+<style color=#00ffffff size=1>.</style>                         authoritative, or `delegated' if another server
+<style color=#00ffffff size=1>.</style>                         is authoritative)
+<style color=#00ffffff size=1>.</style>            sys          system name (short local name for a host)
+<style color=#00ffffff size=1>.</style>            tcp          TCP service name
+<style color=#00ffffff size=1>.</style>            udp          UDP service name
+
+<style color=#00ffffff size=1>.</style>            Internet addresses and masks can be written in any form
+<style color=#00ffffff size=1>.</style>            accepted by <action name=Ip(2)>Ip(2)</action>. Network applications might use other
+<style color=#00ffffff size=1>.</style>            attributes of their own, which they document on their own
+<style color=#00ffffff size=1>.</style>            pages.
+
+<style color=#00ffffff size=1>.</style>            Cs (8) interprets a host name of the form $server as
+<style color=#00ffffff size=1>.</style>            referring to the set of names and addresses that are values
+<style color=#00ffffff size=1>.</style>            of the attribute server in the network data base. Attributes
+<style color=#00ffffff size=1>.</style>            in general use include some of those above, and the
+<style color=#00ffffff size=1>.</style>            following:
+<style color=#00ffffff size=1>.</style>            FILESERVER  older name for file server fs file server
+<style color=#00ffffff size=1>.</style>            pop3        mail reading service using the POP3 protocol
+<style color=#00ffffff size=1>.</style>            PROXY       firewall proxy for <action name=ftpfs(4)>ftpfs(4)</action>
+<style color=#00ffffff size=1>.</style>            SIGNER      Inferno authentication server running <action name=logind(8)>logind(8)</action>
+<style color=#00ffffff size=1>.</style>                        and/or <action name=signer(8)>signer(8)</action>
+<style color=#00ffffff size=1>.</style>            smtp        mail delivery gateway using the SMTP protocol
+
+<style color=#00ffffff size=1>.</style>            Other such symbolic server names are mentioned in the manual
+<style color=#00ffffff size=1>.</style>            pages for associated applications.
+
+<style color=#00ffffff size=1>.</style>            <action name=Dns(8)>Dns(8)</action> interprets dns and dnsdomain values in any
+<style color=#00ffffff size=1>.</style>            infernosite entry, and dom, ip, and ns values more
+<style color=#00ffffff size=1>.</style>            generally. When resolving a domain name, dns looks first in
+<style color=#00ffffff size=1>.</style>            this data base to see if there is a dom entry for the name,
+<style color=#00ffffff size=1>.</style>            and if so, whether there is either an associated ns
+<style color=#00ffffff size=1>.</style>            attribute giving a name server to ask, or an ip attribute
+<style color=#00ffffff size=1>.</style>            giving the name's IP address. Failing that, it works up the
+<style color=#00ffffff size=1>.</style>            name hierarchy looking for name servers to ask. Failing
+<style color=#00ffffff size=1>.</style>            that, it looks for a dnsdomain entry with dns attributes
+<style color=#00ffffff size=1>.</style>            listing other resolvers to ask. Bootstrap data is commonly
+<style color=#00ffffff size=1>.</style>            stored in /lib/ndb/dns\; by default it defines the root name
+<style color=#00ffffff size=1>.</style>            servers:
+
+<style color=#00ffffff size=1>.</style>                 dom=    # root
+<style color=#00ffffff size=1>.</style>                 	ns=a.root-servers.net
+<style color=#00ffffff size=1>.</style>                 	ns=b.root-servers.net
+<style color=#00ffffff size=1>.</style>                 	...
+<style color=#00ffffff size=1>.</style>                 dom=a.root-servers.net ip=198.41.0.4
+<style color=#00ffffff size=1>.</style>                 dom=b.root-servers.net ip=128.9.0.107
+<style color=#00ffffff size=1>.</style>                 	...
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Specify the site's default DNS domain name and resolvers for
+<style color=#00ffffff size=1>.</style>            <action name=dns(8)>dns(8)</action>, and a collection of symbolic service names for cs
+<style color=#00ffffff size=1>.</style>            (8):
+
+<style color=#00ffffff size=1>.</style>                 infernosite=
+<style color=#00ffffff size=1>.</style>                 	dnsdomain=vitanuova.com
+<style color=#00ffffff size=1>.</style>                 	dns=200.1.1.11
+<style color=#00ffffff size=1>.</style>                 	dns=158.152.1.58
+<style color=#00ffffff size=1>.</style>                 	dns=158.152.1.43
+<style color=#00ffffff size=1>.</style>                 	SIGNER=doppio
+<style color=#00ffffff size=1>.</style>                 	FILESERVER=doppio
+<style color=#00ffffff size=1>.</style>                 	smtp=doppio
+<style color=#00ffffff size=1>.</style>                 	pop3=doppio
+<style color=#00ffffff size=1>.</style>                 	PROXY=doppio
+<style color=#00ffffff size=1>.</style>                 	GAMES=vivido
+<style color=#00ffffff size=1>.</style>                 	IRMSERVER=vivido
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/ndb/*
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=attrdb(2)>attrdb(2)</action>, <action name=attrdb(6)>attrdb(6)</action>, <action name=bootpd(8)>bootpd(8)</action>, <action name=cs(8)>cs(8)</action>, <action name=dns(8)>dns(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

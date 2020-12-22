@@ -1,0 +1,273 @@
+<action name=9P-NINEP(2)>9P-NINEP(2)</action>                                           <action name=9P-NINEP(2)>9P-NINEP(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Ninep: Rmsg, Tmsg, dir2text, istmsg, packdir, packdirsize,
+<style color=#00ffffff size=1>.</style>            readmsg, qid2text, unpackdir - interface to 9P file protocol
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "9p.m"\;
+<style color=#00ffffff size=1>.</style>            ninep := load Ninep Ninep->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Tmsg: adt {
+<style color=#00ffffff size=1>.</style>                tag: int\;
+<style color=#00ffffff size=1>.</style>                pick {
+<style color=#00ffffff size=1>.</style>                Readerror =>
+<style color=#00ffffff size=1>.</style>                    error: string\;      # tag is unused in this case
+<style color=#00ffffff size=1>.</style>                Version =>
+<style color=#00ffffff size=1>.</style>                    msize: int\;
+<style color=#00ffffff size=1>.</style>                    version: string\;
+<style color=#00ffffff size=1>.</style>                Auth =>
+<style color=#00ffffff size=1>.</style>                    afid: int\;
+<style color=#00ffffff size=1>.</style>                    uname, aname: string\;
+<style color=#00ffffff size=1>.</style>                Attach =>
+<style color=#00ffffff size=1>.</style>                    fid, afid: int\;
+<style color=#00ffffff size=1>.</style>                    uname, aname: string\;
+<style color=#00ffffff size=1>.</style>                Flush =>
+<style color=#00ffffff size=1>.</style>                    oldtag: int\;
+<style color=#00ffffff size=1>.</style>                Walk =>
+<style color=#00ffffff size=1>.</style>                    fid, newfid: int\;
+<style color=#00ffffff size=1>.</style>                    names: array of string\;
+<style color=#00ffffff size=1>.</style>                Open =>
+<style color=#00ffffff size=1>.</style>                    fid, mode: int\;
+<style color=#00ffffff size=1>.</style>                Create =>
+<style color=#00ffffff size=1>.</style>                    fid: int\;
+<style color=#00ffffff size=1>.</style>                    name: string\;
+<style color=#00ffffff size=1>.</style>                    perm, mode: int\;
+<style color=#00ffffff size=1>.</style>                Read =>
+<style color=#00ffffff size=1>.</style>                    fid: int\;
+<style color=#00ffffff size=1>.</style>                    offset: big\;
+<style color=#00ffffff size=1>.</style>                    count: int\;
+<style color=#00ffffff size=1>.</style>                Write =>
+<style color=#00ffffff size=1>.</style>                    fid: int\;
+<style color=#00ffffff size=1>.</style>                    offset: big\;
+<style color=#00ffffff size=1>.</style>                    data: array of byte\;
+<style color=#00ffffff size=1>.</style>                Clunk or
+<style color=#00ffffff size=1>.</style>                Stat or
+<style color=#00ffffff size=1>.</style>                Remove => 
+<style color=#00ffffff size=1>.</style>                    fid: int\;
+<style color=#00ffffff size=1>.</style>                Wstat =>
+<style color=#00ffffff size=1>.</style>                    fid: int\;
+<style color=#00ffffff size=1>.</style>                    stat: Sys->Dir\;
+<style color=#00ffffff size=1>.</style>                }
+
+<style color=#00ffffff size=1>.</style>                read:   fn(fd: ref Sys->FD, msize: int): ref Tmsg\;
+<style color=#00ffffff size=1>.</style>                unpack: fn(a: array of byte): (int, ref Tmsg)\;
+<style color=#00ffffff size=1>.</style>                pack:   fn(nil: self ref Tmsg): array of byte\;
+<style color=#00ffffff size=1>.</style>                packedsize: fn(nil: self ref Tmsg): int\;
+<style color=#00ffffff size=1>.</style>                text:   fn(nil: self ref Tmsg): string\;
+<style color=#00ffffff size=1>.</style>                mtype:  fn(nil: self ref Tmsg): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Rmsg: adt {
+<style color=#00ffffff size=1>.</style>                tag: int\;
+<style color=#00ffffff size=1>.</style>                pick {
+<style color=#00ffffff size=1>.</style>                Readerror =>
+<style color=#00ffffff size=1>.</style>                    error: string\;      # tag is unused in this case
+<style color=#00ffffff size=1>.</style>                Version =>
+<style color=#00ffffff size=1>.</style>                    msize: int\;
+<style color=#00ffffff size=1>.</style>                    version: string\;
+<style color=#00ffffff size=1>.</style>                Auth =>
+<style color=#00ffffff size=1>.</style>                    aqid: Sys->Qid\;
+<style color=#00ffffff size=1>.</style>                Attach =>
+<style color=#00ffffff size=1>.</style>                    qid: Sys->Qid\;
+<style color=#00ffffff size=1>.</style>                Flush =>
+<style color=#00ffffff size=1>.</style>                Error =>
+<style color=#00ffffff size=1>.</style>                    ename: string\;
+<style color=#00ffffff size=1>.</style>                Clunk or
+<style color=#00ffffff size=1>.</style>                Remove or
+<style color=#00ffffff size=1>.</style>                Wstat =>
+<style color=#00ffffff size=1>.</style>                Walk =>
+<style color=#00ffffff size=1>.</style>                    qids: array of Sys->Qid\;
+<style color=#00ffffff size=1>.</style>                Create or
+<style color=#00ffffff size=1>.</style>                Open =>
+<style color=#00ffffff size=1>.</style>                    qid: Sys->Qid\;
+<style color=#00ffffff size=1>.</style>                    iounit: int\;
+<style color=#00ffffff size=1>.</style>                Read =>
+<style color=#00ffffff size=1>.</style>                    data: array of byte\;
+<style color=#00ffffff size=1>.</style>                Write =>
+<style color=#00ffffff size=1>.</style>                    count: int\;
+<style color=#00ffffff size=1>.</style>                Stat =>
+<style color=#00ffffff size=1>.</style>                    stat: Sys->Dir\;
+<style color=#00ffffff size=1>.</style>                }
+
+<style color=#00ffffff size=1>.</style>                read:   fn(fd: ref Sys->FD, msize: int): ref Rmsg\;
+<style color=#00ffffff size=1>.</style>                unpack: fn(a: array of byte): (int, ref Rmsg)\;
+<style color=#00ffffff size=1>.</style>                pack:   fn(nil: self ref Rmsg): array of byte\;
+<style color=#00ffffff size=1>.</style>                packedsize: fn(nil: self ref Rmsg): int\;
+<style color=#00ffffff size=1>.</style>                text:   fn(nil: self ref Rmsg): string\;
+<style color=#00ffffff size=1>.</style>                mtype:  fn(nil: self ref Rmsg): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:        fn()\;
+
+<style color=#00ffffff size=1>.</style>            readmsg:     fn(fd: ref Sys->FD, msize: int): (array of byte, string)\;
+<style color=#00ffffff size=1>.</style>            istmsg:      fn(f: array of byte): int\;
+
+<style color=#00ffffff size=1>.</style>            compatible:  fn(t: ref Tmsg.Version, msize: int, version: string): (int, string)\;
+
+<style color=#00ffffff size=1>.</style>            packdirsize: fn(d: Sys->Dir): int\;
+<style color=#00ffffff size=1>.</style>            packdir:     fn(d: Sys->Dir): array of byte\;
+<style color=#00ffffff size=1>.</style>            unpackdir:   fn(f: array of byte): (int, Sys->Dir)\;
+<style color=#00ffffff size=1>.</style>            dir2text:    fn(d: Sys->Dir): string\;
+<style color=#00ffffff size=1>.</style>            qid2text:    fn(q: Sys->Qid): string\;
+
+<style color=#00ffffff size=1>.</style>            VERSION:  con "9P2000"\;
+<style color=#00ffffff size=1>.</style>            MAXWELEM: con 16\;
+<style color=#00ffffff size=1>.</style>            NOTAG:    con 16rFFFF\;
+<style color=#00ffffff size=1>.</style>            NOFID:    con ~0\;
+<style color=#00ffffff size=1>.</style>            IOHDRSZ:  con implementation-defined\;
+<style color=#00ffffff size=1>.</style>            DEFMSIZE: con implementation-defined\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ninep provides a Limbo interface to send and receive
+<style color=#00ffffff size=1>.</style>            messages of the 9P file service protocol, described by
+<style color=#00ffffff size=1>.</style>            Section 5 of this manual, a thorough reading of which is
+<style color=#00ffffff size=1>.</style>            advised before using this module. Init must be called before
+<style color=#00ffffff size=1>.</style>            using any other function in the module.
+
+<style color=#00ffffff size=1>.</style>            A 9P client transmits requests to a server as `T-messages'
+<style color=#00ffffff size=1>.</style>            and receives replies in matching `R-messages'. A T-message
+<style color=#00ffffff size=1>.</style>            is here represented by values of the type Tmsg, and an
+<style color=#00ffffff size=1>.</style>            R-message by values of type Rmsg. Every message has a tag
+<style color=#00ffffff size=1>.</style>            value, and the alternatives of the pick adt represent the
+<style color=#00ffffff size=1>.</style>            possible operation types of a T-message, generally with
+<style color=#00ffffff size=1>.</style>            parameter names and types corresponding to those described
+<style color=#00ffffff size=1>.</style>            in section 5. The exceptions are: Tmsg.Write and Rmsg.Read
+<style color=#00ffffff size=1>.</style>            contain an array of byte, data, to hold the data for the
+<style color=#00ffffff size=1>.</style>            corresponding message, and the `count' parameter of the
+<style color=#00ffffff size=1>.</style>            message is simply the length of that array\; and there is an
+<style color=#00ffffff size=1>.</style>            alternative labelled Readerror that does not appear in the
+<style color=#00ffffff size=1>.</style>            protocol but is used to represent input errors as described
+<style color=#00ffffff size=1>.</style>            below. Also note that values that are `unsigned' integers in
+<style color=#00ffffff size=1>.</style>            the protocol are typically given signed integer types in the
+<style color=#00ffffff size=1>.</style>            Limbo representation (in particular, fids, qid paths, counts
+<style color=#00ffffff size=1>.</style>            and offsets), and applications should take appropriate care
+<style color=#00ffffff size=1>.</style>            when manipulating them.
+
+<style color=#00ffffff size=1>.</style>            The following functions are provided by Tmsg:
+
+<style color=#00ffffff size=1>.</style>            read(fd, msize)
+<style color=#00ffffff size=1>.</style>                 Read file descriptor fd to obtain exactly one T-message
+<style color=#00ffffff size=1>.</style>                 and return (a reference to) the corresponding Tmsg. A
+<style color=#00ffffff size=1>.</style>                 nil value is returned on end of file. Otherwise, if the
+<style color=#00ffffff size=1>.</style>                 read fails or the data read does not form a valid
+<style color=#00ffffff size=1>.</style>                 T-message, the value returned will be a Tmsg.Readerror
+<style color=#00ffffff size=1>.</style>                 value in which the error member describes the error.
+<style color=#00ffffff size=1>.</style>                 Msize gives the maximum number of bytes in any
+<style color=#00ffffff size=1>.</style>                 acceptable T-message, and should be the value
+<style color=#00ffffff size=1>.</style>                 negotiated in the exchange of version messages\; any
+<style color=#00ffffff size=1>.</style>                 incoming message larger than that will result in a
+<style color=#00ffffff size=1>.</style>                 diagnostic as a Tmsg.Readerror value. An msize of 0
+<style color=#00ffffff size=1>.</style>                 means `no limit negotiated' and should (only) be used
+<style color=#00ffffff size=1>.</style>                 until a message size has been negotiated by exchange of
+<style color=#00ffffff size=1>.</style>                 <action name=version(5)>version(5)</action> messages.
+
+<style color=#00ffffff size=1>.</style>            t.pack()
+<style color=#00ffffff size=1>.</style>                 Return an array of bytes containing the value of t in
+<style color=#00ffffff size=1>.</style>                 the machine-independent format described in Section 5.
+<style color=#00ffffff size=1>.</style>                 It can return nil only if the message t is itself nil
+<style color=#00ffffff size=1>.</style>                 or has an invalid type.
+
+<style color=#00ffffff size=1>.</style>            unpack(a)
+<style color=#00ffffff size=1>.</style>                 The array a is assumed to contain zero or more
+<style color=#00ffffff size=1>.</style>                 T-messages. Unpack attempts to unpack the first
+<style color=#00ffffff size=1>.</style>                 message, and returns a tuple of the form (n,v). If
+<style color=#00ffffff size=1>.</style>                 successful, n is the number of bytes at the start of a
+<style color=#00ffffff size=1>.</style>                 used by the message, and v is the corresponding Tmsg
+<style color=#00ffffff size=1>.</style>                 value. If a contains the prefix of a valid message but
+<style color=#00ffffff size=1>.</style>                 more data is required to complete it, n is zero (and v
+<style color=#00ffffff size=1>.</style>                 is nil)\; the caller will typically read more data,
+<style color=#00ffffff size=1>.</style>                 append it to a, and try again. If the message is
+<style color=#00ffffff size=1>.</style>                 invalid, n is -1 and v is nil.
+
+<style color=#00ffffff size=1>.</style>            t.packedsize()
+<style color=#00ffffff size=1>.</style>                 Return the number of bytes required for the value of t
+<style color=#00ffffff size=1>.</style>                 when packed in its machine-independent format. (Zero is
+<style color=#00ffffff size=1>.</style>                 returned if t is invalid.)
+
+<style color=#00ffffff size=1>.</style>            t.text()
+<style color=#00ffffff size=1>.</style>                 Return a printable string showing the contents of t,
+<style color=#00ffffff size=1>.</style>                 for tracing or debugging.
+
+<style color=#00ffffff size=1>.</style>            t.mtype()
+<style color=#00ffffff size=1>.</style>                 Return the 9P message type of the message.
+
+<style color=#00ffffff size=1>.</style>            An R-message is represented by Rmsg. Its member functions
+<style color=#00ffffff size=1>.</style>            behave exactly as those for Tmsg, except that they operate
+<style color=#00ffffff size=1>.</style>            on R-messages not T-messages.
+
+<style color=#00ffffff size=1>.</style>            When a client reads a directory, the data returned in the
+<style color=#00ffffff size=1>.</style>            reply must be formatted as described in <action name=read(5)>read(5)</action>: an array of
+<style color=#00ffffff size=1>.</style>            directory entries, one per file, with each entry formatted
+<style color=#00ffffff size=1>.</style>            in a machine-independent format. An appropriate array value
+<style color=#00ffffff size=1>.</style>            can be produced by packdir from a Sys->Dir structure, as
+<style color=#00ffffff size=1>.</style>            used by <action name=sys-stat(2)>sys-stat(2)</action>. The space that packed representation
+<style color=#00ffffff size=1>.</style>            will take can be calculated beforehand by packdirsize. The
+<style color=#00ffffff size=1>.</style>            server will usually fill the buffer for the reply to the
+<style color=#00ffffff size=1>.</style>            read with as many entries as will fit, checking the space
+<style color=#00ffffff size=1>.</style>            remaining against the result of packdirsize and if the value
+<style color=#00ffffff size=1>.</style>            will fit, storing the result of packdir. Given an array a
+<style color=#00ffffff size=1>.</style>            containing at most one packed directory value (as produced
+<style color=#00ffffff size=1>.</style>            by packdir), unpackdir returns a tuple (n, d) where n is -1
+<style color=#00ffffff size=1>.</style>            if a is illegally formatted\; n is zero if a does not contain
+<style color=#00ffffff size=1>.</style>            a complete directory entry value\; and otherwise n is the
+<style color=#00ffffff size=1>.</style>            number of bytes of a used to produce the unpacked Dir value
+<style color=#00ffffff size=1>.</style>            d .
+
+<style color=#00ffffff size=1>.</style>            The functions dir2text and qid2text produce printable
+<style color=#00ffffff size=1>.</style>            strings showing the contents of the corresponding data
+<style color=#00ffffff size=1>.</style>            structures, for use when tracing or debugging.
+
+<style color=#00ffffff size=1>.</style>            Applications that acts as file servers will read T-messages
+<style color=#00ffffff size=1>.</style>            and reply with R-messages. They can use Tmsg.read to read
+<style color=#00ffffff size=1>.</style>            each T-message, build an Rmsg reply value r, and use r.pack
+<style color=#00ffffff size=1>.</style>            to produce an array of bytes to be written in reply by
+<style color=#00ffffff size=1>.</style>            Sys->write (see <action name=sys-read(2)>sys-read(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            A few specialised programs might need the lower-level
+<style color=#00ffffff size=1>.</style>            function readmsg that underlies Tmsg.read and Rmsg.read. It
+<style color=#00ffffff size=1>.</style>            reads a single message, which can be either a T-message or
+<style color=#00ffffff size=1>.</style>            R-message, and returns it as an array of bytes, which can
+<style color=#00ffffff size=1>.</style>            then be unpacked using Tmsg.unpack or Rmsg.unpack. Msize is
+<style color=#00ffffff size=1>.</style>            the negotiated message size, or 0 meaning `no limit'. The
+<style color=#00ffffff size=1>.</style>            predicate istmsg returns true if the contents of array f
+<style color=#00ffffff size=1>.</style>            looks like a packed representation of a T-message, judging
+<style color=#00ffffff size=1>.</style>            only by its type byte.
+
+<style color=#00ffffff size=1>.</style>            When generating the version message (see <action name=version(5)>version(5)</action>), the
+<style color=#00ffffff size=1>.</style>            constant NOTAG can be used in Tmsg.tag and Rmsg.tag to
+<style color=#00ffffff size=1>.</style>            represent `no tag value'. The constant VERSION names the
+<style color=#00ffffff size=1>.</style>            current version of the protocol, and can be used as the
+<style color=#00ffffff size=1>.</style>            value of Tmsg.version.
+
+<style color=#00ffffff size=1>.</style>            Compatible can be used by a server to compare its msize and
+<style color=#00ffffff size=1>.</style>            version (which is typically VERSION) to those in the
+<style color=#00ffffff size=1>.</style>            Tmsg.Version message received from a client, to decide its
+<style color=#00ffffff size=1>.</style>            reply, following the rules in <action name=version(5)>version(5)</action>. It returns a tuple
+<style color=#00ffffff size=1>.</style>            (m, v) with values for use in the Rmsg.Version reply. M is
+<style color=#00ffffff size=1>.</style>            the lesser of msize and t.msize, and v is the negotiated
+<style color=#00ffffff size=1>.</style>            protocol version, or the value "unknown" if no version could
+<style color=#00ffffff size=1>.</style>            be agreed. The constant DEFMSIZE is a reasonable value for
+<style color=#00ffffff size=1>.</style>            msize on current systems. The resulting value m can
+<style color=#00ffffff size=1>.</style>            subsequently be given to the various read functions as the
+<style color=#00ffffff size=1>.</style>            limit msize. The constant IOHDRSZ gives the amount to allow
+<style color=#00ffffff size=1>.</style>            for protocol overhead, when limiting data size for
+<style color=#00ffffff size=1>.</style>            Tmsg.Write and Rmsg.Read.
+
+<style color=#00ffffff size=1>.</style>            The constant NOFID can be used as the value of afid of the
+<style color=#00ffffff size=1>.</style>            attach message when authentication is not required (see
+<style color=#00ffffff size=1>.</style>            <action name=attach(5)>attach(5)</action>).
+
+<style color=#00ffffff size=1>.</style>            The constant MAXWELEM gives the protocol-defined limit on
+<style color=#00ffffff size=1>.</style>            the length of the arrays Tmsg.names and Rmsg.qids. For
+<style color=#00ffffff size=1>.</style>            specialised applications, the module defines constants
+<style color=#00ffffff size=1>.</style>            Tversion, Rversion, etc. for the message types of the
+<style color=#00ffffff size=1>.</style>            protocol, and the other constants mentioned in Section 5.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/ninep.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=styxservers(2)>styxservers(2)</action>, <action name=intro(5)>intro(5)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

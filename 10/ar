@@ -1,0 +1,66 @@
+AR(10.6)                                                 AR(10.6)
+
+NAME
+<style color=#00ffffff size=1>.</style>            ar - archive (library) file format
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            #include <ar.h>
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The archive command iar(10.1) is used to combine several
+<style color=#00ffffff size=1>.</style>            files into one. Archives are used mainly as libraries to be
+<style color=#00ffffff size=1>.</style>            searched by the loaders 2l(10.1) et al.
+
+<style color=#00ffffff size=1>.</style>            A file produced by ar has a magic string at the start,
+<style color=#00ffffff size=1>.</style>            followed by the constituent files, each preceded by a file
+<style color=#00ffffff size=1>.</style>            header. The magic number and header layout as described in
+<style color=#00ffffff size=1>.</style>            the include file are:
+
+<style color=#00ffffff size=1>.</style>                 #define ARMAG   "!<arch>\n"
+<style color=#00ffffff size=1>.</style>                 #define SARMAG  8
+
+<style color=#00ffffff size=1>.</style>                 #define ARFMAG  "`\n"
+
+<style color=#00ffffff size=1>.</style>                 struct ar_hdr {
+<style color=#00ffffff size=1>.</style>                     char    name\[16\]\;
+<style color=#00ffffff size=1>.</style>                     char    date\[12\]\;
+<style color=#00ffffff size=1>.</style>                     char    uid\[6\]\;
+<style color=#00ffffff size=1>.</style>                     char    gid\[6\]\;
+<style color=#00ffffff size=1>.</style>                     char    mode\[8\]\;
+<style color=#00ffffff size=1>.</style>                     char    size\[10\]\;
+<style color=#00ffffff size=1>.</style>                     char    fmag\[2\]\;
+<style color=#00ffffff size=1>.</style>                 }\;
+<style color=#00ffffff size=1>.</style>                 #define SAR_HDR 60
+
+<style color=#00ffffff size=1>.</style>            The name is a blank-padded string. The ``fmag'' field
+<style color=#00ffffff size=1>.</style>            contains ``ARFMAG'' to help verify the presence of a header.
+<style color=#00ffffff size=1>.</style>            The other fields are left-adjusted, blank-padded numbers.
+<style color=#00ffffff size=1>.</style>            They are decimal except for `mode', which is octal. The date
+<style color=#00ffffff size=1>.</style>            is the modification date of the file (see <action name=sys-stat(2)>sys-stat(2)</action>) at
+<style color=#00ffffff size=1>.</style>            the time of its insertion into the archive. The mode is the
+<style color=#00ffffff size=1>.</style>            low 9 bits of the file permission mode. The length of the
+<style color=#00ffffff size=1>.</style>            header is `SAR_HDR'. Because the ``ar_hdr'' structure is
+<style color=#00ffffff size=1>.</style>            padded in an architecture-dependent manner, the structure
+<style color=#00ffffff size=1>.</style>            should never be read or written as a unit\; instead, each
+<style color=#00ffffff size=1>.</style>            field should be read or written independently.
+
+<style color=#00ffffff size=1>.</style>            Each file begins on an even (0 mod 2) boundary\; a newline is
+<style color=#00ffffff size=1>.</style>            inserted between files if necessary. Nevertheless size
+<style color=#00ffffff size=1>.</style>            reflects the actual size of the file exclusive of padding.
+
+<style color=#00ffffff size=1>.</style>            When all members of an archive are object files of the same
+<style color=#00ffffff size=1>.</style>            architecture, ar automatically adds an extra file, named
+<style color=#00ffffff size=1>.</style>            __.SYMDEF, as the first member of the archive.  This file
+<style color=#00ffffff size=1>.</style>            contains an index used by the loaders to locate all
+<style color=#00ffffff size=1>.</style>            externally defined text and data symbols in the archive.
+
+<style color=#00ffffff size=1>.</style>            There is no provision for empty areas in an archive file.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            iar(10.1), 2l(10.1), inm(10.1), <action name=sys-stat(2)>sys-stat(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The uid and gid fields are unused. They provide
+<style color=#00ffffff size=1>.</style>            compatibility with Unix ar format.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

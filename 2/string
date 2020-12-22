@@ -1,0 +1,113 @@
+<action name=STRING(2)>STRING(2)</action>                                               <action name=STRING(2)>STRING(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            string: append, drop, in, prefix, quoted, splitl, splitr,
+<style color=#00ffffff size=1>.</style>            splitstrl, splitstrr, take, tobig, toint, toreal, tolower,
+<style color=#00ffffff size=1>.</style>            toupper, unquoted - string operations
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "string.m"\;
+<style color=#00ffffff size=1>.</style>            str := load String String->PATH\;
+
+<style color=#00ffffff size=1>.</style>            append:    fn(s: string, l: list of string): list of string\;
+<style color=#00ffffff size=1>.</style>            drop:      fn(s, cl: string): string\;
+<style color=#00ffffff size=1>.</style>            in:        fn(c: int, cl: string): int\;
+<style color=#00ffffff size=1>.</style>            prefix:    fn(pre, s: string): int\;
+<style color=#00ffffff size=1>.</style>            splitl:    fn(s, cl: string): (string, string)\;
+<style color=#00ffffff size=1>.</style>            splitr:    fn(s, cl: string): (string, string)\;
+<style color=#00ffffff size=1>.</style>            splitstrl: fn(s, t: string): (string, string)\;
+<style color=#00ffffff size=1>.</style>            splitstrr: fn(s, t: string): (string, string)\;
+<style color=#00ffffff size=1>.</style>            take:      fn(s, cl: string): string\;
+<style color=#00ffffff size=1>.</style>            tobig:     fn(s: string, base: int): (big, string)\;
+<style color=#00ffffff size=1>.</style>            toint:     fn(s: string, base: int): (int, string)\;
+<style color=#00ffffff size=1>.</style>            toreal:    fn(s: string, base: int): (real, string)\;
+<style color=#00ffffff size=1>.</style>            tolower:   fn(s: string): string\;
+<style color=#00ffffff size=1>.</style>            toupper:   fn(s: string): string\;
+<style color=#00ffffff size=1>.</style>            quoted:    fn(args: list of string): string\;
+<style color=#00ffffff size=1>.</style>            unquoted:  fn(s: string): list of string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The cl argument to some of these functions is a character
+<style color=#00ffffff size=1>.</style>            class in which a - between any two characters indicates a
+<style color=#00ffffff size=1>.</style>            range and a ^ in the first position means not in the class.
+<style color=#00ffffff size=1>.</style>            Example of classes are a-zA-Z and "^acg-mr"\c .
+
+<style color=#00ffffff size=1>.</style>            Append appends string s to the end of string list l.
+
+<style color=#00ffffff size=1>.</style>            Drop removes the maximal prefix of string s that is in class
+<style color=#00ffffff size=1>.</style>            cl.
+
+<style color=#00ffffff size=1>.</style>            In returns 1 if character c is in class cl and 0 if it is
+<style color=#00ffffff size=1>.</style>            not. 
+
+<style color=#00ffffff size=1>.</style>            Prefix returns 1 if string pre is a prefix of string s and 0
+<style color=#00ffffff size=1>.</style>            if it is not.
+
+<style color=#00ffffff size=1>.</style>            Splitl splits string s just before the first character in
+<style color=#00ffffff size=1>.</style>            class cl.
+
+<style color=#00ffffff size=1>.</style>            Splitr splits string s just after the last character in
+<style color=#00ffffff size=1>.</style>            class cl.
+
+<style color=#00ffffff size=1>.</style>            Splitstrl splits string s just before the leftmost segment
+<style color=#00ffffff size=1>.</style>            of string s that consists entirely of string t, and returns
+<style color=#00ffffff size=1>.</style>            a tuple with the resulting pair of strings. If t does not
+<style color=#00ffffff size=1>.</style>            occur in s, the result is (s,nil).
+
+<style color=#00ffffff size=1>.</style>            Splitstrr splits string s just after the rightmost segment
+<style color=#00ffffff size=1>.</style>            of string s that consists entirely of string t, and returns
+<style color=#00ffffff size=1>.</style>            a tuple with the resulting pair of strings. If t does not
+<style color=#00ffffff size=1>.</style>            occur in s, the result is (nil,s).
+
+<style color=#00ffffff size=1>.</style>            Take returns the maximal prefix of string s that is in class
+<style color=#00ffffff size=1>.</style>            cl.
+
+<style color=#00ffffff size=1>.</style>            Toint returns as an integer the value represented by the
+<style color=#00ffffff size=1>.</style>            string s. The string is scanned up to the first character
+<style color=#00ffffff size=1>.</style>            inconsistent with base. The first inconsistent character
+<style color=#00ffffff size=1>.</style>            marks the beginning of the returned string. Leading
+<style color=#00ffffff size=1>.</style>            white-space characters are ignored. The base can be any
+<style color=#00ffffff size=1>.</style>            integer in the range 2 to 36, inclusive\; or 0 in which case
+<style color=#00ffffff size=1>.</style>            the base can be specified as part of the string, in Limbo
+<style color=#00ffffff size=1>.</style>            style (e.g. 16rffff).
+
+<style color=#00ffffff size=1>.</style>            Tobig has the same specification as toint except that
+<style color=#00ffffff size=1>.</style>            converts to 64-bit big.
+
+<style color=#00ffffff size=1>.</style>            Toreal is similar to toint, except that it expects a
+<style color=#00ffffff size=1>.</style>            floating-point number after optional leading white space: an
+<style color=#00ffffff size=1>.</style>            optional sign, then a string of digits containing a decimal
+<style color=#00ffffff size=1>.</style>            point, then an optional `e' or `E' followed by an optionally
+<style color=#00ffffff size=1>.</style>            signed decimal integer exponent. The string of digits can
+<style color=#00ffffff size=1>.</style>            optionally be preceded by a base (radix) specifier of the
+<style color=#00ffffff size=1>.</style>            form Br, as for integers. Any exponent is then interpreted
+<style color=#00ffffff size=1>.</style>            as a power of that base. Alternatively, following any
+<style color=#00ffffff size=1>.</style>            leading white space and an optional sign, either nan or
+<style color=#00ffffff size=1>.</style>            infinity can appear, in any case, and toreal will return the
+<style color=#00ffffff size=1>.</style>            appropriate value for IEEE floating-point.
+
+<style color=#00ffffff size=1>.</style>            Tolower converts all upper case letters in the string s to
+<style color=#00ffffff size=1>.</style>            lower case letters.
+
+<style color=#00ffffff size=1>.</style>            Toupper converts all lower case letters in the string s to
+<style color=#00ffffff size=1>.</style>            upper case letters.
+
+<style color=#00ffffff size=1>.</style>            Quoted takes a list of strings, args, and returns a single
+<style color=#00ffffff size=1>.</style>            string with the value of each element of args separated from
+<style color=#00ffffff size=1>.</style>            the next by a single space. When forming the string, the
+<style color=#00ffffff size=1>.</style>            text of any element that contains white space or single
+<style color=#00ffffff size=1>.</style>            quotes is first quoted by surrounding it by single quotes ('
+<style color=#00ffffff size=1>.</style>            ...') within which each existing single quote is doubled (''
+<style color=#00ffffff size=1>.</style>            ), following the conventions of <action name=sh(1)>sh(1)</action>.
+
+<style color=#00ffffff size=1>.</style>            Unquoted takes a string s, quoted according to the
+<style color=#00ffffff size=1>.</style>            conventions of quoted, and splits it into separate strings.
+<style color=#00ffffff size=1>.</style>            It splits the string at each maximal sequence of unquoted
+<style color=#00ffffff size=1>.</style>            white space (blank, newline or tab), stripping single quotes
+<style color=#00ffffff size=1>.</style>            except where paired, to form the corresponding list of
+<style color=#00ffffff size=1>.</style>            strings, which it returns.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/string.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

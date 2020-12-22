@@ -1,0 +1,229 @@
+<action name=W3C-CSS(2)>W3C-CSS(2)</action>                                             <action name=W3C-CSS(2)>W3C-CSS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            w3c-css - cascading style sheet parser
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "css.m"\;
+
+<style color=#00ffffff size=1>.</style>            css := load CSS CSS->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Stylesheet: adt {
+<style color=#00ffffff size=1>.</style>               charset:    string\;
+<style color=#00ffffff size=1>.</style>               imports:    list of ref Import\;
+<style color=#00ffffff size=1>.</style>               statements: list of ref Statement\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Import: adt {
+<style color=#00ffffff size=1>.</style>               name:   string\;
+<style color=#00ffffff size=1>.</style>               media:  list of string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Statement: adt {
+<style color=#00ffffff size=1>.</style>               pick{
+<style color=#00ffffff size=1>.</style>               Media =>
+<style color=#00ffffff size=1>.</style>                   media:  list of string\;
+<style color=#00ffffff size=1>.</style>                   rules:  list of ref Statement.Ruleset\;
+<style color=#00ffffff size=1>.</style>               Page =>
+<style color=#00ffffff size=1>.</style>                   pseudo: string\;
+<style color=#00ffffff size=1>.</style>                   decls:  list of ref Decl\;
+<style color=#00ffffff size=1>.</style>               Ruleset =>
+<style color=#00ffffff size=1>.</style>                   selectors: list of Selector\;
+<style color=#00ffffff size=1>.</style>                   decls:     list of ref Decl\;
+<style color=#00ffffff size=1>.</style>               }
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Decl: adt {
+<style color=#00ffffff size=1>.</style>               property:   string\;
+<style color=#00ffffff size=1>.</style>               values:     list of ref Value\;
+<style color=#00ffffff size=1>.</style>               important:  int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Selector:   type list of (int, Simplesel)\;   # (combinator, simplesel)
+<style color=#00ffffff size=1>.</style>            Simplesel:  type list of ref Select\;
+
+<style color=#00ffffff size=1>.</style>            Select: adt {
+<style color=#00ffffff size=1>.</style>               name:   string\;
+<style color=#00ffffff size=1>.</style>               pick{
+<style color=#00ffffff size=1>.</style>               Element or ID or Any or Class or Pseudo =>
+<style color=#00ffffff size=1>.</style>                   # empty
+<style color=#00ffffff size=1>.</style>               Attrib =>
+<style color=#00ffffff size=1>.</style>                   op:     string\; # "=" "~=" "|="
+<style color=#00ffffff size=1>.</style>                   value:  ref Value\;  # optional Ident or String
+<style color=#00ffffff size=1>.</style>               Pseudofn =>
+<style color=#00ffffff size=1>.</style>                   arg:    string\;
+<style color=#00ffffff size=1>.</style>               }
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Value: adt {
+<style color=#00ffffff size=1>.</style>               sep:    int\;    # operator preceding this term
+<style color=#00ffffff size=1>.</style>               pick{
+<style color=#00ffffff size=1>.</style>               String or
+<style color=#00ffffff size=1>.</style>               Number or
+<style color=#00ffffff size=1>.</style>               Percentage or
+<style color=#00ffffff size=1>.</style>               Url or
+<style color=#00ffffff size=1>.</style>               Unicoderange =>
+<style color=#00ffffff size=1>.</style>                   value:  string\;
+<style color=#00ffffff size=1>.</style>               Hexcolour =>
+<style color=#00ffffff size=1>.</style>                   value:  string\;             # as given
+<style color=#00ffffff size=1>.</style>                   rgb:    (int, int, int)\;    # converted
+<style color=#00ffffff size=1>.</style>               RGB =>
+<style color=#00ffffff size=1>.</style>                   args:   cyclic list of ref Value\;  # as given
+<style color=#00ffffff size=1>.</style>                   rgb:    (int, int, int)\;           # converted
+<style color=#00ffffff size=1>.</style>               Ident =>
+<style color=#00ffffff size=1>.</style>                   name:   string\;
+<style color=#00ffffff size=1>.</style>               Unit =>
+<style color=#00ffffff size=1>.</style>                   value:  string\; # int or float
+<style color=#00ffffff size=1>.</style>                   units:  string\; # suffix giving units
+<style color=#00ffffff size=1>.</style>               Function =>
+<style color=#00ffffff size=1>.</style>                   name:   string\;
+<style color=#00ffffff size=1>.</style>                   args:   cyclic list of ref Value\;
+<style color=#00ffffff size=1>.</style>               }
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:       fn(diag: int)\;
+<style color=#00ffffff size=1>.</style>            parse:      fn(s: string): (ref Stylesheet, string)\;
+<style color=#00ffffff size=1>.</style>            parsedecl:  fn(s: string): (list of ref Decl, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Css implements a parser for the World-Wide Web Consortium's
+<style color=#00ffffff size=1>.</style>            Cascading Style Sheet, specification 2.1.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other operation in the
+<style color=#00ffffff size=1>.</style>            module. If diag is non-zero, the module will print
+<style color=#00ffffff size=1>.</style>            diagnostics on standard output for malformed or unrecognised
+<style color=#00ffffff size=1>.</style>            items that are ignored during parsing (as required by the
+<style color=#00ffffff size=1>.</style>            specification).
+
+<style color=#00ffffff size=1>.</style>            Parse takes a complete stylesheet in string s, parses it,
+<style color=#00ffffff size=1>.</style>            and returns a tuple (sheet, err) where sheet refers to a
+<style color=#00ffffff size=1>.</style>            Stylesheet value containing the logical content of s, as
+<style color=#00ffffff size=1>.</style>            described below. On a fatal error, sheet is nil and err is a
+<style color=#00ffffff size=1>.</style>            diagnostic. Most syntactic errors are ignored, as the
+<style color=#00ffffff size=1>.</style>            specification requires.
+
+<style color=#00ffffff size=1>.</style>            In some applications there can be auxiliary declarations
+<style color=#00ffffff size=1>.</style>            outside a stylesheet. Parsedecl takes a string s containing
+<style color=#00ffffff size=1>.</style>            a sequence of declarations, and returns a tuple (decls, err)
+<style color=#00ffffff size=1>.</style>            where decls is a list of references to Decl values, each
+<style color=#00ffffff size=1>.</style>            representing a single declaration in s. On a fatal error,
+<style color=#00ffffff size=1>.</style>            decls is nil, and err is a diagnostic.
+
+<style color=#00ffffff size=1>.</style>            The adts represent an abstract syntax of the CSS grammar.
+<style color=#00ffffff size=1>.</style>            The concrete syntax is presented below in an extended BNF,
+<style color=#00ffffff size=1>.</style>            derived from the reference grammar, with each section
+<style color=#00ffffff size=1>.</style>            labelled by the name of the corresponding adts. (Compared to
+<style color=#00ffffff size=1>.</style>            the reference grammar in the specification, it abstracts
+<style color=#00ffffff size=1>.</style>            away from the complex rules about where whitespace can
+<style color=#00ffffff size=1>.</style>            appear.)
+
+<style color=#00ffffff size=1>.</style>            Stylesheet
+<style color=#00ffffff size=1>.</style>                 stylesheet ::= \[ '@charset' STRING '\;' \] import* statement*
+
+<style color=#00ffffff size=1>.</style>                 Limbo lists represent lists of items in the grammar.
+<style color=#00ffffff size=1>.</style>                 Nil values denote optional components that are missing.
+<style color=#00ffffff size=1>.</style>                 Upper-case names such as IDENT, STRING and NUMBER are
+<style color=#00ffffff size=1>.</style>                 terminals\; see the CSS specification for their often
+<style color=#00ffffff size=1>.</style>                 subtle definitions. They are usually represented by
+<style color=#00ffffff size=1>.</style>                 Limbo string values in the adts.
+
+<style color=#00ffffff size=1>.</style>            Import
+<style color=#00ffffff size=1>.</style>                 import ::= '@import' (STRING|uri) \[medium (',' medium)*\] '\;'
+<style color=#00ffffff size=1>.</style>                 uri ::= 'url(' STRING ')'
+
+<style color=#00ffffff size=1>.</style>                 Import.name holds the text of the STRING or uri.
+
+<style color=#00ffffff size=1>.</style>            Statement
+<style color=#00ffffff size=1>.</style>                 statement ::= ruleset | media | page
+<style color=#00ffffff size=1>.</style>                 media ::= '@media' medium (',' medium)* '{' ruleset* '}'
+<style color=#00ffffff size=1>.</style>                 medium ::= IDENT
+<style color=#00ffffff size=1>.</style>                 page ::= '@page' \[pseudo_page\] '{' declaration ('\;' declaration)* '}'
+<style color=#00ffffff size=1>.</style>                 pseudo_page ::= ':' IDENT
+<style color=#00ffffff size=1>.</style>                 ruleset ::= selector (',' selector)* '{' declaration ('\;' declaration)* '}'
+
+<style color=#00ffffff size=1>.</style>                 Statement is not in the reference grammar, but is
+<style color=#00ffffff size=1>.</style>                 introduced here to give a name corresponding to the
+<style color=#00ffffff size=1>.</style>                 pick adt.
+
+<style color=#00ffffff size=1>.</style>            Decl
+<style color=#00ffffff size=1>.</style>                 declaration ::= property ':' expr \['!' 'important'\] | /* empty */
+<style color=#00ffffff size=1>.</style>                 property ::= IDENT
+<style color=#00ffffff size=1>.</style>                 Decl.values is a list representing the terms of the
+<style color=#00ffffff size=1>.</style>                 expr (see below for details). Decl's field important is
+<style color=#00ffffff size=1>.</style>                 non-zero if the optional `important' priority is given.
+
+<style color=#00ffffff size=1>.</style>            list of ref Value
+<style color=#00ffffff size=1>.</style>                 expr ::= term (operator term)*
+<style color=#00ffffff size=1>.</style>                 operator ::= '/' | ',' | /* empty */
+
+<style color=#00ffffff size=1>.</style>                 An expr is always represented as a list of references
+<style color=#00ffffff size=1>.</style>                 to Value in some containing structure (where Value
+<style color=#00ffffff size=1>.</style>                 represents a term, see below). The operator preceding
+<style color=#00ffffff size=1>.</style>                 each term appears as the field sep of the corresponding
+<style color=#00ffffff size=1>.</style>                 Value, where a space character represents `empty'
+<style color=#00ffffff size=1>.</style>                 (concatenation).
+
+<style color=#00ffffff size=1>.</style>            Selector
+<style color=#00ffffff size=1>.</style>                 selector ::= simple_selector (combinator simple_selector)*
+<style color=#00ffffff size=1>.</style>                 combinator ::= '+' | '>' | /* empty */
+
+<style color=#00ffffff size=1>.</style>                 Selector is just a type synonym for a list of tuples,
+<style color=#00ffffff size=1>.</style>                 say (com, simplesel) where the simplesel value
+<style color=#00ffffff size=1>.</style>                 represents simple_selector (see below), and the integer
+<style color=#00ffffff size=1>.</style>                 com is one of the characters space (representing
+<style color=#00ffffff size=1>.</style>                 `empty'), `>' or `+', giving the combinator that
+<style color=#00ffffff size=1>.</style>                 preceded the simple selector. (The first in the list is
+<style color=#00ffffff size=1>.</style>                 always space.)
+
+<style color=#00ffffff size=1>.</style>            Simplesel, Select
+<style color=#00ffffff size=1>.</style>                 simple_selector ::= element_name (hash | class | attrib | pseudo)*
+<style color=#00ffffff size=1>.</style>                 	| (hash | class | attrib | pseudo)+
+<style color=#00ffffff size=1>.</style>                 hash ::= '#' NAME
+<style color=#00ffffff size=1>.</style>                 class ::= '.' IDENT
+<style color=#00ffffff size=1>.</style>                 element_name ::= IDENT | '*'
+<style color=#00ffffff size=1>.</style>                 attrib ::= '\[' IDENT \[('=' | '|=' | '~=') (IDENT | STRING)\] '\]'
+<style color=#00ffffff size=1>.</style>                 pseudo ::= ':' ( IDENT | IDENT '(' \[IDENT\] ')' )
+
+<style color=#00ffffff size=1>.</style>                 A simple_selector is represented by Simplesel, a list
+<style color=#00ffffff size=1>.</style>                 of references to Select values, each representing one
+<style color=#00ffffff size=1>.</style>                 element_name or qualifier. An element_name is
+<style color=#00ffffff size=1>.</style>                 represented by Select.Element for an IDENT, or
+<style color=#00ffffff size=1>.</style>                 Select.Any for `*'. The qualifiers are hash (Select.ID
+<style color=#00ffffff size=1>.</style>                 ), class (Select.Class), attrib (Select.Attrib, where
+<style color=#00ffffff size=1>.</style>                 the comparison operator is the string op), pseudo
+<style color=#00ffffff size=1>.</style>                 (either Select.Pseudo if a plain identifier, or
+<style color=#00ffffff size=1>.</style>                 Select.Pseudofn for a function with optional
+<style color=#00ffffff size=1>.</style>                 parameter).
+
+<style color=#00ffffff size=1>.</style>            Value
+<style color=#00ffffff size=1>.</style>                 term ::= \['+' | '-'\] (NUMBER | percent | unit) | STRING | IDENT | uri | function | hexcolour | rgb
+<style color=#00ffffff size=1>.</style>                 function ::= IDENT '(' expr ')'
+<style color=#00ffffff size=1>.</style>                 hash ::= '#' NAME
+<style color=#00ffffff size=1>.</style>                 hexcolour ::= '#' HEXDIGIT+
+<style color=#00ffffff size=1>.</style>                 percent ::= NUMBER '%'
+<style color=#00ffffff size=1>.</style>                 unit ::= NUMBER STRING
+<style color=#00ffffff size=1>.</style>                 rgb ::= 'rgb(' term ',' term ',' term ')'
+<style color=#00ffffff size=1>.</style>                 uri ::= 'url(' STRING ')'
+
+<style color=#00ffffff size=1>.</style>                 Any sign before a Number, Percentage or Unit appears as
+<style color=#00ffffff size=1>.</style>                 the first character of value. All the dimensional units
+<style color=#00ffffff size=1>.</style>                 (LENGTH, EMS, EXS, ANGLE, TIME, FREQ and others) in the
+<style color=#00ffffff size=1>.</style>                 reference grammar are mapped to Value.Unit, with the
+<style color=#00ffffff size=1>.</style>                 field units containing the name of the relevant unit
+<style color=#00ffffff size=1>.</style>                 (eg, `cm', `in', etc.) in lower case. Values and names
+<style color=#00ffffff size=1>.</style>                 appear shorn of the surrounding punctuation.
+<style color=#00ffffff size=1>.</style>                 Value.Hexcolour includes the original sequence of hex
+<style color=#00ffffff size=1>.</style>                 digits as a string, and a decoding of it as an rgb
+<style color=#00ffffff size=1>.</style>                 triple. The arguments to the CSS rgb function are
+<style color=#00ffffff size=1>.</style>                 similarly presented in original and decoded forms, in
+<style color=#00ffffff size=1>.</style>                 Value.RGB. Other function references are returned
+<style color=#00ffffff size=1>.</style>                 uninterpreted in Value.Function.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/w3c/css.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            ``Cascading Style Sheets, level 2 revision 1'',
+<style color=#00ffffff size=1>.</style>            http://www.w3.org/TR/CSS21
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

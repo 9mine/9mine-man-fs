@@ -1,0 +1,93 @@
+<action name=SECSTORE(1)>SECSTORE(1)</action>                                           <action name=SECSTORE(1)>SECSTORE(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            secstore - retrieve files from secure store
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            auth/secstore \[ -iv \] \[ -k key \] \[ -p pin \] \[ -s address \] \[
+<style color=#00ffffff size=1>.</style>            -u user \] \[ op \[ file \] ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Secstore manages files on the eponymous Plan 9 secure
+<style color=#00ffffff size=1>.</style>            storage service. It holds a set of files for each of its
+<style color=#00ffffff size=1>.</style>            users. The service is most often used to store a file
+<style color=#00ffffff size=1>.</style>            factotum containing user credentials in a form ready to be
+<style color=#00ffffff size=1>.</style>            loaded into <action name=factotum(4)>factotum(4)</action>. Op is one of the following
+<style color=#00ffffff size=1>.</style>            operations:
+
+<style color=#00ffffff size=1>.</style>            d    Delete the given files on the server.
+
+<style color=#00ffffff size=1>.</style>            p    Print the contents of each file on standard output.
+<style color=#00ffffff size=1>.</style>                 Each line is written separately, so that files of keys
+<style color=#00ffffff size=1>.</style>                 will be received correctly when written to <action name=factotum(4)>factotum(4)</action>.
+
+<style color=#00ffffff size=1>.</style>            r    Replace the contents of files on the server by the
+<style color=#00ffffff size=1>.</style>                 contents of the named files, after encrypting them. In
+<style color=#00ffffff size=1>.</style>                 each case, the file name on the server is the last
+<style color=#00ffffff size=1>.</style>                 component of the local file name (ie, everything after
+<style color=#00ffffff size=1>.</style>                 the final `/').
+
+<style color=#00ffffff size=1>.</style>            t    List a table of contents of user's collection on the
+<style color=#00ffffff size=1>.</style>                 the server. By default, only the names are listed, one
+<style color=#00ffffff size=1>.</style>                 per line, but given the -v option, each line displays
+<style color=#00ffffff size=1>.</style>                 name, file size in bytes, date last stored, and SHA-1
+<style color=#00ffffff size=1>.</style>                 hash of the file's contents.
+
+<style color=#00ffffff size=1>.</style>            x    Extract the named files into files of the same name in
+<style color=#00ffffff size=1>.</style>                 the current directory. By default, they are decrypted
+<style color=#00ffffff size=1>.</style>                 (ie, in clear text).
+
+<style color=#00ffffff size=1>.</style>            If no op is specified, secstore connects to the server (thus
+<style color=#00ffffff size=1>.</style>            checking the connection and the validity of both key and
+<style color=#00ffffff size=1>.</style>            user), but does nothing with it.
+
+<style color=#00ffffff size=1>.</style>            By default, secstore prompts for a secret key to
+<style color=#00ffffff size=1>.</style>            authenticate the user and the secstore service. The service
+<style color=#00ffffff size=1>.</style>            might be configured to demand an extra authentication code,
+<style color=#00ffffff size=1>.</style>            such as a `pin', in which case secstore will then prompt for
+<style color=#00ffffff size=1>.</style>            that as well. The options are:
+
+<style color=#00ffffff size=1>.</style>            -i   Read one or two lines from the standard input: the
+<style color=#00ffffff size=1>.</style>                 first line contains the secret\; the optional second
+<style color=#00ffffff size=1>.</style>                 line contains the extra authentication code.
+
+<style color=#00ffffff size=1>.</style>            -k key
+<style color=#00ffffff size=1>.</style>                 Use key as the secret to authenticate with the secstore
+<style color=#00ffffff size=1>.</style>                 service.
+
+<style color=#00ffffff size=1>.</style>            -p pin
+<style color=#00ffffff size=1>.</style>                 Supply pin as the extra authentication code if the
+<style color=#00ffffff size=1>.</style>                 server demands it.
+
+<style color=#00ffffff size=1>.</style>            -s address
+<style color=#00ffffff size=1>.</style>                 Connect to the server at the given network address, as
+<style color=#00ffffff size=1>.</style>                 defined by <action name=dial(2)>dial(2)</action>, and translated by <action name=cs(8)>cs(8)</action>. The
+<style color=#00ffffff size=1>.</style>                 default is net!$auth!secstore.
+
+<style color=#00ffffff size=1>.</style>            -u user
+<style color=#00ffffff size=1>.</style>                 Authenticate as user (default: the Inferno user name
+<style color=#00ffffff size=1>.</style>                 contained in /dev/user)
+
+<style color=#00ffffff size=1>.</style>            -v   Make the output more verbose: display the name
+<style color=#00ffffff size=1>.</style>                 announced by the remote server\; and use the long form
+<style color=#00ffffff size=1>.</style>                 of the table of contents.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Retrieve the factotum file and feed the keys therein to
+<style color=#00ffffff size=1>.</style>            <action name=factotum(4)>factotum(4)</action>:
+
+<style color=#00ffffff size=1>.</style>                 auth/secstore p factotum >/mnt/factotum/ctl
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auth/secstore.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=crypt(1)>crypt(1)</action>, <action name=secstore(2)>secstore(2)</action>, <action name=factotum(4)>factotum(4)</action>,
+<style color=#00ffffff size=1>.</style>            ``Plan 9 Security'', Plan 9 Programmer's Manual, Fourth
+<style color=#00ffffff size=1>.</style>            Edition, Volume 2, 2003.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Perhaps secstore should allow several -s options as a simple
+<style color=#00ffffff size=1>.</style>            way to replicate the same files on different servers.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

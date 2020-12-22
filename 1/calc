@@ -1,0 +1,188 @@
+<action name=CALC(1)>CALC(1)</action>                                                   <action name=CALC(1)>CALC(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            calc - calculator language
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            calc \[ -s \] \[ file \]
+
+<style color=#00ffffff size=1>.</style>            calc \[ -s \] \[ expression \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Calc interprets a simple language for floating-point
+<style color=#00ffffff size=1>.</style>            arithmetic with Limbo-like syntax and functions.
+
+<style color=#00ffffff size=1>.</style>            If no file or expression is given calc interprets the
+<style color=#00ffffff size=1>.</style>            standard input.
+
+<style color=#00ffffff size=1>.</style>            Calc input consists of expressions and statements.
+<style color=#00ffffff size=1>.</style>            Expressions are evaluated and their results printed.
+<style color=#00ffffff size=1>.</style>            Statements, typically assignments and function definitions,
+<style color=#00ffffff size=1>.</style>            produce no output unless they explicitly call print.
+
+<style color=#00ffffff size=1>.</style>            Comments begin with # and extend to the end of the line as
+<style color=#00ffffff size=1>.</style>            in Limbo.
+
+<style color=#00ffffff size=1>.</style>            Numbers may have a base specified using C or Limbo syntax.
+
+<style color=#00ffffff size=1>.</style>            Variable names have the usual syntax, including `_'. They
+<style color=#00ffffff size=1>.</style>            may be introduced without a declaration and have an initial
+<style color=#00ffffff size=1>.</style>            default value of 0.0.
+
+<style color=#00ffffff size=1>.</style>            The predefined variable degrees can be set to specify angles
+<style color=#00ffffff size=1>.</style>            in degrees rather than radians in the trigonometric
+<style color=#00ffffff size=1>.</style>            functions below. It is initially 0 (angles in radians by
+<style color=#00ffffff size=1>.</style>            default).
+
+<style color=#00ffffff size=1>.</style>            The predefined variable printbase can be set to any integer
+<style color=#00ffffff size=1>.</style>            between 2 and 36 inclusive to specify the base of all values
+<style color=#00ffffff size=1>.</style>            output.
+
+<style color=#00ffffff size=1>.</style>            The constants e, Pi(π), Phi(φ), Gamma(γ), Infinity(∞), and
+<style color=#00ffffff size=1>.</style>            Nan(NaN) are predefined.
+
+<style color=#00ffffff size=1>.</style>            Expressions are formed with these Limbo-like operators,
+<style color=#00ffffff size=1>.</style>            listed by decreasing precedence.
+
+<style color=#00ffffff size=1>.</style>            ! ~ + - ++ --
+
+<style color=#00ffffff size=1>.</style>            **
+
+<style color=#00ffffff size=1>.</style>            * / % //
+
+<style color=#00ffffff size=1>.</style>            + -
+
+<style color=#00ffffff size=1>.</style>            << >>
+
+<style color=#00ffffff size=1>.</style>            > >= < <= <->
+
+<style color=#00ffffff size=1>.</style>            == != -> <-
+
+<style color=#00ffffff size=1>.</style>            &  ↑
+
+<style color=#00ffffff size=1>.</style>            ^
+
+<style color=#00ffffff size=1>.</style>            |  ↓
+
+<style color=#00ffffff size=1>.</style>            &&
+
+<style color=#00ffffff size=1>.</style>            ||
+
+<style color=#00ffffff size=1>.</style>            ? :
+
+<style color=#00ffffff size=1>.</style>            = := += -= *= /= %= //= &= ^= |= <<= >>=
+
+<style color=#00ffffff size=1>.</style>            ,
+
+<style color=#00ffffff size=1>.</style>            If the -s flag is given, a strict interpretation of the
+<style color=#00ffffff size=1>.</style>            declaration rules are enforced - all variables must be
+<style color=#00ffffff size=1>.</style>            declared and initialized first using the := operator.
+<style color=#00ffffff size=1>.</style>            Otherwise undeclared variables are declared and initialized
+<style color=#00ffffff size=1>.</style>            to 0.0 in the current scope. In either case, := always
+<style color=#00ffffff size=1>.</style>            forces a new declaration.
+
+<style color=#00ffffff size=1>.</style>            The extra non-Limbo operators are factorial (! when
+<style color=#00ffffff size=1>.</style>            postfix), integer division (//), conditional (? and :) comma
+<style color=#00ffffff size=1>.</style>            (,), logical equivalence (<->), implication (->), reverse
+<style color=#00ffffff size=1>.</style>            implication (<-), nand (↑) and nor (↓).
+
+<style color=#00ffffff size=1>.</style>            Unary operators, assignment operators, **, ? and : are right
+<style color=#00ffffff size=1>.</style>            associative as usual.
+
+<style color=#00ffffff size=1>.</style>            The comma operator may be replaced by white space in
+<style color=#00ffffff size=1>.</style>            expressions.
+
+<style color=#00ffffff size=1>.</style>            Built in functions are abs, acos, acosh, asin, asinh, atan,
+<style color=#00ffffff size=1>.</style>            atanh, atan2, cbrt, ceiling, cos, cosh, erf, exp, floor,
+<style color=#00ffffff size=1>.</style>            frac, gamma(Γ), int, log, log10, max, min, pow, rand, round,
+<style color=#00ffffff size=1>.</style>            sign, sin, sinh, sqrt, tan, and tanh.
+
+<style color=#00ffffff size=1>.</style>            Functions of one argument may be written without brackets:
+
+<style color=#00ffffff size=1>.</style>            	sin 45
+<style color=#00ffffff size=1>.</style>            	sqrt 2
+
+<style color=#00ffffff size=1>.</style>            These behave as unary operators with the highest precedence.
+
+<style color=#00ffffff size=1>.</style>            Sum and product operators are available using sigma (Σ) and
+<style color=#00ffffff size=1>.</style>            pi (Π). For example
+
+<style color=#00ffffff size=1>.</style>            	sigma(i = 0, 100, 1/i!)
+
+<style color=#00ffffff size=1>.</style>            gives the value 2.7182818284590455 .
+
+<style color=#00ffffff size=1>.</style>            Simple definite integration can be done:
+
+<style color=#00ffffff size=1>.</style>            	integral(x = -1.96, 1.96, exp(-0.5*x*x)/sqrt(2*Pi))
+
+<style color=#00ffffff size=1>.</style>            outputs 0.9500042096998785 . ∫ may be used in place of
+<style color=#00ffffff size=1>.</style>            integral.
+
+<style color=#00ffffff size=1>.</style>            For the sake of completeness, the derivative of a function
+<style color=#00ffffff size=1>.</style>            at a given point can be calculated:
+
+<style color=#00ffffff size=1>.</style>            	differential(x=1, x*x+5*x+6)
+
+<style color=#00ffffff size=1>.</style>            gives 7. Δ may be used in place of differential.
+
+<style color=#00ffffff size=1>.</style>            There is limited support for the solution of equations. For
+<style color=#00ffffff size=1>.</style>            example
+
+<style color=#00ffffff size=1>.</style>            	solve(x**2-5*x+6==0)
+
+<style color=#00ffffff size=1>.</style>            outputs the values 2 and 3. The value returned by solve is
+<style color=#00ffffff size=1>.</style>            the largest of the roots. To specify the variable to solve
+<style color=#00ffffff size=1>.</style>            for, if ambiguous, simply add it as a second parameter as
+<style color=#00ffffff size=1>.</style>            in, for example,
+
+<style color=#00ffffff size=1>.</style>            	solve(x**2-5*x+6==y**3+z, x)
+
+<style color=#00ffffff size=1>.</style>            This will substitute the current values of y and z and solve
+<style color=#00ffffff size=1>.</style>            for x. To tune the solution process, the predefined
+<style color=#00ffffff size=1>.</style>            variables solvelimit (default value 100) and solvestep
+<style color=#00ffffff size=1>.</style>            (default value 1) are available. The former specifies the
+<style color=#00ffffff size=1>.</style>            maximum absolute solution to search for. The latter
+<style color=#00ffffff size=1>.</style>            specifies the interval increment to apply when searching for
+<style color=#00ffffff size=1>.</style>            sign changes.
+
+<style color=#00ffffff size=1>.</style>            Print prints a list of expressions that may include string
+<style color=#00ffffff size=1>.</style>            constants such as "hello\n".
+
+<style color=#00ffffff size=1>.</style>            Read reads in a list of values interactively. The list of
+<style color=#00ffffff size=1>.</style>            variables to assign these values should follow.
+
+<style color=#00ffffff size=1>.</style>            Other files may be read in using the Limbo include
+<style color=#00ffffff size=1>.</style>            statement.
+
+<style color=#00ffffff size=1>.</style>            Control flow statements are break, continue, exit, return,
+<style color=#00ffffff size=1>.</style>            if-else, while, do-while, and for, with braces for grouping.
+
+<style color=#00ffffff size=1>.</style>            The use of semi-colon and newline is optional.
+
+<style color=#00ffffff size=1>.</style>            Functions are introduced by the keyword fn.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            fn ack(a, b)
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	n = n+1
+<style color=#00ffffff size=1>.</style>            	if(a == 0)
+<style color=#00ffffff size=1>.</style>            		return b+1\;
+<style color=#00ffffff size=1>.</style>            	if(b == 0)
+<style color=#00ffffff size=1>.</style>            		return ack(a-1, 1)\;
+<style color=#00ffffff size=1>.</style>            	return ack(a-1, ack(a, b-1))\;
+<style color=#00ffffff size=1>.</style>            }
+
+<style color=#00ffffff size=1>.</style>            for(i = 0\; i < 4\; i++)
+<style color=#00ffffff size=1>.</style>            	for(j = 0\; j < 4\; j++){
+<style color=#00ffffff size=1>.</style>            		n = 0
+<style color=#00ffffff size=1>.</style>            		print "ack(", i, ",", j, ")=", ack(i, j), "\n"
+<style color=#00ffffff size=1>.</style>            		print n, " calls", "\n"
+<style color=#00ffffff size=1>.</style>            	}
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/calc.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=fc(1)>fc(1)</action>, <action name=math-intro(2)>math-intro(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

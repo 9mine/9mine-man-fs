@@ -1,0 +1,130 @@
+<action name=BUTTON(9)>BUTTON(9)</action>                                               <action name=BUTTON(9)>BUTTON(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            button - Create and manipulate button widgets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            button pathName ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -activebackground -disabledcolor      -justify
+<style color=#00ffffff size=1>.</style>            -activeforeground -font               -relief
+<style color=#00ffffff size=1>.</style>            -anchor           -foreground         -takefocus
+<style color=#00ffffff size=1>.</style>            -background       -highlightcolor     -text
+<style color=#00ffffff size=1>.</style>            -bitmap           -highlightthickness -underline
+<style color=#00ffffff size=1>.</style>            -borderwidth      -image
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -command tkcmd
+<style color=#00ffffff size=1>.</style>                 Specifies a Tk command to associate with the button.
+<style color=#00ffffff size=1>.</style>                 This command is typically invoked when mouse button 1
+<style color=#00ffffff size=1>.</style>                 is released over the button window.
+
+<style color=#00ffffff size=1>.</style>            -height dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired height for the button. If this
+<style color=#00ffffff size=1>.</style>                 option isn't specified, the button's desired height is
+<style color=#00ffffff size=1>.</style>                 computed from the size of the image or bitmap or text
+<style color=#00ffffff size=1>.</style>                 being displayed in it.
+
+<style color=#00ffffff size=1>.</style>            -state state
+<style color=#00ffffff size=1>.</style>                 Specifies one of three states for the button:  normal, 
+<style color=#00ffffff size=1>.</style>                 active, or disabled.  In normal state the button is
+<style color=#00ffffff size=1>.</style>                 displayed using the foreground and background options.
+<style color=#00ffffff size=1>.</style>                 The active state is typically used when the pointer is
+<style color=#00ffffff size=1>.</style>                 over the button.  In active state the button is
+<style color=#00ffffff size=1>.</style>                 displayed using the activeForeground and
+<style color=#00ffffff size=1>.</style>                 activeBackground options.  Disabled state means that
+<style color=#00ffffff size=1>.</style>                 the button should be insensitive:  the default bindings
+<style color=#00ffffff size=1>.</style>                 will refuse to activate the widget and will ignore
+<style color=#00ffffff size=1>.</style>                 mouse button presses. In this state the background
+<style color=#00ffffff size=1>.</style>                 option determines how the button is displayed.
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired width for the button. If this
+<style color=#00ffffff size=1>.</style>                 option isn't specified, the button's desired width is
+<style color=#00ffffff size=1>.</style>                 computed from the size of the image or bitmap or text
+<style color=#00ffffff size=1>.</style>                 being displayed in it.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The button command creates a new window (given by the
+<style color=#00ffffff size=1>.</style>            pathName argument) and makes it into a button widget.
+<style color=#00ffffff size=1>.</style>            Additional options, described above, may be specified on the
+<style color=#00ffffff size=1>.</style>            command line. to configure aspects of the button such as its
+<style color=#00ffffff size=1>.</style>            colours, font, text, and initial relief.  The button command
+<style color=#00ffffff size=1>.</style>            returns its pathName argument.  At the time this command is
+<style color=#00ffffff size=1>.</style>            invoked, there must not exist a window named pathName.
+
+<style color=#00ffffff size=1>.</style>            A button is a widget that displays a textual string, bitmap
+<style color=#00ffffff size=1>.</style>            or image. If text is displayed, it must all be in a single
+<style color=#00ffffff size=1>.</style>            font, but it can occupy multiple lines on the screen (if it
+<style color=#00ffffff size=1>.</style>            contains newlines) and one of the characters may optionally
+<style color=#00ffffff size=1>.</style>            be underlined using the underline option. It can display
+<style color=#00ffffff size=1>.</style>            itself in either of three different ways, according to the 
+<style color=#00ffffff size=1>.</style>            state option\; it can be made to appear raised, sunken, or
+<style color=#00ffffff size=1>.</style>            flat.  When a user invokes the button (by pressing mouse
+<style color=#00ffffff size=1>.</style>            button 1 with the cursor over the button), then the Tk
+<style color=#00ffffff size=1>.</style>            command specified in the -command option is invoked.
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The button command creates a new Tk command whose name is 
+<style color=#00ffffff size=1>.</style>            pathName.  This command may be used to invoke various
+<style color=#00ffffff size=1>.</style>            operations on the widget.  It has the following general
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathName option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            Option and the args determine the exact behaviour of the
+<style color=#00ffffff size=1>.</style>            command.  The following commands are possible for button
+<style color=#00ffffff size=1>.</style>            widgets:
+
+<style color=#00ffffff size=1>.</style>            pathName cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the button command.
+
+<style color=#00ffffff size=1>.</style>            pathName configure ?option? ?value option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathName. If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, then the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the button command.
+
+<style color=#00ffffff size=1>.</style>            pathName invoke
+<style color=#00ffffff size=1>.</style>                 Invoke the Tk command associated with the button, if
+<style color=#00ffffff size=1>.</style>                 there is one. The return value is the return value from
+<style color=#00ffffff size=1>.</style>                 the Tk command, or an empty string if there is no
+<style color=#00ffffff size=1>.</style>                 command associated with the button. This command is
+<style color=#00ffffff size=1>.</style>                 ignored if the button's state is disabled.
+
+DEFAULT BINDINGS
+<style color=#00ffffff size=1>.</style>            Tk automatically creates bindings for buttons that give them
+<style color=#00ffffff size=1>.</style>            the following default behaviour:
+
+<style color=#00ffffff size=1>.</style>            \[1\]  A button activates whenever the mouse passes over it
+<style color=#00ffffff size=1>.</style>                 and deactivates whenever the mouse leaves the button.
+
+<style color=#00ffffff size=1>.</style>            \[2\]  A button's relief is changed to sunken whenever mouse
+<style color=#00ffffff size=1>.</style>                 button 1 is pressed over the button, and the relief is
+<style color=#00ffffff size=1>.</style>                 restored to its original value when button 1 is later
+<style color=#00ffffff size=1>.</style>                 released.
+
+<style color=#00ffffff size=1>.</style>            \[3\]  If mouse button 1 is pressed over a button and later
+<style color=#00ffffff size=1>.</style>                 released over the button, the button is invoked.
+<style color=#00ffffff size=1>.</style>                 However, if the mouse is not over the button when
+<style color=#00ffffff size=1>.</style>                 button 1 is released, then no invocation occurs.
+
+<style color=#00ffffff size=1>.</style>            \[4\]  If the Enter or Space key is pressed when the button
+<style color=#00ffffff size=1>.</style>                 has keyboard focus, the button is invoked.
+
+<style color=#00ffffff size=1>.</style>            If the button's state is disabled then none of the above
+<style color=#00ffffff size=1>.</style>            actions occur:  the button is completely non-responsive.
+
+<style color=#00ffffff size=1>.</style>            The behaviour of buttons can be changed by defining new
+<style color=#00ffffff size=1>.</style>            bindings for individual widgets.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=checkbutton(9)>checkbutton(9)</action>, <action name=choicebutton(9)>choicebutton(9)</action>, <action name=options(9)>options(9)</action>, <action name=radiobutton(9)>radiobutton(9)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

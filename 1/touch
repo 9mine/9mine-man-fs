@@ -1,0 +1,21 @@
+<action name=TOUCH(1)>TOUCH(1)</action>                                                 <action name=TOUCH(1)>TOUCH(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            touch - update the modification time of one or more files
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            touch \[-c\] \[ -t time \] files
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Touch attempts to set the modification time of the specified
+<style color=#00ffffff size=1>.</style>            files to time (by default, the current system time). If a
+<style color=#00ffffff size=1>.</style>            file does not exist, touch will attempt to create it, unless
+<style color=#00ffffff size=1>.</style>            the -c option is given.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/touch.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ls(1)>ls(1)</action>, <action name=chmod(1)>chmod(1)</action>, <action name=sys-stat(2)>sys-stat(2)</action>, <action name=stat(5)>stat(5)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

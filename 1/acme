@@ -1,0 +1,689 @@
+<action name=ACME(1)>ACME(1)</action>                                                   <action name=ACME(1)>ACME(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            acme, win - interactive text windows
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            acme \[ -f varfont \] \[ -F fixfont \] \[ -c ncol \] \[ -b \] \[ -l
+<style color=#00ffffff size=1>.</style>            file | file ... \]
+
+<style color=#00ffffff size=1>.</style>            win \[ command \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Acme manages windows of text that may be edited
+<style color=#00ffffff size=1>.</style>            interactively or by external programs. The interactive
+<style color=#00ffffff size=1>.</style>            interface uses the keyboard and mouse\; external programs use
+<style color=#00ffffff size=1>.</style>            a set of files served by acme\; these are discussed in acme
+<style color=#00ffffff size=1>.</style>            (4).
+
+<style color=#00ffffff size=1>.</style>            Any named files are read into acme windows before acme
+<style color=#00ffffff size=1>.</style>            accepts input. With the -l option, the state of the entire
+<style color=#00ffffff size=1>.</style>            system is loaded from file, which should have been created
+<style color=#00ffffff size=1>.</style>            by a Dump command (q.v.), and subsequent file names are
+<style color=#00ffffff size=1>.</style>            ignored. Plain files display as text\; directories display as
+<style color=#00ffffff size=1>.</style>            columnated lists of the names of their components with the
+<style color=#00ffffff size=1>.</style>            names of subdirectories having a slash appended.
+
+<style color=#00ffffff size=1>.</style>            The -f (-F) option sets the default variable-pitch
+<style color=#00ffffff size=1>.</style>            (fixed-pitch) font\; the default is
+<style color=#00ffffff size=1>.</style>            /fonts/lucidasans/euro.8.font (.../lucm/unicode.9.font). Tab
+<style color=#00ffffff size=1>.</style>            intervals are set to the width of 4 numeral zeros in the
+<style color=#00ffffff size=1>.</style>            variable-pitch font.
+
+<style color=#00ffffff size=1>.</style>         Windows
+<style color=#00ffffff size=1>.</style>            Acme windows are in two parts: a one-line tag above a
+<style color=#00ffffff size=1>.</style>            multi-line body. The body typically contains an image of a
+<style color=#00ffffff size=1>.</style>            file or the output of a program. The tag contains a number
+<style color=#00ffffff size=1>.</style>            of blank-separated words, followed by a vertical bar
+<style color=#00ffffff size=1>.</style>            character, followed by anything. The first word is the name
+<style color=#00ffffff size=1>.</style>            of the window, typically the name of the associated file or
+<style color=#00ffffff size=1>.</style>            directory, and the other words are commands available in
+<style color=#00ffffff size=1>.</style>            that window. Any text may be added after the bar\; examples
+<style color=#00ffffff size=1>.</style>            are strings to search for or commands to execute in that
+<style color=#00ffffff size=1>.</style>            window. Changes to the text left of the bar will be ignored,
+<style color=#00ffffff size=1>.</style>            unless the result is to change the name of the window.
+
+<style color=#00ffffff size=1>.</style>            If a window holds a directory, the name (first word of the
+<style color=#00ffffff size=1>.</style>            tag) will end with a slash.
+
+<style color=#00ffffff size=1>.</style>         Scrolling
+<style color=#00ffffff size=1>.</style>            Each window has a scroll bar to the left of the body.
+<style color=#00ffffff size=1>.</style>            Scrolling occurs when the button is pressed, rather than
+<style color=#00ffffff size=1>.</style>            released, and continues as long as the mouse button is held
+<style color=#00ffffff size=1>.</style>            down in the scroll bar. For example, to scroll slowly
+<style color=#00ffffff size=1>.</style>            through a file, hold button 3 down near the top of the
+<style color=#00ffffff size=1>.</style>            scroll bar.  Moving the mouse down the scroll bar speeds up
+<style color=#00ffffff size=1>.</style>            the rate of scrolling. Scrolling backwards is performed
+<style color=#00ffffff size=1>.</style>            similarly using button 1. Button 2 allows absolute movement
+<style color=#00ffffff size=1>.</style>            within the text\; clicking it at different heights within the
+<style color=#00ffffff size=1>.</style>            scroll bar changes the focused text without intermediate
+<style color=#00ffffff size=1>.</style>            scrolling.
+
+<style color=#00ffffff size=1>.</style>         Layout
+<style color=#00ffffff size=1>.</style>            Acme windows are arranged in columns.  By default, it
+<style color=#00ffffff size=1>.</style>            creates two columns when starting\; this can be overridden
+<style color=#00ffffff size=1>.</style>            with the -c option. Placement is automatic but may be
+<style color=#00ffffff size=1>.</style>            adjusted using the layout box in the upper left corner of
+<style color=#00ffffff size=1>.</style>            each window and column. Pressing and holding any mouse
+<style color=#00ffffff size=1>.</style>            button in the box drags the associated window or column. For
+<style color=#00ffffff size=1>.</style>            windows, just clicking in the layout box grows the window in
+<style color=#00ffffff size=1>.</style>            place: button 1 grows it a little, button 2 grows it as much
+<style color=#00ffffff size=1>.</style>            as it can, still leaving all other tags in that column
+<style color=#00ffffff size=1>.</style>            visible, and button 3 takes over the column completely,
+<style color=#00ffffff size=1>.</style>            temporarily hiding other windows in the column. (They will
+<style color=#00ffffff size=1>.</style>            return en masse if any of them needs attention.) The layout
+<style color=#00ffffff size=1>.</style>            box in a window is normally white\; when it is black in the
+<style color=#00ffffff size=1>.</style>            center, it records that the file is `dirty': Acme believes
+<style color=#00ffffff size=1>.</style>            it is modified from its original contents.
+
+<style color=#00ffffff size=1>.</style>            Tags exist at the top of each column and across the whole
+<style color=#00ffffff size=1>.</style>            display. Acme pre-loads them with useful commands. Also, the
+<style color=#00ffffff size=1>.</style>            tag across the top maintains a list of executing
+<style color=#00ffffff size=1>.</style>            long-running commands.
+
+<style color=#00ffffff size=1>.</style>         Typing
+<style color=#00ffffff size=1>.</style>            The behaviour of typed text is as one would expect except
+<style color=#00ffffff size=1>.</style>            that the characters are delivered to the tag or body under
+<style color=#00ffffff size=1>.</style>            the mouse\; there is no `click to type'. (The experimental
+<style color=#00ffffff size=1>.</style>            option -b causes typing to go to the most recently
+<style color=#00ffffff size=1>.</style>            clicked-at or made window.) The usual backspacing
+<style color=#00ffffff size=1>.</style>            conventions apply. The ESC key selects the text typed since
+<style color=#00ffffff size=1>.</style>            the last mouse action, a feature particularly useful when
+<style color=#00ffffff size=1>.</style>            executing commands. A side effect is that typing ESC with
+<style color=#00ffffff size=1>.</style>            text already selected is identical to a Cut command (q.v.).
+
+<style color=#00ffffff size=1>.</style>            Most text, including the names of windows, may be edited
+<style color=#00ffffff size=1>.</style>            uniformly. The only exception is that the command names to
+<style color=#00ffffff size=1>.</style>            the left of the bar in a tag are maintained automatically\;
+<style color=#00ffffff size=1>.</style>            changes to them are repaired by acme.
+
+<style color=#00ffffff size=1>.</style>         Directory context
+<style color=#00ffffff size=1>.</style>            Each window's tag names a directory: explicitly if the
+<style color=#00ffffff size=1>.</style>            window holds a directory\; implicitly if it holds a regular
+<style color=#00ffffff size=1>.</style>            file (e.g. the directory /module if the window holds
+<style color=#00ffffff size=1>.</style>            /module/sys.m). This directory provides a context for
+<style color=#00ffffff size=1>.</style>            interpreting file names in that window. For example, the
+<style color=#00ffffff size=1>.</style>            string sys.m in a window labelled /module/ or /module/draw.m
+<style color=#00ffffff size=1>.</style>            will be interpreted as the file name /module/sys.m. The
+<style color=#00ffffff size=1>.</style>            directory is defined purely textually, so it can be a
+<style color=#00ffffff size=1>.</style>            non-existent directory or a real directory associated with a
+<style color=#00ffffff size=1>.</style>            non-existent file (e.g. /module/not-a-file). File names
+<style color=#00ffffff size=1>.</style>            beginning with a slash are assumed to be absolute file
+<style color=#00ffffff size=1>.</style>            names.
+
+<style color=#00ffffff size=1>.</style>         Errors
+<style color=#00ffffff size=1>.</style>            Windows whose names begin with - or + conventionally hold
+<style color=#00ffffff size=1>.</style>            diagnostics and other data not directly associated with
+<style color=#00ffffff size=1>.</style>            files. A window labelled +Errors receives all diagnostics
+<style color=#00ffffff size=1>.</style>            produced by acme itself. Diagnostics from commands run by
+<style color=#00ffffff size=1>.</style>            acme appear in a window named directory/+Errors where
+<style color=#00ffffff size=1>.</style>            directory is identified by the context of the command. These
+<style color=#00ffffff size=1>.</style>            error windows are created when needed.
+
+<style color=#00ffffff size=1>.</style>         Mouse button 1
+<style color=#00ffffff size=1>.</style>            Mouse button 1 selects text and double-clicking highlights
+<style color=#00ffffff size=1>.</style>            the text for replacement text to be typed in. 
+
+<style color=#00ffffff size=1>.</style>            Button 1 is also useful for matching symbols. For example to
+<style color=#00ffffff size=1>.</style>            match curly brackets in some limbo source, double click
+<style color=#00ffffff size=1>.</style>            button 1 immediately after the open curly bracket. The whole
+<style color=#00ffffff size=1>.</style>            of the text up to any matching end curly bracket will be
+<style color=#00ffffff size=1>.</style>            highlighted. A similar match is made if the double click is
+<style color=#00ffffff size=1>.</style>            performed immediately before the end bracket. In all, acme
+<style color=#00ffffff size=1>.</style>            will match the pairs { and }, \[ and \], ( and ), < and >, «
+<style color=#00ffffff size=1>.</style>            and », ' and ', " and ", ` and `. Also whole lines of text
+<style color=#00ffffff size=1>.</style>            may be highlighted by double clicking at the beginning or
+<style color=#00ffffff size=1>.</style>            end of the line.
+
+<style color=#00ffffff size=1>.</style>         Mouse button 2
+<style color=#00ffffff size=1>.</style>            By an action similar to selecting text with button 1, button
+<style color=#00ffffff size=1>.</style>            2 indicates text to execute as a command. If the indicated
+<style color=#00ffffff size=1>.</style>            text has multiple white-space-separated words, the first is
+<style color=#00ffffff size=1>.</style>            the command name and the second and subsequent are its
+<style color=#00ffffff size=1>.</style>            arguments. If button 2 is `clicked'—indicates a null
+<style color=#00ffffff size=1>.</style>            string—\c acme expands the indicated text to find a command
+<style color=#00ffffff size=1>.</style>            to run: if the click is within button-1-selected text, acme
+<style color=#00ffffff size=1>.</style>            takes that selection as the command\; otherwise it takes the
+<style color=#00ffffff size=1>.</style>            largest string of valid file name characters containing the
+<style color=#00ffffff size=1>.</style>            click. Valid file name characters are alphanumerics and _ .
+<style color=#00ffffff size=1>.</style>            - + /. This behaviour is similar to double-clicking with
+<style color=#00ffffff size=1>.</style>            button 1 but, because a null command is meaningless, only a
+<style color=#00ffffff size=1>.</style>            single click is required.
+
+<style color=#00ffffff size=1>.</style>            Some commands, all by convention starting with a capital
+<style color=#00ffffff size=1>.</style>            letter, are built-ins that are executed directly by acme:
+
+<style color=#00ffffff size=1>.</style>            Cut         Delete most recently selected text and place in
+<style color=#00ffffff size=1>.</style>                        snarf buffer.
+
+<style color=#00ffffff size=1>.</style>            Del         Delete window.  If window is dirty, instead
+<style color=#00ffffff size=1>.</style>                        print a warning\; a second Del will succeed.
+
+<style color=#00ffffff size=1>.</style>            Delcol      Delete column and all its windows, after
+<style color=#00ffffff size=1>.</style>                        checking that windows are not dirty.
+
+<style color=#00ffffff size=1>.</style>            Delete      Delete window without checking for dirtiness.
+
+<style color=#00ffffff size=1>.</style>            Dump        Write the state of acme to the file name, if
+<style color=#00ffffff size=1>.</style>                        specified, or $home/acme.dump by default.
+
+<style color=#00ffffff size=1>.</style>            Edit        Treat the argument as a text editing command in
+<style color=#00ffffff size=1>.</style>                        the style of Plan9's sam. The full Sam language
+<style color=#00ffffff size=1>.</style>                        is implemented except for the commands k, n, q,
+<style color=#00ffffff size=1>.</style>                        and !. The = command is slightly different: it
+<style color=#00ffffff size=1>.</style>                        includes the file name and gives only the line
+<style color=#00ffffff size=1>.</style>                        address unless the command is explicitly =#. The
+<style color=#00ffffff size=1>.</style>                        `current window' for the command is the body of
+<style color=#00ffffff size=1>.</style>                        the window in which the Edit command is
+<style color=#00ffffff size=1>.</style>                        executed. Usually the Edit command would be
+<style color=#00ffffff size=1>.</style>                        typed in a tag\; longer commands may be prepared
+<style color=#00ffffff size=1>.</style>                        in a scratch window and executed, with Edit
+<style color=#00ffffff size=1>.</style>                        itself in the current window, using the 2-1
+<style color=#00ffffff size=1>.</style>                        chord described below. See the later section on
+<style color=#00ffffff size=1>.</style>                        editing for a full description of the commands
+<style color=#00ffffff size=1>.</style>                        available here.
+
+<style color=#00ffffff size=1>.</style>            Exit        Exit acme after checking that windows are not
+<style color=#00ffffff size=1>.</style>                        dirty.
+
+<style color=#00ffffff size=1>.</style>            Font        With no arguments, change the font of the
+<style color=#00ffffff size=1>.</style>                        associated window from fixed-spaced to
+<style color=#00ffffff size=1>.</style>                        proportional-spaced or vice versa. Given a file
+<style color=#00ffffff size=1>.</style>                        name argument, change the font of the window to
+<style color=#00ffffff size=1>.</style>                        that stored in the named file. If the file name
+<style color=#00ffffff size=1>.</style>                        argument is prefixed by var (fix), also set the
+<style color=#00ffffff size=1>.</style>                        default proportional-spaced (fixed-spaced) font
+<style color=#00ffffff size=1>.</style>                        for future use to that font. Other existing
+<style color=#00ffffff size=1>.</style>                        windows are unaffected.
+
+<style color=#00ffffff size=1>.</style>            Get         Load file into window, replacing previous
+<style color=#00ffffff size=1>.</style>                        contents (after checking for dirtiness as in Del
+<style color=#00ffffff size=1>.</style>                        ). With no argument, use the existing file name
+<style color=#00ffffff size=1>.</style>                        of the window. Given an argument, use that file
+<style color=#00ffffff size=1>.</style>                        but do not change the window's file name.
+
+<style color=#00ffffff size=1>.</style>            ID          Print window ID number (q.v.).
+
+<style color=#00ffffff size=1>.</style>            Incl        When opening `include' files with button 3, acme
+<style color=#00ffffff size=1>.</style>                        searches in the directories /module and /include
+<style color=#00ffffff size=1>.</style>                        . Incl adds its arguments to a supplementary
+<style color=#00ffffff size=1>.</style>                        list of include directories, analogous to the -I
+<style color=#00ffffff size=1>.</style>                        option to the compilers. This list is per-window
+<style color=#00ffffff size=1>.</style>                        and is inherited when windows are created by
+<style color=#00ffffff size=1>.</style>                        actions in that window, so Incl is most usefully
+<style color=#00ffffff size=1>.</style>                        applied to a directory containing relevant
+<style color=#00ffffff size=1>.</style>                        source. With no arguments, Incl prints the
+<style color=#00ffffff size=1>.</style>                        supplementary list.
+
+<style color=#00ffffff size=1>.</style>            Kill        Send a kill note to acme-initiated commands
+<style color=#00ffffff size=1>.</style>                        named as arguments.
+
+<style color=#00ffffff size=1>.</style>            Lineno      Give the line number(s) of the currently
+<style color=#00ffffff size=1>.</style>                        selected text.
+
+<style color=#00ffffff size=1>.</style>            Load        Restore the state of acme from a file (default
+<style color=#00ffffff size=1>.</style>                        $home/acme.dump) created by the Dump command.
+
+<style color=#00ffffff size=1>.</style>            Local       When prefixed to a command run the command in
+<style color=#00ffffff size=1>.</style>                        the same file name space and environment
+<style color=#00ffffff size=1>.</style>                        variable group as acme. The environment of the
+<style color=#00ffffff size=1>.</style>                        command is restricted but is sufficient to run
+<style color=#00ffffff size=1>.</style>                        <action name=bind(1)>bind(1)</action>, mount, etc., and to set environment
+<style color=#00ffffff size=1>.</style>                        variables.
+
+<style color=#00ffffff size=1>.</style>            Look        Search in body for occurrence of literal text
+<style color=#00ffffff size=1>.</style>                        indicated by the argument or, if none is given,
+<style color=#00ffffff size=1>.</style>                        by the selected text in the body.
+
+<style color=#00ffffff size=1>.</style>            New         Make new window.  With arguments, load the named
+<style color=#00ffffff size=1>.</style>                        files into windows.
+
+<style color=#00ffffff size=1>.</style>            Newcol      Make new column.
+
+<style color=#00ffffff size=1>.</style>            Paste       Replace most recently selected text with
+<style color=#00ffffff size=1>.</style>                        contents of snarf buffer.
+
+<style color=#00ffffff size=1>.</style>            Put         Write window to the named file. With no
+<style color=#00ffffff size=1>.</style>                        argument, write to the file named in the tag of
+<style color=#00ffffff size=1>.</style>                        the window.
+
+<style color=#00ffffff size=1>.</style>            Putall      Write all dirty windows whose names indicate
+<style color=#00ffffff size=1>.</style>                        existing regular files.
+
+<style color=#00ffffff size=1>.</style>            Redo        Complement of Undo.
+
+<style color=#00ffffff size=1>.</style>            Send        Append selected text or snarf buffer to end of
+<style color=#00ffffff size=1>.</style>                        body\; used mainly with win.
+
+<style color=#00ffffff size=1>.</style>            Snarf       Place selected text in snarf buffer.
+
+<style color=#00ffffff size=1>.</style>            Sort        Arrange the windows in the column from top to
+<style color=#00ffffff size=1>.</style>                        bottom in lexicographical order based on their
+<style color=#00ffffff size=1>.</style>                        names.
+
+<style color=#00ffffff size=1>.</style>            Undo        Undo last textual change or set of changes.
+
+<style color=#00ffffff size=1>.</style>            Zerox       Create a copy of the window containing most
+<style color=#00ffffff size=1>.</style>                        recently selected text.
+
+<style color=#00ffffff size=1>.</style>            A common place to store text for commands is in the tag\; in
+<style color=#00ffffff size=1>.</style>            fact acme maintains a set of commands appropriate to the
+<style color=#00ffffff size=1>.</style>            state of the window to the left of the bar in the tag.
+
+<style color=#00ffffff size=1>.</style>            If the text indicated with button 2 is not a recognized
+<style color=#00ffffff size=1>.</style>            built-in, it is executed as a shell command.  For example,
+<style color=#00ffffff size=1>.</style>            indicating date with button 2 runs <action name=date(1)>date(1)</action>. The standard and
+<style color=#00ffffff size=1>.</style>            error outputs of commands are sent to the error window
+<style color=#00ffffff size=1>.</style>            associated with the directory from which the command was
+<style color=#00ffffff size=1>.</style>            run, which will be created if necessary. For example, in a
+<style color=#00ffffff size=1>.</style>            window /module/sys.m executing pwd will produce the output
+<style color=#00ffffff size=1>.</style>            /module in a (possibly newly-created) window labelled
+<style color=#00ffffff size=1>.</style>            /adm/+Errors\; in a window containing /appl/cmd/date.b
+<style color=#00ffffff size=1>.</style>            executing limbo date.b will run <action name=limbo(1)>limbo(1)</action> in /appl/cmd,
+<style color=#00ffffff size=1>.</style>            producing output in a window labelled /appl/cmd/+Errors.
+
+<style color=#00ffffff size=1>.</style>         Mouse button 3
+<style color=#00ffffff size=1>.</style>            Pointing at text with button 3 instructs acme to locate or
+<style color=#00ffffff size=1>.</style>            acquire the file, string, etc. described by the indicated
+<style color=#00ffffff size=1>.</style>            text and its context. This description follows the actions
+<style color=#00ffffff size=1>.</style>            taken when button 3 is released after sweeping out some
+<style color=#00ffffff size=1>.</style>            text. In the description, text refers to the text of the
+<style color=#00ffffff size=1>.</style>            original sweep or, if it was null, the result of applying
+<style color=#00ffffff size=1>.</style>            the same expansion rules that apply to button 2 actions.
+
+<style color=#00ffffff size=1>.</style>            If the text names an existing window, acme moves the mouse
+<style color=#00ffffff size=1>.</style>            cursor to the selected text in the body of that window. If
+<style color=#00ffffff size=1>.</style>            the text names an existing file with no associated window,
+<style color=#00ffffff size=1>.</style>            acme loads the file into a new window and moves the mouse
+<style color=#00ffffff size=1>.</style>            there. If the text is a file name contained in double
+<style color=#00ffffff size=1>.</style>            quotes, acme loads the indicated include file from the
+<style color=#00ffffff size=1>.</style>            directory appropriate to the suffix of the file name of the
+<style color=#00ffffff size=1>.</style>            window holding the text. (The Incl command adds directories
+<style color=#00ffffff size=1>.</style>            to the standard list.)
+
+<style color=#00ffffff size=1>.</style>            If the text begins with a colon, it is taken to be an
+<style color=#00ffffff size=1>.</style>            address within the body of the window containing the text.
+<style color=#00ffffff size=1>.</style>            The address is evaluated, the resulting text highlighted,
+<style color=#00ffffff size=1>.</style>            and the mouse moved to it. Thus, in acme, one must type
+<style color=#00ffffff size=1>.</style>            :/regexp or :127 not just /regexp or 127. (There is an
+<style color=#00ffffff size=1>.</style>            easier way to locate literal text\; see below.)
+
+<style color=#00ffffff size=1>.</style>            If the text is a file name followed by a colon and an
+<style color=#00ffffff size=1>.</style>            address, acme loads the file and evaluates the address.  For
+<style color=#00ffffff size=1>.</style>            example, clicking button 3 anywhere in the text file.c:27
+<style color=#00ffffff size=1>.</style>            will open file.c, select line 27, and put the mouse at the
+<style color=#00ffffff size=1>.</style>            beginning of the line.  The rules about Error files,
+<style color=#00ffffff size=1>.</style>            directories, and so on all combine to make this an efficient
+<style color=#00ffffff size=1>.</style>            way to investigate errors from compilers, etc.
+
+<style color=#00ffffff size=1>.</style>            If the text is not an address or file, it is taken to be
+<style color=#00ffffff size=1>.</style>            literal text, which is then searched for in the body of the
+<style color=#00ffffff size=1>.</style>            window in which button 3 was clicked.  If a match is found,
+<style color=#00ffffff size=1>.</style>            it is selected and the mouse is moved there.  Thus, to
+<style color=#00ffffff size=1>.</style>            search for occurrences of a word in a file, just click
+<style color=#00ffffff size=1>.</style>            button 3 on the word.  Because of the rule of using the
+<style color=#00ffffff size=1>.</style>            selection as the button 3 action, subsequent clicks will
+<style color=#00ffffff size=1>.</style>            find subsequent occurrences without moving the mouse.
+
+<style color=#00ffffff size=1>.</style>            In all these actions, the mouse motion is not done if the
+<style color=#00ffffff size=1>.</style>            text is a null string within a non-null selected string in
+<style color=#00ffffff size=1>.</style>            the tag, so that (for example) complex regular expressions
+<style color=#00ffffff size=1>.</style>            may be selected and applied repeatedly to the body by just
+<style color=#00ffffff size=1>.</style>            clicking button 3 over them.
+
+<style color=#00ffffff size=1>.</style>         Chords of mouse buttons
+<style color=#00ffffff size=1>.</style>            Several operations are bound to multiple-button actions.
+<style color=#00ffffff size=1>.</style>            After selecting text, with button 1 still down, pressing
+<style color=#00ffffff size=1>.</style>            button 2 executes Cut and button 3 executes Paste. After
+<style color=#00ffffff size=1>.</style>            clicking one button, the other undoes the first\; thus (while
+<style color=#00ffffff size=1>.</style>            holding down button 1) 2 followed by 3 is a Snarf that
+<style color=#00ffffff size=1>.</style>            leaves the file undirtied\; 3 followed by 2 is a no-op. These
+<style color=#00ffffff size=1>.</style>            actions also apply to text selected by double-clicking
+<style color=#00ffffff size=1>.</style>            because the double-click expansion is made when the second
+<style color=#00ffffff size=1>.</style>            click starts, not when it ends.
+
+<style color=#00ffffff size=1>.</style>            Thus to copy a word a number of times, double click on the
+<style color=#00ffffff size=1>.</style>            word with button 1 to highlight it leaving button 1 down,
+<style color=#00ffffff size=1>.</style>            press and release button 2 to cut it and save it in the
+<style color=#00ffffff size=1>.</style>            snarf buffer, press and release button 3 to paste it back
+<style color=#00ffffff size=1>.</style>            and then release button 1. Now move the cursor to any
+<style color=#00ffffff size=1>.</style>            selected place in the text, press button 1 down, then button
+<style color=#00ffffff size=1>.</style>            3 and the word is copied in.
+
+<style color=#00ffffff size=1>.</style>            Similarly lines may be deleted by double clicking at the
+<style color=#00ffffff size=1>.</style>            beginning or end of the line and then pressing button 2 with
+<style color=#00ffffff size=1>.</style>            button 1 still down.
+
+<style color=#00ffffff size=1>.</style>            Commands may be given extra arguments by a mouse chord with
+<style color=#00ffffff size=1>.</style>            buttons 2 and 1. While holding down button 2 on text to be
+<style color=#00ffffff size=1>.</style>            executed as a command, clicking button 1 appends the text
+<style color=#00ffffff size=1>.</style>            last pointed to by button 1 as a distinct final argument.
+<style color=#00ffffff size=1>.</style>            For example, to search for literal text one may execute Look
+<style color=#00ffffff size=1>.</style>            text with button 2 or instead point at text with button 1 in
+<style color=#00ffffff size=1>.</style>            any window, release button 1, then execute Look, clicking
+<style color=#00ffffff size=1>.</style>            button 1 while 2 is held down.
+
+<style color=#00ffffff size=1>.</style>            When an external command (e.g. <action name=echo(1)>echo(1)</action>) is executed this
+<style color=#00ffffff size=1>.</style>            way, the extra argument is passed as expected and an
+<style color=#00ffffff size=1>.</style>            environment variable $acmeaddr is created that holds, in the
+<style color=#00ffffff size=1>.</style>            form interpreted by button 3, the fully-qualified address of
+<style color=#00ffffff size=1>.</style>            the extra argument.
+
+<style color=#00ffffff size=1>.</style>         Support programs
+<style color=#00ffffff size=1>.</style>            win creates a new acme window and runs a command (default
+<style color=#00ffffff size=1>.</style>            /dis/sh.dis) in it, turning the window into a shell window
+<style color=#00ffffff size=1>.</style>            in which commands may be executed. Executing text in a win
+<style color=#00ffffff size=1>.</style>            window with button 2 is similar to using Send.
+
+<style color=#00ffffff size=1>.</style>            Similarly winm creates a new window but runs the shell
+<style color=#00ffffff size=1>.</style>            /dis/mash.dis by default. adiff behaves as diff in finding
+<style color=#00ffffff size=1>.</style>            the difference between two files but the listing uses
+<style color=#00ffffff size=1>.</style>            filename:linenumber format to allow the user to simply click
+<style color=#00ffffff size=1>.</style>            on this to be sent to that line in the file. agrep does for
+<style color=#00ffffff size=1>.</style>            grep what adiff does for diff above. cd changes directory
+<style color=#00ffffff size=1>.</style>            but when used in a win window for example, sends information
+<style color=#00ffffff size=1>.</style>            to the window to display a new heading reflecting the new
+<style color=#00ffffff size=1>.</style>            directory.
+
+<style color=#00ffffff size=1>.</style>         Mail
+<style color=#00ffffff size=1>.</style>            In the directory /acme/mail there are two mail programs that
+<style color=#00ffffff size=1>.</style>            may be used under acme. These Mail and Mailpop3 can be run
+<style color=#00ffffff size=1>.</style>            to display the user's current mail, read the mail, reply to
+<style color=#00ffffff size=1>.</style>            mail, save or delete mail, send mail and write the user's
+<style color=#00ffffff size=1>.</style>            mail box.
+
+<style color=#00ffffff size=1>.</style>            The former expects the user's mail box to be in the
+<style color=#00ffffff size=1>.</style>            directory and file specified as its first argument, the
+<style color=#00ffffff size=1>.</style>            latter uses the POP3 protocol to connect to a server for the
+<style color=#00ffffff size=1>.</style>            user's mail and will prompt for a password when first run.
+<style color=#00ffffff size=1>.</style>            Otherwise their behaviour is the same.
+
+<style color=#00ffffff size=1>.</style>         Applications and guide files
+<style color=#00ffffff size=1>.</style>            In the directory /acme live several subdirectories, each
+<style color=#00ffffff size=1>.</style>            corresponding to a program or set of related programs that
+<style color=#00ffffff size=1>.</style>            employ acme's user interface. Each subdirectory includes dis
+<style color=#00ffffff size=1>.</style>            files and a readme file for further information. It also
+<style color=#00ffffff size=1>.</style>            includes a guide, a text file holding sample commands to
+<style color=#00ffffff size=1>.</style>            invoke the programs. The idea is to find an example in the
+<style color=#00ffffff size=1>.</style>            guide that best matches the job at hand, edit it to suit,
+<style color=#00ffffff size=1>.</style>            and execute it.
+
+<style color=#00ffffff size=1>.</style>            Whenever a command is executed by acme, the default search
+<style color=#00ffffff size=1>.</style>            path includes the directory of the window containing the
+<style color=#00ffffff size=1>.</style>            command. Also, acme binds the directory /acme/dis in front
+<style color=#00ffffff size=1>.</style>            of /dis when it starts\; this is where acme-specific programs
+<style color=#00ffffff size=1>.</style>            such as win reside.
+
+EDITING
+<style color=#00ffffff size=1>.</style>            This section explains the commands available when using
+<style color=#00ffffff size=1>.</style>            acme's Edit command.
+
+<style color=#00ffffff size=1>.</style>         Regular expressions
+<style color=#00ffffff size=1>.</style>            Regular expressions are as in <action name=regexp(6)>regexp(6)</action> with the addition of
+<style color=#00ffffff size=1>.</style>            \n to represent newlines. A regular expression may never
+<style color=#00ffffff size=1>.</style>            contain a literal newline character. The empty regular
+<style color=#00ffffff size=1>.</style>            expression stands for the last complete expression
+<style color=#00ffffff size=1>.</style>            encountered. A regular expression matches the longest
+<style color=#00ffffff size=1>.</style>            leftmost substring formally matched by the expression.
+<style color=#00ffffff size=1>.</style>            Searching in the reverse direction is equivalent to
+<style color=#00ffffff size=1>.</style>            searching backwards with the catenation operations reversed
+<style color=#00ffffff size=1>.</style>            in the expression.
+
+<style color=#00ffffff size=1>.</style>         Addresses
+<style color=#00ffffff size=1>.</style>            An address identifies a substring in a file. In the
+<style color=#00ffffff size=1>.</style>            following, `character n' means the null string after the n
+<style color=#00ffffff size=1>.</style>            -th character in the file, with 1 the first character in the
+<style color=#00ffffff size=1>.</style>            file. `Line n' means the n-th match, starting at the
+<style color=#00ffffff size=1>.</style>            beginning of the file, of the regular expression `.*\en?'.
+<style color=#00ffffff size=1>.</style>            All files always have a current substring, called dot, that
+<style color=#00ffffff size=1>.</style>            is the default address.
+
+<style color=#00ffffff size=1>.</style>         Simple Addresses
+<style color=#00ffffff size=1>.</style>            #n   The empty string after character n\; #0 is the beginning
+<style color=#00ffffff size=1>.</style>                 of the file.
+<style color=#00ffffff size=1>.</style>            n    Line n\; 0 is the beginning of the file.
+<style color=#00ffffff size=1>.</style>            /regexp/
+<style color=#00ffffff size=1>.</style>            ?regexp?
+<style color=#00ffffff size=1>.</style>                 The substring that matches the regular expression,
+<style color=#00ffffff size=1>.</style>                 found by looking toward the end (/) or beginning (?) of
+<style color=#00ffffff size=1>.</style>                 the file, and if necessary continuing the search from
+<style color=#00ffffff size=1>.</style>                 the other end to the starting point of the search. The
+<style color=#00ffffff size=1>.</style>                 matched substring may straddle the starting point. When
+<style color=#00ffffff size=1>.</style>                 entering a pattern containing a literal question mark
+<style color=#00ffffff size=1>.</style>                 for a backward search, the question mark should be
+<style color=#00ffffff size=1>.</style>                 specified as a member of a class.
+
+<style color=#00ffffff size=1>.</style>            0    The string before the first full line. This is not
+<style color=#00ffffff size=1>.</style>                 necessarily the null string\; see + and - below.
+
+<style color=#00ffffff size=1>.</style>            $    The null string at the end of the file.
+
+<style color=#00ffffff size=1>.</style>            .    Dot.
+
+<style color=#00ffffff size=1>.</style>            '    The mark in the file.
+
+<style color=#00ffffff size=1>.</style>            "regexp"
+<style color=#00ffffff size=1>.</style>                 Preceding a simple address (default .), refers to the
+<style color=#00ffffff size=1>.</style>                 address evaluated in the unique file whose menu line
+<style color=#00ffffff size=1>.</style>                 matches the regular expression.
+
+<style color=#00ffffff size=1>.</style>         Compound Addresses
+<style color=#00ffffff size=1>.</style>            In the following, a1 and a2 are addresses.
+<style color=#00ffffff size=1>.</style>            a1+a2  The address a2 evaluated starting at the end of a1.
+<style color=#00ffffff size=1>.</style>            a1-a2  The address a2 evaluated looking in the reverse
+<style color=#00ffffff size=1>.</style>                   direction starting at the beginning of a1.
+<style color=#00ffffff size=1>.</style>            a1,a2  The substring from the beginning of a1 to the end of
+<style color=#00ffffff size=1>.</style>                   a2. If a1 is missing, 0 is substituted. If a2 is
+<style color=#00ffffff size=1>.</style>                   missing, $ is substituted.
+<style color=#00ffffff size=1>.</style>            a1\;a2  Like a1,a2, but with a2 evaluated at the end of, and
+<style color=#00ffffff size=1>.</style>                   dot set to, a1.
+
+<style color=#00ffffff size=1>.</style>            The operators + and - are high precedence, while , and \; are
+<style color=#00ffffff size=1>.</style>            low precedence.
+
+<style color=#00ffffff size=1>.</style>            In both + and - forms, if a2 is a line or character address
+<style color=#00ffffff size=1>.</style>            with a missing number, the number defaults to 1. If a1 is
+<style color=#00ffffff size=1>.</style>            missing, ``.'' is substituted. If both a1 and a2 are present
+<style color=#00ffffff size=1>.</style>            and distinguishable, + may be elided. a2 may be a regular
+<style color=#00ffffff size=1>.</style>            expression\; if it is delimited by `?''s, the effect of the +
+<style color=#00ffffff size=1>.</style>            or - is reversed.
+
+<style color=#00ffffff size=1>.</style>            It is an error for a compound address to represent a
+<style color=#00ffffff size=1>.</style>            malformed substring. Some useful idioms: a1+- (a1-+) selects
+<style color=#00ffffff size=1>.</style>            the line containing the end (beginning) of a1. 0/regexp/
+<style color=#00ffffff size=1>.</style>            locates the first match of the expression in the file. (The
+<style color=#00ffffff size=1>.</style>            form 0\;// sets dot unnecessarily.) ./regexp/// finds the
+<style color=#00ffffff size=1>.</style>            second following occurrence of the expression, and .,/regexp
+<style color=#00ffffff size=1>.</style>            / extends dot.
+
+<style color=#00ffffff size=1>.</style>         Commands
+<style color=#00ffffff size=1>.</style>            In the following, text demarcated by slashes represents text
+<style color=#00ffffff size=1>.</style>            delimited by any printable character except alphanumerics.
+<style color=#00ffffff size=1>.</style>            Any number of trailing delimiters may be elided, with
+<style color=#00ffffff size=1>.</style>            multiple elisions then representing null strings, but the
+<style color=#00ffffff size=1>.</style>            first delimiter must always be present. In any delimited
+<style color=#00ffffff size=1>.</style>            text, newline may not appear literally\; \n may be typed for
+<style color=#00ffffff size=1>.</style>            newline\; and \/ quotes the delimiter, here `/'. Backslash is
+<style color=#00ffffff size=1>.</style>            otherwise interpreted literally, except in s commands.
+
+<style color=#00ffffff size=1>.</style>            Most commands may be prefixed by an address to indicate
+<style color=#00ffffff size=1>.</style>            their range of operation. Those that may not are marked with
+<style color=#00ffffff size=1>.</style>            a ``*'' below. If a command takes an address and none is
+<style color=#00ffffff size=1>.</style>            supplied, dot is used. The sole exception is the w command,
+<style color=#00ffffff size=1>.</style>            which defaults to 0,$. In the description, `range' is used
+<style color=#00ffffff size=1>.</style>            to represent whatever address is supplied. Many commands set
+<style color=#00ffffff size=1>.</style>            the value of dot as a side effect. If so, it is always set
+<style color=#00ffffff size=1>.</style>            to the `result' of the change: the empty string for a
+<style color=#00ffffff size=1>.</style>            deletion, the new text for an insertion, etc. (but see the s
+<style color=#00ffffff size=1>.</style>            and e commands).
+
+<style color=#00ffffff size=1>.</style>         Text commands
+<style color=#00ffffff size=1>.</style>            a/text/
+<style color=#00ffffff size=1>.</style>            or
+<style color=#00ffffff size=1>.</style>            a
+<style color=#00ffffff size=1>.</style>            lines of text
+<style color=#00ffffff size=1>.</style>            .    Insert the text into the file after the range. Set dot.
+
+<style color=#00ffffff size=1>.</style>            c
+
+<style color=#00ffffff size=1>.</style>            i    Same as a, but c replaces the text, while i inserts
+<style color=#00ffffff size=1>.</style>                 before the range.
+
+<style color=#00ffffff size=1>.</style>            d    Delete the text in the range. Set dot.
+
+<style color=#00ffffff size=1>.</style>            s/regexp/text/
+<style color=#00ffffff size=1>.</style>                 Substitute text for the first match to the regular
+<style color=#00ffffff size=1>.</style>                 expression in the range. Set dot to the modified range.
+<style color=#00ffffff size=1>.</style>                 In text the character & stands for the string that
+<style color=#00ffffff size=1>.</style>                 matched the expression. Backslash behaves as usual
+<style color=#00ffffff size=1>.</style>                 unless followed by a digit: \d stands for the string
+<style color=#00ffffff size=1>.</style>                 that matched the subexpression begun by the d-th left
+<style color=#00ffffff size=1>.</style>                 parenthesis. If s is followed immediately by a number n
+<style color=#00ffffff size=1>.</style>                 , as in s2/x/y/, the n-th match in the range is
+<style color=#00ffffff size=1>.</style>                 substituted. If the command is followed by a g, as in
+<style color=#00ffffff size=1>.</style>                 s/x/y/g, all matches in the range are substituted.
+
+<style color=#00ffffff size=1>.</style>            m a1
+
+<style color=#00ffffff size=1>.</style>            t a1 Move (m) or copy (t) the range to after a1. Set dot.
+
+<style color=#00ffffff size=1>.</style>         Display commands
+<style color=#00ffffff size=1>.</style>            p    Print the text in the range. Set dot.
+<style color=#00ffffff size=1>.</style>            =    Print the file name and line address of the range.
+<style color=#00ffffff size=1>.</style>            =#   Print the file name and character address of the range.
+
+<style color=#00ffffff size=1>.</style>         File commands
+<style color=#00ffffff size=1>.</style>            * b file-list
+<style color=#00ffffff size=1>.</style>                 Set the current file to the first file named in the
+<style color=#00ffffff size=1>.</style>                 list that acme has displayed. The list may be expressed
+<style color=#00ffffff size=1>.</style>                 <command in which case the file names are taken as
+<style color=#00ffffff size=1>.</style>                 words (in the shell sense) generated by the command.
+<style color=#00ffffff size=1>.</style>            * B file-list
+<style color=#00ffffff size=1>.</style>                 Same as b, except that file names not displayed are
+<style color=#00ffffff size=1>.</style>                 entered there, and all file names in the list are
+<style color=#00ffffff size=1>.</style>                 examined.
+<style color=#00ffffff size=1>.</style>            * D file-list
+<style color=#00ffffff size=1>.</style>                 Delete the named files from the menu. If no files are
+<style color=#00ffffff size=1>.</style>                 named, the current file is deleted. It is an error to D
+<style color=#00ffffff size=1>.</style>                 a modified file, but a subsequent D will delete such a
+<style color=#00ffffff size=1>.</style>                 file.
+
+<style color=#00ffffff size=1>.</style>         I/O Commands
+<style color=#00ffffff size=1>.</style>            * e filename
+<style color=#00ffffff size=1>.</style>                 Replace the file by the contents of the named external
+<style color=#00ffffff size=1>.</style>                 file. Set dot to the beginning of the file.
+<style color=#00ffffff size=1>.</style>            r filename
+<style color=#00ffffff size=1>.</style>                 Replace the text in the range by the contents of the
+<style color=#00ffffff size=1>.</style>                 named external file. Set dot.
+<style color=#00ffffff size=1>.</style>            w filename
+<style color=#00ffffff size=1>.</style>                 Write the range (default 0,$) to the named external
+<style color=#00ffffff size=1>.</style>                 file.
+<style color=#00ffffff size=1>.</style>            * f filename
+<style color=#00ffffff size=1>.</style>                 Set the file name and print the resulting menu entry.
+<style color=#00ffffff size=1>.</style>            If the file name is absent from any of these, the current
+<style color=#00ffffff size=1>.</style>            file name is used. e always sets the file name\; r and w do
+<style color=#00ffffff size=1>.</style>            so if the file has no name.
+<style color=#00ffffff size=1>.</style>            < command
+<style color=#00ffffff size=1>.</style>                 Replace the range by the standard output of the
+<style color=#00ffffff size=1>.</style>                 command.
+<style color=#00ffffff size=1>.</style>            > command
+<style color=#00ffffff size=1>.</style>                 Send the range to the standard input of the command.
+<style color=#00ffffff size=1>.</style>            | command
+<style color=#00ffffff size=1>.</style>                 Send the range to the standard input, and replace it by
+<style color=#00ffffff size=1>.</style>                 the standard output, of the command.
+<style color=#00ffffff size=1>.</style>            * cd directory
+<style color=#00ffffff size=1>.</style>                 Change working directory. If no directory is specified,
+<style color=#00ffffff size=1>.</style>                 $home is used.
+
+<style color=#00ffffff size=1>.</style>            In any of <, >, or |, if the command is omitted the last
+<style color=#00ffffff size=1>.</style>            command (of any type) is substituted.
+
+<style color=#00ffffff size=1>.</style>         Loops and Conditionals
+<style color=#00ffffff size=1>.</style>            x/regexp/ command
+<style color=#00ffffff size=1>.</style>                 For each match of the regular expression in the range,
+<style color=#00ffffff size=1>.</style>                 run the command with dot set to the match. Set dot to
+<style color=#00ffffff size=1>.</style>                 the last match. If the regular expression and its
+<style color=#00ffffff size=1>.</style>                 slashes are omitted, ``/.*\en/'' is assumed. Null
+<style color=#00ffffff size=1>.</style>                 string matches potentially occur before every character
+<style color=#00ffffff size=1>.</style>                 of the range and at the end of the range.
+<style color=#00ffffff size=1>.</style>            y/regexp/ command
+<style color=#00ffffff size=1>.</style>                 Like x, but run the command for each substring that
+<style color=#00ffffff size=1>.</style>                 lies before, between, or after the matches that would
+<style color=#00ffffff size=1>.</style>                 be generated by x. There is no default regular
+<style color=#00ffffff size=1>.</style>                 expression. Null substrings potentially occur before
+<style color=#00ffffff size=1>.</style>                 every character in the range.
+<style color=#00ffffff size=1>.</style>            * X/ regexp / command
+<style color=#00ffffff size=1>.</style>                 For each file whose menu entry matches the regular
+<style color=#00ffffff size=1>.</style>                 expression, make that the current file and run the
+<style color=#00ffffff size=1>.</style>                 command. If the expression is omitted, the command is
+<style color=#00ffffff size=1>.</style>                 run in every file.
+<style color=#00ffffff size=1>.</style>            * Y/ regexp / command
+<style color=#00ffffff size=1>.</style>                 Same as X, but for files that do not match the regular
+<style color=#00ffffff size=1>.</style>                 expression, and the expression is required.
+<style color=#00ffffff size=1>.</style>            g/regexp/ command
+<style color=#00ffffff size=1>.</style>            v/regexp/ command
+<style color=#00ffffff size=1>.</style>                 If the range contains (g) or does not contain (v) a
+<style color=#00ffffff size=1>.</style>                 match for the expression, set dot to the range and run
+<style color=#00ffffff size=1>.</style>                 the command.
+<style color=#00ffffff size=1>.</style>            These may be nested arbitrarily deeply, but only one
+<style color=#00ffffff size=1>.</style>            instance of either X or Y may appear in a \%single command.
+<style color=#00ffffff size=1>.</style>            An empty command in an x or y defaults to p\; an empty
+<style color=#00ffffff size=1>.</style>            command in X or Y defaults to f. g and v do not have
+<style color=#00ffffff size=1>.</style>            defaults.
+
+<style color=#00ffffff size=1>.</style>         Miscellany
+<style color=#00ffffff size=1>.</style>            * u n    Undo the last n (default 1) top-level commands that
+<style color=#00ffffff size=1>.</style>                     changed the contents or name of the current file,
+<style color=#00ffffff size=1>.</style>                     and any other file whose most recent change was
+<style color=#00ffffff size=1>.</style>                     simultaneous with the current file's change.
+<style color=#00ffffff size=1>.</style>                     Successive u's move further back in time. The only
+<style color=#00ffffff size=1>.</style>                     commands for which u is ineffective are cd, u, w
+<style color=#00ffffff size=1>.</style>                     and D. If n is negative, u `redoes,' undoing the
+<style color=#00ffffff size=1>.</style>                     undo, going forwards in time again.
+<style color=#00ffffff size=1>.</style>            (empty)  If the range is explicit, set dot to the range. If
+<style color=#00ffffff size=1>.</style>                     no address is specified (the command is a newline)
+<style color=#00ffffff size=1>.</style>                     dot is extended in either direction to line
+<style color=#00ffffff size=1>.</style>                     boundaries and printed. If dot is thereby
+<style color=#00ffffff size=1>.</style>                     unchanged, it is set to .+1 and printed.
+
+<style color=#00ffffff size=1>.</style>         Grouping and multiple changes
+<style color=#00ffffff size=1>.</style>            Commands may be grouped by enclosing them in braces {}.
+<style color=#00ffffff size=1>.</style>            Commands within the braces must appear on separate lines (no
+<style color=#00ffffff size=1>.</style>            backslashes are required between commands). Semantically, an
+<style color=#00ffffff size=1>.</style>            opening brace is like a command: it takes an (optional)
+<style color=#00ffffff size=1>.</style>            address and sets dot for each sub-command. Commands within
+<style color=#00ffffff size=1>.</style>            the braces are executed sequentially, but changes made by
+<style color=#00ffffff size=1>.</style>            one command are not visible to other commands (see the next
+<style color=#00ffffff size=1>.</style>            paragraph). Braces may be nested arbitrarily.
+
+<style color=#00ffffff size=1>.</style>            When a command makes a number of changes to a file, as in
+<style color=#00ffffff size=1>.</style>            x/re/c/text/, the addresses of all changes to the file are
+<style color=#00ffffff size=1>.</style>            computed in the original file. If the changes are in
+<style color=#00ffffff size=1>.</style>            sequence, they are applied to the file. Successive
+<style color=#00ffffff size=1>.</style>            insertions at the same address are catenated into a single
+<style color=#00ffffff size=1>.</style>            insertion composed of the several insertions in the order
+<style color=#00ffffff size=1>.</style>            applied.
+
+FILES
+<style color=#00ffffff size=1>.</style>            $home/acme.dump        default file for Dump and Load\; also
+<style color=#00ffffff size=1>.</style>                                   where state is written if acme dies
+<style color=#00ffffff size=1>.</style>                                   unexpectedly.
+<style color=#00ffffff size=1>.</style>            /acme/*/guide          template files for applications
+<style color=#00ffffff size=1>.</style>            /acme/*/readme         informal documentation for
+<style color=#00ffffff size=1>.</style>                                   applications
+<style color=#00ffffff size=1>.</style>            /appl/acme/acme/*/src  source for applications
+<style color=#00ffffff size=1>.</style>            /acme/dis              dis files for applications
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/acme
+<style color=#00ffffff size=1>.</style>            /appl/acme/acme/bin/src/win.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=acme(4)>acme(4)</action>
+<style color=#00ffffff size=1>.</style>            Rob Pike, Acme: A User Interface for Programmers, Volume 2
+
+BUGS
+<style color=#00ffffff size=1>.</style>            With the -l option or Load command, the recreation of
+<style color=#00ffffff size=1>.</style>            windows under control of external programs such as win is
+<style color=#00ffffff size=1>.</style>            just to rerun the command\; information may be lost.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

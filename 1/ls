@@ -1,0 +1,109 @@
+<action name=LS(1)>LS(1)</action>                                                       <action name=LS(1)>LS(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ls, lc - list files
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ls \[ -lpmnqduntscrFT \] \[ file... \]
+
+<style color=#00ffffff size=1>.</style>            lc \[ -lpmnqduntscrFT \] \[ file... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ls lists the named files in an order and format determined
+<style color=#00ffffff size=1>.</style>            by its options. The options determining the output format
+<style color=#00ffffff size=1>.</style>            are:
+
+<style color=#00ffffff size=1>.</style>            -l        Produce output in long format. The information
+<style color=#00ffffff size=1>.</style>                      given in each column is as follows:
+
+<style color=#00ffffff size=1>.</style>                      1.   The permission mode of the file. This is
+<style color=#00ffffff size=1>.</style>                           formatted as 11 characters\; the first is `d'
+<style color=#00ffffff size=1>.</style>                           if the file is a directory, `a' if the file
+<style color=#00ffffff size=1>.</style>                           is append-only, `A' if it is an
+<style color=#00ffffff size=1>.</style>                           authentication file, or `-' otherwise. The
+<style color=#00ffffff size=1>.</style>                           next character is `l' if the file is
+<style color=#00ffffff size=1>.</style>                           exclusive-use, or `-' otherwise. The
+<style color=#00ffffff size=1>.</style>                           remaining characters are in three groups of
+<style color=#00ffffff size=1>.</style>                           three, each representing one permission bit.
+<style color=#00ffffff size=1>.</style>                           Each character is either `r' (read
+<style color=#00ffffff size=1>.</style>                           permission), `w' (write permission), `x'
+<style color=#00ffffff size=1>.</style>                           (execute permission) or `-' (no permission).
+<style color=#00ffffff size=1>.</style>                           The three groups represent permissions
+<style color=#00ffffff size=1>.</style>                           granted for that file to the file's owner,
+<style color=#00ffffff size=1>.</style>                           members of the file's group and anybody else
+<style color=#00ffffff size=1>.</style>                           respectively.
+
+<style color=#00ffffff size=1>.</style>                      2.   The device type (this is the `#' device
+<style color=#00ffffff size=1>.</style>                           letter for local devices or `M' for files
+<style color=#00ffffff size=1>.</style>                           mounted over a 9P connection).
+
+<style color=#00ffffff size=1>.</style>                      3.   The device instance number (this
+<style color=#00ffffff size=1>.</style>                           distinguishes between separately mounted
+<style color=#00ffffff size=1>.</style>                           instances of the same device).
+
+<style color=#00ffffff size=1>.</style>                      4.   The file's owner.
+
+<style color=#00ffffff size=1>.</style>                      5.   The file's group.
+
+<style color=#00ffffff size=1>.</style>                      7.   The size of the file in bytes.
+
+<style color=#00ffffff size=1>.</style>                      8.   The date and time the file was last modified
+<style color=#00ffffff size=1>.</style>                           (see also the -u and the -e options).
+
+<style color=#00ffffff size=1>.</style>                      9.   The name of the file.
+
+<style color=#00ffffff size=1>.</style>            -m        Print the name of the user who most recently
+<style color=#00ffffff size=1>.</style>                      modified the file.
+
+<style color=#00ffffff size=1>.</style>            -q        Print the file's qid (see <action name=sys-stat(2)>sys-stat(2)</action>) at the
+<style color=#00ffffff size=1>.</style>                      beginning of each line\; the printed fields are in
+<style color=#00ffffff size=1>.</style>                      the order path, version, and type.
+
+<style color=#00ffffff size=1>.</style>            -u        Applicable only to the -l and -t options: causes
+<style color=#00ffffff size=1>.</style>                      time-sorted listings to be listed by time of last
+<style color=#00ffffff size=1>.</style>                      access, and the access time to be printed in
+<style color=#00ffffff size=1>.</style>                      long-format listings instead of the modification
+<style color=#00ffffff size=1>.</style>                      time.
+
+<style color=#00ffffff size=1>.</style>            -e        Applicable only to the -l and -u options: causes
+<style color=#00ffffff size=1>.</style>                      the time to be displayed as seconds since the
+<style color=#00ffffff size=1>.</style>                      epoch.
+
+<style color=#00ffffff size=1>.</style>            -p        Print each filename as a bare name, without the
+<style color=#00ffffff size=1>.</style>                      name of the containing directory.
+
+<style color=#00ffffff size=1>.</style>            The other options relate to the order in which the listed
+<style color=#00ffffff size=1>.</style>            files are printed, and which files are selected. Usually,
+<style color=#00ffffff size=1>.</style>            each file that is a directory has its contents printed. The
+<style color=#00ffffff size=1>.</style>            -d option causes the directory itself to be listed. In a
+<style color=#00ffffff size=1>.</style>            union directory, it is possible for there to be two or more
+<style color=#00ffffff size=1>.</style>            instances of a file with the same name. The -c option causes
+<style color=#00ffffff size=1>.</style>            only the first one occurring to be listed. The options
+<style color=#00ffffff size=1>.</style>            relating to ordering are:
+
+<style color=#00ffffff size=1>.</style>            -n        Do not sort the files at all.
+
+<style color=#00ffffff size=1>.</style>            -t        Sort by modification time (most recent first) or
+<style color=#00ffffff size=1>.</style>                      access time if the -u option is also specified.
+
+<style color=#00ffffff size=1>.</style>            -s        Sort by size (smallest first).
+
+<style color=#00ffffff size=1>.</style>            -r        Reverse the sort order.
+
+<style color=#00ffffff size=1>.</style>            -F        Add the character / after all directory names and
+<style color=#00ffffff size=1>.</style>                      the character * after all executable files.
+
+<style color=#00ffffff size=1>.</style>            -T        Print the character t before each file if it has
+<style color=#00ffffff size=1>.</style>                      the temporary flag set, and - otherwise.
+
+<style color=#00ffffff size=1>.</style>            Lc is the same as ls, but sets the -p option and pipes the
+<style color=#00ffffff size=1>.</style>            output through <action name=mc(1)>mc(1)</action>.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ls.b
+<style color=#00ffffff size=1>.</style>            /dis/lc
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=readdir(2)>readdir(2)</action>, <action name=mc(1)>mc(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

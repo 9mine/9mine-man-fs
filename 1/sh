@@ -1,0 +1,513 @@
+<action name=SH(1)>SH(1)</action>                                                       <action name=SH(1)>SH(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            sh, builtin, exit, load, loaded, local, whatis, quote, run,
+<style color=#00ffffff size=1>.</style>            set, unload, unquote - command language
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            sh \[ -ilxvn \] \[ -c command \] \[ file \[ arg ... \]\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Sh is a programmable user level interface (a shell) for
+<style color=#00ffffff size=1>.</style>            Inferno. It executes command lines read from a terminal or a
+<style color=#00ffffff size=1>.</style>            file or, with the -c flag, from sh's argument list. It can
+<style color=#00ffffff size=1>.</style>            also be used to give programmable functionality to Limbo
+<style color=#00ffffff size=1>.</style>            modules (see <action name=sh(2)>sh(2)</action>).
+
+<style color=#00ffffff size=1>.</style>         Command Lines
+<style color=#00ffffff size=1>.</style>            A command line is a sequence of commands, separated by
+<style color=#00ffffff size=1>.</style>            ampersands or semicolons (& or \;), terminated by a newline.
+<style color=#00ffffff size=1>.</style>            The commands are executed in sequence from left to right. Sh
+<style color=#00ffffff size=1>.</style>            does not wait for a command followed by & to finish
+<style color=#00ffffff size=1>.</style>            executing before starting the following command. Whenever a
+<style color=#00ffffff size=1>.</style>            command followed by & is executed, its process id is
+<style color=#00ffffff size=1>.</style>            assigned to the sh variable $apid. Whenever a command not
+<style color=#00ffffff size=1>.</style>            followed by & exits or is terminated, the sh variable
+<style color=#00ffffff size=1>.</style>            $status gets the process's wait message (see <action name=prog(3)>prog(3)</action>)\; it
+<style color=#00ffffff size=1>.</style>            will be the null string if the command was successful.
+
+<style color=#00ffffff size=1>.</style>            A number-sign (#) and any following characters up to (but
+<style color=#00ffffff size=1>.</style>            not including) the next newline are ignored, except in
+<style color=#00ffffff size=1>.</style>            quotation marks.
+
+<style color=#00ffffff size=1>.</style>         Simple Commands
+<style color=#00ffffff size=1>.</style>            A simple command is a sequence of arguments interspersed
+<style color=#00ffffff size=1>.</style>            with I/O redirections. If the first argument is the name of
+<style color=#00ffffff size=1>.</style>            a sh builtin or it is a braced command block (see Compound
+<style color=#00ffffff size=1>.</style>            Commands, below), it is executed by sh. If the first
+<style color=#00ffffff size=1>.</style>            character of the name is a brace ({), the shell tries to
+<style color=#00ffffff size=1>.</style>            parse it and execute it as a braced command block\; if the
+<style color=#00ffffff size=1>.</style>            parsing fails, an exception is raised. Otherwise sh looks
+<style color=#00ffffff size=1>.</style>            for an external program to execute.
+
+<style color=#00ffffff size=1>.</style>            If the name ends in .dis, sh looks for a Dis module of that
+<style color=#00ffffff size=1>.</style>            name\; otherwise it tries first to find a Dis module of that
+<style color=#00ffffff size=1>.</style>            name with .dis appended and failing that, it looks for an
+<style color=#00ffffff size=1>.</style>            executable file of the same name, which should be a
+<style color=#00ffffff size=1>.</style>            readable, executable script file. If the name does not start
+<style color=#00ffffff size=1>.</style>            with a slash (/) or dot-slash (./), then the name is first
+<style color=#00ffffff size=1>.</style>            looked for relative to /dis, and then relative to the
+<style color=#00ffffff size=1>.</style>            current directory. A Dis module will be executed only if it
+<style color=#00ffffff size=1>.</style>            implements the Command interface (see <action name=sh(1)>sh(1)</action>)\; a script file
+<style color=#00ffffff size=1>.</style>            will be executed only if it starts with the characters ``#!
+<style color=#00ffffff size=1>.</style>            '' followed by the name of a file executable under the rules
+<style color=#00ffffff size=1>.</style>            above. In this case the command will be executed with any
+<style color=#00ffffff size=1>.</style>            following arguments mentioned in the #! header, followed by
+<style color=#00ffffff size=1>.</style>            the path of the script file, followed by any arguments
+<style color=#00ffffff size=1>.</style>            originally given to the command.
+
+<style color=#00ffffff size=1>.</style>            For example, to execute the simple command ls, sh will look
+<style color=#00ffffff size=1>.</style>            for one of the following things, in order, stopping the
+<style color=#00ffffff size=1>.</style>            search when one is found:
+
+<style color=#00ffffff size=1>.</style>            1)   a built-in command named ``ls''.
+
+<style color=#00ffffff size=1>.</style>            2)   a Dis module named ``/dis/ls.dis'',
+
+<style color=#00ffffff size=1>.</style>            3)   an executable script file named ``/dis/ls'',
+
+<style color=#00ffffff size=1>.</style>            4)   a Dis module named ``./ls.dis'',
+
+<style color=#00ffffff size=1>.</style>            5)   an executable script file named ``./ls''.
+
+<style color=#00ffffff size=1>.</style>         Arguments and Variables
+<style color=#00ffffff size=1>.</style>            A number of constructions may be used where sh's syntax
+<style color=#00ffffff size=1>.</style>            requires an argument to appear. In many cases a
+<style color=#00ffffff size=1>.</style>            construction's value will be a list of arguments rather than
+<style color=#00ffffff size=1>.</style>            a single string.
+
+<style color=#00ffffff size=1>.</style>            The simplest kind of argument is the unquoted word: a
+<style color=#00ffffff size=1>.</style>            sequence of one or more characters none of which is a blank,
+<style color=#00ffffff size=1>.</style>            tab, newline, or any of the following:
+<style color=#00ffffff size=1>.</style>            	# \; & | ^ $ ` ' { } ( ) < > " =
+<style color=#00ffffff size=1>.</style>            An unquoted word that contains any of the characters * ? \[
+<style color=#00ffffff size=1>.</style>            is a pattern for matching against file names. The character
+<style color=#00ffffff size=1>.</style>            * matches any sequence of characters, ? matches any single
+<style color=#00ffffff size=1>.</style>            character, and \[class\] matches any character in the class.
+<style color=#00ffffff size=1>.</style>            If the first character of class is ^, the class is
+<style color=#00ffffff size=1>.</style>            complemented. (As this character is special to the shell, it
+<style color=#00ffffff size=1>.</style>            may only be included in a pattern if this character is
+<style color=#00ffffff size=1>.</style>            quoted, as long as the leading \[ is not quoted). The class
+<style color=#00ffffff size=1>.</style>            may also contain pairs of characters separated by -,
+<style color=#00ffffff size=1>.</style>            standing for all characters lexically between the two. The
+<style color=#00ffffff size=1>.</style>            character / must appear explicitly in a pattern. A pattern
+<style color=#00ffffff size=1>.</style>            is replaced by a list of arguments, one for each path name
+<style color=#00ffffff size=1>.</style>            matched, except that a pattern matching no names is not
+<style color=#00ffffff size=1>.</style>            replaced by the empty list, but rather stands for itself.
+<style color=#00ffffff size=1>.</style>            Pattern matching is done after all other operations. Thus,
+<style color=#00ffffff size=1>.</style>            	x=/tmp\; echo $x^/*.b
+<style color=#00ffffff size=1>.</style>            matches /tmp/*.b, rather than matching /*.b and then
+<style color=#00ffffff size=1>.</style>            prefixing /tmp.
+
+<style color=#00ffffff size=1>.</style>            A quoted word is a sequence of characters surrounded by
+<style color=#00ffffff size=1>.</style>            single quotes ('). A single quote is represented in a quoted
+<style color=#00ffffff size=1>.</style>            word by a pair of quotes ('').
+
+<style color=#00ffffff size=1>.</style>            Each of the following is an argument.
+<style color=#00ffffff size=1>.</style>            (arguments)
+<style color=#00ffffff size=1>.</style>                 The value of a sequence of arguments enclosed in
+<style color=#00ffffff size=1>.</style>                 parentheses is a list comprising the members of each
+<style color=#00ffffff size=1>.</style>                 element of the sequence. Argument lists have no
+<style color=#00ffffff size=1>.</style>                 recursive structure, although their syntax may suggest
+<style color=#00ffffff size=1>.</style>                 it. The following are entirely equivalent:
+<style color=#00ffffff size=1>.</style>                 	echo hi there everybody
+<style color=#00ffffff size=1>.</style>                 	((echo) (hi there) everybody)
+<style color=#00ffffff size=1>.</style>                 	echo (hi
+<style color=#00ffffff size=1>.</style>                 	there
+<style color=#00ffffff size=1>.</style>                 	everybody
+<style color=#00ffffff size=1>.</style>                 	)
+<style color=#00ffffff size=1>.</style>                 Newlines within parentheses count as simple white
+<style color=#00ffffff size=1>.</style>                 space\; they do not terminate the command. This can be
+<style color=#00ffffff size=1>.</style>                 useful to give some more freedom of layout to commands
+<style color=#00ffffff size=1>.</style>                 that take several commands as arguments, for instance
+<style color=#00ffffff size=1>.</style>                 several of the commands defined in <action name=sh-std(1)>sh-std(1)</action>.
+<style color=#00ffffff size=1>.</style>            $argument
+<style color=#00ffffff size=1>.</style>                 The argument after the $ is the name of a variable
+<style color=#00ffffff size=1>.</style>                 whose value is substituted. Multiple levels of
+<style color=#00ffffff size=1>.</style>                 indirection are possible. Variable values are lists of
+<style color=#00ffffff size=1>.</style>                 strings. If argument is a number n, the value is the n
+<style color=#00ffffff size=1>.</style>                 th element of $*, unless $* doesn't have n elements, in
+<style color=#00ffffff size=1>.</style>                 which case the value is empty. Assignments to variables
+<style color=#00ffffff size=1>.</style>                 are described under Assignment , below.
+<style color=#00ffffff size=1>.</style>            $#argument
+<style color=#00ffffff size=1>.</style>                 The value is the number of elements in the named
+<style color=#00ffffff size=1>.</style>                 variable. A variable never assigned a value has zero
+<style color=#00ffffff size=1>.</style>                 elements.
+<style color=#00ffffff size=1>.</style>            $"argument
+<style color=#00ffffff size=1>.</style>                 The value is a single string containing the components
+<style color=#00ffffff size=1>.</style>                 of the named variable separated by spaces.  A variable
+<style color=#00ffffff size=1>.</style>                 with zero elements yields the empty string.
+<style color=#00ffffff size=1>.</style>            `{command}
+<style color=#00ffffff size=1>.</style>            "{command}
+<style color=#00ffffff size=1>.</style>                 Sh executes the command and reads its standard output.
+<style color=#00ffffff size=1>.</style>                 If backquote (`) is used, it is split into a list of
+<style color=#00ffffff size=1>.</style>                 arguments, using characters in $ifs as separators. If
+<style color=#00ffffff size=1>.</style>                 $ifs is not otherwise set, its value is ' \t\n'. If
+<style color=#00ffffff size=1>.</style>                 doublequote (") is used, no tokenization takes place.
+<style color=#00ffffff size=1>.</style>            argument^argument
+<style color=#00ffffff size=1>.</style>                 The ^ operator concatenates its two operands. If the
+<style color=#00ffffff size=1>.</style>                 two operands have the same number of components, they
+<style color=#00ffffff size=1>.</style>                 are concatenated pairwise. If not, then one operand
+<style color=#00ffffff size=1>.</style>                 must have one component, and the other must be
+<style color=#00ffffff size=1>.</style>                 non-empty, and concatenation is distributive.
+<style color=#00ffffff size=1>.</style>            ${command}
+<style color=#00ffffff size=1>.</style>                 Command must be a simple command with no redirections\;
+<style color=#00ffffff size=1>.</style>                 its first word must be the name of a builtin
+<style color=#00ffffff size=1>.</style>                 substitution operator. The operator is invoked and its
+<style color=#00ffffff size=1>.</style>                 value substituted. See Built-in Commands, below, for
+<style color=#00ffffff size=1>.</style>                 more information on builtins.
+<style color=#00ffffff size=1>.</style>            <{command}
+<style color=#00ffffff size=1>.</style>            >{command}
+<style color=#00ffffff size=1>.</style>                 The command is executed asynchronously with its
+<style color=#00ffffff size=1>.</style>                 standard output or standard input connected to a pipe.
+<style color=#00ffffff size=1>.</style>                 The value of the argument is the name of a file
+<style color=#00ffffff size=1>.</style>                 referring to the other end of the pipe. This allows the
+<style color=#00ffffff size=1>.</style>                 construction of non-linear pipelines. For example, the
+<style color=#00ffffff size=1>.</style>                 following runs two commands old and new and uses cmp to
+<style color=#00ffffff size=1>.</style>                 compare their outputs
+<style color=#00ffffff size=1>.</style>                 	cmp <{old} <{new}
+
+<style color=#00ffffff size=1>.</style>         Free Carets
+<style color=#00ffffff size=1>.</style>            In most circumstances, sh will insert the ^ operator
+<style color=#00ffffff size=1>.</style>            automatically between words that are not separated by white
+<style color=#00ffffff size=1>.</style>            space. Whenever one of $ ' ` follows a quoted or unquoted
+<style color=#00ffffff size=1>.</style>            word or an unquoted word follows a quoted word with no
+<style color=#00ffffff size=1>.</style>            intervening blanks or tabs, a ^ is inserted between the two.
+<style color=#00ffffff size=1>.</style>            If an unquoted word immediately follows a $ and contains a
+<style color=#00ffffff size=1>.</style>            character other than an alphanumeric, underscore, or *, a ^
+<style color=#00ffffff size=1>.</style>            is inserted before the first such character. Thus
+
+<style color=#00ffffff size=1>.</style>                 limbo -$flags $stem.b
+
+<style color=#00ffffff size=1>.</style>            is equivalent to
+
+<style color=#00ffffff size=1>.</style>                 limbo -^$flags $stem^.b
+
+<style color=#00ffffff size=1>.</style>         Assignment
+<style color=#00ffffff size=1>.</style>            A command of the form name=value or name:=value assigns
+<style color=#00ffffff size=1>.</style>            value to the environment variable named name. Value is
+<style color=#00ffffff size=1>.</style>            either a list of arguments or an assignment statement. In
+<style color=#00ffffff size=1>.</style>            the latter case value is taken from the value assigned in
+<style color=#00ffffff size=1>.</style>            the assignment statement. If := is used, the value is stored
+<style color=#00ffffff size=1>.</style>            in the innermost local scope. A local scope is created every
+<style color=#00ffffff size=1>.</style>            time a braced block is entered, and destroyed when the block
+<style color=#00ffffff size=1>.</style>            is left. If = is used, the value is stored in the innermost
+<style color=#00ffffff size=1>.</style>            scope that contains any definition of name.
+
+<style color=#00ffffff size=1>.</style>            A list of names can also be used in place of name, which
+<style color=#00ffffff size=1>.</style>            causes each element of value in turn to be assigned the
+<style color=#00ffffff size=1>.</style>            respective variable name in the list. The last variable in
+<style color=#00ffffff size=1>.</style>            the list is assigned any elements that are left over. If
+<style color=#00ffffff size=1>.</style>            there are more variable names than elements in value, the
+<style color=#00ffffff size=1>.</style>            remaining elements are assigned the null list. For instance,
+<style color=#00ffffff size=1>.</style>            after the assignment:
+<style color=#00ffffff size=1>.</style>            	(a b c) = one two three four five
+<style color=#00ffffff size=1>.</style>            $a is one, $b is two, and $c contains the remaining three
+<style color=#00ffffff size=1>.</style>            elements (three four five).
+
+<style color=#00ffffff size=1>.</style>         I/O Redirections
+<style color=#00ffffff size=1>.</style>            The sequence >file redirects the standard output file (file
+<style color=#00ffffff size=1>.</style>            descriptor 1, normally the terminal) to the named file\; >>
+<style color=#00ffffff size=1>.</style>            file appends standard output to the file. The standard input
+<style color=#00ffffff size=1>.</style>            file (file descriptor 0, also normally the terminal) may be
+<style color=#00ffffff size=1>.</style>            redirected from a file by the sequence <file, or by the
+<style color=#00ffffff size=1>.</style>            sequence <>file, which opens the file for writing as well as
+<style color=#00ffffff size=1>.</style>            reading. Note that if file is in fact a parsed braced block,
+<style color=#00ffffff size=1>.</style>            the redirection will be treated as pipe to the given command
+<style color=#00ffffff size=1>.</style>            - it is identical to the <{} operator mentioned above.
+
+<style color=#00ffffff size=1>.</style>            Redirections may be applied to a file-descriptor other than
+<style color=#00ffffff size=1>.</style>            standard input or output by qualifying the redirection
+<style color=#00ffffff size=1>.</style>            operator with a number in square brackets. For example, the
+<style color=#00ffffff size=1>.</style>            diagnostic output (file descriptor 2) may be redirected by
+<style color=#00ffffff size=1>.</style>            writing limbo junk.b >\[2\] junk.
+
+<style color=#00ffffff size=1>.</style>            A file descriptor may be redirected to an already open
+<style color=#00ffffff size=1>.</style>            descriptor by writing >\[fd0=fd1\] or <\[fd0=fd1\]. Fd1 is a
+<style color=#00ffffff size=1>.</style>            previously opened file descriptor and fd0 becomes a new copy
+<style color=#00ffffff size=1>.</style>            (in the sense of <action name=sys-dup(2)>sys-dup(2)</action>) of it.
+
+<style color=#00ffffff size=1>.</style>            Redirections are executed from left to right. Therefore,
+<style color=#00ffffff size=1>.</style>            limbo junk.b >/dev/null >\[2=1\] and limbo junk.b >\[2=1\]
+<style color=#00ffffff size=1>.</style>            >/dev/null have different effects: the first puts standard
+<style color=#00ffffff size=1>.</style>            output in /dev/null and then puts diagnostic output in the
+<style color=#00ffffff size=1>.</style>            same place, where the second directs diagnostic output to
+<style color=#00ffffff size=1>.</style>            the terminal and sends standard output to /dev/null.
+
+<style color=#00ffffff size=1>.</style>         Compound Commands
+<style color=#00ffffff size=1>.</style>            A pair of commands separated by a pipe operator (|) is a
+<style color=#00ffffff size=1>.</style>            command. The standard output of the left command is sent
+<style color=#00ffffff size=1>.</style>            through a pipe to the standard input of the right command.
+<style color=#00ffffff size=1>.</style>            The pipe operator may be decorated to use different file
+<style color=#00ffffff size=1>.</style>            descriptors. |\[fd\] connects the output end of the pipe to
+<style color=#00ffffff size=1>.</style>            file descriptor fd rather than 1. |\[fd0=fd1\] connects output
+<style color=#00ffffff size=1>.</style>            to fd1 of the left command and input to fd0 of the right
+<style color=#00ffffff size=1>.</style>            command.
+
+<style color=#00ffffff size=1>.</style>            A sequence of commands separated by &, \;, or newline may be
+<style color=#00ffffff size=1>.</style>            grouped by surrounding them with braces ({}), elsewhere
+<style color=#00ffffff size=1>.</style>            referred to as a braced block. A braced block may be used
+<style color=#00ffffff size=1>.</style>            anywhere that a simple word is expected. If a simple command
+<style color=#00ffffff size=1>.</style>            is found with a braced block as its first word, the variable
+<style color=#00ffffff size=1>.</style>            $* is set to any following arguments, $0 is set to the block
+<style color=#00ffffff size=1>.</style>            itself, and the commands are executed in sequence. If a
+<style color=#00ffffff size=1>.</style>            braced block is passed as an argument, no execution takes
+<style color=#00ffffff size=1>.</style>            place: the block is converted to a functionally equivalent
+<style color=#00ffffff size=1>.</style>            string, suitable for later re-interpretation by the shell.
+<style color=#00ffffff size=1>.</style>            The null command ({}) has no effect and always gives a nil
+<style color=#00ffffff size=1>.</style>            status. For instance the following commands all produce the
+<style color=#00ffffff size=1>.</style>            same result:
+<style color=#00ffffff size=1>.</style>            	echo hello world
+<style color=#00ffffff size=1>.</style>            	{echo hello world}
+<style color=#00ffffff size=1>.</style>            	'{echo hello world}'
+<style color=#00ffffff size=1>.</style>            	{echo $*} hello world
+<style color=#00ffffff size=1>.</style>            	sh -c {echo hello world}
+<style color=#00ffffff size=1>.</style>            	{$*} {echo hello world}
+<style color=#00ffffff size=1>.</style>            	{$*} {{$*} {echo hello world}}
+<style color=#00ffffff size=1>.</style>            	"{echo {echo hello world}}
+<style color=#00ffffff size=1>.</style>            	'{echo hello' ^ ' world}'
+<style color=#00ffffff size=1>.</style>            	x := {echo hello world}\; $x
+<style color=#00ffffff size=1>.</style>            It is important to note that the value of $* is lost every
+<style color=#00ffffff size=1>.</style>            time a braced block is entered, so for instance, the
+<style color=#00ffffff size=1>.</style>            following command prints an empty string:
+<style color=#00ffffff size=1>.</style>            	{{echo $*}} hello world
+
+<style color=#00ffffff size=1>.</style>         Built-in Commands
+<style color=#00ffffff size=1>.</style>            The term ``built-in command'', or just ``builtin'', is used
+<style color=#00ffffff size=1>.</style>            somewhat loosely in this document to refer to any command
+<style color=#00ffffff size=1>.</style>            that is executed directly by the shell\; most built-in
+<style color=#00ffffff size=1>.</style>            commands are defined by externally loaded modules\; there are
+<style color=#00ffffff size=1>.</style>            a few that are not, known as ``internal'' builtins, listed
+<style color=#00ffffff size=1>.</style>            below.
+
+<style color=#00ffffff size=1>.</style>            Given sh's ability to pass compound commands (braced blocks)
+<style color=#00ffffff size=1>.</style>            as arguments to other commands, most control-flow
+<style color=#00ffffff size=1>.</style>            functionality that is traditionally hard-wired into a shell
+<style color=#00ffffff size=1>.</style>            is in sh implemented by loadable modules. See <action name=sh-std(1)>sh-std(1)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=sh-expr(1)>sh-expr(1)</action>, and <action name=sh-tk(1)>sh-tk(1)</action> for more details.
+
+<style color=#00ffffff size=1>.</style>            There are two classes of built-in commands\; the first class,
+<style color=#00ffffff size=1>.</style>            known simply as ``builtins'', are used in the same way as
+<style color=#00ffffff size=1>.</style>            normal commands, the only difference being that builtins can
+<style color=#00ffffff size=1>.</style>            raise exceptions, while external commands cannot, as they
+<style color=#00ffffff size=1>.</style>            are run in a separate process. The second class, known as
+<style color=#00ffffff size=1>.</style>            ``builtin substitutions'' can only be used as the first word
+<style color=#00ffffff size=1>.</style>            of the command in the ${} operator. The two classes exist in
+<style color=#00ffffff size=1>.</style>            different name-spaces: a builtin  may do something quite
+<style color=#00ffffff size=1>.</style>            different from a builtin substitution of the same name.
+
+<style color=#00ffffff size=1>.</style>            In general, normal builtins perform some action or test some
+<style color=#00ffffff size=1>.</style>            condition\; the return status of a normal builtin usually
+<style color=#00ffffff size=1>.</style>            indicates error status or conditional success. The rôle of a
+<style color=#00ffffff size=1>.</style>            substitution builtin is to yield a value, (possibly a list)
+<style color=#00ffffff size=1>.</style>            which is substituted directly into place as part of the
+<style color=#00ffffff size=1>.</style>            argument list of a command.
+
+<style color=#00ffffff size=1>.</style>            @ command ...
+<style color=#00ffffff size=1>.</style>                 Execute command in a subshell, allowing (for instance)
+<style color=#00ffffff size=1>.</style>                 the name-space to be forked independently of main
+<style color=#00ffffff size=1>.</style>                 shell.
+<style color=#00ffffff size=1>.</style>            run file ...
+<style color=#00ffffff size=1>.</style>                 Execute commands from file. $* is set for the duration
+<style color=#00ffffff size=1>.</style>                 to the remainder of the argument list following file.
+<style color=#00ffffff size=1>.</style>            builtin command ...
+<style color=#00ffffff size=1>.</style>                 Execute command as usual except that any command
+<style color=#00ffffff size=1>.</style>                 defined by an external module is ignored in favour of
+<style color=#00ffffff size=1>.</style>                 the original meaning. This command cannot be redefined
+<style color=#00ffffff size=1>.</style>                 by an external module.
+<style color=#00ffffff size=1>.</style>            exit
+<style color=#00ffffff size=1>.</style>                 Terminate the current process.
+<style color=#00ffffff size=1>.</style>            load path...
+<style color=#00ffffff size=1>.</style>                 Load tries to load each of its arguments as a builtin
+<style color=#00ffffff size=1>.</style>                 module into sh. If a module load succeeds, each builtin
+<style color=#00ffffff size=1>.</style>                 command defined by that module is added to the list of
+<style color=#00ffffff size=1>.</style>                 builtin commands. If there was a previous definition of
+<style color=#00ffffff size=1>.</style>                 the command, it is replaced, with the exception of
+<style color=#00ffffff size=1>.</style>                 internal sh builtins, which are covered up and reappear
+<style color=#00ffffff size=1>.</style>                 when the module is unloaded. If a module with the same
+<style color=#00ffffff size=1>.</style>                 path has already been loaded, sh does not try to load
+<style color=#00ffffff size=1>.</style>                 it again. Unless the path begins with / or ./, the
+<style color=#00ffffff size=1>.</style>                 shell looks in the standard builtins directory /dis/sh
+<style color=#00ffffff size=1>.</style>                 for the module. If a load fails, a bad module exception
+<style color=#00ffffff size=1>.</style>                 is raised. The environment variable $autoload can be
+<style color=#00ffffff size=1>.</style>                 set to a list of Shell modules that each instance of sh
+<style color=#00ffffff size=1>.</style>                 should load automatically during its initialisation.
+<style color=#00ffffff size=1>.</style>                 (More precisely, the modules are loaded when a new
+<style color=#00ffffff size=1>.</style>                 Sh->Context is created: see <action name=sh(2)>sh(2)</action> for details.)
+<style color=#00ffffff size=1>.</style>            unload path...
+<style color=#00ffffff size=1>.</style>                 Unload undoes previous load commands. To succeed, path
+<style color=#00ffffff size=1>.</style>                 must be the same as that given to a previous invocation
+<style color=#00ffffff size=1>.</style>                 of load.
+<style color=#00ffffff size=1>.</style>            loaded
+<style color=#00ffffff size=1>.</style>                 Loaded prints all the builtin commands currently
+<style color=#00ffffff size=1>.</style>                 defined, along with the name of the module that defined
+<style color=#00ffffff size=1>.</style>                 them. Internally defined commands are tagged with
+<style color=#00ffffff size=1>.</style>                 module builtin.
+<style color=#00ffffff size=1>.</style>            whatis name ...
+<style color=#00ffffff size=1>.</style>                 Print the value of each name in a form suitable for
+<style color=#00ffffff size=1>.</style>                 input to sh. The forms are:
+<style color=#00ffffff size=1>.</style>                      varname = value...
+<style color=#00ffffff size=1>.</style>                           Varname is a non-nil environment variable.
+<style color=#00ffffff size=1>.</style>                      load module\; name
+<style color=#00ffffff size=1>.</style>                           Name has been defined as a builtin by the
+<style color=#00ffffff size=1>.</style>                           externally loaded module.
+<style color=#00ffffff size=1>.</style>                      load module\; ${name}
+<style color=#00ffffff size=1>.</style>                           Name has been defined as a builtin
+<style color=#00ffffff size=1>.</style>                           substitution by the externally loaded module.
+<style color=#00ffffff size=1>.</style>                      builtin name
+<style color=#00ffffff size=1>.</style>                           Name is defined as a builtin internally by sh
+<style color=#00ffffff size=1>.</style>                           .
+<style color=#00ffffff size=1>.</style>                      ${name}
+<style color=#00ffffff size=1>.</style>                           Name is defined as a builtin substitution
+<style color=#00ffffff size=1>.</style>                           internally by the shell.
+<style color=#00ffffff size=1>.</style>                      pathname
+<style color=#00ffffff size=1>.</style>                           The completed pathname of an external file.
+<style color=#00ffffff size=1>.</style>            ${builtin command }
+<style color=#00ffffff size=1>.</style>                 Does for substitution builtin commands what builtin
+<style color=#00ffffff size=1>.</style>                 does for normal commands.
+<style color=#00ffffff size=1>.</style>            ${loaded}
+<style color=#00ffffff size=1>.</style>                 The loaded builtin substitution yields a list of the
+<style color=#00ffffff size=1>.</style>                 names of all the modules currently loaded, as passed to
+<style color=#00ffffff size=1>.</style>                 load.
+<style color=#00ffffff size=1>.</style>            ${quote list}
+<style color=#00ffffff size=1>.</style>                 Quote yields a single element list which if reparsed by
+<style color=#00ffffff size=1>.</style>                 the shell will recreate list.
+<style color=#00ffffff size=1>.</style>            ${bquote list}
+<style color=#00ffffff size=1>.</style>                 Same as quote except that items in list that are known
+<style color=#00ffffff size=1>.</style>                 to be well-formed command blocks are not quoted.
+<style color=#00ffffff size=1>.</style>            ${unquote arg}
+<style color=#00ffffff size=1>.</style>                 Unquote reverses the operation of quote, yielding the
+<style color=#00ffffff size=1>.</style>                 original list of values. For example, ${unquote ${quote
+<style color=#00ffffff size=1>.</style>                 list}} yields list. A list quoted with bquote can only
+<style color=#00ffffff size=1>.</style>                 be unquoted by parsing.
+
+<style color=#00ffffff size=1>.</style>         Environment
+<style color=#00ffffff size=1>.</style>            The environment is a list of strings made available to
+<style color=#00ffffff size=1>.</style>            externally executing commands by the env module (see env
+<style color=#00ffffff size=1>.</style>            (2)). If the env module does not exist or cannot be loaded,
+<style color=#00ffffff size=1>.</style>            no error will be reported, but no variables can be exported
+<style color=#00ffffff size=1>.</style>            to external commands. Sh creates an environment entry for
+<style color=#00ffffff size=1>.</style>            each variable whose value is non-empty. This is formatted as
+<style color=#00ffffff size=1>.</style>            if it had been run through ${quote}. Note that in order for
+<style color=#00ffffff size=1>.</style>            a variable to be exported, its name must conform to the
+<style color=#00ffffff size=1>.</style>            restrictions imposed by <action name=env(3)>env(3)</action>\; names that do not will not
+<style color=#00ffffff size=1>.</style>            be exported.
+
+<style color=#00ffffff size=1>.</style>            When sh starts executing it reads variable definitions from
+<style color=#00ffffff size=1>.</style>            its environment.
+
+<style color=#00ffffff size=1>.</style>            Internally, the shell holds a context, which holds a stack
+<style color=#00ffffff size=1>.</style>            of environment variables, the current execution flags and
+<style color=#00ffffff size=1>.</style>            the list of built-in modules. A copy is made whereever
+<style color=#00ffffff size=1>.</style>            parallel access to the context might occur. This happens for
+<style color=#00ffffff size=1>.</style>            processes executing in a pipeline, processes run
+<style color=#00ffffff size=1>.</style>            asynchronously with &, and in any builtin command that runs
+<style color=#00ffffff size=1>.</style>            a shell command asynchronously.
+
+<style color=#00ffffff size=1>.</style>         Exceptions
+<style color=#00ffffff size=1>.</style>            When sh encounters an error processing its input, an
+<style color=#00ffffff size=1>.</style>            exception is raised, and if the -v flag is set, an error
+<style color=#00ffffff size=1>.</style>            message is printed to standard error. An exception causes
+<style color=#00ffffff size=1>.</style>            processing of the current command to terminate and control
+<style color=#00ffffff size=1>.</style>            to be transferred back up the invocation stack. In an
+<style color=#00ffffff size=1>.</style>            interactive shell, the central command processing loop
+<style color=#00ffffff size=1>.</style>            catches all exceptions and sets $status to the name of the
+<style color=#00ffffff size=1>.</style>            exception. Exceptions are not propagated between processes.
+<style color=#00ffffff size=1>.</style>            Any command that requires I/O redirection is run in a
+<style color=#00ffffff size=1>.</style>            separate process, namely pipes (|), redirections (>, <, >>,
+<style color=#00ffffff size=1>.</style>            and <>), backquote substitution (`, ") and background
+<style color=#00ffffff size=1>.</style>            processes (&). Exceptions can be raised and rescued using
+<style color=#00ffffff size=1>.</style>            the raise and rescue functions in the standard builtins
+<style color=#00ffffff size=1>.</style>            module, std. (See <action name=sh-std(1)>sh-std(1)</action>). Names of exceptions raised by
+<style color=#00ffffff size=1>.</style>            sh include:
+
+<style color=#00ffffff size=1>.</style>            parse error
+<style color=#00ffffff size=1>.</style>                      An error has occurred trying to parse a command.
+
+<style color=#00ffffff size=1>.</style>            usage     A builtin has been passed an invalid set of
+<style color=#00ffffff size=1>.</style>                      arguments\;
+
+<style color=#00ffffff size=1>.</style>            bad redir An error was encountered trying to open files
+<style color=#00ffffff size=1>.</style>                      prior to running a process.
+
+<style color=#00ffffff size=1>.</style>            bad $ arg An invalid name was given to the $ or ${}
+<style color=#00ffffff size=1>.</style>                      operator.
+
+<style color=#00ffffff size=1>.</style>            no pipe   Sh failed to make a pipe.
+
+<style color=#00ffffff size=1>.</style>            bad wait read
+<style color=#00ffffff size=1>.</style>                      An error occurred while waiting for a process to
+<style color=#00ffffff size=1>.</style>                      exit.
+
+<style color=#00ffffff size=1>.</style>            builtin not found
+<style color=#00ffffff size=1>.</style>                      A substitution builtin was named but not found.
+
+<style color=#00ffffff size=1>.</style>         Special Variables
+<style color=#00ffffff size=1>.</style>            The following variables are set or used by sh.
+<style color=#00ffffff size=1>.</style>            $*   Set to sh's argument list during initialization.
+<style color=#00ffffff size=1>.</style>                 Whenever a braced block is executed, the current value
+<style color=#00ffffff size=1>.</style>                 is saved and $* receives the new argument list. The
+<style color=#00ffffff size=1>.</style>                 saved value is restored on completion of the block.
+<style color=#00ffffff size=1>.</style>            $apid
+<style color=#00ffffff size=1>.</style>                 Whenever a process is started asynchronously with &,
+<style color=#00ffffff size=1>.</style>                 $apid is set to its process id.
+<style color=#00ffffff size=1>.</style>            $ifs The input field separators used in backquote
+<style color=#00ffffff size=1>.</style>                 substitutions. If $ifs is not set in sh's environment,
+<style color=#00ffffff size=1>.</style>                 it is initialized to blank, tab and newline.
+<style color=#00ffffff size=1>.</style>            $prompt
+<style color=#00ffffff size=1>.</style>                 When sh is run interactively, the first component of
+<style color=#00ffffff size=1>.</style>                 $prompt is printed before reading each command. The
+<style color=#00ffffff size=1>.</style>                 second component is printed whenever a newline is typed
+<style color=#00ffffff size=1>.</style>                 and more lines are required to complete the command. If
+<style color=#00ffffff size=1>.</style>                 not set in the environment, it is initialized by
+<style color=#00ffffff size=1>.</style>                 prompt=('% ' '').
+<style color=#00ffffff size=1>.</style>            $status
+<style color=#00ffffff size=1>.</style>                 Set to the wait message of the last-executed program,
+<style color=#00ffffff size=1>.</style>                 the return status of the last-executed builtin (unless
+<style color=#00ffffff size=1>.</style>                 started with &), or the name of the last-raised
+<style color=#00ffffff size=1>.</style>                 exception, whichever is most recent. When sh exits at
+<style color=#00ffffff size=1>.</style>                 end-of-file of its input, $status is its exit status.
+
+<style color=#00ffffff size=1>.</style>         Invocation
+<style color=#00ffffff size=1>.</style>            If sh is started with no arguments it reads commands from
+<style color=#00ffffff size=1>.</style>            standard input. Otherwise its first non-flag argument is the
+<style color=#00ffffff size=1>.</style>            name of a file from which to read commands (but see -c
+<style color=#00ffffff size=1>.</style>            below). Subsequent arguments become the initial value of $*.
+<style color=#00ffffff size=1>.</style>            Sh accepts the following command-line flags.
+<style color=#00ffffff size=1>.</style>            -c string
+<style color=#00ffffff size=1>.</style>                 Commands are read from string.
+<style color=#00ffffff size=1>.</style>            -i   If -i is present, or sh is given no arguments and its
+<style color=#00ffffff size=1>.</style>                 standard input is a terminal, it runs interactively.
+<style color=#00ffffff size=1>.</style>                 Commands are prompted for using $prompt. This option
+<style color=#00ffffff size=1>.</style>                 implies -v.
+<style color=#00ffffff size=1>.</style>            -l   If -l is given sh reads commands from /lib/sh/profile,
+<style color=#00ffffff size=1>.</style>                 if it exists, and then ./lib/profile, if it exists,
+<style color=#00ffffff size=1>.</style>                 before reading its normal input.
+<style color=#00ffffff size=1>.</style>            -n   Normally, sh forks its namespace on startup\; if -n is
+<style color=#00ffffff size=1>.</style>                 given, this behaviour is suppressed.
+<style color=#00ffffff size=1>.</style>            -v   Within a non-interactive shell, informational messages
+<style color=#00ffffff size=1>.</style>                 printed to standard error are usually disabled\; giving
+<style color=#00ffffff size=1>.</style>                 the -v flag enables them.
+<style color=#00ffffff size=1>.</style>            -x   Print each simple command to stderr before executing
+<style color=#00ffffff size=1>.</style>                 it.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sh/sh.y
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=sh-std(1)>sh-std(1)</action>, <action name=sh-expr(1)>sh-expr(1)</action>, <action name=sh-file2chan(1)>sh-file2chan(1)</action>, <action name=sh-tk(1)>sh-tk(1)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=sh-arg(1)>sh-arg(1)</action>, <action name=sh-regex(1)>sh-regex(1)</action>, <action name=sh-string(1)>sh-string(1)</action>, <action name=sh-csv(1)>sh-csv(1)</action>, <action name=sh(2)>sh(2)</action>, env
+<style color=#00ffffff size=1>.</style>            (2)
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Due to lack of system support, appending to a file with >>
+<style color=#00ffffff size=1>.</style>            will not work correctly when there are multiple concurrent
+<style color=#00ffffff size=1>.</style>            writers (but see the examples section of <action name=sh-file2chan(1)>sh-file2chan(1)</action> for
+<style color=#00ffffff size=1>.</style>            one solution to this).
+
+<style color=#00ffffff size=1>.</style>            While it is possible to use the shell as a general purpose
+<style color=#00ffffff size=1>.</style>            programming language, it is a very slow one! Intensive tasks
+<style color=#00ffffff size=1>.</style>            are best done in Limbo, which is a much safer language to
+<style color=#00ffffff size=1>.</style>            boot.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

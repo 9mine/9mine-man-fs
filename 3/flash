@@ -1,0 +1,124 @@
+<action name=FLASH(3)>FLASH(3)</action>                                                 <action name=FLASH(3)>FLASH(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            flash - flash memory
+
+SYNOPSYS
+<style color=#00ffffff size=1>.</style>            bind -a #F\[n\] /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/flash
+<style color=#00ffffff size=1>.</style>            /dev/flash/part
+<style color=#00ffffff size=1>.</style>            /dev/flash/partctl
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The flash memory device serves a two-level directory, giving
+<style color=#00ffffff size=1>.</style>            access to files representing part or all of a bank of flash
+<style color=#00ffffff size=1>.</style>            memory. A platform might have more than one bank of flash,
+<style color=#00ffffff size=1>.</style>            numbered starting from 0. The attach specifier n is a
+<style color=#00ffffff size=1>.</style>            decimal integer that selects a particular bank of flash
+<style color=#00ffffff size=1>.</style>            (default: 0). Both NOR and NAND flash is supported. For both
+<style color=#00ffffff size=1>.</style>            types of flash, the driver gives a read/write/erase
+<style color=#00ffffff size=1>.</style>            interface to the raw flash device, which can impose
+<style color=#00ffffff size=1>.</style>            constraints on operations beyond those imposed by the
+<style color=#00ffffff size=1>.</style>            driver. Other drivers such as <action name=ftl(3)>ftl(3)</action> or <action name=logfs(3)>logfs(3)</action> implement
+<style color=#00ffffff size=1>.</style>            any higher-level format required, including ECC for NAND
+<style color=#00ffffff size=1>.</style>            flash, for instance.
+
+<style color=#00ffffff size=1>.</style>            The top level directory contains a single directory named
+<style color=#00ffffff size=1>.</style>            flash for bank 0, and flashn for each other bank n. It
+<style color=#00ffffff size=1>.</style>            contains two files for each partition: a data file part and
+<style color=#00ffffff size=1>.</style>            an associated control file partctl, where part is the name
+<style color=#00ffffff size=1>.</style>            of the partition. Each partition represents a region of
+<style color=#00ffffff size=1>.</style>            flash memory that starts and ends on a flash segment (erase
+<style color=#00ffffff size=1>.</style>            unit) boundary. The system initially creates a single
+<style color=#00ffffff size=1>.</style>            standard partition flash representing the whole of flash
+<style color=#00ffffff size=1>.</style>            memory, and the corresponding control file flashctl. Other
+<style color=#00ffffff size=1>.</style>            partitions can be created by writing to flashctl as
+<style color=#00ffffff size=1>.</style>            described below.
+
+<style color=#00ffffff size=1>.</style>            The data file part provides read and write access to the
+<style color=#00ffffff size=1>.</style>            bytes on the system's flash memory. Bytes can be read and
+<style color=#00ffffff size=1>.</style>            written on any byte boundary: the interface hides any
+<style color=#00ffffff size=1>.</style>            alignment restrictions. A read returns the value of the
+<style color=#00ffffff size=1>.</style>            bytes at the current file offset, where zero is the start of
+<style color=#00ffffff size=1>.</style>            the partition. A write reprograms the flash to the given
+<style color=#00ffffff size=1>.</style>            byte values, at the current file offset (relative to the
+<style color=#00ffffff size=1>.</style>            start of the partition), using the physical device's
+<style color=#00ffffff size=1>.</style>            reprogramming algorithm. An erased flash byte is logically
+<style color=#00ffffff size=1>.</style>            16rFF (regardless of the conventions of the physical flash
+<style color=#00ffffff size=1>.</style>            device). A write can change a bit with value 1 to a 0, but
+<style color=#00ffffff size=1>.</style>            cannot change a 0 bit to 1\; that can only be done by erasing
+<style color=#00ffffff size=1>.</style>            one or more flash segments. NAND flash typically has
+<style color=#00ffffff size=1>.</style>            restrictions on the number of writes allowed to a page
+<style color=#00ffffff size=1>.</style>            before requiring a block erase. Reads and writes are
+<style color=#00ffffff size=1>.</style>            unbuffered.
+
+<style color=#00ffffff size=1>.</style>            The control file partctl can be read and written. A read
+<style color=#00ffffff size=1>.</style>            returns several lines containing decimal and hexadecimal
+<style color=#00ffffff size=1>.</style>            numbers (separated by white space) revealing the
+<style color=#00ffffff size=1>.</style>            characteristics of memory within the partition. The first
+<style color=#00ffffff size=1>.</style>            line gives the the manufacturer ID,  the flash device ID,
+<style color=#00ffffff size=1>.</style>            the memory width in bytes, and a string giving the flash
+<style color=#00ffffff size=1>.</style>            type (currently either nor or nand). Subsequent lines give
+<style color=#00ffffff size=1>.</style>            characteristics of each group of erase units within the
+<style color=#00ffffff size=1>.</style>            partition, where the erase units within a group have the
+<style color=#00ffffff size=1>.</style>            same properties. Each line gives the start and end (as byte
+<style color=#00ffffff size=1>.</style>            addresses) of the erase units in the region that lie within
+<style color=#00ffffff size=1>.</style>            the partition, followed by the size in bytes of each erase
+<style color=#00ffffff size=1>.</style>            unit, which is followed for NAND flash by the size in bytes
+<style color=#00ffffff size=1>.</style>            of a page. The sizes for NAND flash include the extra bytes
+<style color=#00ffffff size=1>.</style>            per page typically used to hold an ECC and block status. A
+<style color=#00ffffff size=1>.</style>            write contains one of the following textual commands:
+<style color=#00ffffff size=1>.</style>            add name start end
+<style color=#00ffffff size=1>.</style>                     Create a new partition that ranges from start to
+<style color=#00ffffff size=1>.</style>                     end within the current partition. Each value must
+<style color=#00ffffff size=1>.</style>                     be numeric (decimal, octal or hexadecimal) and a
+<style color=#00ffffff size=1>.</style>                     multiple of the erase unit size. Name must not be
+<style color=#00ffffff size=1>.</style>                     the name of an existing partition. On success, new
+<style color=#00ffffff size=1>.</style>                     files name and namectl will appear in the parent
+<style color=#00ffffff size=1>.</style>                     flash directory.
+<style color=#00ffffff size=1>.</style>            erase all
+<style color=#00ffffff size=1>.</style>                     Erase the whole flash partition, setting all bytes
+<style color=#00ffffff size=1>.</style>                     to 16rFF, except those that are hardware
+<style color=#00ffffff size=1>.</style>                     write-protected.
+<style color=#00ffffff size=1>.</style>            erase offset
+<style color=#00ffffff size=1>.</style>                     Erase the segment that begins at the given offset
+<style color=#00ffffff size=1>.</style>                     within the partition, setting all bytes to 16rFF,
+<style color=#00ffffff size=1>.</style>                     except those that are hardware write-protected. The
+<style color=#00ffffff size=1>.</style>                     offset is given in bytes, but must be a multiple of
+<style color=#00ffffff size=1>.</style>                     the segment (erase unit) size.
+<style color=#00ffffff size=1>.</style>            protectboot\[ off \]
+<style color=#00ffffff size=1>.</style>                     By default the system prevents erase unit 0 of the
+<style color=#00ffffff size=1>.</style>                     flash from being erased or written, assuming it
+<style color=#00ffffff size=1>.</style>                     contains the primary bootstrap. Writing this
+<style color=#00ffffff size=1>.</style>                     command with parameter off removes that protection.
+<style color=#00ffffff size=1>.</style>                     Writing protectboot with any other parameter (or
+<style color=#00ffffff size=1>.</style>                     none) restores the protection. Note that a
+<style color=#00ffffff size=1>.</style>                     manufacturer might also have locked the flash in
+<style color=#00ffffff size=1>.</style>                     hardware, and that protection must be removed in a
+<style color=#00ffffff size=1>.</style>                     device-dependent way.
+<style color=#00ffffff size=1>.</style>            sync     If the underlying device must buffer or cache
+<style color=#00ffffff size=1>.</style>                     (current devices do not), flush the buffer(s).
+
+<style color=#00ffffff size=1>.</style>            The syntax of all numbers is that of strtoul(10.2)\; the
+<style color=#00ffffff size=1>.</style>            default base is 10.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/*/devflash.c
+<style color=#00ffffff size=1>.</style>            /os/*/flash*.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ftl(3)>ftl(3)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            A write will return an error if an attempt is made to change
+<style color=#00ffffff size=1>.</style>            a 0 bit to 1, or if the flash memory fails to be programmed
+<style color=#00ffffff size=1>.</style>            correctly.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The flash cannot be written if the kernel is executing
+<style color=#00ffffff size=1>.</style>            directly from flash, because the physical flash cannot be
+<style color=#00ffffff size=1>.</style>            read during programming, and the driver does not copy the
+<style color=#00ffffff size=1>.</style>            programming code to DRAM.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

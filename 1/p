@@ -1,0 +1,24 @@
+<action name=P(1)>P(1)</action>                                                         <action name=P(1)>P(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            p - paginate
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            p \[ -number \] \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            P copies its standard input, or the named files if given, to
+<style color=#00ffffff size=1>.</style>            its standard output, stopping at the end of every page, to
+<style color=#00ffffff size=1>.</style>            wait for a newline from the user. The option sets the number
+<style color=#00ffffff size=1>.</style>            of lines on a page (default: 22).
+
+<style color=#00ffffff size=1>.</style>            While waiting for a newline, p interprets the commands:
+
+<style color=#00ffffff size=1>.</style>            !    Pass the rest of the line to the shell as a command.
+
+<style color=#00ffffff size=1>.</style>            q    Quit.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/p.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,53 @@
+<action name=RABIN(2)>RABIN(2)</action>                                                 <action name=RABIN(2)>RABIN(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            rabin - rabin fingerprinting
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "rabin.m"\;
+<style color=#00ffffff size=1>.</style>            rabin := load Rabin Rabin->PATH\;
+<style color=#00ffffff size=1>.</style>            Rcfg, Rfile: import rabin\;
+
+<style color=#00ffffff size=1>.</style>            init:	fn(bufio: Bufio)\;
+<style color=#00ffffff size=1>.</style>            open:	fn(rcfg: ref Rcfg, b: ref Iobuf, min, max: int): (ref Rfile, string)\;
+
+<style color=#00ffffff size=1>.</style>            Rcfg: adt {
+<style color=#00ffffff size=1>.</style>            	mk:	fn(prime, width, mod: int): (ref Rcfg, string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Rfile: adt {
+<style color=#00ffffff size=1>.</style>            	read:	fn(r: self ref Rfile): (array of byte, big, string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Rabin implements a data fingerprinting algorithm.  A rolling
+<style color=#00ffffff size=1>.</style>            checksum is calculated while reading data.  Certain checksum
+<style color=#00ffffff size=1>.</style>            values are taken to be data boundaries and used to split the
+<style color=#00ffffff size=1>.</style>            data into chunks.
+
+<style color=#00ffffff size=1>.</style>            Rcfg represents the parameters to the algorithm\; Rcfg.mk
+<style color=#00ffffff size=1>.</style>            creates a new instance. Prime should be a prime number.
+<style color=#00ffffff size=1>.</style>            Width is the width of the rolling checksum window in bytes.
+<style color=#00ffffff size=1>.</style>            A wider window results in more diverse boundary patterns.  A
+<style color=#00ffffff size=1>.</style>            window of 30 bytes should be reasonable for most uses. Mod
+<style color=#00ffffff size=1>.</style>            effectively sets the mean desired chunk size.  The rolling
+<style color=#00ffffff size=1>.</style>            checksum is calculated modulo mod. All three parameters
+<style color=#00ffffff size=1>.</style>            influence where chunk boundaries will be found.
+
+<style color=#00ffffff size=1>.</style>            Rfile represents a file to read chunks from. Open returns an
+<style color=#00ffffff size=1>.</style>            initialised Rfile or an error string. Min and max are the
+<style color=#00ffffff size=1>.</style>            minimum and maximum size in bytes of chunks that will be
+<style color=#00ffffff size=1>.</style>            returned.  Only the last chunk in a file can be smaller than
+<style color=#00ffffff size=1>.</style>            the minimum chunk size.  Note that the mean chunk size may
+<style color=#00ffffff size=1>.</style>            be off due to these parameters. Data is read from Iobuf b.
+<style color=#00ffffff size=1>.</style>            Rfile.read returns subsequent chunks of data and the file
+<style color=#00ffffff size=1>.</style>            offset at which they were found, or an error message.  After
+<style color=#00ffffff size=1>.</style>            end of file, the returned chunks are zero bytes long.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/rabin.b
+
+AUTHOR
+<style color=#00ffffff size=1>.</style>            Mechiel Lukkien, during GSoC 2007
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

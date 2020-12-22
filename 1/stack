@@ -1,0 +1,96 @@
+<action name=STACK(1)>STACK(1)</action>                                                 <action name=STACK(1)>STACK(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            stack, stackv - examine call stack
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind '#p' /prog
+<style color=#00ffffff size=1>.</style>            stack \[ -v \] \[ -p dispath sblpath \]... pid
+<style color=#00ffffff size=1>.</style>            stackv \[ -Tlm \] \[ -r maxdepth \] \[ pid \[ . sym \] ...\] ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Stack writes to the standard output a stack trace for
+<style color=#00ffffff size=1>.</style>            process pid, by decoding the stack traceback data contained
+<style color=#00ffffff size=1>.</style>            in the file /prog/pid/stack. The -v option causes stack to
+<style color=#00ffffff size=1>.</style>            print values of arguments and variables. The output is most
+<style color=#00ffffff size=1>.</style>            useful when the Limbo program was compiled with the -g
+<style color=#00ffffff size=1>.</style>            option to produce a .sbl symbol file.
+
+<style color=#00ffffff size=1>.</style>            Stack has a built-in list of associations between dis
+<style color=#00ffffff size=1>.</style>            directories and their associated source directories (e.g. it
+<style color=#00ffffff size=1>.</style>            can automatically map from /dis/ls.dis to /appl/cmd/ls.sbl).
+<style color=#00ffffff size=1>.</style>            Giving the -p option adds a new association to the head of
+<style color=#00ffffff size=1>.</style>            this list: if a module path prefix matches dispath, stack
+<style color=#00ffffff size=1>.</style>            will search for a symbol file in sblpath. If the environment
+<style color=#00ffffff size=1>.</style>            variable $sblpath is set, pairs of items from it are added
+<style color=#00ffffff size=1>.</style>            to the association list, as given as -p options. The -p
+<style color=#00ffffff size=1>.</style>            options take precedence over $sblpath.
+
+<style color=#00ffffff size=1>.</style>            Stackv recursively traverses the symbols it finds, printing
+<style color=#00ffffff size=1>.</style>            values as it goes. Repeated identical structure is not shown
+<style color=#00ffffff size=1>.</style>            - only the pointer value is printed, followed by (qv). Each
+<style color=#00ffffff size=1>.</style>            argument gives a starting point for the traversal, rooted by
+<style color=#00ffffff size=1>.</style>            a process id, pid. If an unadorned process id is given, all
+<style color=#00ffffff size=1>.</style>            values in all stack frames in the process will be printed\;
+<style color=#00ffffff size=1>.</style>            adding names specifies the starting point. For instance,
+<style color=#00ffffff size=1>.</style>            123.init.ctxt.display might specify the display field inside
+<style color=#00ffffff size=1>.</style>            the ctxt adt inside the init function inside the process 123
+<style color=#00ffffff size=1>.</style>            . Stackv understands the following options:
+
+<style color=#00ffffff size=1>.</style>            -l        Show source line information with each item.
+
+<style color=#00ffffff size=1>.</style>            -m        Show module variables accessible from each stack
+<style color=#00ffffff size=1>.</style>                      frame.
+
+<style color=#00ffffff size=1>.</style>            -T        Do not show the Limbo types of value encountered.
+
+<style color=#00ffffff size=1>.</style>            -r maxdepth
+<style color=#00ffffff size=1>.</style>                      Restrict the maximum traversal depth to maxdepth
+<style color=#00ffffff size=1>.</style>                      levels.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Run stack on process with ID 1:
+
+<style color=#00ffffff size=1>.</style>                 $ stack 1
+<style color=#00ffffff size=1>.</style>                 unknown fn() Module $Sys PC 742103
+<style color=#00ffffff size=1>.</style>                 waitfor() shnew.b:105.7, 38
+<style color=#00ffffff size=1>.</style>                 runpipeline() shnew.b:483.2, 14
+<style color=#00ffffff size=1>.</style>                 runit() shnew.b:552.3, 29
+<style color=#00ffffff size=1>.</style>                 init() shnew.b:83.3, 28
+
+<style color=#00ffffff size=1>.</style>            The process is executing in the Sys module, a call to
+<style color=#00ffffff size=1>.</style>            sys->read that originated at line 105 (characters 7 to 38)
+<style color=#00ffffff size=1>.</style>            of the waitfor function in shnew.b.
+
+<style color=#00ffffff size=1>.</style>            Once again, with the -v option to reveal more:
+
+<style color=#00ffffff size=1>.</style>                 $ stack -v 1
+<style color=#00ffffff size=1>.</style>                 unknown fn() Module $Sys PC 742103
+<style color=#00ffffff size=1>.</style>                 waitfor(pid=18) shnew.b:105.7, 38
+<style color=#00ffffff size=1>.</style>                         status=\[0\] ""
+<style color=#00ffffff size=1>.</style>                         buf=\[64\] @b419a4
+<style color=#00ffffff size=1>.</style>                         n=-1
+<style color=#00ffffff size=1>.</style>                         who=-1
+<style color=#00ffffff size=1>.</style>                 runpipeline(ctx=nil, pipeline=@b41454) shnew.b:483.2, 14
+<style color=#00ffffff size=1>.</style>                         pid=18
+<style color=#00ffffff size=1>.</style>                 runit(ctx=nil, pipes=nil) shnew.b:552.3, 29
+<style color=#00ffffff size=1>.</style>                         pipeline=@b41454
+<style color=#00ffffff size=1>.</style>                 init(ctxt=nil, argv=nil) shnew.b:83.3, 28
+<style color=#00ffffff size=1>.</style>                         buf=\[1024\] @b40f04
+<style color=#00ffffff size=1>.</style>                         n=4
+<style color=#00ffffff size=1>.</style>                         arg=@b41634
+<style color=#00ffffff size=1>.</style>                         prompt=\[21\] "$ "
+<style color=#00ffffff size=1>.</style>                 $
+
+FILES
+<style color=#00ffffff size=1>.</style>            /prog/pid/stack
+<style color=#00ffffff size=1>.</style>            /prog/pid/status
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/stack.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/stackv.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=deb(1)>deb(1)</action>, <action name=ps(1)>ps(1)</action>, <action name=prog(3)>prog(3)</action>, <action name=debug(2)>debug(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

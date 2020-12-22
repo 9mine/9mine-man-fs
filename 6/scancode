@@ -1,0 +1,28 @@
+<action name=SCANCODE(6)>SCANCODE(6)</action>                                           <action name=SCANCODE(6)>SCANCODE(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            scancode - known formats of scan codes
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The scancode interface of <action name=cons(3)>cons(3)</action> provides access to scan
+<style color=#00ffffff size=1>.</style>            codes of the primary keyboard. There are as many scan code
+<style color=#00ffffff size=1>.</style>            formats as keyboards. Here are some common ones.
+
+Microsoft Windows™ Virtual Key
+<style color=#00ffffff size=1>.</style>            The identifier is emu_win32vk, and each scan code is encoded
+<style color=#00ffffff size=1>.</style>            in the two byte format specified in <action name=cons(3)>cons(3)</action>. This format is
+<style color=#00ffffff size=1>.</style>            used by the Microsoft Windows™ implementation of emu(1E),
+<style color=#00ffffff size=1>.</style>            and each scan code is a Virtual Key. See the appropriate
+<style color=#00ffffff size=1>.</style>            Microsoft documentation for the meaning of the codes.
+
+X11
+<style color=#00ffffff size=1>.</style>            The identifier is emu_x11, and each scan code is encoded in
+<style color=#00ffffff size=1>.</style>            the single byte format specified in <action name=cons(3)>cons(3)</action>. This format is
+<style color=#00ffffff size=1>.</style>            used by the various Unix/X11 implementations of emu(1E), and
+<style color=#00ffffff size=1>.</style>            each scan code is an X11 keycode. See the appropriate X11
+<style color=#00ffffff size=1>.</style>            documentation for the meaning of the codes.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cons(3)>cons(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,515 @@
+<action name=STYXSERVERS(2)>STYXSERVERS(2)</action>                                     <action name=STYXSERVERS(2)>STYXSERVERS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            styxservers - 9P (Styx) server implementation assistance
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            include "styx.m"\;
+<style color=#00ffffff size=1>.</style>            Tmsg, Rmsg: import Styx\;
+<style color=#00ffffff size=1>.</style>            include "styxservers.m"\;
+<style color=#00ffffff size=1>.</style>            styxservers := load Styxservers Styxservers->PATH\;
+<style color=#00ffffff size=1>.</style>            Styxserver, Fid, Navigator: import styxservers\;
+
+<style color=#00ffffff size=1>.</style>            Styxserver: adt {
+<style color=#00ffffff size=1>.</style>                fd:      ref Sys->FD\;     # file server end of connection
+<style color=#00ffffff size=1>.</style>                t:       ref Navigator\;   # name space navigator for this server
+<style color=#00ffffff size=1>.</style>                msize:   int\;             # negotiated 9P message size
+<style color=#00ffffff size=1>.</style>             
+<style color=#00ffffff size=1>.</style>                new:     fn(fd: ref Sys->FD, t: ref Navigator, rootpath: big)
+<style color=#00ffffff size=1>.</style>                              :(chan of ref Tmsg, ref Styxserver)\;
+<style color=#00ffffff size=1>.</style>                reply:   fn(srv: self ref Styxserver, m: ref Rmsg): int\;
+
+<style color=#00ffffff size=1>.</style>                # protocol operations
+<style color=#00ffffff size=1>.</style>                attach:  fn(srv: self ref Styxserver, m: ref Tmsg.Attach): ref Fid\;
+<style color=#00ffffff size=1>.</style>                clunk:   fn(srv: self ref Styxserver, m: ref Tmsg.Clunk): ref Fid\;
+<style color=#00ffffff size=1>.</style>                walk:    fn(srv: self ref Styxserver, m: ref Tmsg.Walk): ref Fid\;
+<style color=#00ffffff size=1>.</style>                open:    fn(srv: self ref Styxserver, m: ref Tmsg.Open): ref Fid\;
+<style color=#00ffffff size=1>.</style>                read:    fn(srv: self ref Styxserver, m: ref Tmsg.Read): ref Fid\;
+<style color=#00ffffff size=1>.</style>                remove:  fn(srv: self ref Styxserver, m: ref Tmsg.Remove): ref Fid\;
+<style color=#00ffffff size=1>.</style>                stat:    fn(srv: self ref Styxserver, m: ref Tmsg.Stat)\;
+<style color=#00ffffff size=1>.</style>                default: fn(srv: self ref Styxserver, gm: ref Tmsg)\;
+
+<style color=#00ffffff size=1>.</style>                replychan: chan of ref Rmsg\;             # replies sent here if not nil.
+<style color=#00ffffff size=1>.</style>                replydirect: fn(srv: self ref Styxserver, gm: ref Rmsg): int\; # called by receiver for replychan
+
+<style color=#00ffffff size=1>.</style>               # check validity
+<style color=#00ffffff size=1>.</style>                cancreate: fn(srv: self ref Styxserver, m: ref Tmsg.Create)
+<style color=#00ffffff size=1>.</style>                              :(ref Fid, int, ref Sys->Dir, string)\;
+<style color=#00ffffff size=1>.</style>                canopen:   fn(srv: self ref Styxserver, m: ref Tmsg.Open)
+<style color=#00ffffff size=1>.</style>            		          :(ref Fid, int, ref Sys->Dir, string)\;
+<style color=#00ffffff size=1>.</style>                canread:   fn(srv: self ref Styxserver, m: ref Tmsg.Read)
+<style color=#00ffffff size=1>.</style>                              :(ref Fid, string)\;
+<style color=#00ffffff size=1>.</style>                canwrite:  fn(srv: self ref Styxserver, m: ref Tmsg.Write)
+<style color=#00ffffff size=1>.</style>                              :(ref Fid, string)\;
+<style color=#00ffffff size=1>.</style>                canremove: fn(srv: self ref Styxserver, m: ref Tmsg.Remove)
+<style color=#00ffffff size=1>.</style>                              :(ref Fid, big, string)\;
+
+<style color=#00ffffff size=1>.</style>                # fid management
+<style color=#00ffffff size=1>.</style>                getfid:  fn(srv: self ref Styxserver, fid: int): ref Fid\;
+<style color=#00ffffff size=1>.</style>                newfid:  fn(srv: self ref Styxserver, fid: int): ref Fid\;
+<style color=#00ffffff size=1>.</style>                delfid:  fn(srv: self ref Styxserver, c: ref Fid)\;
+<style color=#00ffffff size=1>.</style>                allfids: fn(srv: self ref Styxserver): list of ref Fid\;
+
+<style color=#00ffffff size=1>.</style>                iounit:  fn(srv: self ref Styxserver): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Fid: adt {
+<style color=#00ffffff size=1>.</style>                fid:    int\;       # client's fid
+<style color=#00ffffff size=1>.</style>                path:   big\;       # file's 64-bit unique path
+<style color=#00ffffff size=1>.</style>                qtype:  int\;       # file's qid type (eg, Sys->QTDIR if directory)
+<style color=#00ffffff size=1>.</style>                isopen: int\;       # non-zero if file is open
+<style color=#00ffffff size=1>.</style>                mode:   int\;       # if open, the open mode
+<style color=#00ffffff size=1>.</style>                uname:  string\;    # user name from original attach
+<style color=#00ffffff size=1>.</style>                param:  string\;    # attach aname from original attach
+<style color=#00ffffff size=1>.</style>                data:   array of byte\;   # application data
+
+<style color=#00ffffff size=1>.</style>                clone:  fn(f: self ref Fid, nf: ref Fid): ref Fid\;
+<style color=#00ffffff size=1>.</style>                open:   fn(f: self ref Fid, mode: int, qid: Sys->Qid)\;
+<style color=#00ffffff size=1>.</style>                walk:   fn(f: self ref Fid, qid: Sys->Qid)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Navop: adt {
+<style color=#00ffffff size=1>.</style>                reply:  chan of (ref Sys->Dir, string)\;  # channel for reply
+<style color=#00ffffff size=1>.</style>                path:   big\;      # file or directory path
+<style color=#00ffffff size=1>.</style>                pick {
+<style color=#00ffffff size=1>.</style>                Stat =>
+<style color=#00ffffff size=1>.</style>                Walk =>
+<style color=#00ffffff size=1>.</style>                    name: string\;
+<style color=#00ffffff size=1>.</style>                Readdir =>
+<style color=#00ffffff size=1>.</style>                    offset: int\;  # index (origin 0) of first entry to return
+<style color=#00ffffff size=1>.</style>                    count:  int\;  # number of directory entries requested
+<style color=#00ffffff size=1>.</style>                }
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Navigator: adt {
+<style color=#00ffffff size=1>.</style>                new:    fn(c: chan of ref Navop): ref Navigator\;
+<style color=#00ffffff size=1>.</style>                stat:   fn(t: self ref Navigator, path: big): (ref Sys->Dir, string)\;
+<style color=#00ffffff size=1>.</style>                walk:   fn(t: self ref Navigator, parent: big, name: string)
+<style color=#00ffffff size=1>.</style>                           : (ref Sys->Dir, string)\;
+<style color=#00ffffff size=1>.</style>                readdir:fn(t: self ref Navigator, path: big,
+<style color=#00ffffff size=1>.</style>                           offset, count: int): array of ref Sys->Dir\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:      fn(styx: Styx)\;
+<style color=#00ffffff size=1>.</style>            traceset:  fn(on: int)\;
+
+<style color=#00ffffff size=1>.</style>            readbytes: fn(m: ref Styx->Tmsg.Read, d: array of byte):
+<style color=#00ffffff size=1>.</style>                          ref Styx->Rmsg.Read\;
+<style color=#00ffffff size=1>.</style>            readstr:   fn(m: ref Styx->Tmsg.Read, s: string):
+<style color=#00ffffff size=1>.</style>                          ref Styx->Rmsg.Read\;
+<style color=#00ffffff size=1>.</style>            openok:    fn(uname: string, omode,
+<style color=#00ffffff size=1>.</style>                          perm: int, funame, fgname: string): int\;
+<style color=#00ffffff size=1>.</style>            openmode:  fn(o: int): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            When writing a file server, there are some commonly
+<style color=#00ffffff size=1>.</style>            performed tasks that are fiddly or tedious to implement each
+<style color=#00ffffff size=1>.</style>            time. Styxservers provides a framework to automate some of
+<style color=#00ffffff size=1>.</style>            these routine tasks. In particular, it helps manage the fid
+<style color=#00ffffff size=1>.</style>            space, implements common default processing for protocol
+<style color=#00ffffff size=1>.</style>            messages, and assists walking around the directory hierarchy
+<style color=#00ffffff size=1>.</style>            and reading of directories. Other tasks, such as defining
+<style color=#00ffffff size=1>.</style>            the structure of the name space, and reading and writing
+<style color=#00ffffff size=1>.</style>            files in it, are left to the file server program itself.
+<style color=#00ffffff size=1>.</style>            Familiarity with Section 5 of the manual which defines the
+<style color=#00ffffff size=1>.</style>            protocol (see <action name=intro(5)>intro(5)</action>), and with the representation of 9P
+<style color=#00ffffff size=1>.</style>            messages in Limbo (see <action name=styx(2)>styx(2)</action>), is a prerequisite for use
+<style color=#00ffffff size=1>.</style>            of this module.
+
+<style color=#00ffffff size=1>.</style>            Styxservers does not define or store any of the directory
+<style color=#00ffffff size=1>.</style>            hierarchy itself\; instead it queries an external process for
+<style color=#00ffffff size=1>.</style>            information when necessary, through a value of type
+<style color=#00ffffff size=1>.</style>            Navigator, which encapsulates communication with that
+<style color=#00ffffff size=1>.</style>            process. That process must be started up independently of
+<style color=#00ffffff size=1>.</style>            each Styxserver\; a channel to such a process should be
+<style color=#00ffffff size=1>.</style>            provided when starting a new Styxserver. The channel carries
+<style color=#00ffffff size=1>.</style>            messages of type Navop. <action name=Styxservers-nametree(2)>Styxservers-nametree(2)</action> provides a
+<style color=#00ffffff size=1>.</style>            ready-made implementation of such a process that is
+<style color=#00ffffff size=1>.</style>            sufficient for many applications.
+
+<style color=#00ffffff size=1>.</style>            Styxserver keeps tabs on the fids that are currently in use,
+<style color=#00ffffff size=1>.</style>            and remembers some associated information, such as the Qid
+<style color=#00ffffff size=1>.</style>            path of the file, whether it has been opened, etc. It does
+<style color=#00ffffff size=1>.</style>            this using values of type Fid.
+
+<style color=#00ffffff size=1>.</style>            Once the Styxservers module has been loaded, the init
+<style color=#00ffffff size=1>.</style>            function must be called before anything else, to initialise
+<style color=#00ffffff size=1>.</style>            its internal state. The styx argument should be an
+<style color=#00ffffff size=1>.</style>            implementation of the <action name=styx(2)>styx(2)</action> module, which will be used to
+<style color=#00ffffff size=1>.</style>            translate messages. Individual Styxserver instances do not
+<style color=#00ffffff size=1>.</style>            share state, and are therefore independently thread-safe.
+
+<style color=#00ffffff size=1>.</style>         Fid representation
+<style color=#00ffffff size=1>.</style>            Styxservers represents each active fid as a Fid value, which
+<style color=#00ffffff size=1>.</style>            has the following public members:
+<style color=#00ffffff size=1>.</style>            fid    The integer fid value provided by the client to refer
+<style color=#00ffffff size=1>.</style>                   to an active instance of a file in the file server,
+<style color=#00ffffff size=1>.</style>                   as described in <action name=intro(5)>intro(5)</action>.
+<style color=#00ffffff size=1>.</style>            path   The 64-bit qid path that uniquely identifies the file
+<style color=#00ffffff size=1>.</style>                   on the file server, as described in <action name=intro(5)>intro(5)</action>. It is
+<style color=#00ffffff size=1>.</style>                   set by f.walk and f.open (see below).
+<style color=#00ffffff size=1>.</style>            qtype  The file's qid type\; it is Sys->QTDIR if and only if
+<style color=#00ffffff size=1>.</style>                   the fid refers to a directory. The value is set by f
+<style color=#00ffffff size=1>.</style>                   .walk and f.open (see below).
+<style color=#00ffffff size=1>.</style>            isopen Non-zero if and only if the fid has been opened by an
+<style color=#00ffffff size=1>.</style>                   <action name=open(5)>open(5)</action> message. It is initially zero, and set by f
+<style color=#00ffffff size=1>.</style>                   .open (see below).
+<style color=#00ffffff size=1>.</style>            mode   Valid only if the fid has been opened. It has one of
+<style color=#00ffffff size=1>.</style>                   the values Sys->OREAD, Sys->OWRITE, Sys->ORDWR,
+<style color=#00ffffff size=1>.</style>                   possibly ORed with Sys->ORCLOSE, corresponding to the
+<style color=#00ffffff size=1>.</style>                   mode with which the file was opened. It is set by f
+<style color=#00ffffff size=1>.</style>                   .open (see below).
+<style color=#00ffffff size=1>.</style>            uname  The name of the user that created the fid.
+<style color=#00ffffff size=1>.</style>            param  Set by Styxservers to the aname of the initial attach
+<style color=#00ffffff size=1>.</style>                   (5) message, and subsequently inherited by each new
+<style color=#00ffffff size=1>.</style>                   fid created by <action name=walk(5)>walk(5)</action>, but not otherwise used by
+<style color=#00ffffff size=1>.</style>                   Styxservers itself, and may be changed by the
+<style color=#00ffffff size=1>.</style>                   application.
+<style color=#00ffffff size=1>.</style>            data   Unused by Styxservers\; for application use. It might
+<style color=#00ffffff size=1>.</style>                   be used, for instance, to implement a file that gives
+<style color=#00ffffff size=1>.</style>                   different data to different clients.
+<style color=#00ffffff size=1>.</style>            f.clone(nf)
+<style color=#00ffffff size=1>.</style>                   Copy the current state of all members of f except f
+<style color=#00ffffff size=1>.</style>                   .fid, into nf, and return nf. Used by Styxserver.walk
+<style color=#00ffffff size=1>.</style>                   , and is needed by an application only if it replaces
+<style color=#00ffffff size=1>.</style>                   that function.
+<style color=#00ffffff size=1>.</style>            f.walk(qid)
+<style color=#00ffffff size=1>.</style>                   Make f refer to the file with the given qid: set f
+<style color=#00ffffff size=1>.</style>                   .path and f.qtype from qid.path and qid.qtype. Used
+<style color=#00ffffff size=1>.</style>                   by Styxserver.walk and is needed by an application
+<style color=#00ffffff size=1>.</style>                   only if it replaces that function.
+<style color=#00ffffff size=1>.</style>            f.open(mode, qid)
+<style color=#00ffffff size=1>.</style>                   Mark f as `open', set f.mode to mode, and set path
+<style color=#00ffffff size=1>.</style>                   and qtype to the path and type of qid. Used by the
+<style color=#00ffffff size=1>.</style>                   implementations of open and create messages. The
+<style color=#00ffffff size=1>.</style>                   default implementation of <action name=open(5)>open(5)</action> in Styxserver
+<style color=#00ffffff size=1>.</style>                   obtains the value of mode from Styxserver.canopen
+<style color=#00ffffff size=1>.</style>                   (below), and obtains the value of qid by querying the
+<style color=#00ffffff size=1>.</style>                   application's navigator.
+<style color=#00ffffff size=1>.</style>         Styxserver and file server state
+<style color=#00ffffff size=1>.</style>            Each Styxserver value holds the state for a single file
+<style color=#00ffffff size=1>.</style>            server, including its active fids, the link to the external
+<style color=#00ffffff size=1>.</style>            name space process, and other internal data. Most of the
+<style color=#00ffffff size=1>.</style>            state is manipulated through the member functions described
+<style color=#00ffffff size=1>.</style>            below. The exceptions are two read-only values: the
+<style color=#00ffffff size=1>.</style>            Navigator reference srv.t which can be used to access that
+<style color=#00ffffff size=1>.</style>            navigator\; and the file descriptor srv.fd that is the file
+<style color=#00ffffff size=1>.</style>            server's end of the connection to the 9P client. Both values
+<style color=#00ffffff size=1>.</style>            are initially provided by the file serving application, but
+<style color=#00ffffff size=1>.</style>            can be accessed through the Styxserver value for
+<style color=#00ffffff size=1>.</style>            convenience. The file descriptor value is normally used only
+<style color=#00ffffff size=1>.</style>            through Styxserver.reply, but will be needed directly if the
+<style color=#00ffffff size=1>.</style>            caller needs the file descriptor value as a parameter to
+<style color=#00ffffff size=1>.</style>            <action name=sys-pctl(2)>sys-pctl(2)</action> when insulating the serving process's file
+<style color=#00ffffff size=1>.</style>            descriptors from the surrounding environment.
+
+<style color=#00ffffff size=1>.</style>            The first set of functions in Styxserver provides common and
+<style color=#00ffffff size=1>.</style>            default actions:
+
+<style color=#00ffffff size=1>.</style>            Styxserver.new( fd , t , rootpath )
+<style color=#00ffffff size=1>.</style>                 Create a new Styxserver. It returns a tuple, say (c, 
+<style color=#00ffffff size=1>.</style>                 srv), and spawns a new process, which uses <action name=styx(2)>styx(2)</action> to
+<style color=#00ffffff size=1>.</style>                 read and parse 9P messages read from fd, and send them
+<style color=#00ffffff size=1>.</style>                 down c\; t should be a Navigator adt which the
+<style color=#00ffffff size=1>.</style>                 Styxserver can use to answer queries on the name space
+<style color=#00ffffff size=1>.</style>                 (see ``Navigating file trees'', below). Rootpath gives
+<style color=#00ffffff size=1>.</style>                 the Qid path of the root of the served name space.
+
+<style color=#00ffffff size=1>.</style>            srv.reply(m)
+<style color=#00ffffff size=1>.</style>                 Send a reply (R-message) to a client. The various
+<style color=#00ffffff size=1>.</style>                 utility methods, listed below, call this function to
+<style color=#00ffffff size=1>.</style>                 make their response. When srv.replychan is not nil the
+<style color=#00ffffff size=1>.</style>                 function sends the R-message to this channel. It is
+<style color=#00ffffff size=1>.</style>                 assumed that a process will drain replies from it and
+<style color=#00ffffff size=1>.</style>                 call srv.replydirect when appropriate.
+
+<style color=#00ffffff size=1>.</style>            srv.attach(m)
+<style color=#00ffffff size=1>.</style>                 Respond to an <action name=attach(5)>attach(5)</action> message m, creating a new fid
+<style color=#00ffffff size=1>.</style>                 in the process, and returning it. Returns nil if m.fid
+<style color=#00ffffff size=1>.</style>                 is a duplicate of an existing fid. The value of the
+<style color=#00ffffff size=1>.</style>                 attach parameter m.aname is copied into the new fid's
+<style color=#00ffffff size=1>.</style>                 param field, as is the attaching user name, m.uname.
+
+<style color=#00ffffff size=1>.</style>            srv.clunk(m)
+<style color=#00ffffff size=1>.</style>                 Respond to a <action name=clunk(5)>clunk(5)</action> message m, and return the old Fid
+<style color=#00ffffff size=1>.</style>                 . Note that this does nothing about remove-on-close
+<style color=#00ffffff size=1>.</style>                 files\; that should be programmed explicitly if needed.
+
+<style color=#00ffffff size=1>.</style>            srv.walk(m)
+<style color=#00ffffff size=1>.</style>                 Respond to a <action name=walk(5)>walk(5)</action> message m, querying srv.t for
+<style color=#00ffffff size=1>.</style>                 information on existing files.
+
+<style color=#00ffffff size=1>.</style>            srv.open(m)
+<style color=#00ffffff size=1>.</style>                 Respond to an <action name=open(5)>open(5)</action> message m. This will allow a file
+<style color=#00ffffff size=1>.</style>                 to be opened if its permissions allow the specified
+<style color=#00ffffff size=1>.</style>                 mode of access.
+
+<style color=#00ffffff size=1>.</style>            srv.read(m)
+<style color=#00ffffff size=1>.</style>                 Respond to a <action name=read(5)>read(5)</action> message m. If a directory is being
+<style color=#00ffffff size=1>.</style>                 read, the appropriate reply is made\; for files, an
+<style color=#00ffffff size=1>.</style>                 error is given.
+
+<style color=#00ffffff size=1>.</style>            srv.remove(m)
+<style color=#00ffffff size=1>.</style>                 Respond to a <action name=remove(5)>remove(5)</action> message m with an error,
+<style color=#00ffffff size=1>.</style>                 clunking the fid as it does so, and returning the old
+<style color=#00ffffff size=1>.</style>                 Fid.
+
+<style color=#00ffffff size=1>.</style>            srv.stat(m)
+<style color=#00ffffff size=1>.</style>                 Respond to a <action name=stat(5)>stat(5)</action> message m.
+
+<style color=#00ffffff size=1>.</style>            srv.default(gm)
+<style color=#00ffffff size=1>.</style>                 Respond to an arbitrary T-message, gm, as appropriate
+<style color=#00ffffff size=1>.</style>                 (eg, by calling srv.walk for a <action name=walk(5)>walk(5)</action> message). It
+<style color=#00ffffff size=1>.</style>                 responds appropriately to <action name=version(5)>version(5)</action>, and replies to
+<style color=#00ffffff size=1>.</style>                 Tauth (see <action name=attach(5)>attach(5)</action>) stating that authentication is
+<style color=#00ffffff size=1>.</style>                 not required. Other messages without an associated
+<style color=#00ffffff size=1>.</style>                 Styxserver function are generally responded to with a
+<style color=#00ffffff size=1>.</style>                 ``permission denied'' error.
+
+<style color=#00ffffff size=1>.</style>            All the functions above check the validity of the fids,
+<style color=#00ffffff size=1>.</style>            modes, counts and offsets in the messages, and automatically
+<style color=#00ffffff size=1>.</style>            reply to the client with a suitable <action name=error(5)>error(5)</action> message on
+<style color=#00ffffff size=1>.</style>            error.
+
+<style color=#00ffffff size=1>.</style>            The following further Styxserver operations are useful in
+<style color=#00ffffff size=1>.</style>            applications that override all or part of the default
+<style color=#00ffffff size=1>.</style>            handling (in particular, to process read and write
+<style color=#00ffffff size=1>.</style>            requests):
+
+<style color=#00ffffff size=1>.</style>            srv.canopen(m)
+<style color=#00ffffff size=1>.</style>                 Check whether it is legal to open a file as requested
+<style color=#00ffffff size=1>.</style>                 by message m: the fid is valid but not already open,
+<style color=#00ffffff size=1>.</style>                 the corresponding file exists and its permissions allow
+<style color=#00ffffff size=1>.</style>                 access in the requested mode, and if Sys->ORCLOSE is
+<style color=#00ffffff size=1>.</style>                 requested, the parent directory is writable (to allow
+<style color=#00ffffff size=1>.</style>                 the file to be removed when closed). Canopen returns a
+<style color=#00ffffff size=1>.</style>                 tuple, say (f, mode, d, err ). If the open request was
+<style color=#00ffffff size=1>.</style>                 invalid, f will be nil, and the string err will
+<style color=#00ffffff size=1>.</style>                 diagnose the error (for return to the client in an
+<style color=#00ffffff size=1>.</style>                 Rmsg.Error message). If the request was valid: f
+<style color=#00ffffff size=1>.</style>                 contains the Fid representing the file to be opened\;
+<style color=#00ffffff size=1>.</style>                 mode is the access mode derived from m.mode, Sys->OREAD
+<style color=#00ffffff size=1>.</style>                 , Sys->OWRITE, Sys->ORDWR, ORed with Sys->ORCLOSE\; d is
+<style color=#00ffffff size=1>.</style>                 a Dir value giving the file's attributes, obtained from
+<style color=#00ffffff size=1>.</style>                 the navigator\; and err is nil. Once the application has
+<style color=#00ffffff size=1>.</style>                 done what it must to open the file, it must call f.open
+<style color=#00ffffff size=1>.</style>                 to mark it open.
+
+<style color=#00ffffff size=1>.</style>            srv.cancreate(m)
+<style color=#00ffffff size=1>.</style>                 Checks whether the creation of the file requested by
+<style color=#00ffffff size=1>.</style>                 message m is legal: the fid is valid but not open,
+<style color=#00ffffff size=1>.</style>                 refers to a directory, the permissions returned by srv
+<style color=#00ffffff size=1>.</style>                 .t.stat show that directory is writable by the
+<style color=#00ffffff size=1>.</style>                 requesting user, the name does not already exist in
+<style color=#00ffffff size=1>.</style>                 that directory, and the mode with which the new file
+<style color=#00ffffff size=1>.</style>                 would be opened is valid. Cancreate returns a tuple,
+<style color=#00ffffff size=1>.</style>                 say (f, mode, d, err ). If the creation request was
+<style color=#00ffffff size=1>.</style>                 invalid, f will be nil, and the string err will
+<style color=#00ffffff size=1>.</style>                 diagnose the error, for use in an error reply to the
+<style color=#00ffffff size=1>.</style>                 client. If the request was valid: f contains the Fid
+<style color=#00ffffff size=1>.</style>                 representing the parent directory\; mode is the open
+<style color=#00ffffff size=1>.</style>                 mode as defined for canopen above\; d is a Dir value
+<style color=#00ffffff size=1>.</style>                 containing some initial attributes for the new file or
+<style color=#00ffffff size=1>.</style>                 directory\; and err is nil. The initial attributes set
+<style color=#00ffffff size=1>.</style>                 in d are: d.name (the name of the file to be created)\;
+<style color=#00ffffff size=1>.</style>                 d.uid and d.muid (the user that did the initial
+<style color=#00ffffff size=1>.</style>                 attach)\; d.gid, d.dtype, d.dev (taken from the parent
+<style color=#00ffffff size=1>.</style>                 directory's attributes)\; and d.mode holds the file mode
+<style color=#00ffffff size=1>.</style>                 that should be attributed to the new file (taking into
+<style color=#00ffffff size=1>.</style>                 account the parent mode, as described in <action name=open(5)>open(5)</action>). The
+<style color=#00ffffff size=1>.</style>                 caller must supply d.qid once the file has successfully
+<style color=#00ffffff size=1>.</style>                 been created, and d.atime and d.mtime\; it must also
+<style color=#00ffffff size=1>.</style>                 call f.open to mark f open and set its path to the
+<style color=#00ffffff size=1>.</style>                 file's path. If the file cannot be created
+<style color=#00ffffff size=1>.</style>                 successfully, the application should reply with an
+<style color=#00ffffff size=1>.</style>                 <action name=error(5)>error(5)</action> message and leave f untouched. The Fid f will
+<style color=#00ffffff size=1>.</style>                 then continue to refer to the original directory, and
+<style color=#00ffffff size=1>.</style>                 remain unopened.
+
+<style color=#00ffffff size=1>.</style>            srv.canread(m)
+<style color=#00ffffff size=1>.</style>                 Checks whether <action name=read(5)>read(5)</action> message m refers to a valid fid
+<style color=#00ffffff size=1>.</style>                 that has been opened for reading, and that the count
+<style color=#00ffffff size=1>.</style>                 and file offset are non-negative. Canread returns a
+<style color=#00ffffff size=1>.</style>                 tuple, say (f, err)\; if the attempted access is
+<style color=#00ffffff size=1>.</style>                 illegal, f will be nil, and err contains a description
+<style color=#00ffffff size=1>.</style>                 of the error, otherwise f contains the Fid
+<style color=#00ffffff size=1>.</style>                 corresponding to the file in question. It is typically
+<style color=#00ffffff size=1>.</style>                 called by an application's implementation of Tmsg.Read
+<style color=#00ffffff size=1>.</style>                 to obtain the Fid corresponding to the fid in the
+<style color=#00ffffff size=1>.</style>                 message, and check the access.
+
+<style color=#00ffffff size=1>.</style>            srv.canwrite(m)
+<style color=#00ffffff size=1>.</style>                 Checks whether message m refers to a valid fid that has
+<style color=#00ffffff size=1>.</style>                 been opened for writing, and that the file offset is
+<style color=#00ffffff size=1>.</style>                 non-negative. Canwrite returns a tuple (f, err)\; if the
+<style color=#00ffffff size=1>.</style>                 attempted access is illegal, f will be nil, and err
+<style color=#00ffffff size=1>.</style>                 contains a description of the error, otherwise f
+<style color=#00ffffff size=1>.</style>                 contains the Fid corresponding to the file in question.
+<style color=#00ffffff size=1>.</style>                 It is typically called by an application's
+<style color=#00ffffff size=1>.</style>                 implementation of Tmsg.Write to obtain the Fid
+<style color=#00ffffff size=1>.</style>                 corresponding to the fid in the message, and check the
+<style color=#00ffffff size=1>.</style>                 access.
+
+<style color=#00ffffff size=1>.</style>            srv.canremove(m)
+<style color=#00ffffff size=1>.</style>                 Checks whether the removal of the file requested by
+<style color=#00ffffff size=1>.</style>                 message m is legal: the fid is valid, it is not a root
+<style color=#00ffffff size=1>.</style>                 directory, and there is write permission in the parent
+<style color=#00ffffff size=1>.</style>                 directory. Canremove returns a tuple (f, path, err)\; if
+<style color=#00ffffff size=1>.</style>                 the attempted access is illegal, f will be nil and err
+<style color=#00ffffff size=1>.</style>                 contains a description of the error\; otherwise f
+<style color=#00ffffff size=1>.</style>                 contains the Fid for the file to be removed, and path
+<style color=#00ffffff size=1>.</style>                 is the Qid.path for the parent directory.The caller
+<style color=#00ffffff size=1>.</style>                 should remove the file, and in every case must call
+<style color=#00ffffff size=1>.</style>                 srv.delfid before replying, because the protocol's
+<style color=#00ffffff size=1>.</style>                 remove operation always clunks the fid.
+
+<style color=#00ffffff size=1>.</style>            srv.iounit()
+<style color=#00ffffff size=1>.</style>                 Return an appropriate value for use as the iounit
+<style color=#00ffffff size=1>.</style>                 element in Rmsg.Open and Rmsg.Create replies, as
+<style color=#00ffffff size=1>.</style>                 defined in <action name=open(5)>open(5)</action>, based on the message size
+<style color=#00ffffff size=1>.</style>                 negotiated by the initial <action name=version(5)>version(5)</action> message.
+
+<style color=#00ffffff size=1>.</style>            The remaining functions are normally used only by servers
+<style color=#00ffffff size=1>.</style>            that need to override default actions. They maintain and
+<style color=#00ffffff size=1>.</style>            access the mapping between a client's fid values presented
+<style color=#00ffffff size=1>.</style>            in Tmsg messages and the Fid values that represent the
+<style color=#00ffffff size=1>.</style>            corresponding files internally.
+
+<style color=#00ffffff size=1>.</style>            srv.newfid(fid)
+<style color=#00ffffff size=1>.</style>                 Create a new Fid associated with number fid and return
+<style color=#00ffffff size=1>.</style>                 it. Return nil if the fid is already in use (implies a
+<style color=#00ffffff size=1>.</style>                 client error if the server correctly clunks fids).
+
+<style color=#00ffffff size=1>.</style>            srv.getfid(fid)
+<style color=#00ffffff size=1>.</style>                 Get the Fid data associated with numeric id fid\; return
+<style color=#00ffffff size=1>.</style>                 nil if there is none such (a malicious or erroneous
+<style color=#00ffffff size=1>.</style>                 client can cause this).
+
+<style color=#00ffffff size=1>.</style>            srv.delfid(fid)
+<style color=#00ffffff size=1>.</style>                 Delete fid from the table of fids in the Styxserver.
+<style color=#00ffffff size=1>.</style>                 (There is no error return.)
+
+<style color=#00ffffff size=1>.</style>            srv.allfids()
+<style color=#00ffffff size=1>.</style>                 Return a list of all current fids (ie, the files
+<style color=#00ffffff size=1>.</style>                 currently active on the client).
+
+<style color=#00ffffff size=1>.</style>            Newfid is required when processing <action name=auth(5)>auth(5)</action>, <action name=attach(5)>attach(5)</action> and
+<style color=#00ffffff size=1>.</style>            <action name=walk(5)>walk(5)</action> messages to create new fids. Delfid is used to clunk
+<style color=#00ffffff size=1>.</style>            fids when processing <action name=clunk(5)>clunk(5)</action>, <action name=remove(5)>remove(5)</action>, and in a failed
+<style color=#00ffffff size=1>.</style>            <action name=walk(5)>walk(5)</action> when it specified a new fid. All other messages
+<style color=#00ffffff size=1>.</style>            should refer only to already existing fids, and the
+<style color=#00ffffff size=1>.</style>            associated Fid data is fetched by getfid.
+
+<style color=#00ffffff size=1>.</style>         Navigating file trees
+<style color=#00ffffff size=1>.</style>            When a Styxserver instance needs to know about the
+<style color=#00ffffff size=1>.</style>            namespace, it queries an external process through a channel
+<style color=#00ffffff size=1>.</style>            by sending a Navop request\; each such request carries with
+<style color=#00ffffff size=1>.</style>            it a reply channel through which the reply should be made.
+<style color=#00ffffff size=1>.</style>            The reply tuple has a reference to a Sys->Dir value that is
+<style color=#00ffffff size=1>.</style>            non-nil on success, and a diagnostic string that is non-nil
+<style color=#00ffffff size=1>.</style>            on error.
+
+<style color=#00ffffff size=1>.</style>            Files in the tree are referred to by their Qid path. The
+<style color=#00ffffff size=1>.</style>            requests are:
+<style color=#00ffffff size=1>.</style>            Stat
+<style color=#00ffffff size=1>.</style>                  Find a file in the hierarchy by its path, and reply
+<style color=#00ffffff size=1>.</style>                  with the corresponding Dir data if found (or a
+<style color=#00ffffff size=1>.</style>                  diagnostic on error).
+<style color=#00ffffff size=1>.</style>            Walk
+<style color=#00ffffff size=1>.</style>                  Look for file name in the directory with the given
+<style color=#00ffffff size=1>.</style>                  path.
+<style color=#00ffffff size=1>.</style>            Readdir
+<style color=#00ffffff size=1>.</style>                  Get information on selected files in the directory
+<style color=#00ffffff size=1>.</style>                  with the given path. In this case, the reply channel
+<style color=#00ffffff size=1>.</style>                  is used to send a sequence of values, one for each
+<style color=#00ffffff size=1>.</style>                  entry in the directory, finishing with a tuple value
+<style color=#00ffffff size=1>.</style>                  (nil,nil). The entries to return are those selected by
+<style color=#00ffffff size=1>.</style>                  an offset that is the index (origin 0) of the first
+<style color=#00ffffff size=1>.</style>                  directory entry to return, and a count of a number of
+<style color=#00ffffff size=1>.</style>                  entries to return starting with that index. Note that
+<style color=#00ffffff size=1>.</style>                  both values are expressed in units of directory
+<style color=#00ffffff size=1>.</style>                  entries, not as byte counts.
+<style color=#00ffffff size=1>.</style>            Styxserver provides a Navigator adt to enable convenient
+<style color=#00ffffff size=1>.</style>            access to this functionality\; calls into the Navigator adt
+<style color=#00ffffff size=1>.</style>            are bundled up into requests on the channel, and the reply
+<style color=#00ffffff size=1>.</style>            returned. The functions provided are:
+<style color=#00ffffff size=1>.</style>            Navigator.new(c)
+<style color=#00ffffff size=1>.</style>                      Create a new Navigator, sending requests down c.
+<style color=#00ffffff size=1>.</style>            t.stat(path)
+<style color=#00ffffff size=1>.</style>                      Find the file with the given path. Return a tuple
+<style color=#00ffffff size=1>.</style>                      (d, err), where d holds directory information for
+<style color=#00ffffff size=1>.</style>                      the file if found\; otherwise err contains an error
+<style color=#00ffffff size=1>.</style>                      message.
+<style color=#00ffffff size=1>.</style>            t.walk(parent, name)
+<style color=#00ffffff size=1>.</style>                      Find the file with name name inside parent
+<style color=#00ffffff size=1>.</style>                      directory parent. Return a tuple as for stat.
+<style color=#00ffffff size=1>.</style>            t.readdir(path, offset, count)
+<style color=#00ffffff size=1>.</style>                      Return directory data read from directory path,
+<style color=#00ffffff size=1>.</style>                      starting at entry offset for count entries.
+<style color=#00ffffff size=1>.</style>         Other functions
+<style color=#00ffffff size=1>.</style>            The following functions provide some commonly used
+<style color=#00ffffff size=1>.</style>            functionality:
+
+<style color=#00ffffff size=1>.</style>            readbytes(m, d)
+<style color=#00ffffff size=1>.</style>                      Assuming that the file in question contains data d
+<style color=#00ffffff size=1>.</style>                      , readbytes returns an appropriate reply to read
+<style color=#00ffffff size=1>.</style>                      (5) message m, taking account of m.offset and
+<style color=#00ffffff size=1>.</style>                      m.count when extracting data from d.
+
+<style color=#00ffffff size=1>.</style>            readstr(m, s)
+<style color=#00ffffff size=1>.</style>                      Assuming that the file in question contains string
+<style color=#00ffffff size=1>.</style>                      s, readstr returns an appropriate reply to <action name=read(5)>read(5)</action>
+<style color=#00ffffff size=1>.</style>                      message m, taking account of m.offset and m.count
+<style color=#00ffffff size=1>.</style>                      when extracting data from the UTF-8 representation
+<style color=#00ffffff size=1>.</style>                      of s.
+
+<style color=#00ffffff size=1>.</style>            openok(uname, omode, perm, fuid, fgid)
+<style color=#00ffffff size=1>.</style>                      Does standard permission checking, assuming user
+<style color=#00ffffff size=1>.</style>                      uname is trying to open a file with access mode
+<style color=#00ffffff size=1>.</style>                      omode, where the file is owned by fuid, has group
+<style color=#00ffffff size=1>.</style>                      fgid, and permissions perm. Returns true
+<style color=#00ffffff size=1>.</style>                      (non-zero) if permission would be granted, and
+<style color=#00ffffff size=1>.</style>                      false (zero) otherwise.
+
+<style color=#00ffffff size=1>.</style>            openmode(o)
+<style color=#00ffffff size=1>.</style>                      Checks to see whether the open mode o is
+<style color=#00ffffff size=1>.</style>                      well-formed\; if it is not, openmode returns -1\; if
+<style color=#00ffffff size=1>.</style>                      it is, it returns the mode with OTRUNC and ORCLOSE
+<style color=#00ffffff size=1>.</style>                      flags removed.
+
+<style color=#00ffffff size=1>.</style>            traceset(on)
+<style color=#00ffffff size=1>.</style>                      If on is true (non-zero), will trace 9P requests
+<style color=#00ffffff size=1>.</style>                      and replies, on standard error. This option must
+<style color=#00ffffff size=1>.</style>                      be set before creating a Styxserver, to ensure
+<style color=#00ffffff size=1>.</style>                      that it preserves its standard error descriptor.
+
+<style color=#00ffffff size=1>.</style>         Constants
+<style color=#00ffffff size=1>.</style>            Styxservers defines a number of constants applicable to the
+<style color=#00ffffff size=1>.</style>            writing of 9P servers, including:
+
+<style color=#00ffffff size=1>.</style>            Einuse, Ebadfid, Eopen, Enotfound, Enotdir, Eperm, Ebadarg,
+<style color=#00ffffff size=1>.</style>                 Eexists
+<style color=#00ffffff size=1>.</style>                 These provide standard strings for commonly used error
+<style color=#00ffffff size=1>.</style>                 conditions, to be used in Rmsg.Error replies.
+
+<style color=#00ffffff size=1>.</style>         Authentication
+<style color=#00ffffff size=1>.</style>            If authentication is required beyond that provided at the
+<style color=#00ffffff size=1>.</style>            link level (for instance by <action name=security-auth(2)>security-auth(2)</action>), the server
+<style color=#00ffffff size=1>.</style>            application must handle Tauth itself, remember the value of
+<style color=#00ffffff size=1>.</style>            afid in that message, and generate an Rauth reply with a
+<style color=#00ffffff size=1>.</style>            suitable Qid referring to a file with Qid.qtype of QTAUTH.
+<style color=#00ffffff size=1>.</style>            Following successful authentication by read and write on
+<style color=#00ffffff size=1>.</style>            that file, it must associate that status with the afid.
+<style color=#00ffffff size=1>.</style>            Then, on a subsequent Tattach message, before calling srv
+<style color=#00ffffff size=1>.</style>            .attach it must check that the Tattach's afid value
+<style color=#00ffffff size=1>.</style>            corresponds to one previously authenticated, and reply with
+<style color=#00ffffff size=1>.</style>            an appropriate error if not.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/styxservers.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=styxservers-nametree(2)>styxservers-nametree(2)</action>, <action name=sys-stat(2)>sys-stat(2)</action>, <action name=intro(5)>intro(5)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,40 @@
+<action name=VOLUME(2)>VOLUME(2)</action>                                               <action name=VOLUME(2)>VOLUME(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            volume - volume control for an infrared interface
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "volume.m"\;
+<style color=#00ffffff size=1>.</style>            vctl := load Volumectl Volumectl->PATH\;
+
+<style color=#00ffffff size=1>.</style>            volumectl: fn(ctxt: ref Draw->Context, ch: chan of int,
+<style color=#00ffffff size=1>.</style>            			device: string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Volumectl should be spawned as a separate process from any
+<style color=#00ffffff size=1>.</style>            process that desires volume control via an infrared
+<style color=#00ffffff size=1>.</style>            interface. Ctxt provides volumectl with access to the
+<style color=#00ffffff size=1>.</style>            display, on which it displays a slider widget. The slider
+<style color=#00ffffff size=1>.</style>            automatically disappears after several seconds of
+<style color=#00ffffff size=1>.</style>            inactivity. Volumectl receives input from the infrared
+<style color=#00ffffff size=1>.</style>            controller on channel ch. The values recognized are:
+
+<style color=#00ffffff size=1>.</style>            VolUP  increase volume
+
+<style color=#00ffffff size=1>.</style>            VolDN  decrease volume
+
+<style color=#00ffffff size=1>.</style>            Enter  exit
+
+<style color=#00ffffff size=1>.</style>            Device is a string used as a prefix to commands to the
+<style color=#00ffffff size=1>.</style>            device\; for example "audio out" for <action name=audio(3)>audio(3)</action>.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /dev/volume
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/volume.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ir(2)>ir(2)</action>, <action name=prefab-intro(2)>prefab-intro(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

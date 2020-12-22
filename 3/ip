@@ -1,0 +1,602 @@
+<action name=IP(3)>IP(3)</action>                                                       <action name=IP(3)>IP(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ip - network protocols over IP
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #I \[ ifn \] /net
+
+<style color=#00ffffff size=1>.</style>            /net/arp
+<style color=#00ffffff size=1>.</style>            /net/bootp
+<style color=#00ffffff size=1>.</style>            /net/iproute
+<style color=#00ffffff size=1>.</style>            /net/ipselftab
+<style color=#00ffffff size=1>.</style>            /net/iprouter
+<style color=#00ffffff size=1>.</style>            /net/log
+
+<style color=#00ffffff size=1>.</style>            /net/ipifc/clone
+<style color=#00ffffff size=1>.</style>            /net/ipifc/stats
+<style color=#00ffffff size=1>.</style>            /net/ipifc/n
+<style color=#00ffffff size=1>.</style>            /net/ipifc/n/data
+<style color=#00ffffff size=1>.</style>            /net/ipifc/n/ctl
+<style color=#00ffffff size=1>.</style>            /net/ipifc/n/local
+<style color=#00ffffff size=1>.</style>            /net/ipifc/n/status
+
+<style color=#00ffffff size=1>.</style>            /net/proto/clone
+<style color=#00ffffff size=1>.</style>            /net/proto/stats
+<style color=#00ffffff size=1>.</style>            /net/proto/n
+<style color=#00ffffff size=1>.</style>            /net/proto/n/ctl
+<style color=#00ffffff size=1>.</style>            /net/proto/n/data
+<style color=#00ffffff size=1>.</style>            /net/proto/n/err
+<style color=#00ffffff size=1>.</style>            /net/proto/n/local
+<style color=#00ffffff size=1>.</style>            /net/proto/n/remote
+<style color=#00ffffff size=1>.</style>            /net/proto/n/status
+<style color=#00ffffff size=1>.</style>            /net/proto/n/listen
+<style color=#00ffffff size=1>.</style>            ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The IP device serves a directory representing a
+<style color=#00ffffff size=1>.</style>            self-contained collection of IP interfaces. There may be
+<style color=#00ffffff size=1>.</style>            several instances, identified by the decimal interface
+<style color=#00ffffff size=1>.</style>            number ifn, that follows the #I device name\; #I0 is assumed
+<style color=#00ffffff size=1>.</style>            by default. Each instance has a disjoint collection of IP
+<style color=#00ffffff size=1>.</style>            interfaces, routes and address resolution maps. A physical
+<style color=#00ffffff size=1>.</style>            or virtual device, or medium, that produces IP packets is
+<style color=#00ffffff size=1>.</style>            associated with a logical IP network using the mechanisms
+<style color=#00ffffff size=1>.</style>            described under Physical and logical interfaces below.
+<style color=#00ffffff size=1>.</style>            Commonly all IP media on a host are assigned to a single
+<style color=#00ffffff size=1>.</style>            instance of #I, which is conventionally bound to /net, but
+<style color=#00ffffff size=1>.</style>            other configurations are possible: interfaces might be
+<style color=#00ffffff size=1>.</style>            assigned to different device instances forming separate
+<style color=#00ffffff size=1>.</style>            logical IP networks to partition networks in firewall or
+<style color=#00ffffff size=1>.</style>            gateway applications.
+
+<style color=#00ffffff size=1>.</style>            Hosted Inferno provides a subset of the interface described
+<style color=#00ffffff size=1>.</style>            here that gives to  the TCP/IP and UDP/IP of the host
+<style color=#00ffffff size=1>.</style>            system's own IP subsystem. See Hosted interfaces below for a
+<style color=#00ffffff size=1>.</style>            summary of the differences.
+
+<style color=#00ffffff size=1>.</style>         Protocols
+<style color=#00ffffff size=1>.</style>            Within each instance, the IP device provides an interface to
+<style color=#00ffffff size=1>.</style>            each IP protocol configured into the system, such as TCP/IP
+<style color=#00ffffff size=1>.</style>            or UDP/IP.
+
+<style color=#00ffffff size=1>.</style>            Each of the protocols is served by the IP device, which
+<style color=#00ffffff size=1>.</style>            represents a connection by a set of device files. The top
+<style color=#00ffffff size=1>.</style>            level directory, proto in the SYNOPSIS above, is named after
+<style color=#00ffffff size=1>.</style>            a protocol (eg, tcp, il, udp) and contains a clone file, a
+<style color=#00ffffff size=1>.</style>            stats file, and subdirectories numbered from zero to the
+<style color=#00ffffff size=1>.</style>            number of connections configured for this protocol.
+
+<style color=#00ffffff size=1>.</style>            The read-only stats file contains protocol-specific
+<style color=#00ffffff size=1>.</style>            statistics as one or more lines of text. There is no
+<style color=#00ffffff size=1>.</style>            particular format, but the values are often a superset of
+<style color=#00ffffff size=1>.</style>            those required by the SNMP MIB.
+
+<style color=#00ffffff size=1>.</style>            Opening the clone file reserves a connection, represented by
+<style color=#00ffffff size=1>.</style>            one of the numbered subdirectories.  The resulting file
+<style color=#00ffffff size=1>.</style>            descriptor will be open on the control file, ctl, of the
+<style color=#00ffffff size=1>.</style>            newly allocated connection. Reading the ctl file returns a
+<style color=#00ffffff size=1>.</style>            text string representing the number of the connection.
+<style color=#00ffffff size=1>.</style>            Connections may be used either to listen for incoming calls
+<style color=#00ffffff size=1>.</style>            or to initiate calls to other machines.
+
+<style color=#00ffffff size=1>.</style>            A connection is controlled by writing text strings to the
+<style color=#00ffffff size=1>.</style>            associated ctl file. After a connection has been established
+<style color=#00ffffff size=1>.</style>            data may be read from and written to the data file.
+
+<style color=#00ffffff size=1>.</style>            Before sending data, remote and local addresses must be set
+<style color=#00ffffff size=1>.</style>            for the connection. For outgoing calls the local port number
+<style color=#00ffffff size=1>.</style>            will be allocated randomly if none is set. Addresses are set
+<style color=#00ffffff size=1>.</style>            by writing control messages to the ctl file of the
+<style color=#00ffffff size=1>.</style>            connection. The connection is not established until the data
+<style color=#00ffffff size=1>.</style>            file is opened. There are two models depending on the nature
+<style color=#00ffffff size=1>.</style>            of the protocol. For connection-oriented protocols, the
+<style color=#00ffffff size=1>.</style>            process will block on open until the remote host has
+<style color=#00ffffff size=1>.</style>            acknowledged the connection, either accepting it, causing a
+<style color=#00ffffff size=1>.</style>            successful return from open, or rejecting it, causing open
+<style color=#00ffffff size=1>.</style>            to return an appropriate error. For connectionless
+<style color=#00ffffff size=1>.</style>            protocols, the open always succeeds\; the `connect' request
+<style color=#00ffffff size=1>.</style>            sets local parameters for the source and destination fields
+<style color=#00ffffff size=1>.</style>            for use by subsequent read and write requests.
+
+<style color=#00ffffff size=1>.</style>            The following control messages are provided by this
+<style color=#00ffffff size=1>.</style>            interface to all protocols. A particular protocol can
+<style color=#00ffffff size=1>.</style>            provide additional commands, or change the interpretation or
+<style color=#00ffffff size=1>.</style>            even syntax of those below, as described in the manual page
+<style color=#00ffffff size=1>.</style>            for that protocol. The description below shows the standard
+<style color=#00ffffff size=1>.</style>            commands with the default argument syntax and
+<style color=#00ffffff size=1>.</style>            interpretation:
+
+<style color=#00ffffff size=1>.</style>            connect ipaddress!port\[!r\] \[lport\]
+<style color=#00ffffff size=1>.</style>                 Set the remote IP address and port number for the
+<style color=#00ffffff size=1>.</style>                 connection. If the r flag is supplied and the optional
+<style color=#00ffffff size=1>.</style>                 local port lport has not been specified the system will
+<style color=#00ffffff size=1>.</style>                 allocate a restricted port number (between 600 and
+<style color=#00ffffff size=1>.</style>                 1024) for the connection to allow communication with
+<style color=#00ffffff size=1>.</style>                 Unix machines' login and exec services.
+
+<style color=#00ffffff size=1>.</style>            announce \[ipaddress!\]port
+<style color=#00ffffff size=1>.</style>                 Set the local port number to port and accept calls to
+<style color=#00ffffff size=1>.</style>                 that port. Port is a decimal port number or `*'. If
+<style color=#00ffffff size=1>.</style>                 port is zero, assign a port number (the one assigned
+<style color=#00ffffff size=1>.</style>                 can be read from the local address file). If port is
+<style color=#00ffffff size=1>.</style>                 `*', accept calls for any port that no process has
+<style color=#00ffffff size=1>.</style>                 explicitly announced. If the optional ipaddress is
+<style color=#00ffffff size=1>.</style>                 given, set the local IP address for the connection to
+<style color=#00ffffff size=1>.</style>                 that address, and accept only those incoming calls to
+<style color=#00ffffff size=1>.</style>                 port that are addressed to ipaddress. Announce fails if
+<style color=#00ffffff size=1>.</style>                 the connection is already announced or connected.
+
+<style color=#00ffffff size=1>.</style>            bind port
+<style color=#00ffffff size=1>.</style>                 Port is a decimal port number or `*'. Set the local
+<style color=#00ffffff size=1>.</style>                 port number to port. This request exists to support
+<style color=#00ffffff size=1>.</style>                 emulation of of BSD sockets and is otherwise neither
+<style color=#00ffffff size=1>.</style>                 needed nor used in Inferno.
+
+<style color=#00ffffff size=1>.</style>            tos \[ n \]
+<style color=#00ffffff size=1>.</style>                 Set the type-of-service value in outgooing packets to n
+<style color=#00ffffff size=1>.</style>                 (default: 0).
+
+<style color=#00ffffff size=1>.</style>            ttl \[ n \]
+<style color=#00ffffff size=1>.</style>                 Set the time-to-live (TTL) value in packets transmitted
+<style color=#00ffffff size=1>.</style>                 on this conversation to n (default: 255).
+
+<style color=#00ffffff size=1>.</style>            Port numbers must be in the range 1 to 32767.
+
+<style color=#00ffffff size=1>.</style>            Several read-only files report the status of a connection.
+<style color=#00ffffff size=1>.</style>            The remote and local files contain the IP address and port
+<style color=#00ffffff size=1>.</style>            number for the remote and local side of the connection. The
+<style color=#00ffffff size=1>.</style>            status file contains protocol-dependent information to help
+<style color=#00ffffff size=1>.</style>            debug network connections. The first word on the first line
+<style color=#00ffffff size=1>.</style>            gives the status of the connection.
+
+<style color=#00ffffff size=1>.</style>            Having announced, a process may accept incoming connections
+<style color=#00ffffff size=1>.</style>            by calling open on the listen file. The open will block
+<style color=#00ffffff size=1>.</style>            until a new connection request arrives\; it will then return
+<style color=#00ffffff size=1>.</style>            an open file descriptor that points to the control file of
+<style color=#00ffffff size=1>.</style>            the newly accepted connection. Repeating this procedure will
+<style color=#00ffffff size=1>.</style>            accept all calls for the given protocol.
+
+<style color=#00ffffff size=1>.</style>            In general it should not be necessary to use the file system
+<style color=#00ffffff size=1>.</style>            interface to the networks. The dial, announce, and listen
+<style color=#00ffffff size=1>.</style>            functions described in <action name=dial(2)>dial(2)</action> perform the necessary I/O to
+<style color=#00ffffff size=1>.</style>            establish and manipulate network connections.
+
+<style color=#00ffffff size=1>.</style>         TCP protocol
+<style color=#00ffffff size=1>.</style>            The TCP protocol is the standard Internet protocol for
+<style color=#00ffffff size=1>.</style>            reliable stream communication\; it does not preserve
+<style color=#00ffffff size=1>.</style>            read/write boundaries.
+
+<style color=#00ffffff size=1>.</style>            A connection is controlled by writing text strings to the
+<style color=#00ffffff size=1>.</style>            associated ctl file. After a connection has been established
+<style color=#00ffffff size=1>.</style>            data may be read from and written to the data file. The TCP
+<style color=#00ffffff size=1>.</style>            protocol provides a stream connection that does not preserve
+<style color=#00ffffff size=1>.</style>            read/write boundaries.
+
+<style color=#00ffffff size=1>.</style>            For outgoing calls the local port number will be allocated
+<style color=#00ffffff size=1>.</style>            randomly if none is set. Addresses are set by writing
+<style color=#00ffffff size=1>.</style>            control messages to the ctl file of the connection. The
+<style color=#00ffffff size=1>.</style>            connection is not established until the data file is opened.
+<style color=#00ffffff size=1>.</style>            For TCP the process will block until the remote host has
+<style color=#00ffffff size=1>.</style>            acknowledged the connection.
+
+<style color=#00ffffff size=1>.</style>            As well as the standard control messages above, TCP accepts
+<style color=#00ffffff size=1>.</style>            the following:
+
+<style color=#00ffffff size=1>.</style>            hangup
+<style color=#00ffffff size=1>.</style>                 Send a TCP reset (RST) to the remote side and end the
+<style color=#00ffffff size=1>.</style>                 conversation, without waiting for untransmitted data to
+<style color=#00ffffff size=1>.</style>                 be acknowledged, unlike a normal close of the device.
+
+<style color=#00ffffff size=1>.</style>            keepalive \[n\]
+<style color=#00ffffff size=1>.</style>                 Enable `keep alive' mode: if no traffic crosses the
+<style color=#00ffffff size=1>.</style>                 link within a given period, send a packet to check that
+<style color=#00ffffff size=1>.</style>                 the remote party is still there, and remind it that the
+<style color=#00ffffff size=1>.</style>                 local connection is still live. The optional value n
+<style color=#00ffffff size=1>.</style>                 gives the keep-alive time in milliseconds (default:
+<style color=#00ffffff size=1>.</style>                 120000).
+
+<style color=#00ffffff size=1>.</style>            The status file has many lines, each containing a labelled
+<style color=#00ffffff size=1>.</style>            number, giving the values of parameters and statistics such
+<style color=#00ffffff size=1>.</style>            as: maximum allowed connections, outgoing calls, incoming
+<style color=#00ffffff size=1>.</style>            calls, established but later reset, active calls, input
+<style color=#00ffffff size=1>.</style>            segments, output segments, retransmitted segments,
+<style color=#00ffffff size=1>.</style>            retransmitted timeouts, input errors, transmitted reset.
+
+<style color=#00ffffff size=1>.</style>         UDP protocol
+<style color=#00ffffff size=1>.</style>            UDP provides the standard Internet protocol for unreliable
+<style color=#00ffffff size=1>.</style>            datagram communication.
+
+<style color=#00ffffff size=1>.</style>            UDP opens always succeed. Before sending data, remote and
+<style color=#00ffffff size=1>.</style>            local addresses must be set for the connection.
+<style color=#00ffffff size=1>.</style>            Alternatively, the following special control requests can be
+<style color=#00ffffff size=1>.</style>            used:
+
+<style color=#00ffffff size=1>.</style>            headers
+<style color=#00ffffff size=1>.</style>                 Set the connection to use an address header with IPv6
+<style color=#00ffffff size=1>.</style>                 addressing on reads and writes of the data file,
+<style color=#00ffffff size=1>.</style>                 allowing a single connection to send datagrams to
+<style color=#00ffffff size=1>.</style>                 converse with many different destination addresses and
+<style color=#00ffffff size=1>.</style>                 ports. The 52 byte binary header appears before the
+<style color=#00ffffff size=1>.</style>                 data read or written. It contains: remote IP address,
+<style color=#00ffffff size=1>.</style>                 local IP address, interface IP address, remote port,
+<style color=#00ffffff size=1>.</style>                 and local port. The IP addresses are 16 bytes each in
+<style color=#00ffffff size=1>.</style>                 IPv6 format, and the port addresses are 2 bytes each,
+<style color=#00ffffff size=1>.</style>                 all written in network (big-endian) order. On reads,
+<style color=#00ffffff size=1>.</style>                 the header gives the values from the incoming datagram,
+<style color=#00ffffff size=1>.</style>                 except that if the remote used a multicast destination
+<style color=#00ffffff size=1>.</style>                 address, the IP address of the receiving interface is
+<style color=#00ffffff size=1>.</style>                 substituted. On writes, the header provides the
+<style color=#00ffffff size=1>.</style>                 destination for the resulting datagram, and if the
+<style color=#00ffffff size=1>.</style>                 local IP address corresponds to a valid local unicast
+<style color=#00ffffff size=1>.</style>                 interface, that address is used, otherwise the IP
+<style color=#00ffffff size=1>.</style>                 address of the transmitting interface is substituted.
+
+<style color=#00ffffff size=1>.</style>            headers4
+<style color=#00ffffff size=1>.</style>                 Set the connection to use an address header with IPv4
+<style color=#00ffffff size=1>.</style>                 addresses on reads and writes of the data file,
+<style color=#00ffffff size=1>.</style>                 allowing a single connection to send datagrams to
+<style color=#00ffffff size=1>.</style>                 converse with many different destination addresses and
+<style color=#00ffffff size=1>.</style>                 ports. The 12 byte binary header appears before the
+<style color=#00ffffff size=1>.</style>                 data read or written. It contains: remote IP address,
+<style color=#00ffffff size=1>.</style>                 local IP address, remote port, and local port. The IP
+<style color=#00ffffff size=1>.</style>                 addresses are 4 bytes each, the port addresses are 2
+<style color=#00ffffff size=1>.</style>                 bytes each, all written in network (big-endian) order.
+<style color=#00ffffff size=1>.</style>                 On reads, the header gives the values from the incoming
+<style color=#00ffffff size=1>.</style>                 datagram. On writes, the header provides the
+<style color=#00ffffff size=1>.</style>                 destination for the resulting datagram. This mode is
+<style color=#00ffffff size=1>.</style>                 obsolete and destined for oblivion.
+
+<style color=#00ffffff size=1>.</style>            A read of less than the size of the datagram will cause the
+<style color=#00ffffff size=1>.</style>            entire datagram to be consumed. Each write to the data file
+<style color=#00ffffff size=1>.</style>            will send a single datagram on the network.
+
+<style color=#00ffffff size=1>.</style>            In replies, in connection-oriented mode, if the remote
+<style color=#00ffffff size=1>.</style>            address has not been set, the first arriving packet sets the
+<style color=#00ffffff size=1>.</style>            following based on the source of the incoming datagram: the
+<style color=#00ffffff size=1>.</style>            remote address and port for the conversation, and the local
+<style color=#00ffffff size=1>.</style>            address is set to the destination address in the datagram
+<style color=#00ffffff size=1>.</style>            unless that is a multicast address, and then the address of
+<style color=#00ffffff size=1>.</style>            the receiving interface is used.
+
+<style color=#00ffffff size=1>.</style>            If a conversation is in headers mode, only the local port is
+<style color=#00ffffff size=1>.</style>            relevant.
+
+<style color=#00ffffff size=1>.</style>            Connection-oriented UDP is hungup if an ICMP error (eg, host
+<style color=#00ffffff size=1>.</style>            or port unreachable, or time exceeded) arrives with matching
+<style color=#00ffffff size=1>.</style>            port.
+
+<style color=#00ffffff size=1>.</style>            The udp status file contains four lines, each containing a
+<style color=#00ffffff size=1>.</style>            labelled number counting an event: input datagrams,
+<style color=#00ffffff size=1>.</style>            datagrams on unannounced ports, datagrams with wrong
+<style color=#00ffffff size=1>.</style>            checksum, and output datagrams.
+
+<style color=#00ffffff size=1>.</style>         IL Protocol
+<style color=#00ffffff size=1>.</style>            IL provides a reliable point-to-point datagram service for
+<style color=#00ffffff size=1>.</style>            communication between Plan 9 and native Inferno machines.
+<style color=#00ffffff size=1>.</style>            Each read and write transfers a single datagram, as for UDP.
+<style color=#00ffffff size=1>.</style>            The datagrams are delivered reliably and in order.
+<style color=#00ffffff size=1>.</style>            Conversations are addressed and established as for TCP.
+
+<style color=#00ffffff size=1>.</style>         Routing
+<style color=#00ffffff size=1>.</style>            The iproute file can be read and written. When read, it
+<style color=#00ffffff size=1>.</style>            returns the contents of the IP routing tables, one line per
+<style color=#00ffffff size=1>.</style>            entry, with six fields giving the destination host or
+<style color=#00ffffff size=1>.</style>            network address, address mask, gateway address, route type,
+<style color=#00ffffff size=1>.</style>            tag (see below), and the number of the ipifc interface
+<style color=#00ffffff size=1>.</style>            owning the route (or `-' if none). The route type is up to
+<style color=#00ffffff size=1>.</style>            four characters: 4 or 6 (IPv4 or IPv6 route)\; i (route is
+<style color=#00ffffff size=1>.</style>            interface)\; one of u (unicast), b (broadcast), or m
+<style color=#00ffffff size=1>.</style>            (multicast)\; and lastly p if the route is point-to-point.
+
+<style color=#00ffffff size=1>.</style>            Commands can also be written to control the routing:
+
+<style color=#00ffffff size=1>.</style>            add ip mask gw \[ tag \]
+<style color=#00ffffff size=1>.</style>                 Add a route via the gateway identified by IP address gw
+<style color=#00ffffff size=1>.</style>                 to the address specified by ip and subnet mask mask.
+<style color=#00ffffff size=1>.</style>                 Tag the resulting table entry with the tag provided, or
+<style color=#00ffffff size=1>.</style>                 the current tag (see tag below), or the tag none.
+
+<style color=#00ffffff size=1>.</style>            flush \[ tag \]
+<style color=#00ffffff size=1>.</style>                 Remove all routes with the given tag that do not
+<style color=#00ffffff size=1>.</style>                 correspond to a local interface. If tag is not given,
+<style color=#00ffffff size=1>.</style>                 flush all routes.
+
+<style color=#00ffffff size=1>.</style>            remove ip mask
+<style color=#00ffffff size=1>.</style>                 Remove routes to the given address.
+
+<style color=#00ffffff size=1>.</style>            tag tag
+<style color=#00ffffff size=1>.</style>                 Tag the routes generated by writes on the current file
+<style color=#00ffffff size=1>.</style>                 descriptor with the given tag of up to 4 characters.
+<style color=#00ffffff size=1>.</style>                 The default is none, set when iproute is opened.
+
+<style color=#00ffffff size=1>.</style>            The ipselftab file summarises the addresses and routes that
+<style color=#00ffffff size=1>.</style>            refer to the local host. It gives an address, the number of
+<style color=#00ffffff size=1>.</style>            logical interfaces, and the interface type in the same form
+<style color=#00ffffff size=1>.</style>            as the route type of iproute.
+
+<style color=#00ffffff size=1>.</style>            The iprouter file is provided for use by a user-level
+<style color=#00ffffff size=1>.</style>            application acting as an IP gateway. It is effective only
+<style color=#00ffffff size=1>.</style>            when the kernel-level gateway is not enabled (see the
+<style color=#00ffffff size=1>.</style>            iprouting interface control request below). Once opened,
+<style color=#00ffffff size=1>.</style>            packets that are not addressed to a local address can be
+<style color=#00ffffff size=1>.</style>            read from this device. The packet contents are preceded by a
+<style color=#00ffffff size=1>.</style>            16 byte binary header that gives the IPv6 address of the
+<style color=#00ffffff size=1>.</style>            local interface that received the packet.
+
+<style color=#00ffffff size=1>.</style>         Bootstrap
+<style color=#00ffffff size=1>.</style>            The read-only bootp file contains the results of the last
+<style color=#00ffffff size=1>.</style>            BOOTP request transmitted on any interface (see Physical and
+<style color=#00ffffff size=1>.</style>            logical interfaces below) as several lines of text, with two
+<style color=#00ffffff size=1>.</style>            fields each. The first field names an entity and the second
+<style color=#00ffffff size=1>.</style>            field gives its value in IPv4 address format. The current
+<style color=#00ffffff size=1>.</style>            entities are:
+
+<style color=#00ffffff size=1>.</style>                 auip    Authentication server address
+<style color=#00ffffff size=1>.</style>                 fsip    File server address
+<style color=#00ffffff size=1>.</style>                 gwip    Address of an IP gateway out of this (sub)net.
+<style color=#00ffffff size=1>.</style>                 ipaddr  Local IP address
+<style color=#00ffffff size=1>.</style>                 ipmask  Subnet mask for the local IP address
+
+<style color=#00ffffff size=1>.</style>            If any value is unknown (no reply to BOOTP, or value
+<style color=#00ffffff size=1>.</style>            unspecified), the value will be zero, represented as 0.0.0.0
+<style color=#00ffffff size=1>.</style>            .
+
+<style color=#00ffffff size=1>.</style>         Address resolution
+<style color=#00ffffff size=1>.</style>            The arp file can be read and written. When read, it returns
+<style color=#00ffffff size=1>.</style>            the contents of the current ARP cache as a sequence of
+<style color=#00ffffff size=1>.</style>            lines, one per map entry, giving type, state, IP address and
+<style color=#00ffffff size=1>.</style>            corresponding MAC address. Several textual commands can be
+<style color=#00ffffff size=1>.</style>            written to it:
+
+<style color=#00ffffff size=1>.</style>            add \[ medium \] ip mac
+<style color=#00ffffff size=1>.</style>                 Add a mapping from IP address ip to the given mac
+<style color=#00ffffff size=1>.</style>                 address (a sequence of bytes in hexadecimal) on the
+<style color=#00ffffff size=1>.</style>                 given medium. It must support address resolution (eg,
+<style color=#00ffffff size=1>.</style>                 Ethernet). If the medium is not specified, find the one
+<style color=#00ffffff size=1>.</style>                 associated with a route to ip (which must be IPv4).
+
+<style color=#00ffffff size=1>.</style>            flush
+<style color=#00ffffff size=1>.</style>                 Clear the cache.
+
+<style color=#00ffffff size=1>.</style>         Logging
+<style color=#00ffffff size=1>.</style>            The log file provides protocol tracing and debugging data.
+<style color=#00ffffff size=1>.</style>            While the file is held open, the system saves, in a small
+<style color=#00ffffff size=1>.</style>            circular buffer, error messages logged by selected
+<style color=#00ffffff size=1>.</style>            protocols. When read, it returns data not previously read,
+<style color=#00ffffff size=1>.</style>            blocking until there is data to read. The following commands
+<style color=#00ffffff size=1>.</style>            can be written to determine what is logged:
+
+<style color=#00ffffff size=1>.</style>            set proto ...
+<style color=#00ffffff size=1>.</style>                 Enable logging of messages from each source proto, one
+<style color=#00ffffff size=1>.</style>                 or more of: ppp, ip, fs, tcp, il, icmp, udp, compress,
+<style color=#00ffffff size=1>.</style>                 ilmsg, gre, tcpmsg, udpmsg, ipmsg and esp.
+
+<style color=#00ffffff size=1>.</style>            clear proto ...
+<style color=#00ffffff size=1>.</style>                 Disable logging of messages from the given sources.
+
+<style color=#00ffffff size=1>.</style>         Physical and logical interfaces
+<style color=#00ffffff size=1>.</style>            The configuration of the physical and logical IP interfaces
+<style color=#00ffffff size=1>.</style>            in a given instance of #I uses a virtual protocol ipifc
+<style color=#00ffffff size=1>.</style>            within that instance, that adds, controls and removes IP
+<style color=#00ffffff size=1>.</style>            interfaces. It is represented by the protocol directory
+<style color=#00ffffff size=1>.</style>            ipifc. Each connection corresponds to an interface to a
+<style color=#00ffffff size=1>.</style>            physical or virtual medium on which IP packets can be sent
+<style color=#00ffffff size=1>.</style>            and received. It has a set of associated values: minimum and
+<style color=#00ffffff size=1>.</style>            maximum transfer unit, MAC address, and a set of logical IP
+<style color=#00ffffff size=1>.</style>            interfaces. Each logical IP interface has local and remote
+<style color=#00ffffff size=1>.</style>            addresses and an address mask.
+
+<style color=#00ffffff size=1>.</style>            Opening the clone file returns a file descriptor open on the
+<style color=#00ffffff size=1>.</style>            ctl file for a new connection. A medium is then attached
+<style color=#00ffffff size=1>.</style>            using a bind request\; logical interfaces are associated by
+<style color=#00ffffff size=1>.</style>            connect or add\; they are removed by remove\; and finally
+<style color=#00ffffff size=1>.</style>            unbind detaches the medium from the connection. For certain
+<style color=#00ffffff size=1>.</style>            types of media, the unbind is automatic when the connection
+<style color=#00ffffff size=1>.</style>            itself is closed. With most media, including Ethernet, the
+<style color=#00ffffff size=1>.</style>            ipifc connection files can be closed after configuration,
+<style color=#00ffffff size=1>.</style>            and later reopened if need be to add or remove logical
+<style color=#00ffffff size=1>.</style>            interfaces, or set other parameters.
+
+<style color=#00ffffff size=1>.</style>            The ctl file responds to the following text commands,
+<style color=#00ffffff size=1>.</style>            including interface-specific variants of standard IP device
+<style color=#00ffffff size=1>.</style>            requests:
+
+<style color=#00ffffff size=1>.</style>            bind medium \[ name \[ arg ... \]
+<style color=#00ffffff size=1>.</style>                 Attach device medium to the interface, which must not
+<style color=#00ffffff size=1>.</style>                 already be bound to a device. The name and subsequent
+<style color=#00ffffff size=1>.</style>                 arguments are interpreted by the driver for the medium.
+<style color=#00ffffff size=1>.</style>                 The device name associated with the interface is name,
+<style color=#00ffffff size=1>.</style>                 if given, or a generated name otherwise.
+
+<style color=#00ffffff size=1>.</style>            connect ip \[mask \[remote \[mtu \]\]\]
+<style color=#00ffffff size=1>.</style>                 Remove all existing logical interfaces and create a new
+<style color=#00ffffff size=1>.</style>                 one as if by add (see below). The connection must be
+<style color=#00ffffff size=1>.</style>                 bound to a medium.
+
+<style color=#00ffffff size=1>.</style>            add ip \[ mask \[ remote \[ mtu \] \] \]
+<style color=#00ffffff size=1>.</style>                 Add a logical interface with local IP address ip. The
+<style color=#00ffffff size=1>.</style>                 default for mask is the mask for ip's address class\;
+<style color=#00ffffff size=1>.</style>                 for the remote address, ip's network\; and for mtu, the
+<style color=#00ffffff size=1>.</style>                 largest MTU allowed by the medium. The new interface is
+<style color=#00ffffff size=1>.</style>                 registered in the IP routing tables.
+
+<style color=#00ffffff size=1>.</style>            bootp
+<style color=#00ffffff size=1>.</style>                 Broadcast a BOOTP packet (using udp). If a valid
+<style color=#00ffffff size=1>.</style>                 response is received, set the interface's IP address
+<style color=#00ffffff size=1>.</style>                 and mask, and the IP stack's default gateway to the
+<style color=#00ffffff size=1>.</style>                 results obtained from BOOTP. The results are also
+<style color=#00ffffff size=1>.</style>                 available to applications by reading the bootp file
+<style color=#00ffffff size=1>.</style>                 above. Note that this mechanism is now deprecated in
+<style color=#00ffffff size=1>.</style>                 favour of <action name=dhcpclient(2)>dhcpclient(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            remove ip mask
+<style color=#00ffffff size=1>.</style>                 Remove the logical interface determined by ip and mask.
+
+<style color=#00ffffff size=1>.</style>            iprouting \[n\]
+<style color=#00ffffff size=1>.</style>                 Control the use of IP routing on this <action name=ip(3)>ip(3)</action> instance.
+<style color=#00ffffff size=1>.</style>                 If n is missing or non-zero, allow use as a gateway,
+<style color=#00ffffff size=1>.</style>                 rerouting via one interface packets received on
+<style color=#00ffffff size=1>.</style>                 another. By default, or if n is zero, use as a gateway
+<style color=#00ffffff size=1>.</style>                 is not allowed: if a packet received is not addressed
+<style color=#00ffffff size=1>.</style>                 to any local interface, either pass it to a gateway
+<style color=#00ffffff size=1>.</style>                 application if active (see iprouter in <action name=ip(3)>ip(3)</action>), and
+<style color=#00ffffff size=1>.</style>                 otherwise drop the packet.
+
+<style color=#00ffffff size=1>.</style>            mtu n
+<style color=#00ffffff size=1>.</style>                 Set the maximum transmit unit (MTU) on this interface
+<style color=#00ffffff size=1>.</style>                 to n bytes, which must be valid for the medium.
+
+<style color=#00ffffff size=1>.</style>            addmulti multi
+<style color=#00ffffff size=1>.</style>                 Add the multicast address multi to the interface.
+
+<style color=#00ffffff size=1>.</style>            remmulti multi
+<style color=#00ffffff size=1>.</style>                 Remove the multicast address multi from the interface.
+
+<style color=#00ffffff size=1>.</style>            unbind
+<style color=#00ffffff size=1>.</style>                 Remove any association between the current medium
+<style color=#00ffffff size=1>.</style>                 (device) and the connection: remove all routes using
+<style color=#00ffffff size=1>.</style>                 this interface, detach the device, stop packet
+<style color=#00ffffff size=1>.</style>                 transport, and remove all logical interfaces. The
+<style color=#00ffffff size=1>.</style>                 connection is ready for re-use.
+
+<style color=#00ffffff size=1>.</style>            The local file contains one line for each logical interface,
+<style color=#00ffffff size=1>.</style>            of the form:
+
+<style color=#00ffffff size=1>.</style>                 local->self...
+
+<style color=#00ffffff size=1>.</style>            where local is the local address associated with the
+<style color=#00ffffff size=1>.</style>            interface and each self is a broadcast or multicast address
+<style color=#00ffffff size=1>.</style>            that can address that interface, including subnet addresses,
+<style color=#00ffffff size=1>.</style>            if any.
+
+<style color=#00ffffff size=1>.</style>            The status file contains many fields: the first two give the
+<style color=#00ffffff size=1>.</style>            device name and the value of the current MTU, followed by 7
+<style color=#00ffffff size=1>.</style>            fields per line for each logical interface: local address,
+<style color=#00ffffff size=1>.</style>            address mask, remote address, packets in, packets out, input
+<style color=#00ffffff size=1>.</style>            errors, and output errors.
+
+<style color=#00ffffff size=1>.</style>            The following sections describe the media drivers available.
+<style color=#00ffffff size=1>.</style>            Each is separately configurable into a kernel.
+
+<style color=#00ffffff size=1>.</style>         Ethernet medium
+<style color=#00ffffff size=1>.</style>            Ethernet devices as described in <action name=ether(3)>ether(3)</action> can be bound to an
+<style color=#00ffffff size=1>.</style>            IP interface. The bind request has the form:
+
+<style color=#00ffffff size=1>.</style>                 bind ether device
+
+<style color=#00ffffff size=1>.</style>            The interface opens two conversations on the given Ethernet
+<style color=#00ffffff size=1>.</style>            device, for instance ether0, using an internal version of
+<style color=#00ffffff size=1>.</style>            dial, with the addresses device!0x800 (IPv4) and device
+<style color=#00ffffff size=1>.</style>            !0x806 (ARP). See <action name=dial(2)>dial(2)</action> for the interpretation of such
+<style color=#00ffffff size=1>.</style>            addresses. The interface runs until a process does an
+<style color=#00ffffff size=1>.</style>            explicit unbind. Multicast settings made on the interface
+<style color=#00ffffff size=1>.</style>            are propagated to the device.
+
+<style color=#00ffffff size=1>.</style>         Point-to-point medium
+<style color=#00ffffff size=1>.</style>            An asynchronous serial device as described in <action name=eia(3)>eia(3)</action> can be
+<style color=#00ffffff size=1>.</style>            bound to an interface as a Point-to-Point protocol (PPP)
+<style color=#00ffffff size=1>.</style>            device. The bind request has the form:
+
+<style color=#00ffffff size=1>.</style>                 bind ppp serial ip remote mtu framing username secret
+
+<style color=#00ffffff size=1>.</style>            All parameters except serial are optional. The character `-'
+<style color=#00ffffff size=1>.</style>            can appear as a placeholder for any parameter. Except for
+<style color=#00ffffff size=1>.</style>            authentication data, an attempt is made to negotiate
+<style color=#00ffffff size=1>.</style>            suitable values for any missing parameter values, including
+<style color=#00ffffff size=1>.</style>            network addresses. The parameters are interpreted as
+<style color=#00ffffff size=1>.</style>            follows:
+
+<style color=#00ffffff size=1>.</style>                 serial    Name of the device that will run PPP.
+<style color=#00ffffff size=1>.</style>                 ip        Local IP address for the interface.
+<style color=#00ffffff size=1>.</style>                 remote    IP address of the other end of the link.
+<style color=#00ffffff size=1>.</style>                 mtu       Initial MTU value for negotiation (default:
+<style color=#00ffffff size=1>.</style>                           1450)
+<style color=#00ffffff size=1>.</style>                 framing   If framing is zero, do not provide asynch.
+<style color=#00ffffff size=1>.</style>                           framing (on by default). Unimplemented.
+<style color=#00ffffff size=1>.</style>                 username  Identification string used in PAP or CHAP
+<style color=#00ffffff size=1>.</style>                           authentication.
+<style color=#00ffffff size=1>.</style>                 secret    Secret used in authentication\; with CHAP it
+<style color=#00ffffff size=1>.</style>                           never crosses the link.
+
+<style color=#00ffffff size=1>.</style>            If the name serial contains `!' a connection will be opened
+<style color=#00ffffff size=1>.</style>            using dial (see <action name=dial(2)>dial(2)</action>). Otherwise the name will be opened
+<style color=#00ffffff size=1>.</style>            as-is\; usually it is the name of a serial device (eg,
+<style color=#00ffffff size=1>.</style>            #t/eia0). In the latter case, a companion ctl file will also
+<style color=#00ffffff size=1>.</style>            be opened if possible, to set serial characteristics for PPP
+<style color=#00ffffff size=1>.</style>            (flow control, 64kbyte queue size, nonblocking writes). An
+<style color=#00ffffff size=1>.</style>            attempt is made to start the PPP link immediately. The write
+<style color=#00ffffff size=1>.</style>            of the bind control message returns with an error if the
+<style color=#00ffffff size=1>.</style>            link cannot be started, or if negotiation fails. The PPP
+<style color=#00ffffff size=1>.</style>            link is automatically unbound if the line hangs up (eg,
+<style color=#00ffffff size=1>.</style>            modem drops carrier), or an unrecoverable error occurs when
+<style color=#00ffffff size=1>.</style>            reading or writing the connection.
+
+<style color=#00ffffff size=1>.</style>            The PPP implementation can use either PAP and CHAP
+<style color=#00ffffff size=1>.</style>            authentication, as negotiated, provided an appropriate
+<style color=#00ffffff size=1>.</style>            username and secret is given in the bind request. It does
+<style color=#00ffffff size=1>.</style>            not yet support the Microsoft authentication scheme.
+
+<style color=#00ffffff size=1>.</style>         Packet medium
+<style color=#00ffffff size=1>.</style>            The packet medium allows an application to be source and
+<style color=#00ffffff size=1>.</style>            sink for IP packets. It is bound to an interface by the
+<style color=#00ffffff size=1>.</style>            simple request:
+
+<style color=#00ffffff size=1>.</style>                 bind pkt
+
+<style color=#00ffffff size=1>.</style>            All other interface parameters including its IP address are
+<style color=#00ffffff size=1>.</style>            set using the standard ipifc requests described above. Once
+<style color=#00ffffff size=1>.</style>            that has been done, the application reads the data file of
+<style color=#00ffffff size=1>.</style>            the interface to receive packets addressed to the interface,
+<style color=#00ffffff size=1>.</style>            and it writes to the file to inject packets into the IP
+<style color=#00ffffff size=1>.</style>            network. The interface is automatically unbound when all
+<style color=#00ffffff size=1>.</style>            interface files are closed.
+
+<style color=#00ffffff size=1>.</style>         Hosted interfaces
+<style color=#00ffffff size=1>.</style>            Native Inferno and Plan 9 have related IP implementations.
+<style color=#00ffffff size=1>.</style>            Plan 9 emu therefore simply imports Plan 9's /net, and in
+<style color=#00ffffff size=1>.</style>            the absence of version-specific differences, what is
+<style color=#00ffffff size=1>.</style>            described above still applies.
+
+<style color=#00ffffff size=1>.</style>            On all other hosted platforms, the IP device gives
+<style color=#00ffffff size=1>.</style>            applications within <action name=emu(1)>emu(1)</action> a portable interface to TCP/IP
+<style color=#00ffffff size=1>.</style>            and UDP/IP, even through it is ultimately using the host
+<style color=#00ffffff size=1>.</style>            system's own TCP/IP and UDP/IP implementations (usually but
+<style color=#00ffffff size=1>.</style>            not always socket based). The interface remains the same:
+<style color=#00ffffff size=1>.</style>            for instance by /net/tcp and /net/udp, but is currently more
+<style color=#00ffffff size=1>.</style>            limited in the set of services and control requests. Both
+<style color=#00ffffff size=1>.</style>            IPv4 and IPv6 address syntax may be used, but the IPv6 form
+<style color=#00ffffff size=1>.</style>            must still map to the IPv4 address space if the IPv6 support
+<style color=#00ffffff size=1>.</style>            is not configured into emu. Only TCP and UDP are generally
+<style color=#00ffffff size=1>.</style>            available, and a limited interface to ARP on some platforms
+<style color=#00ffffff size=1>.</style>            (see below). The set of TCP/UDP control requests is limited
+<style color=#00ffffff size=1>.</style>            to: connect, announce, bind, ttl, tos, ignoreadvice,
+<style color=#00ffffff size=1>.</style>            headers4, oldheaders, headers, hangup and keepalive.
+
+<style color=#00ffffff size=1>.</style>            The write-only arp file is implemented only on some Unix
+<style color=#00ffffff size=1>.</style>            systems, and is intended to allow the implementation of the
+<style color=#00ffffff size=1>.</style>            BOOTP protocol using Inferno, on hosted systems. It accepts
+<style color=#00ffffff size=1>.</style>            a single textual control request:
+
+<style color=#00ffffff size=1>.</style>            add ip ether
+<style color=#00ffffff size=1>.</style>                 Add a new ARP map entry, or replace an existing one,
+<style color=#00ffffff size=1>.</style>                 for IP address ip, associating it with the given ether
+<style color=#00ffffff size=1>.</style>                 MAC address. The ip address is expressed in the usual
+<style color=#00ffffff size=1>.</style>                 dotted address notation\; ether is a 12 digit
+<style color=#00ffffff size=1>.</style>                 hexadecimal number.
+
+<style color=#00ffffff size=1>.</style>            An error results if the host system does not allow the ARP
+<style color=#00ffffff size=1>.</style>            map to be set, or the current user lacks the privileges to
+<style color=#00ffffff size=1>.</style>            set it.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/devip.c
+<style color=#00ffffff size=1>.</style>            /os/ip/devip.c
+<style color=#00ffffff size=1>.</style>            /os/ip/proto.c
+<style color=#00ffffff size=1>.</style>            /os/ip/ipifc.c
+<style color=#00ffffff size=1>.</style>            /os/ip/*medium.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=dial(2)>dial(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,92 @@
+<action name=ITEST(1)>ITEST(1)</action>                                                 <action name=ITEST(1)>ITEST(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            itest, itreplay - run tests and replay results
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            itest \[ -eo \] \[ -c cflag \] \[ -r count \] \[ -v vlevel \] \[ -C
+<style color=#00ffffff size=1>.</style>            configfile \] \[ -R recordroot \] \[ testdir ... \]
+
+<style color=#00ffffff size=1>.</style>            itreplay \[ -eo \] \[ -v verbosity \] \[ recorddir ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Itest runs a sequence of tests, optionally recording all the
+<style color=#00ffffff size=1>.</style>            results in a directory tree. The itreplay command replays
+<style color=#00ffffff size=1>.</style>            the results of one or more recorded tests. Some options are
+<style color=#00ffffff size=1>.</style>            common to both commands:
+
+<style color=#00ffffff size=1>.</style>            -e   Display the standard error produced by the tests.
+
+<style color=#00ffffff size=1>.</style>            -o   Display the standard output produced by the tests.
+
+<style color=#00ffffff size=1>.</style>            -v vlevel
+<style color=#00ffffff size=1>.</style>                 Set the verbosity level to vlevel (0-9). The higher the
+<style color=#00ffffff size=1>.</style>                 value, the more detail is displayed\; the default level
+<style color=#00ffffff size=1>.</style>                 is 3.
+
+<style color=#00ffffff size=1>.</style>            The tests run by itest are specified as one or more
+<style color=#00ffffff size=1>.</style>            directories either on the command line or in a configuration
+<style color=#00ffffff size=1>.</style>            file. Options:
+
+<style color=#00ffffff size=1>.</style>            -c cflag
+<style color=#00ffffff size=1>.</style>                 Set the value in /dev/jit (usually 0 or 1\; 0 for
+<style color=#00ffffff size=1>.</style>                 interpreted mode, 1 for compiled mode) to cflag
+
+<style color=#00ffffff size=1>.</style>            -r count
+<style color=#00ffffff size=1>.</style>                 Run the set of tests count times\; a value of 0 means
+<style color=#00ffffff size=1>.</style>                 repeat indefinitely.
+
+<style color=#00ffffff size=1>.</style>            -v vlevel
+<style color=#00ffffff size=1>.</style>                 Set the verbosity level to vlevel (0-9). The higher the
+<style color=#00ffffff size=1>.</style>                 value, the more detail is displayed\; the default level
+<style color=#00ffffff size=1>.</style>                 is 3.
+
+<style color=#00ffffff size=1>.</style>            -C cfile
+<style color=#00ffffff size=1>.</style>                 Use the configuration file cfile. The file should
+<style color=#00ffffff size=1>.</style>                 contain a list of test directories, one per line.
+
+<style color=#00ffffff size=1>.</style>            -R recroot
+<style color=#00ffffff size=1>.</style>                 Store the test results in a tree rooted at recroot.
+<style color=#00ffffff size=1>.</style>                 Record directories are named as integers starting at 1.
+<style color=#00ffffff size=1>.</style>                 Each test run creates a new directory numbered one
+<style color=#00ffffff size=1>.</style>                 greater than the highest existing directory.
+
+<style color=#00ffffff size=1>.</style>            The test results to be replayed by itreplay are specified on
+<style color=#00ffffff size=1>.</style>            the command line as one or more record directories.
+
+<style color=#00ffffff size=1>.</style>         TEST FORMAT
+<style color=#00ffffff size=1>.</style>            A test directory must contain either a t.dis file or a t.sh
+<style color=#00ffffff size=1>.</style>            file, depending on whether the test is written as a Limbo
+<style color=#00ffffff size=1>.</style>            program or as a <action name=sh(1)>sh(1)</action> script. Limbo programs should use 
+<style color=#00ffffff size=1>.</style>            <action name=itslib(2)>itslib(2)</action>\; sh scripts should use <action name=sh-test(2)>sh-test(2)</action>. A test
+<style color=#00ffffff size=1>.</style>            directory should also contain a README file (which is
+<style color=#00ffffff size=1>.</style>            displayed by itest if the verbosity level is greater than
+<style color=#00ffffff size=1>.</style>            8), and any other files required for the test.
+
+<style color=#00ffffff size=1>.</style>            Tests are run with their working directory set to their own
+<style color=#00ffffff size=1>.</style>            test directory.
+
+<style color=#00ffffff size=1>.</style>         RECORD DIRECTORY FORMAT
+<style color=#00ffffff size=1>.</style>            Each record directory contains a number of files:
+
+<style color=#00ffffff size=1>.</style>            msgs All the messages generated by the test.
+
+<style color=#00ffffff size=1>.</style>            stderr
+<style color=#00ffffff size=1>.</style>                 Standard error from the test.
+
+<style color=#00ffffff size=1>.</style>            stdout
+<style color=#00ffffff size=1>.</style>                 Standard output from the test.
+
+<style color=#00ffffff size=1>.</style>            summary
+<style color=#00ffffff size=1>.</style>                 a one-line file containing the start time in seconds,
+<style color=#00ffffff size=1>.</style>                 elapsed time in ms, cflag and the name of the test
+<style color=#00ffffff size=1>.</style>                 directory.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/itest.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/itreplay.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=itslib(2)>itslib(2)</action>, <action name=sh-test(2)>sh-test(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

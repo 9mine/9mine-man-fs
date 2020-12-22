@@ -1,0 +1,112 @@
+<action name=FC(1)>FC(1)</action>                                                       <action name=FC(1)>FC(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            fc - command-line floating point calculator
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            fc \[ base \] expression
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Fc calculates the result of its argument expression and
+<style color=#00ffffff size=1>.</style>            prints the result in the format indicated by the optional
+<style color=#00ffffff size=1>.</style>            base argument. Base can be one of:
+
+<style color=#00ffffff size=1>.</style>            -d   Decimal, as produced by the %g format of <action name=sys-print(2)>sys-print(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            -x   Hexadecimal, prefixed with 0x.
+
+<style color=#00ffffff size=1>.</style>            -o   Octal, prefixed with 0.
+
+<style color=#00ffffff size=1>.</style>            -b   Binary, prefixed with 0b.
+
+<style color=#00ffffff size=1>.</style>            -B   As -b, but with extra lines to help bit-counting.
+
+<style color=#00ffffff size=1>.</style>            -r radix
+<style color=#00ffffff size=1>.</style>                 In base radix, prefixed with ``radixr'', as understood
+<style color=#00ffffff size=1>.</style>                 by Limbo (e.g. 16r3fff).
+
+<style color=#00ffffff size=1>.</style>            -c   As a unicode character, prefixed with @.
+
+<style color=#00ffffff size=1>.</style>            Expression is in reverse polish notation: each command line
+<style color=#00ffffff size=1>.</style>            argument is either an operand (number) or an operator.
+<style color=#00ffffff size=1>.</style>            Operands are pushed on a stack\; operators pop items from the
+<style color=#00ffffff size=1>.</style>            stack (the number of items depends on the operator) and push
+<style color=#00ffffff size=1>.</style>            their result. All operands are converted to double precision
+<style color=#00ffffff size=1>.</style>            floating point numbers before being pushed. Integer
+<style color=#00ffffff size=1>.</style>            operations convert their operands to big (64-bit) integers.
+<style color=#00ffffff size=1>.</style>            When all arguments are exhausted, all the values currently
+<style color=#00ffffff size=1>.</style>            on the stack are printed, first-pushed first, in the
+<style color=#00ffffff size=1>.</style>            specified output format.
+
+<style color=#00ffffff size=1>.</style>            Operands can be given in any of the formats that fc can
+<style color=#00ffffff size=1>.</style>            print, as detailed above.
+
+<style color=#00ffffff size=1>.</style>            When an operation is not commutative, the argument values
+<style color=#00ffffff size=1>.</style>            will be taken from the stack first-pushed first. Most
+<style color=#00ffffff size=1>.</style>            functions from from <action name=math-elem(2)>math-elem(2)</action>, <action name=math-fp(2)>math-fp(2)</action> are provided.
+<style color=#00ffffff size=1>.</style>            In addition, other provided operators include:
+
+<style color=#00ffffff size=1>.</style>            + - / x
+<style color=#00ffffff size=1>.</style>                 Representing the four rules. Note the use of x rather
+<style color=#00ffffff size=1>.</style>                 than *, to avoid clashes with shell metacharacters.
+
+<style color=#00ffffff size=1>.</style>            xx   To the power. (equivelant to 'pow')
+
+<style color=#00ffffff size=1>.</style>            rad deg
+<style color=#00ffffff size=1>.</style>                 Convert value to or from radians.
+
+<style color=#00ffffff size=1>.</style>            !    Factorial.
+
+<style color=#00ffffff size=1>.</style>            _    Unary minus.
+
+<style color=#00ffffff size=1>.</style>            and or xor not
+<style color=#00ffffff size=1>.</style>                 Bitwise operations.
+
+<style color=#00ffffff size=1>.</style>            shl shr
+<style color=#00ffffff size=1>.</style>                 Bitwise shift left/right.
+
+<style color=#00ffffff size=1>.</style>            p    Print the current top value on the stack.
+
+<style color=#00ffffff size=1>.</style>            sum  Sum all the values currently pushed on the stack.
+
+<style color=#00ffffff size=1>.</style>            swap Swap the top two stack items.
+
+<style color=#00ffffff size=1>.</style>            dup  Duplicate the top item on the stack.
+
+<style color=#00ffffff size=1>.</style>            rep  Repeatedly execute the last operator until there is
+<style color=#00ffffff size=1>.</style>                 only only one item left on the stack. This is only
+<style color=#00ffffff size=1>.</style>                 valid for operators that take exactly two arguments.
+
+<style color=#00ffffff size=1>.</style>            A few symbolic names for operands are recognised, including
+<style color=#00ffffff size=1>.</style>            pi (or π), e, and macheps.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            fc 22 7 /
+
+<style color=#00ffffff size=1>.</style>            	gives 3.1428571429
+
+<style color=#00ffffff size=1>.</style>            fc -b 1 2 3 4 sum
+
+<style color=#00ffffff size=1>.</style>            	gives 0b00001010
+
+<style color=#00ffffff size=1>.</style>            fc 10 0b10 010 0x10 x rep 0xa00 swap -
+
+<style color=#00ffffff size=1>.</style>            	gives 0
+
+<style color=#00ffffff size=1>.</style>            fc -help
+
+<style color=#00ffffff size=1>.</style>            	gives a usage summary, including a list of
+<style color=#00ffffff size=1>.</style>            	the names of all the operators.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=calc(1)>calc(1)</action>, <action name=math-fp(2)>math-fp(2)</action>, <action name=math-elem(2)>math-elem(2)</action>, <action name=sh-expr(1)>sh-expr(1)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            An error message is displayed if an operator is called on a
+<style color=#00ffffff size=1>.</style>            stack with too few elements. This also causes fc to yield a
+<style color=#00ffffff size=1>.</style>            non-null exit status.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The -B option will only work for fixed-width fonts.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

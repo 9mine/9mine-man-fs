@@ -1,0 +1,174 @@
+<action name=WM-SH(1)>WM-SH(1)</action>                                                 <action name=WM-SH(1)>WM-SH(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            sh, mash - Window frames for the Inferno shells
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wm/sh \[ -b \] \[ -w width \] \[ -h height \] \[ -f font \] sh-args
+<style color=#00ffffff size=1>.</style>            wm/mash mash-args
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Both wm/sh and wm/mash provide a graphical framework to
+<style color=#00ffffff size=1>.</style>            their respective shells. Both wrappers manage the input and
+<style color=#00ffffff size=1>.</style>            output of the shell. They provide facilities for scrolling
+<style color=#00ffffff size=1>.</style>            and editing the output buffer and for constructing input to
+<style color=#00ffffff size=1>.</style>            be sent to the shell.
+
+<style color=#00ffffff size=1>.</style>            Wm/sh invokes the shell <action name=sh(1)>sh(1)</action> with the arguments -n sh-args\;
+<style color=#00ffffff size=1>.</style>            wm/mash invokes <action name=ma<action name=sh(1)>sh(1)</action>>ma<action name=sh(1)>sh(1)</action></action> with the arguments mash-args. Wm/sh
+<style color=#00ffffff size=1>.</style>            accepts the following additional options, which are not
+<style color=#00ffffff size=1>.</style>            passed through to sh:
+
+<style color=#00ffffff size=1>.</style>            -b
+<style color=#00ffffff size=1>.</style>                 Inverts the default background and text color scheme.
+
+<style color=#00ffffff size=1>.</style>            -w width
+<style color=#00ffffff size=1>.</style>                 The window should be at least width pixels wide.
+
+<style color=#00ffffff size=1>.</style>            -h height
+<style color=#00ffffff size=1>.</style>                 The window should be at least height pixels high.
+
+<style color=#00ffffff size=1>.</style>            -f font
+<style color=#00ffffff size=1>.</style>                 Specify the font to use in the window. Font should be
+<style color=#00ffffff size=1>.</style>                 the name of a valid <action name=font(6)>font(6)</action> file.
+
+<style color=#00ffffff size=1>.</style>            Wm/sh and wm/mash both provide their own versions of
+<style color=#00ffffff size=1>.</style>            /dev/cons and /dev/consctl files in the namespace of the
+<style color=#00ffffff size=1>.</style>            invoked shell (see <action name=cons(3)>cons(3)</action> for the originals) and attach the
+<style color=#00ffffff size=1>.</style>            standard input of the invoked shell to the virtualised
+<style color=#00ffffff size=1>.</style>            /dev/cons file. Output from the shell, or of any commands
+<style color=#00ffffff size=1>.</style>            run by the shell, is displayed in a scrollable text window,
+<style color=#00ffffff size=1>.</style>            appearing at the output position, which is at the end of any
+<style color=#00ffffff size=1>.</style>            previously output text, before any as-yet-unread user input
+<style color=#00ffffff size=1>.</style>            text.
+
+<style color=#00ffffff size=1>.</style>            Any text displayed on the console can be edited. Typed text
+<style color=#00ffffff size=1>.</style>            is always inserted at the position of the input cursor. The
+<style color=#00ffffff size=1>.</style>            input cursor can be moved to any point in the text by
+<style color=#00ffffff size=1>.</style>            clicking mouse button-1 at the desired position. Selections
+<style color=#00ffffff size=1>.</style>            can be made by dragging the mouse with button-1 held down.
+<style color=#00ffffff size=1>.</style>            Typing into a selection copies its text to the Snarf buffer,
+<style color=#00ffffff size=1>.</style>            the selected text is deleted and the typed character
+<style color=#00ffffff size=1>.</style>            inserted.
+
+<style color=#00ffffff size=1>.</style>            Text typed beyond the output point will be made available to
+<style color=#00ffffff size=1>.</style>            commands reading from /dev/cons. Normally this text is made
+<style color=#00ffffff size=1>.</style>            available when newline is typed, but typing ESC turns on
+<style color=#00ffffff size=1>.</style>            hold mode (the text turns blue), deferring the availability
+<style color=#00ffffff size=1>.</style>            of the text until ESC is typed again, turning hold mode off.
+<style color=#00ffffff size=1>.</style>            This allows simple multi-line editing of the standard input
+<style color=#00ffffff size=1>.</style>            to a command.
+
+<style color=#00ffffff size=1>.</style>            Writing rawon to /dev/consctl changes the above behaviour,
+<style color=#00ffffff size=1>.</style>            making each character typed beyond the output point
+<style color=#00ffffff size=1>.</style>            available to commands as soon as it is typed\; the character
+<style color=#00ffffff size=1>.</style>            is not automatically echoed. Writing rawoff to /dev/consctl
+<style color=#00ffffff size=1>.</style>            reverses this behaviour.
+
+<style color=#00ffffff size=1>.</style>            In addition to dragging out selections, they can be made by
+<style color=#00ffffff size=1>.</style>            double clicking mouse button-1. Double clicking over a word
+<style color=#00ffffff size=1>.</style>            selects the whole word. Double clicking next to a brace or
+<style color=#00ffffff size=1>.</style>            bracket selects the text between it and its matching brace
+<style color=#00ffffff size=1>.</style>            or bracket. If there is no match then no selection is made.
+
+<style color=#00ffffff size=1>.</style>            Clicking mouse button-2 displays a pop-up menu of editing
+<style color=#00ffffff size=1>.</style>            commands:
+
+<style color=#00ffffff size=1>.</style>            Cut  Copy the current selection to the Snarf buffer and then
+<style color=#00ffffff size=1>.</style>                 delete the selected text. This command has no effect if
+<style color=#00ffffff size=1>.</style>                 there is no selected text, the Snarf buffer is not
+<style color=#00ffffff size=1>.</style>                 cleared.
+
+<style color=#00ffffff size=1>.</style>            Paste
+<style color=#00ffffff size=1>.</style>                 When there is no text selected, the contents of the
+<style color=#00ffffff size=1>.</style>                 Snarf buffer are inserted at the current input cursor.
+<style color=#00ffffff size=1>.</style>                 If a selection exits, its text is replaced by that of
+<style color=#00ffffff size=1>.</style>                 the Snarf buffer. The new text is then selected. The
+<style color=#00ffffff size=1>.</style>                 contents of the Snarf buffer remain unaltered.
+
+<style color=#00ffffff size=1>.</style>            Snarf
+<style color=#00ffffff size=1>.</style>                 Copy the selected text to the Snarf buffer. This
+<style color=#00ffffff size=1>.</style>                 command has no effect if there is no selected text.
+
+<style color=#00ffffff size=1>.</style>            Send If there is any text selected it is copied to the Snarf
+<style color=#00ffffff size=1>.</style>                 buffer. The contents of the Snarf buffer is then
+<style color=#00ffffff size=1>.</style>                 appended to the end of the current shell input line,
+<style color=#00ffffff size=1>.</style>                 forwarding any NewLine completed lines to the shell's
+<style color=#00ffffff size=1>.</style>                 input stream.
+
+<style color=#00ffffff size=1>.</style>            Mouse chording is implemented as in <action name=acme(1)>acme(1)</action>. Dragging a
+<style color=#00ffffff size=1>.</style>            selection with button-1 held down and then also clicking
+<style color=#00ffffff size=1>.</style>            button-2 cuts the selected text into the Snarf buffer.
+<style color=#00ffffff size=1>.</style>            Clicking button-3 instead of button-2 replaces the selected
+<style color=#00ffffff size=1>.</style>            text with the contents of the Snarf buffer.
+
+<style color=#00ffffff size=1>.</style>            Clicking mouse button-3 plumbs the word or selection under
+<style color=#00ffffff size=1>.</style>            the click point. See <action name=plumber(8)>plumber(8)</action> for more information on
+<style color=#00ffffff size=1>.</style>            plumbing.
+
+<style color=#00ffffff size=1>.</style>            Wm/sh also serves the file /chan/shctl. The following
+<style color=#00ffffff size=1>.</style>            commands may be written to this file:
+
+<style color=#00ffffff size=1>.</style>            cwd dir
+<style color=#00ffffff size=1>.</style>                 Causes any plumbing request generated by wm/sh to be
+<style color=#00ffffff size=1>.</style>                 created with dir as its ``current directory''. This is
+<style color=#00ffffff size=1>.</style>                 shown in the title bar of the window. Note that it is
+<style color=#00ffffff size=1>.</style>                 up to the command running inside wm/sh to keep this up
+<style color=#00ffffff size=1>.</style>                 to date (for instance, see EXAMPLES, below).
+
+<style color=#00ffffff size=1>.</style>            button title sendtext
+<style color=#00ffffff size=1>.</style>                 A Tk button is created at the top of the shell window,
+<style color=#00ffffff size=1>.</style>                 labeled with title. When activated, sendtext will be
+<style color=#00ffffff size=1>.</style>                 sent to the shell window as if it had been typed.
+
+<style color=#00ffffff size=1>.</style>            action title sendtext
+<style color=#00ffffff size=1>.</style>                 A button is created as for the button command, except
+<style color=#00ffffff size=1>.</style>                 that activation of the button causes sendtext to be
+<style color=#00ffffff size=1>.</style>                 sent to any process reading from /chan/shctl.
+
+<style color=#00ffffff size=1>.</style>            clear
+<style color=#00ffffff size=1>.</style>                 Delete any buttons that have been created.
+
+<style color=#00ffffff size=1>.</style>            Arguments to commands sent to /chan/shctl follow <action name=sh(1)>sh(1)</action>
+<style color=#00ffffff size=1>.</style>            quoting rules (the same as implemented by quoted and
+<style color=#00ffffff size=1>.</style>            unquoted in <action name=string(2)>string(2)</action>). A process reading from /chan/shctl
+<style color=#00ffffff size=1>.</style>            will block until an action button is activated, whereupon it
+<style color=#00ffffff size=1>.</style>            will yield the sendtext associated with the button.
+
+PLUMBING
+<style color=#00ffffff size=1>.</style>            Both wm/sh and wm/mash plumb text selected by button 3\; an
+<style color=#00ffffff size=1>.</style>            empty selection plumbs the white-space bounded text
+<style color=#00ffffff size=1>.</style>            surrounding the selection.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Define a <action name=sh(1)>sh(1)</action> function to update the current directory
+<style color=#00ffffff size=1>.</style>            automatically:
+
+<style color=#00ffffff size=1>.</style>            	fn cd {builtin cd $*\; echo cwd `{pwd} >/chan/shctl}
+
+<style color=#00ffffff size=1>.</style>            Note that this will not work in all cases, as it is possible
+<style color=#00ffffff size=1>.</style>            to change the current directory without using the cd
+<style color=#00ffffff size=1>.</style>            command.
+
+<style color=#00ffffff size=1>.</style>            Create a button to automate a mount command (note the
+<style color=#00ffffff size=1>.</style>            newline in the argument string):
+
+<style color=#00ffffff size=1>.</style>            	echo ${quote button mount 'mount kremvax /n/remote
+<style color=#00ffffff size=1>.</style>            	'} > /chan/shctl
+
+<style color=#00ffffff size=1>.</style>            Create a new wm/sh window with the above button already
+<style color=#00ffffff size=1>.</style>            created:
+
+<style color=#00ffffff size=1>.</style>            	wm/sh -ic {
+<style color=#00ffffff size=1>.</style>            		echo ${quote button mount 'mount kremvax /n/remote
+<style color=#00ffffff size=1>.</style>            	'} > /chan/shctl
+<style color=#00ffffff size=1>.</style>            	}
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/sh.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/mash.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=ma<action name=sh(1)>sh(1)</action>>ma<action name=sh(1)>sh(1)</action></action>, <action name=wm(1)>wm(1)</action>, <action name=plumber(8)>plumber(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

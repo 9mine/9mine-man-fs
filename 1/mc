@@ -1,0 +1,29 @@
+<action name=MC(1)>MC(1)</action>                                                       <action name=MC(1)>MC(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mc - multicolumn print
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            mc \[ -c columns \] \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Mc formats the contents of files (standard input by default)
+<style color=#00ffffff size=1>.</style>            into columns. Columns is an integer specifying the number of
+<style color=#00ffffff size=1>.</style>            character widths into which mc's output is formatted. If run
+<style color=#00ffffff size=1>.</style>            in an <action name=acme(1)>acme(1)</action> window, the default columns is the number of
+<style color=#00ffffff size=1>.</style>            zeros that will fit across the window\; otherwise the default
+<style color=#00ffffff size=1>.</style>            columns is 65.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/mc.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=acme(1)>acme(1)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The columns are not aligned properly if the input contains
+<style color=#00ffffff size=1>.</style>            tabs.
+<style color=#00ffffff size=1>.</style>            The output doesn't fit the width of a <action name=wm-sh(1)>wm-sh(1)</action> window by
+<style color=#00ffffff size=1>.</style>            default.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

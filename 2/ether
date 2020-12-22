@@ -1,0 +1,54 @@
+<action name=ETHER(2)>ETHER(2)</action>                                                 <action name=ETHER(2)>ETHER(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ether - Ethernet address manipulation
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "ether.m"\;
+<style color=#00ffffff size=1>.</style>            ether := load Ether Ether->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Eaddrlen:	con 6\;
+
+<style color=#00ffffff size=1>.</style>            init:   fn()\;
+<style color=#00ffffff size=1>.</style>            parse:  fn(s: string): array of byte\;
+<style color=#00ffffff size=1>.</style>            text:   fn(a: array of byte): string\;
+<style color=#00ffffff size=1>.</style>            addressof:  fn(dev: string): array of byte\;
+<style color=#00ffffff size=1>.</style>            eqaddr: fn(a, b: array of byte): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ether provides a small set of functions that manipulate
+<style color=#00ffffff size=1>.</style>            Ethernet MAC addresses, for the use of the few applications
+<style color=#00ffffff size=1>.</style>            such as <action name=bootpd(8)>bootpd(8)</action> that must work with them.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before using any other function in the
+<style color=#00ffffff size=1>.</style>            module.
+
+<style color=#00ffffff size=1>.</style>            Parse takes a textual representation of a MAC address in s
+<style color=#00ffffff size=1>.</style>            and returns its internal representation as an array of bytes
+<style color=#00ffffff size=1>.</style>            of length Eaddrlen, the form used in packets read and
+<style color=#00ffffff size=1>.</style>            written via <action name=ether(3)>ether(3)</action>. S is a string of twelve hexadecimal
+<style color=#00ffffff size=1>.</style>            digits, corresponding to the six bytes of a MAC address.
+<style color=#00ffffff size=1>.</style>            Each pair of digits can optionally be separated by a colon.
+<style color=#00ffffff size=1>.</style>            If s is invalid, parse returns nil.
+
+<style color=#00ffffff size=1>.</style>            Text takes an array of bytes of length Eaddrlen and returns
+<style color=#00ffffff size=1>.</style>            its textual representation (a string of twelve hexadecimal
+<style color=#00ffffff size=1>.</style>            digits). It returns `<invalid>' if the array is less than
+<style color=#00ffffff size=1>.</style>            Eaddrlen, but it ignores any bytes beyond that.
+
+<style color=#00ffffff size=1>.</style>            Addressof returns the MAC address of the given Ether device
+<style color=#00ffffff size=1>.</style>            dev (eg, `/net/ether0'), which it reads from dev/addr. It
+<style color=#00ffffff size=1>.</style>            returns nil and sets the error string if that file does not
+<style color=#00ffffff size=1>.</style>            exist or is invalid.
+
+<style color=#00ffffff size=1>.</style>            Eqaddr returns true iff a and b are the same address.
+
+FILES
+<style color=#00ffffff size=1>.</style>            net/etherN/addr   hardware address of Ether N
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/ether.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ip(2)>ip(2)</action>, <action name=ether(3)>ether(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

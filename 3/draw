@@ -1,0 +1,319 @@
+<action name=DRAW(3)>DRAW(3)</action>                                                   <action name=DRAW(3)>DRAW(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            draw - screen graphics
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #i /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/draw/new
+
+<style color=#00ffffff size=1>.</style>            /dev/draw/n/ctl
+<style color=#00ffffff size=1>.</style>            /dev/draw/n/data
+<style color=#00ffffff size=1>.</style>            /dev/draw/n/refresh
+
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The draw device serves a three-level file system providing
+<style color=#00ffffff size=1>.</style>            an interface to the graphics facilities of the system. The
+<style color=#00ffffff size=1>.</style>            Limbo Draw module (see <action name=draw-intro(2)>draw-intro(2)</action>) implements its
+<style color=#00ffffff size=1>.</style>            functions using this device. Each client of the device
+<style color=#00ffffff size=1>.</style>            connects by opening /dev/draw/new and reading 12 strings,
+<style color=#00ffffff size=1>.</style>            each 11 characters wide followed by a blank: the connection
+<style color=#00ffffff size=1>.</style>            number (n), the image id (q.v.) of the display image (always
+<style color=#00ffffff size=1>.</style>            zero), the channel format of the image, the min.x, min.y,
+<style color=#00ffffff size=1>.</style>            max.x, and max.y of the display image, and the min.x, min.y,
+<style color=#00ffffff size=1>.</style>            max.x, and max.y of the clipping rectangle. The channel
+<style color=#00ffffff size=1>.</style>            format string is described in <action name=image(6)>image(6)</action>, and the other fields
+<style color=#00ffffff size=1>.</style>            are decimal numbers.
+
+<style color=#00ffffff size=1>.</style>            The client can then open the directory /dev/draw/n/ to
+<style color=#00ffffff size=1>.</style>            access the ctl, data,
+<style color=#00ffffff size=1>.</style>            and refresh files associated with the connection.
+
+<style color=#00ffffff size=1>.</style>            Via the ctl and draw files, the draw device provides access
+<style color=#00ffffff size=1>.</style>            to images and font caches in its private storage, as
+<style color=#00ffffff size=1>.</style>            described in <action name=draw-intro(2)>draw-intro(2)</action>. Each image is identified by a
+<style color=#00ffffff size=1>.</style>            4-byte integer, its id.
+
+<style color=#00ffffff size=1>.</style>            Reading the ctl file yields 12 strings formatted as in
+<style color=#00ffffff size=1>.</style>            /dev/draw/new, but for the current image rather than the
+<style color=#00ffffff size=1>.</style>            display image. The current image may be set by writing a
+<style color=#00ffffff size=1>.</style>            binary image id to the ctl file.
+
+<style color=#00ffffff size=1>.</style>            A process can write messages to data to allocate and free
+<style color=#00ffffff size=1>.</style>            images, fonts, and subfonts\; read or write portions of the
+<style color=#00ffffff size=1>.</style>            images\; and draw line segments and character strings in the
+<style color=#00ffffff size=1>.</style>            images. All graphics requests are clipped to their images.
+<style color=#00ffffff size=1>.</style>            Some messages return a response to be recovered by reading
+<style color=#00ffffff size=1>.</style>            the data file.
+
+<style color=#00ffffff size=1>.</style>            The draw device provides three types of graphical resource:
+<style color=#00ffffff size=1>.</style>            Images, Screens and Fonts. Resource instances have an
+<style color=#00ffffff size=1>.</style>            identification number. Screen identifiers are global to the
+<style color=#00ffffff size=1>.</style>            device. All other identifiers are local to each client.
+
+<style color=#00ffffff size=1>.</style>            Image is the fundamental resource type on which all drawing
+<style color=#00ffffff size=1>.</style>            primitives are performed. At client connection the physical
+<style color=#00ffffff size=1>.</style>            display is represented by Image 0.
+
+<style color=#00ffffff size=1>.</style>            A Screen manages a set of (overlapping) Images, handling
+<style color=#00ffffff size=1>.</style>            Z-order and position manipulation and the refreshing of
+<style color=#00ffffff size=1>.</style>            regions uncovered by such operations. When a Screen is
+<style color=#00ffffff size=1>.</style>            created it is associated with an Image on which to render
+<style color=#00ffffff size=1>.</style>            itself. New images can be associated with a screen when they
+<style color=#00ffffff size=1>.</style>            are created\; they are then treated as windows on that
+<style color=#00ffffff size=1>.</style>            screen. Screens can be marked as public, meaning that other
+<style color=#00ffffff size=1>.</style>            clients can import their ID and create new windows on them.
+
+<style color=#00ffffff size=1>.</style>            A Font is an image with associated character data. The Font
+<style color=#00ffffff size=1>.</style>            image provides the bitmap of all the characters in the Font\;
+<style color=#00ffffff size=1>.</style>            the character data is used by the string command to render
+<style color=#00ffffff size=1>.</style>            characters from the image.
+
+<style color=#00ffffff size=1>.</style>         Command messages
+<style color=#00ffffff size=1>.</style>            The format of messages written to data is a single letter
+<style color=#00ffffff size=1>.</style>            followed by binary parameters\; multibyte integers are
+<style color=#00ffffff size=1>.</style>            transmitted with the low order byte first. Points are two
+<style color=#00ffffff size=1>.</style>            four-byte numbers: x, y. Rectangles are four four-byte
+<style color=#00ffffff size=1>.</style>            numbers: min x, min y, max x, and max y. Images, screens,
+<style color=#00ffffff size=1>.</style>            and fonts have 32-bit identifiers. In the discussion of the
+<style color=#00ffffff size=1>.</style>            protocol below, the distinction between identifier and
+<style color=#00ffffff size=1>.</style>            actual image, screen, or font is not made, so that ``the
+<style color=#00ffffff size=1>.</style>            object id'' should be interpreted as ``the object with
+<style color=#00ffffff size=1>.</style>            identifier id''. The definitions of constants used in the
+<style color=#00ffffff size=1>.</style>            description below can be found in /module/draw.m or
+<style color=#00ffffff size=1>.</style>            /include/draw.h.
+
+<style color=#00ffffff size=1>.</style>            The following requests are accepted by the data file. The
+<style color=#00ffffff size=1>.</style>            numbers in brackets give the length in bytes of the
+<style color=#00ffffff size=1>.</style>            parameters.
+
+<style color=#00ffffff size=1>.</style>            A id\[4\] imageid\[4\] fillid\[4\] public\[1\]
+<style color=#00ffffff size=1>.</style>             Allocate a new Screen (see <action name=draw-display(2)>draw-display(2)</action>) with screen
+<style color=#00ffffff size=1>.</style>             identifier id using backing store image imageid, filling it
+<style color=#00ffffff size=1>.</style>             initially with data from image fillid. If the public byte
+<style color=#00ffffff size=1>.</style>             is non-zero, the screen can be accessed from other
+<style color=#00ffffff size=1>.</style>             processes using the publicscreen interface.
+
+<style color=#00ffffff size=1>.</style>            b id\[4\] screenid\[4\] refresh\[1\] chan\[4\] repl\[1\] r\[4*4\] clipr
+<style color=#00ffffff size=1>.</style>                 \[4*4\] color\[4\]
+<style color=#00ffffff size=1>.</style>                 Allocate an image with a given id on the screen named
+<style color=#00ffffff size=1>.</style>                 by screenid. The image will have rectangle r and
+<style color=#00ffffff size=1>.</style>                 clipping rectangle clipr. If repl is non-zero, the
+<style color=#00ffffff size=1>.</style>                 image's replicate bit will be set (see <action name=draw(2)>draw(2)</action>).
+
+<style color=#00ffffff size=1>.</style>                 Refresh specifies the method to be used to draw the
+<style color=#00ffffff size=1>.</style>                 window when it is uncovered. Refbackup causes the
+<style color=#00ffffff size=1>.</style>                 server to maintain a backing store, Refnone does not
+<style color=#00ffffff size=1>.</style>                 refresh the image, and Refmesg causes a message to be
+<style color=#00ffffff size=1>.</style>                 sent via the refresh file (q.v.).
+
+<style color=#00ffffff size=1>.</style>                 The image format is described by chan, a binary version
+<style color=#00ffffff size=1>.</style>                 of the channel format string. Specifically, the image
+<style color=#00ffffff size=1>.</style>                 format is the catenation of up to four 8-bit numbers,
+<style color=#00ffffff size=1>.</style>                 each describing a particular image channel. Each of
+<style color=#00ffffff size=1>.</style>                 these 8-bit numbers contains a channel type in its high
+<style color=#00ffffff size=1>.</style>                 nibble and a bit count in its low nibble. The channel
+<style color=#00ffffff size=1>.</style>                 type is one of CRed, CGreen, CBlue, CGrey, CAlpha, CMap
+<style color=#00ffffff size=1>.</style>                 , and CIgnore. See <action name=image(6)>image(6)</action>.
+
+<style color=#00ffffff size=1>.</style>                 Color is the catenation of four 8-bit numbers
+<style color=#00ffffff size=1>.</style>                 specifying the red, green, blue, and alpha channels of
+<style color=#00ffffff size=1>.</style>                 the color that the new image should be initially filled
+<style color=#00ffffff size=1>.</style>                 with. The red channel is in the highest 8 bits, and the
+<style color=#00ffffff size=1>.</style>                 alpha in the lowest. Note that color is always in this
+<style color=#00ffffff size=1>.</style>                 format, independent of the image format.
+
+<style color=#00ffffff size=1>.</style>            c dstid\[4\] repl\[1\] clipr\[4*4\]
+<style color=#00ffffff size=1>.</style>                 Change the replicate bit and clipping rectangle of the 
+<style color=#00ffffff size=1>.</style>                 image dstid. This overrides whatever settings were
+<style color=#00ffffff size=1>.</style>                 specified in the allocate message.
+
+<style color=#00ffffff size=1>.</style>            d dstid\[4\] srcid\[4\] maskid\[4\] dstr\[4*4\] srcp\[2*4\] maskp\[2*4\]
+<style color=#00ffffff size=1>.</style>                 Use the draw operator to combine the rectangle dstr of 
+<style color=#00ffffff size=1>.</style>                 image dstid with a rectangle of image srcid, using a
+<style color=#00ffffff size=1>.</style>                 rectangle of image maskid as an alpha mask to further
+<style color=#00ffffff size=1>.</style>                 control blending. The three rectangles are congruent
+<style color=#00ffffff size=1>.</style>                 and aligned such that the upper left corner dstr in
+<style color=#00ffffff size=1>.</style>                 image dstid corresponds to the point srcp in image
+<style color=#00ffffff size=1>.</style>                 srcid and the point maskp in image maskid. See
+<style color=#00ffffff size=1>.</style>                 <action name=draw-image(2)>draw-image(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            D debugon\[1\]
+<style color=#00ffffff size=1>.</style>                 If debugon is non-zero, enable debugging output. If
+<style color=#00ffffff size=1>.</style>                 zero, disable it. The meaning of ``debugging output''
+<style color=#00ffffff size=1>.</style>                 is implementation dependent.
+
+<style color=#00ffffff size=1>.</style>            e dstid\[4\] srcid\[4\] c\[2*4\] a\[4\] b\[4\] thick\[4\] sp\[2*4\] alpha
+<style color=#00ffffff size=1>.</style>                 \[4\] phi\[4\]
+<style color=#00ffffff size=1>.</style>                 Draw an ellipse in image dst centered on the point c
+<style color=#00ffffff size=1>.</style>                 with horizontal and vertical semiaxes a and b. The
+<style color=#00ffffff size=1>.</style>                 ellipse is drawn using the image src, with the point sp
+<style color=#00ffffff size=1>.</style>                 in src aligned with c in dst. The ellipse is drawn with
+<style color=#00ffffff size=1>.</style>                 thickness 1+2×thick.
+
+<style color=#00ffffff size=1>.</style>                 If the high bit of alpha is set, only the arc of the
+<style color=#00ffffff size=1>.</style>                 ellipse from degree angles alpha to phi is drawn. For
+<style color=#00ffffff size=1>.</style>                 the purposes of drawing the arc, alpha is treated as a
+<style color=#00ffffff size=1>.</style>                 signed 31-bit number by ignoring its high bit.
+
+<style color=#00ffffff size=1>.</style>            E dstid\[4\] srcid\[4\] center\[2*4\] a\[4\] b\[4\] thick\[4\] sp\[2*4\]
+<style color=#00ffffff size=1>.</style>                 alpha\[4\] phi\[4\]
+<style color=#00ffffff size=1>.</style>                 Draws an ellipse or arc as the e message, but rather
+<style color=#00ffffff size=1>.</style>                 than outlining it, fills the corresponding sector using
+<style color=#00ffffff size=1>.</style>                 the image srcid. The thick field is ignored, but must
+<style color=#00ffffff size=1>.</style>                 be non-negative.
+
+<style color=#00ffffff size=1>.</style>            f id\[4\]
+<style color=#00ffffff size=1>.</style>                 Free the resources associated with the image id.
+
+<style color=#00ffffff size=1>.</style>            F id\[4\]
+<style color=#00ffffff size=1>.</style>                 Free the the screen with the specified id. Windows on
+<style color=#00ffffff size=1>.</style>                 the screen must be freed separately.
+
+<style color=#00ffffff size=1>.</style>            i id\[4\] n\[4\] ascent\[1\]
+<style color=#00ffffff size=1>.</style>                 Treat the image id as a font cache of n character
+<style color=#00ffffff size=1>.</style>                 cells, each with ascent ascent.
+
+<style color=#00ffffff size=1>.</style>            l cacheid\[4\] srcid\[4\] index\[2\] r\[4*4\] sp\[2*4\] left\[1\] width
+<style color=#00ffffff size=1>.</style>                 \[1\]
+<style color=#00ffffff size=1>.</style>                 Load a character into the font cache associated with
+<style color=#00ffffff size=1>.</style>                 image cacheid at cache position index. The character
+<style color=#00ffffff size=1>.</style>                 data is drawn in rectangle r of the font cache image
+<style color=#00ffffff size=1>.</style>                 and is fetched from the congruent rectangle in image
+<style color=#00ffffff size=1>.</style>                 srcid with upper left corner sp. Width specifies the
+<style color=#00ffffff size=1>.</style>                 width of the character—the spacing from this character
+<style color=#00ffffff size=1>.</style>                 to the next—while left specifies the horizontal
+<style color=#00ffffff size=1>.</style>                 distance from the left side of the character to the
+<style color=#00ffffff size=1>.</style>                 left side of the cache image. The dimensions of the
+<style color=#00ffffff size=1>.</style>                 image of the character are defined by r.
+
+<style color=#00ffffff size=1>.</style>            L dstid\[4\] p0\[2*4\] p1\[2*4\] end0\[4\] end1\[4\] thick\[4\] srcid\[4\]
+<style color=#00ffffff size=1>.</style>                 sp\[2*4\]
+<style color=#00ffffff size=1>.</style>                 Draw a line of thickness 1+2×thick in image dstid from
+<style color=#00ffffff size=1>.</style>                 point p0 to p1. The line is drawn using the image srcid
+<style color=#00ffffff size=1>.</style>                 , translated so that point sp in srcid aligns with p0
+<style color=#00ffffff size=1>.</style>                 in dstid. The end0 and end1 fields specify whether the
+<style color=#00ffffff size=1>.</style>                 corresponding line end should be a square, a disc, or
+<style color=#00ffffff size=1>.</style>                 an arrow head. See line in <action name=draw-image(2)>draw-image(2)</action> for more
+<style color=#00ffffff size=1>.</style>                 details.
+
+<style color=#00ffffff size=1>.</style>            N id\[4\] in\[1\] j\[1\] name\[j\]
+<style color=#00ffffff size=1>.</style>                 If in is non-zero, associate the image id with the
+<style color=#00ffffff size=1>.</style>                 string name. If in is zero and name already corresponds
+<style color=#00ffffff size=1>.</style>                 to the image id, the association is deleted.
+
+<style color=#00ffffff size=1>.</style>            n id\[4\] j\[1\] name\[j\]
+<style color=#00ffffff size=1>.</style>                 Introduce the identifier id to correspond to the image
+<style color=#00ffffff size=1>.</style>                 named by the string name.
+
+<style color=#00ffffff size=1>.</style>            o id\[4\] r.min\[2*4\] scr\[2*4\]
+<style color=#00ffffff size=1>.</style>                 Position the window id so that its upper left corner is
+<style color=#00ffffff size=1>.</style>                 at the point scr on its screen. Simultaneously change
+<style color=#00ffffff size=1>.</style>                 its internal (logical) coordinate system so that the
+<style color=#00ffffff size=1>.</style>                 point log corresponds to the upper left corner of the
+<style color=#00ffffff size=1>.</style>                 window.
+
+<style color=#00ffffff size=1>.</style>            p dstid\[4\] n\[2\] end0\[4\] end1\[4\] thick\[4\] srcid\[4\] sp\[2*4\] dp
+<style color=#00ffffff size=1>.</style>                 \[2*2*(n+1)\]
+<style color=#00ffffff size=1>.</style>                 Draw a polygon of thickness 1+2×thick. It is
+<style color=#00ffffff size=1>.</style>                 conceptually equivalent to a series of n line-drawing
+<style color=#00ffffff size=1>.</style>                 messages (see L above) joining adjacent points in the
+<style color=#00ffffff size=1>.</style>                 list of points dp. The source image srcid is translated
+<style color=#00ffffff size=1>.</style>                 so that the point sp in srcid aligns with the first
+<style color=#00ffffff size=1>.</style>                 point in the list dp. The polygon need not be closed: 
+<style color=#00ffffff size=1>.</style>                 end0 and end1 specify the line endings for the first
+<style color=#00ffffff size=1>.</style>                 and last point on the polygon. All interior lines have
+<style color=#00ffffff size=1>.</style>                 rounded ends to make smooth joins.
+
+<style color=#00ffffff size=1>.</style>            P dstid\[4\] n\[2\] wind\[4\] ignore\[2*4\] srcid\[4\] sp\[2*4\] dp
+<style color=#00ffffff size=1>.</style>                 \[2*2*(n+1)\]
+<style color=#00ffffff size=1>.</style>                 Draw a polygon as the p message, but fill it rather
+<style color=#00ffffff size=1>.</style>                 than outlining it. The winding rule parameter wind
+<style color=#00ffffff size=1>.</style>                 resolves ambiguities about what to fill if the polygon
+<style color=#00ffffff size=1>.</style>                 is self-intersecting. If wind is ~0, a pixel is inside
+<style color=#00ffffff size=1>.</style>                 the polygon if the polygon's winding number about the
+<style color=#00ffffff size=1>.</style>                 point is non-zero. If wind is 1, a pixel is inside if
+<style color=#00ffffff size=1>.</style>                 the winding number is odd. Complementary values (0 or
+<style color=#00ffffff size=1>.</style>                 ~1) cause outside pixels to be filled. The meaning of
+<style color=#00ffffff size=1>.</style>                 other values is undefined. The polygon is closed with a
+<style color=#00ffffff size=1>.</style>                 line if necessary.
+
+<style color=#00ffffff size=1>.</style>            r id\[4\] r\[4*4\]
+<style color=#00ffffff size=1>.</style>                 Cause the next read of the data file to return the
+<style color=#00ffffff size=1>.</style>                 image pixel data corresponding to the rectangle r in
+<style color=#00ffffff size=1>.</style>                 image id.
+
+<style color=#00ffffff size=1>.</style>            s dstid\[4\] srcid\[4\] fontid\[4\] p\[2*4\] clipr\[4*4\] sp\[2*4\] n\[2\]
+<style color=#00ffffff size=1>.</style>                 n*(index\[2\])
+<style color=#00ffffff size=1>.</style>                 Draw in the image dstid the text string specified by
+<style color=#00ffffff size=1>.</style>                 the n cache indices into font fontid, starting with the
+<style color=#00ffffff size=1>.</style>                 upper left corner at point p in image dstid. The image
+<style color=#00ffffff size=1>.</style>                 drawn is taken from image srcid, translated to align sp
+<style color=#00ffffff size=1>.</style>                 in srcid with dp in dstid. All drawing is confined to
+<style color=#00ffffff size=1>.</style>                 the clipping rectangle clipr in dstid.
+
+<style color=#00ffffff size=1>.</style>            x dstid\[4\] srcid\[4\] fontid\[4\] dp\[2*4\] clipr\[4*4\] sp\[2*4\] n
+<style color=#00ffffff size=1>.</style>                 \[2\] bgid\[4\] bp\[2*4\] n*(index\[2\])
+<style color=#00ffffff size=1>.</style>                 Like the string drawing s command, but fill the
+<style color=#00ffffff size=1>.</style>                 background of each character with pixels from image
+<style color=#00ffffff size=1>.</style>                 bgid. The image bgid is translated so that the point bp
+<style color=#00ffffff size=1>.</style>                 aligns with the point dp in dstid.
+
+<style color=#00ffffff size=1>.</style>            S id\[4\] chan\[4\] Attach to the public screen with the
+<style color=#00ffffff size=1>.</style>                 specified id. It is an error if the screen does not
+<style color=#00ffffff size=1>.</style>                 exist, is not public, or does not have the channel
+<style color=#00ffffff size=1>.</style>                 descriptor chan for its associated image.
+
+<style color=#00ffffff size=1>.</style>            t top\[1\] n\[2\] n*id\[4\]
+<style color=#00ffffff size=1>.</style>                 Send n windows to the top (if t is non-zero) or bottom
+<style color=#00ffffff size=1>.</style>                 (if t is zero) of the window stack. The window is
+<style color=#00ffffff size=1>.</style>                 specified by the list of n image ids are moved as a
+<style color=#00ffffff size=1>.</style>                 group, maintaining their own order within the stack.
+
+<style color=#00ffffff size=1>.</style>            v
+<style color=#00ffffff size=1>.</style>                 Flush changes from a soft screen, if any, to the
+<style color=#00ffffff size=1>.</style>                 display buffer.
+
+<style color=#00ffffff size=1>.</style>            y id\[4\] r\[4*4\] buf\[x*1\]
+<style color=#00ffffff size=1>.</style>                 Y id\[4\] r\[4*4\] buf\[x*1\]
+<style color=#00ffffff size=1>.</style>                 Replace the rectangle r of pixels in image id with the
+<style color=#00ffffff size=1>.</style>                 pixel data in buf. The pixel data must be in the format
+<style color=#00ffffff size=1>.</style>                 dictated by id's image channel descriptor (see image
+<style color=#00ffffff size=1>.</style>                 (6)). The y message uses uncompressed data, while the Y
+<style color=#00ffffff size=1>.</style>                 message uses compressed data. In either case, it is an
+<style color=#00ffffff size=1>.</style>                 error to include more data than necessary.
+
+<style color=#00ffffff size=1>.</style>            The refresh file is read-only. As windows owned by the
+<style color=#00ffffff size=1>.</style>            client are uncovered, if they cannot be refreshed by the
+<style color=#00ffffff size=1>.</style>            server (such as when they have refresh functions associated
+<style color=#00ffffff size=1>.</style>            with them), a message is made available on the refresh file
+<style color=#00ffffff size=1>.</style>            reporting what needs to be repainted by the client. The
+<style color=#00ffffff size=1>.</style>            message has five decimal integers formatted as in the ctl
+<style color=#00ffffff size=1>.</style>            message: the image id of the window and the coordinates of
+<style color=#00ffffff size=1>.</style>            the rectangle that should be refreshed.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/devdraw.c
+<style color=#00ffffff size=1>.</style>            /emu/*/win.c
+<style color=#00ffffff size=1>.</style>            /os/port/devdraw.c
+<style color=#00ffffff size=1>.</style>            /os/*/screen.c
+<style color=#00ffffff size=1>.</style>            /libmemdraw
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=draw-intro(2)>draw-intro(2)</action>, <action name=colour(6)>colour(6)</action>, <action name=image(6)>image(6)</action>, <action name=font(6)>font(6)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Most messages to draw can return errors\; these can be
+<style color=#00ffffff size=1>.</style>            detected by a system call error on the write(see sys-read
+<style color=#00ffffff size=1>.</style>            (2)) of the data containing the erroneous message. The most
+<style color=#00ffffff size=1>.</style>            common error is a failure to allocate because of
+<style color=#00ffffff size=1>.</style>            insufficient free resources.  Most other errors occur only
+<style color=#00ffffff size=1>.</style>            when the protocol is mishandled by the application. The
+<style color=#00ffffff size=1>.</style>            error string (see <action name=sys-intro(2)>sys-intro(2)</action>) will report details.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The Refmesg refresh method is not fully implemented.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,232 @@
+<action name=DHCPCLIENT(2)>DHCPCLIENT(2)</action>                                       <action name=DHCPCLIENT(2)>DHCPCLIENT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Dhcpclient: Bootconf, Lease, bootp, dhcp, applycfg,
+<style color=#00ffffff size=1>.</style>            removecfg - client's side of dynamic host configuration
+<style color=#00ffffff size=1>.</style>            protocol
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "dhcp.m"\;   # sic
+<style color=#00ffffff size=1>.</style>            dhcpclient := load Dhcpclient Dhcpclient->PATH\;
+<style color=#00ffffff size=1>.</style>            Bootconf, Lease: import dhcpclient\;
+
+<style color=#00ffffff size=1>.</style>            Bootconf: adt {
+<style color=#00ffffff size=1>.</style>                ip:      string\;
+<style color=#00ffffff size=1>.</style>                ipgw:    string\;
+<style color=#00ffffff size=1>.</style>                ipmask:  string\;
+<style color=#00ffffff size=1>.</style>                bootf:   string\;
+<style color=#00ffffff size=1>.</style>                bootip:  string\;
+<style color=#00ffffff size=1>.</style>                dhcpip:  string\;
+<style color=#00ffffff size=1>.</style>                siaddr:  string\;
+<style color=#00ffffff size=1>.</style>                serverid: string\;
+<style color=#00ffffff size=1>.</style>                sys:     string\;
+<style color=#00ffffff size=1>.</style>                dom:     string\;
+<style color=#00ffffff size=1>.</style>                lease:   int\;
+<style color=#00ffffff size=1>.</style>                options: array of array of byte\;
+<style color=#00ffffff size=1>.</style>                vendor:  array of array of byte\;
+
+<style color=#00ffffff size=1>.</style>                new:     fn(): ref Bootconf\;
+<style color=#00ffffff size=1>.</style>                get:     fn(c: self ref Bootconf, n: int): array of byte\;
+<style color=#00ffffff size=1>.</style>                getint:  fn(c: self ref Bootconf, n: int): int\;
+<style color=#00ffffff size=1>.</style>                getip:   fn(c: self ref Bootconf, n: int): string\;
+<style color=#00ffffff size=1>.</style>                getips:  fn(c: self ref Bootconf, n: int): list of string\;
+<style color=#00ffffff size=1>.</style>                gets:    fn(c: self ref Bootconf, n: int): string\;
+<style color=#00ffffff size=1>.</style>                put:     fn(c: self ref Bootconf, n: int, a: array of byte)\;
+<style color=#00ffffff size=1>.</style>                putint:  fn(c: self ref Bootconf, n: int, v: int)\;
+<style color=#00ffffff size=1>.</style>                putips:  fn(c: self ref Bootconf, n: int, ips: list of string)\;
+<style color=#00ffffff size=1>.</style>                puts:    fn(c: self ref Bootconf, n: int, s: string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Lease: adt {
+<style color=#00ffffff size=1>.</style>                configs: chan of (ref Bootconf, string)\;
+
+<style color=#00ffffff size=1>.</style>                release: fn(l: self ref Lease)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:      fn()\;
+<style color=#00ffffff size=1>.</style>            tracing:   fn(debug: int)\;
+<style color=#00ffffff size=1>.</style>            bootp:     fn(net: string, ctlifc: ref Sys->FD, device: string,
+<style color=#00ffffff size=1>.</style>                           init: ref Bootconf): (ref Bootconf, string)\;
+<style color=#00ffffff size=1>.</style>            dhcp:      fn(net: string, ctlifc: ref Sys->FD, device: string,
+<style color=#00ffffff size=1>.</style>                           init: ref Bootconf, options: array of int):
+<style color=#00ffffff size=1>.</style>                           (ref Bootconf, ref Lease, string)\;
+
+<style color=#00ffffff size=1>.</style>            applycfg:  fn(net: string, ctlifc: ref Sys->FD,
+<style color=#00ffffff size=1>.</style>                           conf: ref Bootconf): string\;
+<style color=#00ffffff size=1>.</style>            removecfg: fn(net: string, ctlifc: ref Sys->FD,
+<style color=#00ffffff size=1>.</style>                           conf: ref Bootconf): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dhcpclient implements the client side of the Dynamic Host
+<style color=#00ffffff size=1>.</style>            Configuration Protocol (DHCP) of Internet RFC2131. In the
+<style color=#00ffffff size=1>.</style>            interface, Internet addresses are represented as strings, in
+<style color=#00ffffff size=1>.</style>            forms that <action name=ip(2)>ip(2)</action> can parse, and that can be written directly
+<style color=#00ffffff size=1>.</style>            to control files in <action name=ip(3)>ip(3)</action>.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before invoking any other operation of
+<style color=#00ffffff size=1>.</style>            the module.
+
+<style color=#00ffffff size=1>.</style>            Bootp reserves the UDP port on net for use by BOOTP/DHCP
+<style color=#00ffffff size=1>.</style>            clients, and sends a BOOTP request (ie, one without a DHCP
+<style color=#00ffffff size=1>.</style>            operation code). Net is the name of the network directory
+<style color=#00ffffff size=1>.</style>            (if nil, the default is /net). If bootp is to configure the
+<style color=#00ffffff size=1>.</style>            interface according to the results received, ctlifc should
+<style color=#00ffffff size=1>.</style>            be open on the control file of the net/ipifc directory for
+<style color=#00ffffff size=1>.</style>            the interface to be configured\; otherwise it should be nil.
+<style color=#00ffffff size=1>.</style>            Bootp repeats the request periodically until it either
+<style color=#00ffffff size=1>.</style>            receives a reply or has made 5 attempts. It returns a tuple
+<style color=#00ffffff size=1>.</style>            (conf, err). If it has received a reply, conf refers to a
+<style color=#00ffffff size=1>.</style>            Bootconf value that contains the values received, and err is
+<style color=#00ffffff size=1>.</style>            nil. If ctlifc is not nil, the interface will also have been
+<style color=#00ffffff size=1>.</style>            configured appropriately. If a valid reply has not been
+<style color=#00ffffff size=1>.</style>            received, or some other error occurred, conf is nil, and err
+<style color=#00ffffff size=1>.</style>            is a diagnostic.
+
+<style color=#00ffffff size=1>.</style>            Dhcp has a similar interface, but runs the full DHCP
+<style color=#00ffffff size=1>.</style>            protocol. The options array has integers representing
+<style color=#00ffffff size=1>.</style>            possible DHCP options\; dhcp asks the server to provide
+<style color=#00ffffff size=1>.</style>            values for them. If options is nil, a few option values are
+<style color=#00ffffff size=1>.</style>            requested that might be useful for Inferno (eg, subnet mask,
+<style color=#00ffffff size=1>.</style>            gateway, DNS server, authentication and file servers, and so
+<style color=#00ffffff size=1>.</style>            on). If the server does supply them, they can be retrieved
+<style color=#00ffffff size=1>.</style>            either from specific fields of Bootconf, or using its get
+<style color=#00ffffff size=1>.</style>            operations. Init is also usually nil, but can refer to a
+<style color=#00ffffff size=1>.</style>            Bootconf that provides some values to suggest to the server,
+<style color=#00ffffff size=1>.</style>            for instance if the client knows a previously-assigned
+<style color=#00ffffff size=1>.</style>            address stored in non-volatile memory. Dhcp returns a tuple
+<style color=#00ffffff size=1>.</style>            (conf, lease, err), where conf and err are just as for bootp
+<style color=#00ffffff size=1>.</style>            , and the new component lease is a reference to a Lease
+<style color=#00ffffff size=1>.</style>            value that gives access to the state of the client's address
+<style color=#00ffffff size=1>.</style>            assignment.
+
+<style color=#00ffffff size=1>.</style>            DHCP allows a server to assign a client an address
+<style color=#00ffffff size=1>.</style>            permanently, or to lease it for a specified time. In the
+<style color=#00ffffff size=1>.</style>            latter case, Bootconf.lease will have a non-zero value, and
+<style color=#00ffffff size=1>.</style>            the client must periodically renew the lease to retain the
+<style color=#00ffffff size=1>.</style>            address, and dhcp creates a process to do so. The Lease
+<style color=#00ffffff size=1>.</style>            value provides a way for that process to communicate changes
+<style color=#00ffffff size=1>.</style>            (if any) to the network configuration. Each time the
+<style color=#00ffffff size=1>.</style>            configuration changes, the process will send a message on
+<style color=#00ffffff size=1>.</style>            the channel configs. (The channel is buffered, and dhcp
+<style color=#00ffffff size=1>.</style>            first discards any previous notifications not yet received,
+<style color=#00ffffff size=1>.</style>            so there are no ill effects if no process ever receives from
+<style color=#00ffffff size=1>.</style>            the channel.) Each message is a tuple (conf, diag). If a new
+<style color=#00ffffff size=1>.</style>            state change has been made successfully, conf refers to a
+<style color=#00ffffff size=1>.</style>            Bootconf value with the details. Otherwise, conf is nil and
+<style color=#00ffffff size=1>.</style>            diag explains what went wrong. In any case, the watchdog
+<style color=#00ffffff size=1>.</style>            process continues to try to extend the lease, or failing
+<style color=#00ffffff size=1>.</style>            that, obtain a new network configuration, perhaps from
+<style color=#00ffffff size=1>.</style>            another server. Lease.release may be called to release the
+<style color=#00ffffff size=1>.</style>            leased address and stop the watchdog.
+
+<style color=#00ffffff size=1>.</style>            Bootconf has the following operations:
+
+<style color=#00ffffff size=1>.</style>            new()
+<style color=#00ffffff size=1>.</style>                 Return a reference to a Bootconf with values
+<style color=#00ffffff size=1>.</style>                 initialised to nil or 0.
+
+<style color=#00ffffff size=1>.</style>            bc.get(n)
+<style color=#00ffffff size=1>.</style>                 Return the value of DHCP option n as a raw array of
+<style color=#00ffffff size=1>.</style>                 bytes. Return nil if the option is not set.
+
+<style color=#00ffffff size=1>.</style>            bc.getint(n)
+<style color=#00ffffff size=1>.</style>                 Return the value of option n interpreted as an integer.
+<style color=#00ffffff size=1>.</style>                 Return zero if the option is not set.
+
+<style color=#00ffffff size=1>.</style>            bc.getip(n)
+<style color=#00ffffff size=1>.</style>                 Return the first Internet address provided for option n
+<style color=#00ffffff size=1>.</style>                 .
+
+<style color=#00ffffff size=1>.</style>            bc.getips(n)
+<style color=#00ffffff size=1>.</style>                 Return a list of all the Internet addresses provided
+<style color=#00ffffff size=1>.</style>                 for option n.
+
+<style color=#00ffffff size=1>.</style>            bc.gets(n)
+<style color=#00ffffff size=1>.</style>                 Return the value of option n as a string.
+
+<style color=#00ffffff size=1>.</style>            bc.put(n, a)
+<style color=#00ffffff size=1>.</style>                 Set the value of DHCP option n to the bytes of byte
+<style color=#00ffffff size=1>.</style>                 array a. If a is nil, put removes any existing value
+<style color=#00ffffff size=1>.</style>                 for the option.
+
+<style color=#00ffffff size=1>.</style>            bc.putint(n, v)
+<style color=#00ffffff size=1>.</style>                 Set option n to the integer value v.
+
+<style color=#00ffffff size=1>.</style>            bc.putips(n, ips)
+<style color=#00ffffff size=1>.</style>                 Set option n to the list of Internet addresses ips.
+
+<style color=#00ffffff size=1>.</style>            bc.puts(n, s)
+<style color=#00ffffff size=1>.</style>                 Set option n to the string n.
+
+<style color=#00ffffff size=1>.</style>            Dhcpclient names a few constants representing commonly-used
+<style color=#00ffffff size=1>.</style>            configuration options (attributes). They are suitable
+<style color=#00ffffff size=1>.</style>            parameters for the option selector n of Bootconf's get and
+<style color=#00ffffff size=1>.</style>            put functions. The first set of constants name options for
+<style color=#00ffffff size=1>.</style>            both BOOTP and DHCP:
+
+<style color=#00ffffff size=1>.</style>            Odnsserver               Internet address(es) of Domain Name
+<style color=#00ffffff size=1>.</style>                                     Servers
+<style color=#00ffffff size=1>.</style>            Odomainname              Current domain (see Bootconf.dom)
+<style color=#00ffffff size=1>.</style>            Ohostname                Host name (see Bootconf.sys)
+<style color=#00ffffff size=1>.</style>            Omask                    Network mask (IPv4). Also see
+<style color=#00ffffff size=1>.</style>                                     Bootconf.ipmask.
+<style color=#00ffffff size=1>.</style>            Onetbiosns               NetBIOS servers
+<style color=#00ffffff size=1>.</style>            Ontpserver               Network Time Protocol servers
+<style color=#00ffffff size=1>.</style>            Opop3server              POP3 mail servers
+<style color=#00ffffff size=1>.</style>            Orouter                  Default router for subnet (see
+<style color=#00ffffff size=1>.</style>                                     Bootconf.ipgw)
+<style color=#00ffffff size=1>.</style>            Osmtpserver              SMTP mail delivery servers
+<style color=#00ffffff size=1>.</style>            Ovendorinfo              Vendor-specific data (see below)
+<style color=#00ffffff size=1>.</style>            Owwwserver               HTTP proxy
+
+<style color=#00ffffff size=1>.</style>            The second set has DHCP options:
+
+<style color=#00ffffff size=1>.</style>            Obootfile                Name of the file containing a
+<style color=#00ffffff size=1>.</style>                                     kernel for the client  to load (eg,
+<style color=#00ffffff size=1>.</style>                                     by TFTP)\; see Bootconf.bootf.
+<style color=#00ffffff size=1>.</style>            Olease                   Lease time for IP address, in
+<style color=#00ffffff size=1>.</style>                                     seconds (also see Bootconf.lease)
+<style color=#00ffffff size=1>.</style>            Omaxmsg                  Maximum DHCP size the client is
+<style color=#00ffffff size=1>.</style>                                     willing to accept (minimum 576
+<style color=#00ffffff size=1>.</style>                                     bytes).
+<style color=#00ffffff size=1>.</style>            Orebindingtime           Time interval in seconds from
+<style color=#00ffffff size=1>.</style>                                     address assignment to the time
+<style color=#00ffffff size=1>.</style>                                     address must be rebound.
+<style color=#00ffffff size=1>.</style>            Orenewaltime             Time interval in seconds from
+<style color=#00ffffff size=1>.</style>                                     address assignment to first attempt
+<style color=#00ffffff size=1>.</style>                                     to renew the address.
+<style color=#00ffffff size=1>.</style>            Otftpserver              TFTP server from which to fetch
+<style color=#00ffffff size=1>.</style>                                     kernel and parameter files\; see
+<style color=#00ffffff size=1>.</style>                                     Bootconf.bootip.
+<style color=#00ffffff size=1>.</style>            Ovendorclass             Identify vendor type and
+<style color=#00ffffff size=1>.</style>                                     configuration of client. Inferno
+<style color=#00ffffff size=1>.</style>                                     sets this to plan9_386 (sic) to
+<style color=#00ffffff size=1>.</style>                                     encourage Plan 9 DHCP servers to
+<style color=#00ffffff size=1>.</style>                                     respond\; other servers will ignore
+<style color=#00ffffff size=1>.</style>                                     it.
+
+<style color=#00ffffff size=1>.</style>            The final set give vendor-specific options that Inferno
+<style color=#00ffffff size=1>.</style>            shares with Plan 9:
+
+<style color=#00ffffff size=1>.</style>            Ovendor                  Flag OR'd in to an option number to
+<style color=#00ffffff size=1>.</style>                                     mark it as destined for the `vendor
+<style color=#00ffffff size=1>.</style>                                     information' section.
+<style color=#00ffffff size=1>.</style>            OP9auth                  Authentication server (Ovendor|129)
+<style color=#00ffffff size=1>.</style>            OP9fs                    File server (Ovendor|128)
+
+<style color=#00ffffff size=1>.</style>            Given a network configuration in conf, and a valid file
+<style color=#00ffffff size=1>.</style>            descriptor for a network interface's control file, in the
+<style color=#00ffffff size=1>.</style>            network net, applycfg sets the basic interface parameters
+<style color=#00ffffff size=1>.</style>            (address, network mask, default gateway), and writes other
+<style color=#00ffffff size=1>.</style>            parameters to net/ndb\; conversely, removecfg removes from
+<style color=#00ffffff size=1>.</style>            the interface just those parameters set by conf. Normally
+<style color=#00ffffff size=1>.</style>            these functions are called automatically, as required, by
+<style color=#00ffffff size=1>.</style>            dhcp and its watchdog process.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/dhcpclient.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bootpd(8)>bootpd(8)</action>, <action name=dhcp(8)>dhcp(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

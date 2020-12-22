@@ -1,0 +1,42 @@
+<action name=SELECTFILE(2)>SELECTFILE(2)</action>                                       <action name=SELECTFILE(2)>SELECTFILE(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            selectfile - file browser
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "selectfile.m"\;
+<style color=#00ffffff size=1>.</style>            selectfile := load Selectfile Selectfile->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:        fn()\;
+<style color=#00ffffff size=1>.</style>            filename:	fn(ctxt: ref Draw->Context, parent: ref Draw->Image,
+<style color=#00ffffff size=1>.</style>                           title: string,
+<style color=#00ffffff size=1>.</style>                           pat: list of string,
+<style color=#00ffffff size=1>.</style>                           dir: string): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Selectfile provides an interactive file browser for use by a
+<style color=#00ffffff size=1>.</style>            <action name=wm(1)>wm(1)</action> application. It allows a user to browse the file
+<style color=#00ffffff size=1>.</style>            system to select a file of a give type.
+
+<style color=#00ffffff size=1>.</style>            Init should be called once to initialise the module's
+<style color=#00ffffff size=1>.</style>            internal state.
+
+<style color=#00ffffff size=1>.</style>            Filename makes a dialog panel for selecting a file. It is
+<style color=#00ffffff size=1>.</style>            created in the graphics context ctxt, near the northeast
+<style color=#00ffffff size=1>.</style>            corner of a given parent window, parent, represented by that
+<style color=#00ffffff size=1>.</style>            window's Image. (If the parent window is a Tk Toplevel t,
+<style color=#00ffffff size=1>.</style>            for instance, the appropriate value is t.image.) If parent
+<style color=#00ffffff size=1>.</style>            is nil, the panel is centred on the screen. Dir gives the
+<style color=#00ffffff size=1>.</style>            directory where the file search should begin. Only files
+<style color=#00ffffff size=1>.</style>            that match pat are displayed. The returned string is the
+<style color=#00ffffff size=1>.</style>            name of the selected file, or the empty string if no file
+<style color=#00ffffff size=1>.</style>            was selected.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/selectfile.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=dialog(2)>dialog(2)</action>, <action name=dividers(2)>dividers(2)</action>, <action name=draw-context(2)>draw-context(2)</action>, <action name=tabs(2)>tabs(2)</action>, <action name=tk(2)>tk(2)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=wmlib(2)>wmlib(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

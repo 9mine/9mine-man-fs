@@ -1,0 +1,359 @@
+MK(10.1)                                                 MK(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            mk - maintain (make) related files
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            mk \[ -f mkfile \] ... \[ option ... \] \[ target ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Mk uses the dependency rules specified in mkfile to control
+<style color=#00ffffff size=1>.</style>            the update (usually by compilation) of targets (usually
+<style color=#00ffffff size=1>.</style>            files) from the source files upon which they depend. The
+<style color=#00ffffff size=1>.</style>            mkfile (default `mkfile') contains a rule for each target
+<style color=#00ffffff size=1>.</style>            that identifies the files and other targets upon which it
+<style color=#00ffffff size=1>.</style>            depends and an rc(10.1) script, a recipe, to update the
+<style color=#00ffffff size=1>.</style>            target. The script is run if the target does not exist or if
+<style color=#00ffffff size=1>.</style>            it is older than any of the files it depends on. Mkfile may
+<style color=#00ffffff size=1>.</style>            also contain meta-rules that define actions for updating
+<style color=#00ffffff size=1>.</style>            implicit targets. If no target is specified, the target of
+<style color=#00ffffff size=1>.</style>            the first rule (not meta-rule) in mkfile is updated.
+
+<style color=#00ffffff size=1>.</style>            The environment variable $NPROC determines how many targets
+<style color=#00ffffff size=1>.</style>            may be updated simultaneously\; Plan 9 sets $NPROC
+<style color=#00ffffff size=1>.</style>            automatically to the number of CPUs on the current machine.
+
+<style color=#00ffffff size=1>.</style>            Options are:
+
+<style color=#00ffffff size=1>.</style>            -a   Assume all targets to be out of date. Thus, everything
+<style color=#00ffffff size=1>.</style>                 is updated.
+<style color=#00ffffff size=1>.</style>            -d\[egp\]
+<style color=#00ffffff size=1>.</style>                 Produce debugging output (p is for parsing, g for graph
+<style color=#00ffffff size=1>.</style>                 building, e for execution).
+<style color=#00ffffff size=1>.</style>            -e   Explain why each target is made.
+<style color=#00ffffff size=1>.</style>            -i   Force any missing intermediate targets to be made.
+<style color=#00ffffff size=1>.</style>            -k   Do as much work as possible in the face of errors.
+<style color=#00ffffff size=1>.</style>            -n   Print, but do not execute, the commands needed to
+<style color=#00ffffff size=1>.</style>                 update the targets.
+<style color=#00ffffff size=1>.</style>            -s   Make the command line arguments sequentially rather
+<style color=#00ffffff size=1>.</style>                 than in parallel.
+<style color=#00ffffff size=1>.</style>            -t   Touch (update the modified date of) file targets,
+<style color=#00ffffff size=1>.</style>                 without executing any recipes.
+<style color=#00ffffff size=1>.</style>            -wtarget1,target2,...
+<style color=#00ffffff size=1>.</style>                 Pretend the modify time for each target is the current
+<style color=#00ffffff size=1>.</style>                 time\; useful in conjunction with -n to learn what
+<style color=#00ffffff size=1>.</style>                 updates would be triggered by modifying the targets.
+
+<style color=#00ffffff size=1>.</style>         The \fLmkfile\fP
+<style color=#00ffffff size=1>.</style>            A mkfile consists of assignments (described under
+<style color=#00ffffff size=1>.</style>            `Environment') and rules. A rule contains targets and a tail
+<style color=#00ffffff size=1>.</style>            . A target is a literal string and is normally a file name.
+<style color=#00ffffff size=1>.</style>            The tail contains zero or more prerequisites and an optional
+<style color=#00ffffff size=1>.</style>            recipe, which is an rc script. Each line of the recipe must
+<style color=#00ffffff size=1>.</style>            begin with white space. A rule takes the form
+
+<style color=#00ffffff size=1>.</style>                 target: prereq1 prereq2
+<style color=#00ffffff size=1>.</style>                         rc recipe using prereq1, prereq2 to build target
+
+<style color=#00ffffff size=1>.</style>            When the recipe is executed, the first character on every
+<style color=#00ffffff size=1>.</style>            line is elided.
+
+<style color=#00ffffff size=1>.</style>            After the colon on the target line, a rule may specify
+<style color=#00ffffff size=1>.</style>            attributes, described below.
+
+<style color=#00ffffff size=1>.</style>            A meta-rule has a target of the form A%B where A and B are
+<style color=#00ffffff size=1>.</style>            (possibly empty) strings. A meta-rule acts as a rule for any
+<style color=#00ffffff size=1>.</style>            potential target whose name matches A%B with % replaced by
+<style color=#00ffffff size=1>.</style>            an arbitrary string, called the stem. In interpreting a
+<style color=#00ffffff size=1>.</style>            meta-rule, the stem is substituted for all occurrences of %
+<style color=#00ffffff size=1>.</style>            in the prerequisite names. In the recipe of a meta-rule, the
+<style color=#00ffffff size=1>.</style>            environment variable $stem contains the string matched by
+<style color=#00ffffff size=1>.</style>            the %. For example, a meta-rule to compile a C program using
+<style color=#00ffffff size=1>.</style>            2c(10.1) might be:
+
+<style color=#00ffffff size=1>.</style>                 %.2:    %.c
+<style color=#00ffffff size=1>.</style>                         2c $stem.c
+<style color=#00ffffff size=1>.</style>                         2l -o $stem $stem.2
+
+<style color=#00ffffff size=1>.</style>            Meta-rules may contain an ampersand & rather than a percent
+<style color=#00ffffff size=1>.</style>            sign %. A % matches a maximal length string of any
+<style color=#00ffffff size=1>.</style>            characters\; an & matches a maximal length string of any
+<style color=#00ffffff size=1>.</style>            characters except period or slash.
+
+<style color=#00ffffff size=1>.</style>            The text of the mkfile is processed as follows. Lines
+<style color=#00ffffff size=1>.</style>            beginning with < followed by a file name are replaced by the
+<style color=#00ffffff size=1>.</style>            contents of the named file. Blank lines and comments, which
+<style color=#00ffffff size=1>.</style>            run from unquoted # characters to the following newline, are
+<style color=#00ffffff size=1>.</style>            deleted. The character sequence backslash-newline is
+<style color=#00ffffff size=1>.</style>            deleted, so long lines in mkfile may be folded. Non-recipe
+<style color=#00ffffff size=1>.</style>            lines are processed by substituting for `{command} the
+<style color=#00ffffff size=1>.</style>            output of the command when run by rc. References to
+<style color=#00ffffff size=1>.</style>            variables are replaced by the variables' values. Special
+<style color=#00ffffff size=1>.</style>            characters may be quoted using single quotes '' as in rc
+<style color=#00ffffff size=1>.</style>            (10.1).
+
+<style color=#00ffffff size=1>.</style>            Assignments and rules are distinguished by the first
+<style color=#00ffffff size=1>.</style>            unquoted occurrence of : (rule) or = (assignment).
+
+<style color=#00ffffff size=1>.</style>            A later rule may modify or override an existing rule under
+<style color=#00ffffff size=1>.</style>            the following conditions:
+
+<style color=#00ffffff size=1>.</style>            -    If the targets of the rules exactly match and one rule
+<style color=#00ffffff size=1>.</style>                 contains only a prerequisite clause and no recipe, the
+<style color=#00ffffff size=1>.</style>                 clause is added to the prerequisites of the other rule.
+<style color=#00ffffff size=1>.</style>                 If either or both targets are virtual, the recipe is
+<style color=#00ffffff size=1>.</style>                 always executed.
+
+<style color=#00ffffff size=1>.</style>            -    If the targets of the rules match exactly and the
+<style color=#00ffffff size=1>.</style>                 prerequisites do not match and both rules contain
+<style color=#00ffffff size=1>.</style>                 recipes, mk reports an ``ambiguous recipe'' error.
+
+<style color=#00ffffff size=1>.</style>            -    If the target and prerequisites of both rules match
+<style color=#00ffffff size=1>.</style>                 exactly, the second rule overrides the first.
+
+<style color=#00ffffff size=1>.</style>         Environment
+<style color=#00ffffff size=1>.</style>            Rules may make use of rc environment variables. A legal
+<style color=#00ffffff size=1>.</style>            reference of the form $OBJ or ${name} is expanded as in rc
+<style color=#00ffffff size=1>.</style>            (10.1). A reference of the form ${name:A%B=C%D}, where A, B,
+<style color=#00ffffff size=1>.</style>            C, D are (possibly empty) strings, has the value formed by
+<style color=#00ffffff size=1>.</style>            expanding $name and substituting C for A and D for B in each
+<style color=#00ffffff size=1>.</style>            word in $name that matches pattern A%B.
+
+<style color=#00ffffff size=1>.</style>            Variables can be set by assignments of the form         var=
+<style color=#00ffffff size=1>.</style>            \[attr=\]value
+<style color=#00ffffff size=1>.</style>            Blanks in the value break it into words, as in rc but
+<style color=#00ffffff size=1>.</style>            without the surrounding parentheses. Such variables are
+<style color=#00ffffff size=1>.</style>            exported to the environment of recipes as they are executed,
+<style color=#00ffffff size=1>.</style>            unless U, the only legal attribute attr, is present. The
+<style color=#00ffffff size=1>.</style>            initial value of a variable is taken from (in increasing
+<style color=#00ffffff size=1>.</style>            order of precedence) the default values below, mk's
+<style color=#00ffffff size=1>.</style>            environment, the mkfiles, and any command line assignment as
+<style color=#00ffffff size=1>.</style>            an argument to mk. A variable assignment argument overrides
+<style color=#00ffffff size=1>.</style>            the first (but not any subsequent) assignment to that
+<style color=#00ffffff size=1>.</style>            variable. The variable MKFLAGS contains all the option
+<style color=#00ffffff size=1>.</style>            arguments (arguments starting with ``-'' or containing `=')
+<style color=#00ffffff size=1>.</style>            and MKARGS contains all the targets in the call to mk.
+
+<style color=#00ffffff size=1>.</style>            It is recommended that mkfiles start with
+
+<style color=#00ffffff size=1>.</style>                 </$objtype/mkfile
+
+<style color=#00ffffff size=1>.</style>            to set CC, LD, AS, O, ALEF, YACC, and MK to values
+<style color=#00ffffff size=1>.</style>            appropriate to the target architecture (see the examples
+<style color=#00ffffff size=1>.</style>            below).
+
+<style color=#00ffffff size=1>.</style>            Dynamic information may be included in the mkfile by using a
+<style color=#00ffffff size=1>.</style>            line of the form         <| command args
+<style color=#00ffffff size=1>.</style>            This runs the command command with the given arguments args
+<style color=#00ffffff size=1>.</style>            and pipes its standard output to mk to be included as part
+<style color=#00ffffff size=1>.</style>            of the mkfile. For instance, the file /os/sa1100/mkfile uses
+<style color=#00ffffff size=1>.</style>            this technique to run a shell command with an awk script and
+<style color=#00ffffff size=1>.</style>            a configuration file as arguments in order for the awk
+<style color=#00ffffff size=1>.</style>            script to process the file and output a set of variables and
+<style color=#00ffffff size=1>.</style>            their values.
+
+<style color=#00ffffff size=1>.</style>         Execution
+<style color=#00ffffff size=1>.</style>            During execution, mk determines which targets must be
+<style color=#00ffffff size=1>.</style>            updated, and in what order, to build the names specified on
+<style color=#00ffffff size=1>.</style>            the command line. It then runs the associated recipes.
+
+<style color=#00ffffff size=1>.</style>            A target is considered up to date if it has no prerequisites
+<style color=#00ffffff size=1>.</style>            or if all its prerequisites are up to date and it is newer
+<style color=#00ffffff size=1>.</style>            than all its prerequisites. Once the recipe for a target has
+<style color=#00ffffff size=1>.</style>            executed, the target is considered up to date.
+
+<style color=#00ffffff size=1>.</style>            The date stamp used to determine if a target is up to date
+<style color=#00ffffff size=1>.</style>            is computed differently for different types of targets. If a
+<style color=#00ffffff size=1>.</style>            target is virtual (the target of a rule with the V
+<style color=#00ffffff size=1>.</style>            attribute), its date stamp is initially zero\; when the
+<style color=#00ffffff size=1>.</style>            target is updated the date stamp is set to the most recent
+<style color=#00ffffff size=1>.</style>            date stamp of its prerequisites. Otherwise, if a target does
+<style color=#00ffffff size=1>.</style>            not exist as a file, its date stamp is set to the most
+<style color=#00ffffff size=1>.</style>            recent date stamp of its prerequisites, or zero if it has no
+<style color=#00ffffff size=1>.</style>            prerequisites. Otherwise, the target is the name of a file
+<style color=#00ffffff size=1>.</style>            and the target's date stamp is always that file's
+<style color=#00ffffff size=1>.</style>            modification date. The date stamp is computed when the
+<style color=#00ffffff size=1>.</style>            target is needed in the execution of a rule\; it is not a
+<style color=#00ffffff size=1>.</style>            static value.
+
+<style color=#00ffffff size=1>.</style>            Nonexistent targets that have prerequisites and are
+<style color=#00ffffff size=1>.</style>            themselves prerequisites are treated specially. Such a
+<style color=#00ffffff size=1>.</style>            target t is given the date stamp of its most recent
+<style color=#00ffffff size=1>.</style>            prerequisite and if this causes all the targets which have t
+<style color=#00ffffff size=1>.</style>            as a prerequisite to be up to date, t is considered up to
+<style color=#00ffffff size=1>.</style>            date. Otherwise, t is made in the normal fashion. The -i
+<style color=#00ffffff size=1>.</style>            flag overrides this special treatment.
+
+<style color=#00ffffff size=1>.</style>            Files may be made in any order that respects the preceding
+<style color=#00ffffff size=1>.</style>            restrictions.
+
+<style color=#00ffffff size=1>.</style>            A recipe is executed by supplying the recipe as standard
+<style color=#00ffffff size=1>.</style>            input to the command         $SHELL -e -I
+<style color=#00ffffff size=1>.</style>            where the SHELL variable is the appropriate shell on the
+<style color=#00ffffff size=1>.</style>            current platform - typically /bin/sh or /bin/rc. The
+<style color=#00ffffff size=1>.</style>            appropriate value is automatically supplied in the Inferno
+<style color=#00ffffff size=1>.</style>            build environment. The -e is omitted if the E attribute is
+<style color=#00ffffff size=1>.</style>            set. The environment is augmented by the following
+<style color=#00ffffff size=1>.</style>            variables:
+
+<style color=#00ffffff size=1>.</style>            $alltarget    all the targets of this rule.
+
+<style color=#00ffffff size=1>.</style>            $newprereq    the prerequisites that caused this rule to
+<style color=#00ffffff size=1>.</style>                          execute.
+
+<style color=#00ffffff size=1>.</style>            $nproc        the process slot for this recipe. It satisfies
+<style color=#00ffffff size=1>.</style>                          0≤$nproc<$NPROC.
+
+<style color=#00ffffff size=1>.</style>            $pid          the process id for the mk executing the
+<style color=#00ffffff size=1>.</style>                          recipe.
+
+<style color=#00ffffff size=1>.</style>            $prereq       all the prerequisites for this rule.
+
+<style color=#00ffffff size=1>.</style>            $stem         if this is a meta-rule, $stem is the string
+<style color=#00ffffff size=1>.</style>                          that matched % or &. Otherwise, it is empty.
+<style color=#00ffffff size=1>.</style>                          For regular expression meta-rules (see below),
+<style color=#00ffffff size=1>.</style>                          the variables `stem0', ..., ``stem9'' are set
+<style color=#00ffffff size=1>.</style>                          to the corresponding subexpressions.
+
+<style color=#00ffffff size=1>.</style>            $target       the targets for this rule that need to be
+<style color=#00ffffff size=1>.</style>                          remade.
+
+<style color=#00ffffff size=1>.</style>            These variables are available only during the execution of a
+<style color=#00ffffff size=1>.</style>            recipe, not while evaluating the mkfile.
+
+<style color=#00ffffff size=1>.</style>            Unless the rule has the Q attribute, the recipe is printed
+<style color=#00ffffff size=1>.</style>            prior to execution with recognizable environment variables
+<style color=#00ffffff size=1>.</style>            expanded. Commands returning error status cause mk to
+<style color=#00ffffff size=1>.</style>            terminate.
+
+<style color=#00ffffff size=1>.</style>            Recipes and backquoted rc commands in places such as
+<style color=#00ffffff size=1>.</style>            assignments execute in a copy of mk's environment\; changes
+<style color=#00ffffff size=1>.</style>            they make to environment variables are not visible from mk.
+
+<style color=#00ffffff size=1>.</style>            Variable substitution in a rule is done when the rule is
+<style color=#00ffffff size=1>.</style>            read\; variable substitution in the recipe is done when the
+<style color=#00ffffff size=1>.</style>            recipe is executed.  For example:
+
+<style color=#00ffffff size=1>.</style>                 bar=a.c
+<style color=#00ffffff size=1>.</style>                 foo:    $bar
+<style color=#00ffffff size=1>.</style>                         $CC -o foo $bar
+<style color=#00ffffff size=1>.</style>                 bar=b.c
+
+<style color=#00ffffff size=1>.</style>            will compile b.c into foo, if a.c is newer than foo.
+
+<style color=#00ffffff size=1>.</style>         Aggregates
+<style color=#00ffffff size=1>.</style>            Names of the form a(b) refer to member b of the aggregate a.
+<style color=#00ffffff size=1>.</style>            Currently, the only aggregates supported are ar(10.1)
+<style color=#00ffffff size=1>.</style>            archives.
+
+<style color=#00ffffff size=1>.</style>         Attributes
+<style color=#00ffffff size=1>.</style>            The colon separating the target from the prerequisites may
+<style color=#00ffffff size=1>.</style>            be immediately followed by attributes and another colon. The
+<style color=#00ffffff size=1>.</style>            attributes are:
+
+<style color=#00ffffff size=1>.</style>            D    If the recipe exits with a non-null status, the target
+<style color=#00ffffff size=1>.</style>                 is deleted.
+
+<style color=#00ffffff size=1>.</style>            E    Continue execution if the recipe draws errors.
+
+<style color=#00ffffff size=1>.</style>            N    If there is no recipe, the target has its time updated.
+
+<style color=#00ffffff size=1>.</style>            n    The rule is a meta-rule that cannot be a target of a
+<style color=#00ffffff size=1>.</style>                 virtual rule. Only files match the pattern in the
+<style color=#00ffffff size=1>.</style>                 target.
+
+<style color=#00ffffff size=1>.</style>            P    The characters after the P until the terminating : are
+<style color=#00ffffff size=1>.</style>                 taken as a program name. It will be invoked as rc -c
+<style color=#00ffffff size=1>.</style>                 prog 'arg1' 'arg2' and should return a null exit status
+<style color=#00ffffff size=1>.</style>                 if and only if arg1 is not out of date with respect to
+<style color=#00ffffff size=1>.</style>                 arg2. Date stamps are still propagated in the normal
+<style color=#00ffffff size=1>.</style>                 way.
+
+<style color=#00ffffff size=1>.</style>            Q    The recipe is not printed prior to execution.
+
+<style color=#00ffffff size=1>.</style>            R    The rule is a meta-rule using regular expressions. In
+<style color=#00ffffff size=1>.</style>                 the rule, % has no special meaning. The target is
+<style color=#00ffffff size=1>.</style>                 interpreted as a regular expression as defined in
+<style color=#00ffffff size=1>.</style>                 <action name=regexp(6)>regexp(6)</action>. The prerequisites may contain references to
+<style color=#00ffffff size=1>.</style>                 subexpressions in form \n, as in the substitute command
+<style color=#00ffffff size=1>.</style>                 of sed(10.1).
+
+<style color=#00ffffff size=1>.</style>            U    The targets are considered to have been updated even if
+<style color=#00ffffff size=1>.</style>                 the recipe did not do so.
+
+<style color=#00ffffff size=1>.</style>            V    The targets of this rule are marked as virtual. They
+<style color=#00ffffff size=1>.</style>                 are distinct from files of the same name.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            A simple mkfile to compile a program:
+
+<style color=#00ffffff size=1>.</style>                 </$objtype/mkfile
+
+<style color=#00ffffff size=1>.</style>                 prog:   a.$O b.$O c.$O
+<style color=#00ffffff size=1>.</style>                     $LD $CFLAGS -o $target $prereq
+
+<style color=#00ffffff size=1>.</style>                 %.$O:   %.c
+<style color=#00ffffff size=1>.</style>                     $CC $stem.c
+
+<style color=#00ffffff size=1>.</style>            Override flag settings in the mkfile:
+
+<style color=#00ffffff size=1>.</style>                 % mk target 'CFLAGS=-S -w'
+
+<style color=#00ffffff size=1>.</style>            To get the prerequisites for an aggregate:
+
+<style color=#00ffffff size=1>.</style>                 % membername 'libc.a(read.2)' 'libc.a(write.2)'
+<style color=#00ffffff size=1>.</style>                 read.2 write.2
+
+<style color=#00ffffff size=1>.</style>            Maintain a library:
+
+<style color=#00ffffff size=1>.</style>                 libc.a(%.$O):N: %.$O
+<style color=#00ffffff size=1>.</style>                 libc.a: libc.a(abs.$O) libc.a(access.$O) libc.a(alarm.$O) ...
+<style color=#00ffffff size=1>.</style>                     names=`{membername $newprereq}
+<style color=#00ffffff size=1>.</style>                     ar r libc.a $names && rm $names
+
+<style color=#00ffffff size=1>.</style>            String expression variables to derive names from a master
+<style color=#00ffffff size=1>.</style>            list:
+
+<style color=#00ffffff size=1>.</style>                 NAMES=alloc arc bquote builtins expand main match mk var word
+<style color=#00ffffff size=1>.</style>                 OBJ=${NAMES:%=%.$O}
+
+<style color=#00ffffff size=1>.</style>            Regular expression meta-rules:
+
+<style color=#00ffffff size=1>.</style>                 (\[^/\]*)/(.*)\.o:R:  \1/\2.c
+<style color=#00ffffff size=1>.</style>                 	cd $stem1\; $CC $CFLAGS $stem2.c
+
+<style color=#00ffffff size=1>.</style>            A correct way to deal with yacc(10.1) grammars. The file
+<style color=#00ffffff size=1>.</style>            lex.c includes the file x.tab.h rather than y.tab.h in order
+<style color=#00ffffff size=1>.</style>            to reflect changes in content, not just modification time.
+
+<style color=#00ffffff size=1>.</style>                 lex.o:           x.tab.h
+<style color=#00ffffff size=1>.</style>                 x.tab.h:         y.tab.h
+<style color=#00ffffff size=1>.</style>                     cmp -s x.tab.h y.tab.h || cp y.tab.h x.tab.h
+<style color=#00ffffff size=1>.</style>                 y.tab.c y.tab.h: gram.y
+<style color=#00ffffff size=1>.</style>                     $YACC -d gram.y
+
+<style color=#00ffffff size=1>.</style>            The above example could also use the P attribute for the
+<style color=#00ffffff size=1>.</style>            x.tab.h rule:
+
+<style color=#00ffffff size=1>.</style>                 x.tab.h:Pcmp -s: y.tab.h
+<style color=#00ffffff size=1>.</style>                 	cp y.tab.h x.tab.h
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /utils/mk
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            rc(10.1), <action name=regexp(6)>regexp(6)</action>
+<style color=#00ffffff size=1>.</style>            A. Hume, ``Mk: a Successor to Make''.
+<style color=#00ffffff size=1>.</style>            Bob Flandrena, ``Plan 9 Mkfiles''.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Identical recipes for regular expression meta-rules only
+<style color=#00ffffff size=1>.</style>            have one target.
+<style color=#00ffffff size=1>.</style>            Seemingly appropriate input like CFLAGS=-DHZ=60 is parsed as
+<style color=#00ffffff size=1>.</style>            an erroneous attribute\; correct it by inserting a space
+<style color=#00ffffff size=1>.</style>            after the first `='.
+<style color=#00ffffff size=1>.</style>            The recipes printed by mk before being passed to rc for
+<style color=#00ffffff size=1>.</style>            execution are sometimes erroneously expanded for printing.
+<style color=#00ffffff size=1>.</style>            Don't trust what's printed\; rely on what rc does.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

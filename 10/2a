@@ -1,0 +1,37 @@
+2A(10.1)                                                 2A(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            0a, 1a, 2a, 5a, 6a, 7a, 8a, ka, qa, va - assemblers
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            2a \[ option ... \] \[ name ... \]
+<style color=#00ffffff size=1>.</style>            etc.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These programs assemble the named files into object files
+<style color=#00ffffff size=1>.</style>            for the corresponding architectures\; see 2c(10.1) for the
+<style color=#00ffffff size=1>.</style>            correspondence between an architecture and the character (1,
+<style color=#00ffffff size=1>.</style>            2, etc.) that specifies it. The assemblers handle the most
+<style color=#00ffffff size=1>.</style>            common C preprocessor directives and the associated
+<style color=#00ffffff size=1>.</style>            command-line options -D and -I. Other options are:
+
+<style color=#00ffffff size=1>.</style>            -o obj
+<style color=#00ffffff size=1>.</style>                 Place output in file obj (allowed only if there is just
+<style color=#00ffffff size=1>.</style>                 one input file). Default is to take the last element of
+<style color=#00ffffff size=1>.</style>                 the input path name, strip any trailing .s, and append
+<style color=#00ffffff size=1>.</style>                 .O, where O is first letter of the assembler's name.
+
+FILES
+<style color=#00ffffff size=1>.</style>            The directory /sys/include is searched for include files
+<style color=#00ffffff size=1>.</style>            after machine-dependent files in /$objtype/include.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /utils/2a, etc.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            2c(10.1), 2l(10.1).
+
+<style color=#00ffffff size=1>.</style>            Rob Pike, ``A manual for the Plan 9/Inferno assembler'',
+<style color=#00ffffff size=1>.</style>            Volume 2
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

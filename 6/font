@@ -1,0 +1,64 @@
+<action name=FONT(6)>FONT(6)</action>                                                   <action name=FONT(6)>FONT(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            font, subfont - external format for character fonts and
+<style color=#00ffffff size=1>.</style>            subfonts
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Fonts are constructed as a list defining a range of Unicode
+<style color=#00ffffff size=1>.</style>            characters and a subfont containing the character images for
+<style color=#00ffffff size=1>.</style>            that range. Subfonts are not directly accessible from Limbo.
+
+<style color=#00ffffff size=1>.</style>            External fonts are described by a plain text file that can
+<style color=#00ffffff size=1>.</style>            be read using Font.open\; Font.build reads the same format
+<style color=#00ffffff size=1>.</style>            from a string rather than a file. (see <action name=draw-font(2)>draw-font(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            The format is a header followed by any number of subfont
+<style color=#00ffffff size=1>.</style>            range specifications. The header contains two numbers: the
+<style color=#00ffffff size=1>.</style>            height and the ascent, both in pixels. The height is the
+<style color=#00ffffff size=1>.</style>            inter-line spacing and the ascent is the distance from the
+<style color=#00ffffff size=1>.</style>            top of the line to the baseline.  These numbers should be
+<style color=#00ffffff size=1>.</style>            chosen to display consistently all the subfonts of the font.
+<style color=#00ffffff size=1>.</style>            A subfont range specification contains two or three numbers
+<style color=#00ffffff size=1>.</style>            and a file name. The numbers are the inclusive range of
+<style color=#00ffffff size=1>.</style>            characters covered by the subfont, with an optional starting
+<style color=#00ffffff size=1>.</style>            position within the subfont, and the file name names an
+<style color=#00ffffff size=1>.</style>            external file holding the subfont data. The minimum number
+<style color=#00ffffff size=1>.</style>            of a covered range is mapped to the specified starting
+<style color=#00ffffff size=1>.</style>            position (default zero) of the corresponding subfont. If the
+<style color=#00ffffff size=1>.</style>            subfont file name does not begin with a slash, it is taken
+<style color=#00ffffff size=1>.</style>            relative to the directory containing the font file. Each
+<style color=#00ffffff size=1>.</style>            field must be followed by some white space. Each numeric
+<style color=#00ffffff size=1>.</style>            field may be C-format decimal, octal, or hexadecimal.
+
+<style color=#00ffffff size=1>.</style>            External subfonts are represented in a more rigid format: an
+<style color=#00ffffff size=1>.</style>            image containing character images, followed by a subfont
+<style color=#00ffffff size=1>.</style>            header, followed by character information. The image has the
+<style color=#00ffffff size=1>.</style>            format for external image files described in <action name=image(6)>image(6)</action>. The
+<style color=#00ffffff size=1>.</style>            subfont header has 3 decimal strings: n, height, and ascent.
+<style color=#00ffffff size=1>.</style>            Each number is right-justified and blank padded in 11
+<style color=#00ffffff size=1>.</style>            characters, followed by a blank. The character info consists
+<style color=#00ffffff size=1>.</style>            of n+1 6-byte entries, each giving values called x (2 bytes,
+<style color=#00ffffff size=1>.</style>            low order byte first), top, bottom, left, and width for the
+<style color=#00ffffff size=1>.</style>            successive characters from left to right (in increasing
+<style color=#00ffffff size=1>.</style>            Unicode order) in the subfont. The rectangle holding the
+<style color=#00ffffff size=1>.</style>            character is (x, top, xn, bottom), where xn is the x field
+<style color=#00ffffff size=1>.</style>            of the next character. When the character is to be drawn in
+<style color=#00ffffff size=1>.</style>            an image at point p, the rectangle is placed at (p.x+left ,
+<style color=#00ffffff size=1>.</style>            p.y) and the next character to be drawn is placed at
+<style color=#00ffffff size=1>.</style>            (p.x+width , p.y) The x field of the last entry is used to
+<style color=#00ffffff size=1>.</style>            calculate the image width of the previous character\; the
+<style color=#00ffffff size=1>.</style>            other fields in the last entry are irrelevant.
+
+<style color=#00ffffff size=1>.</style>            Note that the convention of using the character with value
+<style color=#00ffffff size=1>.</style>            zero (NUL) to represent characters of zero width (see the
+<style color=#00ffffff size=1>.</style>            description of Image.text in <action name=draw-image(2)>draw-image(2)</action>) means that fonts
+<style color=#00ffffff size=1>.</style>            should have, as their zeroth character, one with non-zero
+<style color=#00ffffff size=1>.</style>            width.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /fonts/*  font directories
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=draw-intro(2)>draw-intro(2)</action>, <action name=draw-font(2)>draw-font(2)</action>, <action name=draw(3)>draw(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,126 @@
+<action name=PNP(3)>PNP(3)</action>                                                     <action name=PNP(3)>PNP(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            pnp, pci - Plug 'n' Play ISA and PCI Interfaces
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a '#$' /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/pci/bus.dev.fnctl
+<style color=#00ffffff size=1>.</style>            /dev/pci/bus.dev.fnraw
+
+<style color=#00ffffff size=1>.</style>            /dev/pnp/ctl
+<style color=#00ffffff size=1>.</style>            /dev/pnp/csnnctl
+<style color=#00ffffff size=1>.</style>            /dev/pnp/csnnraw
+<style color=#00ffffff size=1>.</style>            ...
+
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This device provides a limited interface to the PCI bus and
+<style color=#00ffffff size=1>.</style>            Plug 'n' Play ISA devices. Both are present on most PC
+<style color=#00ffffff size=1>.</style>            platforms\; on others, only the pci interface is present
+<style color=#00ffffff size=1>.</style>            (because there is no ISA bus).
+
+<style color=#00ffffff size=1>.</style>         PCI Interface
+<style color=#00ffffff size=1>.</style>            PCI devices are addressed logically by a bus number, a
+<style color=#00ffffff size=1>.</style>            device number on that bus, and a function number within the
+<style color=#00ffffff size=1>.</style>            device. The set of all such device functions may be
+<style color=#00ffffff size=1>.</style>            enumerated by traversing the /dev/pci directory\; the driver
+<style color=#00ffffff size=1>.</style>            serves two files for each function. These are a control file
+<style color=#00ffffff size=1>.</style>            (`/dev/pci/\fIbus\fP.\fIdev\fP.\fIfn\fPctl' which may be
+<style color=#00ffffff size=1>.</style>            read for a textual summary of the device function, and a
+<style color=#00ffffff size=1>.</style>            `raw' file (`/dev/pci/\fIbus\fP.\fIdev\fP.\fIfn\fPraw' which
+<style color=#00ffffff size=1>.</style>            may be read to obtain the raw contents of PCI configuration
+<style color=#00ffffff size=1>.</style>            space.
+
+<style color=#00ffffff size=1>.</style>            The first field of a PCI control file contains the class,
+<style color=#00ffffff size=1>.</style>            sub-class and programming interface values for the device
+<style color=#00ffffff size=1>.</style>            function, expressed as 2-digit hexadecimal values, and
+<style color=#00ffffff size=1>.</style>            separated by periods. The second field yields the vendor ID
+<style color=#00ffffff size=1>.</style>            and device ID, each as 4-digit hex numbers, separated by a
+<style color=#00ffffff size=1>.</style>            slash. The third field is the associated interrupt line in
+<style color=#00ffffff size=1>.</style>            decimal. The remainder of the line enumerates any valid base
+<style color=#00ffffff size=1>.</style>            address registers for the function, using two fields for
+<style color=#00ffffff size=1>.</style>            each. In the first field, the index of the register is
+<style color=#00ffffff size=1>.</style>            followed by a colon, and then the value of the register
+<style color=#00ffffff size=1>.</style>            itself. The following field gives the associated size of the
+<style color=#00ffffff size=1>.</style>            memory (or I/O space) that is mapped by the register.
+
+<style color=#00ffffff size=1>.</style>         Plug 'n' Play
+<style color=#00ffffff size=1>.</style>            Plug 'n' Play ISA devices are discovered by sending a fixed
+<style color=#00ffffff size=1>.</style>            `unlock' sequence over an I/O port, and then reading back
+<style color=#00ffffff size=1>.</style>            data from another port. An arbitration algorithm is used to
+<style color=#00ffffff size=1>.</style>            separate out the individual cards and enumerate them in
+<style color=#00ffffff size=1>.</style>            turn. Each card is assigned a unique number, called a CSN,
+<style color=#00ffffff size=1>.</style>            in the range 1-255 as a result of enumeration. Cards also
+<style color=#00ffffff size=1>.</style>            have a fixed 64 bit identification number, set by the
+<style color=#00ffffff size=1>.</style>            manufacturer, which is used by the arbitration algorithm to
+<style color=#00ffffff size=1>.</style>            resolve conflicts. The first 32 bits describe the type of
+<style color=#00ffffff size=1>.</style>            the card, and the second 32 bits form a serial number for
+<style color=#00ffffff size=1>.</style>            the particular instance of that card type. When formatted
+<style color=#00ffffff size=1>.</style>            textually, it appears as 3 upper-case letters (typically
+<style color=#00ffffff size=1>.</style>            representing the manufacturer), followed by 4 hex digits,
+<style color=#00ffffff size=1>.</style>            then a period, then 8 hex digits. The substring before the
+<style color=#00ffffff size=1>.</style>            period is the card type, and the substring after the period
+<style color=#00ffffff size=1>.</style>            is the serial number.
+
+<style color=#00ffffff size=1>.</style>            The enumeration algorithm needs to be enabled by specifying
+<style color=#00ffffff size=1>.</style>            the port number to write the unlock sequence out on. This
+<style color=#00ffffff size=1>.</style>            can be configured to take place at boot time by adding a
+<style color=#00ffffff size=1>.</style>            line like the following to plan9.ini:
+
+<style color=#00ffffff size=1>.</style>                 pnp0=port=0x203
+
+<style color=#00ffffff size=1>.</style>            Here port should be chosen to not conflict with any existing
+<style color=#00ffffff size=1>.</style>            devices. It must be in the range 0x203-0x3ff. Alternatively,
+<style color=#00ffffff size=1>.</style>            one can use the following command:
+
+<style color=#00ffffff size=1>.</style>                 echo port 0x203 >/dev/pnp/ctl
+
+<style color=#00ffffff size=1>.</style>            Note that a side-effect of PnP enumeration is to reset the
+<style color=#00ffffff size=1>.</style>            configuration state of all such cards\; any settings made by
+<style color=#00ffffff size=1>.</style>            a Plug and Play BIOS will be lost. Reading the file
+<style color=#00ffffff size=1>.</style>            /dev/pnp/ctl returns one of the strings enabled  port or
+<style color=#00ffffff size=1>.</style>            disabled.
+
+<style color=#00ffffff size=1>.</style>            For each enumerated card, two files are served in /dev/pnp.
+<style color=#00ffffff size=1>.</style>            A control file (`/dev/pnp/csn\fIn\fPctl' may be read to
+<style color=#00ffffff size=1>.</style>            determine the ID of the card, and a raw file (
+<style color=#00ffffff size=1>.</style>            `/dev/pnp/csn\fIn\fPraw' may be read to obtain the
+<style color=#00ffffff size=1>.</style>            configuration data associated with the card. It is intended
+<style color=#00ffffff size=1>.</style>            that the control file should take commands which set the
+<style color=#00ffffff size=1>.</style>            various configurable resources of the card, but this has not
+<style color=#00ffffff size=1>.</style>            been implemented yet.
+
+<style color=#00ffffff size=1>.</style>            A mechanism is provided for configuring cards via plan9.ini
+<style color=#00ffffff size=1>.</style>            (10.6). A line of the form pnpn=idstring ... will cause the
+<style color=#00ffffff size=1>.</style>            driver to look for the card named by idstring and, if found,
+<style color=#00ffffff size=1>.</style>            assign it the CSN n. The intention is that any additional
+<style color=#00ffffff size=1>.</style>            text after the idstring is interpreted as if it was written
+<style color=#00ffffff size=1>.</style>            to the card's ctl file, but this is not yet implemented.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            To list all PCI functions:
+
+<style color=#00ffffff size=1>.</style>                 cat /dev/pci/*ctl
+
+<style color=#00ffffff size=1>.</style>            To find just the PCI video card (class 3):
+
+<style color=#00ffffff size=1>.</style>                 grep '^03' /dev/pci/*ctl
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/pc/devpnp.c
+<style color=#00ffffff size=1>.</style>            /os/port/devpci.c
+
+BUGS
+<style color=#00ffffff size=1>.</style>            There is currently no way to write to PCI configuration
+<style color=#00ffffff size=1>.</style>            space, or to perform reads of less than 32 bits. Access to
+<style color=#00ffffff size=1>.</style>            the I/O and memory regions of a PCI device is not provided.
+
+<style color=#00ffffff size=1>.</style>            The ability to set a Plug 'n' Play card's configurable
+<style color=#00ffffff size=1>.</style>            settings has not been implemented.
+
+<style color=#00ffffff size=1>.</style>            There should be a user program for identifying and
+<style color=#00ffffff size=1>.</style>            configuring Plug 'n' Play cards.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

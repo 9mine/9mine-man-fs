@@ -1,0 +1,49 @@
+<action name=PREFAB-INTRO(2)>PREFAB-INTRO(2)</action>                                   <action name=PREFAB-INTRO(2)>PREFAB-INTRO(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Prefab: intro - Interactive TV tookit
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            include "prefab.m"\;
+<style color=#00ffffff size=1>.</style>            prefab := load Prefab Prefab->PATH\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Prefab module contains components for building graphics
+<style color=#00ffffff size=1>.</style>            objects suitable for Interactive Television (ITV)
+<style color=#00ffffff size=1>.</style>            applications using infrared remote controls. Using the Draw
+<style color=#00ffffff size=1>.</style>            module's operations for simple text and images (see
+<style color=#00ffffff size=1>.</style>            <action name=draw-intro(2)>draw-intro(2)</action>), the toolkit can group individual items,
+<style color=#00ffffff size=1>.</style>            treat those groups as units, and then activate the items on
+<style color=#00ffffff size=1>.</style>            command. The other user interface toolkit, <action name=tk(2)>tk(2)</action>, provides
+<style color=#00ffffff size=1>.</style>            facilities for keyboard- and mouse-driven applications.
+
+<style color=#00ffffff size=1>.</style>            The objects on the screen are of type Compound, each of
+<style color=#00ffffff size=1>.</style>            which occupies a unique window on the display and contains
+<style color=#00ffffff size=1>.</style>            objects of type Element. An Element may be a single object
+<style color=#00ffffff size=1>.</style>            or a list of further Elements, to build hierarchically
+<style color=#00ffffff size=1>.</style>            structured components.
+
+<style color=#00ffffff size=1>.</style>            Prefab defines Environ and Style types that specify the
+<style color=#00ffffff size=1>.</style>            appearance of objects: their colours, fonts, backgrounds,
+<style color=#00ffffff size=1>.</style>            and so on. A Style gives font and colour information, while
+<style color=#00ffffff size=1>.</style>            an Environ identifies the Screen upon which the items will
+<style color=#00ffffff size=1>.</style>            be displayed and the Style in which they will be drawn.
+
+<style color=#00ffffff size=1>.</style>            Applications should allocate Elements and Compounds only
+<style color=#00ffffff size=1>.</style>            through the appropriate member functions, as described in
+<style color=#00ffffff size=1>.</style>            the corresponding sections of the manual. Items created with
+<style color=#00ffffff size=1>.</style>            regular Limbo definitions will not work properly. Moreover,
+<style color=#00ffffff size=1>.</style>            except where indicated, applications should not modify the
+<style color=#00ffffff size=1>.</style>            data members directly. Although the type definitions make
+<style color=#00ffffff size=1>.</style>            data members visible, the members should usually be treated
+<style color=#00ffffff size=1>.</style>            as read-only data.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/prefab.c
+<style color=#00ffffff size=1>.</style>            /libprefab/*.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=draw-intro(2)>draw-intro(2)</action>, <action name=ir(2)>ir(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

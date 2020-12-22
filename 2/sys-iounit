@@ -1,0 +1,36 @@
+<action name=SYS-IOUNIT(2)>SYS-IOUNIT(2)</action>                                       <action name=SYS-IOUNIT(2)>SYS-IOUNIT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            iounit - return size of atomic I/O unit for file descriptor
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            iounit:	fn(fd: ref FD): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Reads and writes of files are transmitted using the 9P
+<style color=#00ffffff size=1>.</style>            protocol (see <action name=intro(5)>intro(5)</action>) and in general, operations involving
+<style color=#00ffffff size=1>.</style>            large amounts of data must be broken into smaller pieces by
+<style color=#00ffffff size=1>.</style>            the operating system. The `I/O unit' associated with each
+<style color=#00ffffff size=1>.</style>            file descriptor records the maximum size, in bytes, that may
+<style color=#00ffffff size=1>.</style>            be read or written without breaking up the transfer.
+
+<style color=#00ffffff size=1>.</style>            The iounit system call returns the I/O unit size for the
+<style color=#00ffffff size=1>.</style>            open file fd. Certain file descriptors, particularly those
+<style color=#00ffffff size=1>.</style>            associated with devices, may have no specific I/O unit, in
+<style color=#00ffffff size=1>.</style>            which case iounit will return zero.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/inferno.c
+<style color=#00ffffff size=1>.</style>            /os/port/inferno.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-dup(2)>sys-dup(2)</action>, <action name=read(5)>read(5)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Returns zero if any error occurs or if the I/O unit size of
+<style color=#00ffffff size=1>.</style>            the fd is unspecified or unknown.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

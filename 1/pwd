@@ -1,0 +1,22 @@
+<action name=PWD(1)>PWD(1)</action>                                                     <action name=PWD(1)>PWD(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            pwd - print working directory
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            pwd
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Pwd prints the path name of the working (current) directory.
+<style color=#00ffffff size=1>.</style>            It is guaranteed to return the same path that was used to
+<style color=#00ffffff size=1>.</style>            enter the directory. Note that if meanwhile the name space
+<style color=#00ffffff size=1>.</style>            has changed, or directories in the path have been renamed,
+<style color=#00ffffff size=1>.</style>            the path name may no longer be valid.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/pwd.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cd(1)>cd(1)</action>, <action name=bind(1)>bind(1)</action>, <action name=sys-fd2path(2)>sys-fd2path(2)</action>, <action name=workdir(2)>workdir(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

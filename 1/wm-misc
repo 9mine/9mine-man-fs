@@ -1,0 +1,197 @@
+<action name=WM-MISC(1)>WM-MISC(1)</action>                                             <action name=WM-MISC(1)>WM-MISC(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            about, clock, coffee, colors, date, edit, mand, memory,
+<style color=#00ffffff size=1>.</style>            polyhedra, reversi, rt, stopwatch, sweeper, task, tetris,
+<style color=#00ffffff size=1>.</style>            unibrowse, view, winctl - miscellaneous graphical
+<style color=#00ffffff size=1>.</style>            applications
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wm/about
+<style color=#00ffffff size=1>.</style>            wm/clock
+<style color=#00ffffff size=1>.</style>            wm/coffee
+<style color=#00ffffff size=1>.</style>            wm/colors
+<style color=#00ffffff size=1>.</style>            wm/date
+<style color=#00ffffff size=1>.</style>            wm/edit \[file\]
+<style color=#00ffffff size=1>.</style>            wm/mand
+<style color=#00ffffff size=1>.</style>            wm/memory
+<style color=#00ffffff size=1>.</style>            wm/polyhedra
+<style color=#00ffffff size=1>.</style>            wm/reversi
+<style color=#00ffffff size=1>.</style>            wm/rt
+<style color=#00ffffff size=1>.</style>            wm/stopwatch
+<style color=#00ffffff size=1>.</style>            wm/sweeper
+<style color=#00ffffff size=1>.</style>            wm/task
+<style color=#00ffffff size=1>.</style>            wm/tetris \[ -b blocksize \]
+<style color=#00ffffff size=1>.</style>            wm/unibrowse
+<style color=#00ffffff size=1>.</style>            wm/view \[ -i \] \[file...\]
+<style color=#00ffffff size=1>.</style>            wm/winctl
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A collection of simple applications and utilities that
+<style color=#00ffffff size=1>.</style>            operate under the Wm window manager. Other Wm applications
+<style color=#00ffffff size=1>.</style>            exist, see their respective manual pages for more
+<style color=#00ffffff size=1>.</style>            information.
+
+<style color=#00ffffff size=1>.</style>            wm/about
+<style color=#00ffffff size=1>.</style>                 Display system version and copyright information.
+
+<style color=#00ffffff size=1>.</style>            wm/clock
+<style color=#00ffffff size=1>.</style>                 Display an analogue clock.
+
+<style color=#00ffffff size=1>.</style>            wm/coffee
+<style color=#00ffffff size=1>.</style>                 A whimsical plaything.
+
+<style color=#00ffffff size=1>.</style>            wm/colors
+<style color=#00ffffff size=1>.</style>                 Displays the Inferno palette. Clicking on a particular
+<style color=#00ffffff size=1>.</style>                 colour displays its RGB values.
+
+<style color=#00ffffff size=1>.</style>            wm/date
+<style color=#00ffffff size=1>.</style>                 Displays the current date and time in a window.
+
+<style color=#00ffffff size=1>.</style>            wm/edit
+<style color=#00ffffff size=1>.</style>                 A simple cut-and-paste text editor. Several menus
+<style color=#00ffffff size=1>.</style>                 provide the usual editing commands. Text selections are
+<style color=#00ffffff size=1>.</style>                 dragged out using mouse button 1. Mouse button-2
+<style color=#00ffffff size=1>.</style>                 displays a pop-up menu of the Cut, Copy and Paste
+<style color=#00ffffff size=1>.</style>                 commands.
+
+<style color=#00ffffff size=1>.</style>            wm/mand
+<style color=#00ffffff size=1>.</style>                 A fractal browser to explore the Mandelbrot and Julia
+<style color=#00ffffff size=1>.</style>                 sets. Button 1 drags a rectangle to zoom into, button 2
+<style color=#00ffffff size=1>.</style>                 shows the  Julia set at the chosen point, button 3
+<style color=#00ffffff size=1>.</style>                 zooms out. To produce more accurate pictures, the
+<style color=#00ffffff size=1>.</style>                 iteration depth may be increased by altering the depth
+<style color=#00ffffff size=1>.</style>                 scale factor. The default number of iterations per
+<style color=#00ffffff size=1>.</style>                 point is 253. The sets are plotted by filling regions
+<style color=#00ffffff size=1>.</style>                 of (apparently) the same colour. Deselecting the fill
+<style color=#00ffffff size=1>.</style>                 option will plot the points in the usual fashion.
+
+<style color=#00ffffff size=1>.</style>            wm/memory
+<style color=#00ffffff size=1>.</style>                 Displays memory usage. Three usage bars are displayed,
+<style color=#00ffffff size=1>.</style>                 one for each of the Inferno memory pools: main, heap
+<style color=#00ffffff size=1>.</style>                 and image. The current usage (in bytes) is displayed to
+<style color=#00ffffff size=1>.</style>                 the left of each bar, and the number of blocks in use
+<style color=#00ffffff size=1>.</style>                 appears in red. The maximum permitted size of each pool
+<style color=#00ffffff size=1>.</style>                 is given (in megabytes) to the right of its usage bar.
+<style color=#00ffffff size=1>.</style>                 Each bar also sports a highwater mark. The usage data
+<style color=#00ffffff size=1>.</style>                 is re-read and displayed once every second.
+
+<style color=#00ffffff size=1>.</style>            wm/polyhedra
+<style color=#00ffffff size=1>.</style>                 A program to display convex regular polyhedra. The menu
+<style color=#00ffffff size=1>.</style>                 options allow the user to alter the speed of rotation
+<style color=#00ffffff size=1>.</style>                 and the axis of rotation. To display a different solid,
+<style color=#00ffffff size=1>.</style>                 move forward or back with the prev and next boxes.
+<style color=#00ffffff size=1>.</style>                 Selecting the dual box will show the dual of a solid
+<style color=#00ffffff size=1>.</style>                 rather than the original solid. Finally the edges,
+<style color=#00ffffff size=1>.</style>                 clear and faces boxes determine whether edges are
+<style color=#00ffffff size=1>.</style>                 shown, whether the screen is cleared before the next
+<style color=#00ffffff size=1>.</style>                 plot and whether faces are shown respectively.
+
+<style color=#00ffffff size=1>.</style>            wm/reversi
+<style color=#00ffffff size=1>.</style>                 An implementation of the popular game. The default set
+<style color=#00ffffff size=1>.</style>                 up is for black to be the machine and white the human
+<style color=#00ffffff size=1>.</style>                 player. Use the Black and White menu options to change
+<style color=#00ffffff size=1>.</style>                 this. The level of any machine player may be set using
+<style color=#00ffffff size=1>.</style>                 the Black level and White level boxes. This determines
+<style color=#00ffffff size=1>.</style>                 the amount of lookahead performed by the tree search
+<style color=#00ffffff size=1>.</style>                 algorithm.
+
+<style color=#00ffffff size=1>.</style>            wm/rt
+<style color=#00ffffff size=1>.</style>                 A Dis module inspector: it can show the Dis
+<style color=#00ffffff size=1>.</style>                 instructions, strings, types and other attributes of a
+<style color=#00ffffff size=1>.</style>                 module\; it also allows the user to set some attributes
+<style color=#00ffffff size=1>.</style>                 stored in a module's header.
+
+<style color=#00ffffff size=1>.</style>            wm/stopwatch
+<style color=#00ffffff size=1>.</style>                 A simple-minded stopwatch. Only useful for
+<style color=#00ffffff size=1>.</style>                 coarse-grained timings.
+
+<style color=#00ffffff size=1>.</style>            wm/sweeper
+<style color=#00ffffff size=1>.</style>                 Mine sweeping game.
+
+<style color=#00ffffff size=1>.</style>            wm/task
+<style color=#00ffffff size=1>.</style>                 Task manager: it lists the processes running when it
+<style color=#00ffffff size=1>.</style>                 starts, and offers buttons to kill a selected process,
+<style color=#00ffffff size=1>.</style>                 kill its process group, show its open files, or debug
+<style color=#00ffffff size=1>.</style>                 it using <action name=deb(1)>deb(1)</action>. A process is selected from the list
+<style color=#00ffffff size=1>.</style>                 using mouse button 1. Task does not automatically
+<style color=#00ffffff size=1>.</style>                 refresh the list\; there is a Refresh button to prompt
+<style color=#00ffffff size=1>.</style>                 it to do so.
+
+<style color=#00ffffff size=1>.</style>            wm/tetris
+<style color=#00ffffff size=1>.</style>                 The ubiquitous and annoyingly addictive tile dropping
+<style color=#00ffffff size=1>.</style>                 game. The game keys are: `7' move left\; `8' rotate
+<style color=#00ffffff size=1>.</style>                 (anti-clockwise)\; `9' move right\; `p' pause\; `space'
+<style color=#00ffffff size=1>.</style>                 drop and `q' quit. A mouse or stylus can also be used
+<style color=#00ffffff size=1>.</style>                 to guide the pieces (eg, by tapping the screen in the
+<style color=#00ffffff size=1>.</style>                 desired direction). Scores are stored in the file
+<style color=#00ffffff size=1>.</style>                 /lib/scores/tetris. Score file updates are not
+<style color=#00ffffff size=1>.</style>                 interlocked - it's only a game!
+
+<style color=#00ffffff size=1>.</style>            wm/unibrowse
+<style color=#00ffffff size=1>.</style>                 A handy utility for browsing the unicode character set,
+<style color=#00ffffff size=1>.</style>                 finding out what particular characters look like in
+<style color=#00ffffff size=1>.</style>                 different fonts, finding out exactly which characters a
+<style color=#00ffffff size=1>.</style>                 font provides, and finding the name of a character that
+<style color=#00ffffff size=1>.</style>                 you have managed to grab into the snarf buffer.
+
+<style color=#00ffffff size=1>.</style>            wm/view
+<style color=#00ffffff size=1>.</style>                 Image viewer. Displays GIF, Inferno <action name=image(6)>image(6)</action>, JPEG, PNG
+<style color=#00ffffff size=1>.</style>                 and X bitmap image files. The viewer creates a new
+<style color=#00ffffff size=1>.</style>                 window to display the contents of each file. If no
+<style color=#00ffffff size=1>.</style>                 arguments are given, the file browser panel <action name=filename(1)>filename(1)</action>
+<style color=#00ffffff size=1>.</style>                 is displayed to prompt the user to select an image file
+<style color=#00ffffff size=1>.</style>                 to view. If the -i option is given, view continues to
+<style color=#00ffffff size=1>.</style>                 listen for requests from the <action name=plumber(8)>plumber(8)</action>\; the -i option
+<style color=#00ffffff size=1>.</style>                 will normally appear only in rules in <action name=plumbing(6)>plumbing(6)</action>
+<style color=#00ffffff size=1>.</style>                 files.
+
+<style color=#00ffffff size=1>.</style>            wm/winctl
+<style color=#00ffffff size=1>.</style>                 Window management tool. Displays a set of buttons that
+<style color=#00ffffff size=1>.</style>                 provide for: raising a window to the top or lowering it
+<style color=#00ffffff size=1>.</style>                 to the bottom of the screen window stack\; moving a
+<style color=#00ffffff size=1>.</style>                 window to a new position\; iconising a window\; deleting
+<style color=#00ffffff size=1>.</style>                 a window.
+
+<style color=#00ffffff size=1>.</style>                 Click on the button for the required action then click
+<style color=#00ffffff size=1>.</style>                 on the window to apply it to. When moving a window,
+<style color=#00ffffff size=1>.</style>                 click and drag the target. Deleting a window is
+<style color=#00ffffff size=1>.</style>                 error-prone. Currently using this tool on a charon or
+<style color=#00ffffff size=1>.</style>                 acme window has strange effects.
+
+PLUMBING
+<style color=#00ffffff size=1>.</style>            wm/view receives view messages
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/polyhedra
+<style color=#00ffffff size=1>.</style>                 Polyhedra data base.
+
+<style color=#00ffffff size=1>.</style>            /lib/scores/tetris
+<style color=#00ffffff size=1>.</style>                 Tetris high score table.
+
+<style color=#00ffffff size=1>.</style>            /lib/unidata
+<style color=#00ffffff size=1>.</style>                 Directory holding Unicode character set information,
+<style color=#00ffffff size=1>.</style>                 used by unibrowse.
+
+<style color=#00ffffff size=1>.</style>            /dev/memory
+<style color=#00ffffff size=1>.</style>                 Provides memory with memory usage statistics.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/about.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/coffee.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/colors.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/date.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/edit.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/mand.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/memory.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/polyhedra.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/reversi.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/rt.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/stopwatch.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/task.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/tetris.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/unibrowse.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/view.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/winctl.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

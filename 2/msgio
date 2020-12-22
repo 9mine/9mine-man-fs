@@ -1,0 +1,105 @@
+<action name=MSGIO(2)>MSGIO(2)</action>                                                 <action name=MSGIO(2)>MSGIO(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            msgio: getmsg, sendmsg, senderrmsg, getstring, putstring,
+<style color=#00ffffff size=1>.</style>            getbytearray, putbytearray, puterror - exchange data on
+<style color=#00ffffff size=1>.</style>            delimited and undelimited streams
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "msgio.m"\;
+<style color=#00ffffff size=1>.</style>            msgio := load Msgio Msgio->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:         fn()\;
+
+<style color=#00ffffff size=1>.</style>            getmsg:       fn(fd: ref Sys->FD): array of byte\;
+<style color=#00ffffff size=1>.</style>            sendmsg:      fn(fd: ref Sys->FD, buf: array of byte, n: int): int\;
+<style color=#00ffffff size=1>.</style>            senderrmsg:   fn(fd: ref Sys->FD, s: string): int\;
+
+<style color=#00ffffff size=1>.</style>            getstring:    fn(fd: ref Sys->FD): (string, string)\;
+<style color=#00ffffff size=1>.</style>            putstring:    fn(fd: ref Sys->FD, s: string): int\;
+<style color=#00ffffff size=1>.</style>            getbytearray: fn(fd: ref Sys->FD): (array of byte, string)\;
+<style color=#00ffffff size=1>.</style>            putbytearray: fn(fd: ref Sys->FD, a: array of byte, n: int): int\;
+<style color=#00ffffff size=1>.</style>            puterror:     fn(fd: ref Sys->FD, s: string): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Msgio provides two complementary sets of functions for the
+<style color=#00ffffff size=1>.</style>            exchange of data over a network connection that uses a
+<style color=#00ffffff size=1>.</style>            connection-oriented transport protocols. The connection is
+<style color=#00ffffff size=1>.</style>            represented by a file descriptor fd.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other operation of the
+<style color=#00ffffff size=1>.</style>            module.
+
+<style color=#00ffffff size=1>.</style>            The first set allows arbitrary data, packed into arrays of
+<style color=#00ffffff size=1>.</style>            bytes, to be exchanged on network connections using
+<style color=#00ffffff size=1>.</style>            protocols such as TCP/IP that do not preserve record
+<style color=#00ffffff size=1>.</style>            boundaries. They are used to implement various
+<style color=#00ffffff size=1>.</style>            authentication protocols, including <action name=auth(6)>auth(6)</action>.
+
+<style color=#00ffffff size=1>.</style>            Each data message is transmitted with a five-byte header
+<style color=#00ffffff size=1>.</style>            containing a four-character zero-padded decimal count n
+<style color=#00ffffff size=1>.</style>            terminated by a newline, followed by n bytes of message
+<style color=#00ffffff size=1>.</style>            data. An error message has a similar structure, except that
+<style color=#00ffffff size=1>.</style>            the first character of the count is replaced by an
+<style color=#00ffffff size=1>.</style>            exclamation mark (!)\; the message data following contains
+<style color=#00ffffff size=1>.</style>            the diagnostic string in its UTF-8 encoding (see <action name=utf(6)>utf(6)</action>).
+
+<style color=#00ffffff size=1>.</style>            Getmsg reads the next message from fd and returns its data
+<style color=#00ffffff size=1>.</style>            content.
+
+<style color=#00ffffff size=1>.</style>            Sendmsg sends the first n bytes of buf as a message on fd,
+<style color=#00ffffff size=1>.</style>            and returns n.
+
+<style color=#00ffffff size=1>.</style>            Senderrmsg sends the error message s.
+
+<style color=#00ffffff size=1>.</style>            The second set of functions provide I/O for strings, byte
+<style color=#00ffffff size=1>.</style>            arrays and error strings over network connections that
+<style color=#00ffffff size=1>.</style>            provide a record structure for communication (as provided
+<style color=#00ffffff size=1>.</style>            for arbitrary networks by <action name=ssl(3)>ssl(3)</action>).
+
+<style color=#00ffffff size=1>.</style>            Putstring writes string s to fd. It returns the number of
+<style color=#00ffffff size=1>.</style>            bytes written, or -1 if an error occurred. Messages written
+<style color=#00ffffff size=1>.</style>            by putstring are truncated to 4096 bytes.
+
+<style color=#00ffffff size=1>.</style>            Getstring reads a string as written by putstring from fd and
+<style color=#00ffffff size=1>.</style>            returns a tuple (result,error). If successful, the error
+<style color=#00ffffff size=1>.</style>            string is nil.
+
+<style color=#00ffffff size=1>.</style>            Putbytearray writes the array of bytes a to fd. It returns
+<style color=#00ffffff size=1>.</style>            the number of bytes written, or -1 if an error occurred.
+<style color=#00ffffff size=1>.</style>            Messages written by putbytearray are truncated to 4096
+<style color=#00ffffff size=1>.</style>            bytes.
+
+<style color=#00ffffff size=1>.</style>            Getbytearray reads an array of bytes as written by
+<style color=#00ffffff size=1>.</style>            putbytearray from fd and returns a tuple of the form (result
+<style color=#00ffffff size=1>.</style>            ,error). If successful, the error string is nil.
+
+<style color=#00ffffff size=1>.</style>            Puterror writes an error string s to fd. It can be used in
+<style color=#00ffffff size=1>.</style>            place of putstring or putbytearray to cause a corresponding
+<style color=#00ffffff size=1>.</style>            getstring or getbytearray to fail (in the receiving
+<style color=#00ffffff size=1>.</style>            process), forcing them to return the error string s. It may
+<style color=#00ffffff size=1>.</style>            not be longer than Sys->ERRMAX bytes.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/msgio.b
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            The output functions return an int which is -1 if there was
+<style color=#00ffffff size=1>.</style>            an I/O error, and a non-negative value otherwise\; they also
+<style color=#00ffffff size=1>.</style>            set the system error string. Getmsg returns nil if there was
+<style color=#00ffffff size=1>.</style>            an error reading from fd\; it sets the system error string to
+<style color=#00ffffff size=1>.</style>            reflect the cause. It also returns nil if an error message
+<style color=#00ffffff size=1>.</style>            was received instead of a data message\; the system error
+<style color=#00ffffff size=1>.</style>            string will contain the error message's diagnostic. The
+<style color=#00ffffff size=1>.</style>            other input functions (for streams with delimiters) return a
+<style color=#00ffffff size=1>.</style>            tuple that includes a string indicating the cause of the
+<style color=#00ffffff size=1>.</style>            error, as the second element of the tuple.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The module is really intended to retrofit the original
+<style color=#00ffffff size=1>.</style>            Inferno authentication protocols into a new regime, and is
+<style color=#00ffffff size=1>.</style>            not yet intended for general-purpose use, hence the
+<style color=#00ffffff size=1>.</style>            irregular naming and calling conventions, inherited from the
+<style color=#00ffffff size=1>.</style>            original implementation in Keyring.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

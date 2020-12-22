@@ -1,0 +1,88 @@
+<action name=DS(3)>DS(3)</action>                                                       <action name=DS(3)>DS(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ds - compound device subsystems
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -b #k /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/ds
+<style color=#00ffffff size=1>.</style>            /dev/ds/ctl
+<style color=#00ffffff size=1>.</style>            /dev/ds/...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ds builds complex block storage subsystems out of simpler
+<style color=#00ffffff size=1>.</style>            ones. Inspired by the Plan 9 file server kernel's
+<style color=#00ffffff size=1>.</style>            configuration strings, it provides device mirroring,
+<style color=#00ffffff size=1>.</style>            partitioning, interleaving, and catenation for
+<style color=#00ffffff size=1>.</style>            block-oriented file systems.
+
+<style color=#00ffffff size=1>.</style>            It serves a two-level directory. The top level contains a
+<style color=#00ffffff size=1>.</style>            single directory ds, which contains a control file ctl and
+<style color=#00ffffff size=1>.</style>            one file per configured device.
+
+<style color=#00ffffff size=1>.</style>            The control messages each introduce a new device, here named
+<style color=#00ffffff size=1>.</style>            new. The file arguments are interpreted in the name space of
+<style color=#00ffffff size=1>.</style>            the writer.
+
+<style color=#00ffffff size=1>.</style>            mirror new files...
+<style color=#00ffffff size=1>.</style>                 The device new corresponds to a RAID 1 mirroring of
+<style color=#00ffffff size=1>.</style>                 files. Writes to new are handled by sequentially
+<style color=#00ffffff size=1>.</style>                 writing to the files from right to left (the reverse of
+<style color=#00ffffff size=1>.</style>                 of the order in the control message). If any write
+<style color=#00ffffff size=1>.</style>                 fails, the write is aborted. Reads from new are handled
+<style color=#00ffffff size=1>.</style>                 by sequentially reading from the files from left to
+<style color=#00ffffff size=1>.</style>                 right until one succeeds. The length of the mirror
+<style color=#00ffffff size=1>.</style>                 device is the minimum of the lengths of the files.
+
+<style color=#00ffffff size=1>.</style>            part new file offset length
+<style color=#00ffffff size=1>.</style>                 The device new corresponds to the length bytes starting
+<style color=#00ffffff size=1>.</style>                 at offset in file. If offset+length reaches past the
+<style color=#00ffffff size=1>.</style>                 end of file, length is silently reduced to fit.
+
+<style color=#00ffffff size=1>.</style>            inter new files...
+<style color=#00ffffff size=1>.</style>                 The device new corresponds to the block interleaving of
+<style color=#00ffffff size=1>.</style>                 files\; an 8192-byte block size is assumed.
+
+<style color=#00ffffff size=1>.</style>            cat name files...
+<style color=#00ffffff size=1>.</style>                 The device new corresponds to the catenation of files.
+
+<style color=#00ffffff size=1>.</style>            If the variable fsconfig is set in plan9.<action name=ini(8)>ini(8)</action> then ds will
+<style color=#00ffffff size=1>.</style>            read its configuration from the file $fsconfig on the first
+<style color=#00ffffff size=1>.</style>            attach. This is useful when the machine boots from a local
+<style color=#00ffffff size=1>.</style>            file server that uses fs.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Mirror the two disks /dev/sdC0/data and /dev/sdD0/data as
+<style color=#00ffffff size=1>.</style>            /dev/ds/m0\; similarly, mirror /dev/sdC1/data and
+<style color=#00ffffff size=1>.</style>            /dev/sdD1/data as /dev/ds/m1:
+
+<style color=#00ffffff size=1>.</style>                 echo mirror m0 /dev/sdC0/data /dev/sdD0/data >/dev/ds/ctl
+<style color=#00ffffff size=1>.</style>                 echo mirror m1 /dev/sdC1/data /dev/sdD1/data >/dev/ds/ctl
+
+<style color=#00ffffff size=1>.</style>            Interleave the two mirrored disks to create /dev/ds/data:
+
+<style color=#00ffffff size=1>.</style>                 echo inter data /dev/ds/m0 /dev/ds/m1 >/dev/ds/ctl
+
+<style color=#00ffffff size=1>.</style>            Run <action name=kfs(4)>kfs(4)</action> on the interleaved device:
+
+<style color=#00ffffff size=1>.</style>                 disk/kfs -f /dev/ds/data
+
+<style color=#00ffffff size=1>.</style>            Save the configuration:
+
+<style color=#00ffffff size=1>.</style>                 cp /dev/ds/ctl /dev/fd0disk
+<style color=#00ffffff size=1>.</style>                 To load the configuration automatically at boot time,
+<style color=#00ffffff size=1>.</style>                 add this to plan9.ini:
+
+<style color=#00ffffff size=1>.</style>                 fsconfig=/dev/fd0disk
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=dossrv(4)>dossrv(4)</action>
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/devds.c
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Should be able to select block size for interleaved devices.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

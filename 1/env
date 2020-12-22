@@ -1,0 +1,27 @@
+<action name=ENV(1)>ENV(1)</action>                                                     <action name=ENV(1)>ENV(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            env - display environment variables
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            env
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Env prints on standard output the current process's
+<style color=#00ffffff size=1>.</style>            environment (see <action name=sh(1)>sh(1)</action> and <action name=env(3)>env(3)</action>) listing each variable and
+<style color=#00ffffff size=1>.</style>            its current value.
+
+<style color=#00ffffff size=1>.</style>            Individual variable values can be set by assignment in sh
+<style color=#00ffffff size=1>.</style>            (1).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/env.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=acme(1)>acme(1)</action>, <action name=sh(1)>sh(1)</action>, <action name=env(2)>env(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Env does not understand that environment variables as stored
+<style color=#00ffffff size=1>.</style>            by <action name=sh(1)>sh(1)</action> are lists.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

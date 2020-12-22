@@ -1,0 +1,64 @@
+<action name=POPUP(2)>POPUP(2)</action>                                                 <action name=POPUP(2)>POPUP(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Popup: mkbutton, changebutton, event, add - popup list box
+<style color=#00ffffff size=1>.</style>            pseudo-widget
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "popup.m"\;
+<style color=#00ffffff size=1>.</style>            popup := load Popup Popup->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:         fn()\;
+<style color=#00ffffff size=1>.</style>            mkbutton:     fn(win: ref Tk->Toplevel, name: string,
+<style color=#00ffffff size=1>.</style>                             items: array of string, n: int): chan of string\;
+<style color=#00ffffff size=1>.</style>            changebutton: fn(win: ref Tk->Toplevel, name: string,
+<style color=#00ffffff size=1>.</style>                             items: array of string, n: int)\;
+<style color=#00ffffff size=1>.</style>            event:        fn(win: ref Tk->Toplevel, e: string,
+<style color=#00ffffff size=1>.</style>                             items: array of string): int\;
+<style color=#00ffffff size=1>.</style>            add:          fn(items: array of string, s: string):
+<style color=#00ffffff size=1>.</style>                             (array of string, int)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Popup implements popup list boxes as Tk pseudo-widgets. This
+<style color=#00ffffff size=1>.</style>            module has since been superseded by <action name=choicebutton(2)>choicebutton(2)</action> in Tk
+<style color=#00ffffff size=1>.</style>            itself, but remains for the moment for compatibility.
+
+<style color=#00ffffff size=1>.</style>            Init must be called once to initialise the module.
+
+<style color=#00ffffff size=1>.</style>            Mkbutton creates a new button name, in Tk toplevel win. It
+<style color=#00ffffff size=1>.</style>            returns a channel on which it delivers events (see event,
+<style color=#00ffffff size=1>.</style>            below). Once created, name can be packed like any other Tk
+<style color=#00ffffff size=1>.</style>            widget. When the button is pressed with button 1, a menu
+<style color=#00ffffff size=1>.</style>            pops up offering a choice from the given items. The value n
+<style color=#00ffffff size=1>.</style>            is the index in items of the button's initial value. The
+<style color=#00ffffff size=1>.</style>            current choice is always displayed in the button. If items
+<style color=#00ffffff size=1>.</style>            is nil or an empty array, the string `-----' is displayed
+<style color=#00ffffff size=1>.</style>            instead.
+
+<style color=#00ffffff size=1>.</style>            Having created a popup button, the application must receive
+<style color=#00ffffff size=1>.</style>            values on the channel returned by mkbutton and pass each
+<style color=#00ffffff size=1>.</style>            value it receives to event (as parameter e). (Typically the
+<style color=#00ffffff size=1>.</style>            application will receive on the channel in an alt statement
+<style color=#00ffffff size=1>.</style>            that watches other channels too.) Event returns the result
+<style color=#00ffffff size=1>.</style>            of a selection, or -1 if no selection was made. In either
+<style color=#00ffffff size=1>.</style>            case, the text of the button name will reflect the currently
+<style color=#00ffffff size=1>.</style>            active selection (the application can fetch it using `cget
+<style color=#00ffffff size=1>.</style>            -text'). The items parameter must match that given to
+<style color=#00ffffff size=1>.</style>            mkbutton (or most recently given to changebutton).
+
+<style color=#00ffffff size=1>.</style>            Changebutton changes the list of items in an existing popup
+<style color=#00ffffff size=1>.</style>            button name, and sets its initial selection to the item with
+<style color=#00ffffff size=1>.</style>            index n.
+
+<style color=#00ffffff size=1>.</style>            Add adds string s to the array items, if it is not already
+<style color=#00ffffff size=1>.</style>            there, and in either case returns the resulting new array
+<style color=#00ffffff size=1>.</style>            and the index of s therein. It is useful for calculating a
+<style color=#00ffffff size=1>.</style>            list of items dynamically.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/popup.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=tabs(2)>tabs(2)</action>, <action name=tk(2)>tk(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

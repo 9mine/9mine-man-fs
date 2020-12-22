@@ -1,0 +1,237 @@
+<action name=YACC(1)>YACC(1)</action>                                                   <action name=YACC(1)>YACC(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            yacc - yet another compiler-compiler (Limbo version)
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            yacc \[ option ... \] grammar
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Yacc converts a context-free grammar and translation code
+<style color=#00ffffff size=1>.</style>            into a set of tables for an <action name=LR(1)>LR(1)</action> parser and translator. The
+<style color=#00ffffff size=1>.</style>            grammar may be ambiguous\; specified precedence rules are
+<style color=#00ffffff size=1>.</style>            used to break ambiguities.
+
+<style color=#00ffffff size=1>.</style>            The output from yacc is a Limbo module y.tab.b containing
+<style color=#00ffffff size=1>.</style>            the parse function yyparse which must be provided with a
+<style color=#00ffffff size=1>.</style>            YYLEX adt providing the parser access to a lexical analyser
+<style color=#00ffffff size=1>.</style>            routine lex(), an error routine error(), and any other
+<style color=#00ffffff size=1>.</style>            context required.
+
+<style color=#00ffffff size=1>.</style>            The options are
+
+<style color=#00ffffff size=1>.</style>            -o output
+<style color=#00ffffff size=1>.</style>                 Direct output to the specified file instead of y.tab.b.
+
+<style color=#00ffffff size=1>.</style>            -Dn  Create file y.debug, containing diagnostic messages. To
+<style color=#00ffffff size=1>.</style>                 incorporate them in the parser, give an n greater than
+<style color=#00ffffff size=1>.</style>                 zero. The amount of diagnostic output from the parser
+<style color=#00ffffff size=1>.</style>                 is regulated by value n:
+
+<style color=#00ffffff size=1>.</style>                 1    Report errors.
+
+<style color=#00ffffff size=1>.</style>                 2    Also report reductions.
+
+<style color=#00ffffff size=1>.</style>                 3    Also report the name of each token returned by
+<style color=#00ffffff size=1>.</style>                      `yylex'.
+
+<style color=#00ffffff size=1>.</style>            -v   Create file y.output, containing a description of the
+<style color=#00ffffff size=1>.</style>                 parsing tables and of conflicts arising from
+<style color=#00ffffff size=1>.</style>                 ambiguities in the grammar.
+
+<style color=#00ffffff size=1>.</style>            -d   Create file y.tab.m, containing the module declaration
+<style color=#00ffffff size=1>.</style>                 for the parser, along with definitions of the constants
+<style color=#00ffffff size=1>.</style>                 that associate yacc-assigned `token codes' with
+<style color=#00ffffff size=1>.</style>                 user-declared `token names'. Include it in source files
+<style color=#00ffffff size=1>.</style>                 other than y.tab.b to give access to the token codes
+<style color=#00ffffff size=1>.</style>                 and the parser module.
+
+<style color=#00ffffff size=1>.</style>            -s stem
+<style color=#00ffffff size=1>.</style>                 Change the prefix ``y'' of the file names y.tab.b,
+<style color=#00ffffff size=1>.</style>                 y.tab.m, y.debug, and y.output to stem.
+
+<style color=#00ffffff size=1>.</style>            -m   Normally yacc defines the type of the y.tab.b module
+<style color=#00ffffff size=1>.</style>                 within the text of the module according to the contents
+<style color=#00ffffff size=1>.</style>                 of the %module directive. Giving the -m option
+<style color=#00ffffff size=1>.</style>                 suppresses this behaviour, leaving the implementation
+<style color=#00ffffff size=1>.</style>                 free to define the module's type from an external .m
+<style color=#00ffffff size=1>.</style>                 file. The module's type name is still taken from the
+<style color=#00ffffff size=1>.</style>                 %module directive.
+
+<style color=#00ffffff size=1>.</style>            -n size
+<style color=#00ffffff size=1>.</style>                 Specify the initial size of the token stack created for
+<style color=#00ffffff size=1>.</style>                 the parser (default: 200).
+
+<style color=#00ffffff size=1>.</style>         Differences from C yacc
+<style color=#00ffffff size=1>.</style>            The Limbo yacc is in many respects identical to the C yacc.
+<style color=#00ffffff size=1>.</style>            The differences are summarised below:
+
+<style color=#00ffffff size=1>.</style>            Comments follow the Limbo convention (a # symbol gives a
+<style color=#00ffffff size=1>.</style>            comment until the end of the line).
+
+<style color=#00ffffff size=1>.</style>            A %module directive is required, which replaces the %union
+<style color=#00ffffff size=1>.</style>            directive. It is of the form:
+
+<style color=#00ffffff size=1>.</style>                 %module modname {
+<style color=#00ffffff size=1>.</style>                 module types, functions and constants
+<style color=#00ffffff size=1>.</style>                 }
+<style color=#00ffffff size=1>.</style>            Modname will be the module's implementation type\; the body
+<style color=#00ffffff size=1>.</style>            of the directive, augmented with con definitions for the
+<style color=#00ffffff size=1>.</style>            yacc-assigned token codes, gives the type of the module,
+<style color=#00ffffff size=1>.</style>            unless the -m option is given, in which case no module
+<style color=#00ffffff size=1>.</style>            definition is emitted.
+
+<style color=#00ffffff size=1>.</style>            A type YYSTYPE must be defined, giving the type associated
+<style color=#00ffffff size=1>.</style>            with yacc tokens. If the angle bracket construction is used
+<style color=#00ffffff size=1>.</style>            after any of the %token, %left, %right, %nonassoc or %type
+<style color=#00ffffff size=1>.</style>            directives in order to associate a type with a token or
+<style color=#00ffffff size=1>.</style>            production, the word inside the angle brackets refers to a
+<style color=#00ffffff size=1>.</style>            member of an instance of YYSTYPE, which should be an adt.
+
+<style color=#00ffffff size=1>.</style>            An adt YYLEX must be defined, providing context to the
+<style color=#00ffffff size=1>.</style>            parser. The definition must consist of at least the
+<style color=#00ffffff size=1>.</style>            following:
+<style color=#00ffffff size=1>.</style>            	YYLEX: adt {
+<style color=#00ffffff size=1>.</style>            		lval: YYSTYPE\;
+<style color=#00ffffff size=1>.</style>            		lex: fn(l: self ref YYLEX): int\;
+<style color=#00ffffff size=1>.</style>            		error: fn(l: self ref YYLEX, msg: string)\;
+<style color=#00ffffff size=1>.</style>            	}
+<style color=#00ffffff size=1>.</style>            Lex should invoke a lexical analyser to return the next
+<style color=#00ffffff size=1>.</style>            token for yacc to analyse. The value of the token should be
+<style color=#00ffffff size=1>.</style>            left in lval. Error will be called when a parse error
+<style color=#00ffffff size=1>.</style>            occurs. Msg is a string describing the error.
+
+<style color=#00ffffff size=1>.</style>            Yyparse takes one argument, a reference to the YYLEX adt
+<style color=#00ffffff size=1>.</style>            that will be used to provide it with tokens.
+
+<style color=#00ffffff size=1>.</style>            The parser is fully re-entrant\; i.e. it does not hold any
+<style color=#00ffffff size=1>.</style>            parse state in any global variables within the module.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            The following is a small but complete example of the use of
+<style color=#00ffffff size=1>.</style>            Limbo yacc to build a simple calculator.
+<style color=#00ffffff size=1>.</style>            %{
+<style color=#00ffffff size=1>.</style>                include "sys.m"\;
+<style color=#00ffffff size=1>.</style>                sys: Sys\;
+
+<style color=#00ffffff size=1>.</style>                include "bufio.m"\;
+<style color=#00ffffff size=1>.</style>                bufio: Bufio\;
+<style color=#00ffffff size=1>.</style>                Iobuf: import bufio\;
+
+<style color=#00ffffff size=1>.</style>                include "draw.m"\;
+
+<style color=#00ffffff size=1>.</style>                YYSTYPE: adt { v: real\; }\;
+<style color=#00ffffff size=1>.</style>                YYLEX: adt {
+<style color=#00ffffff size=1>.</style>                    lval:   YYSTYPE\;
+<style color=#00ffffff size=1>.</style>                    lex: fn(l: self ref YYLEX): int\;
+<style color=#00ffffff size=1>.</style>                    error: fn(l: self ref YYLEX, msg: string)\;
+<style color=#00ffffff size=1>.</style>                }\;
+<style color=#00ffffff size=1>.</style>            %}
+
+<style color=#00ffffff size=1>.</style>            %module Calc{
+<style color=#00ffffff size=1>.</style>                init:   fn(ctxt: ref Draw->Context, args: list of string)\;
+<style color=#00ffffff size=1>.</style>            }
+
+<style color=#00ffffff size=1>.</style>            %left   '+' '-'
+<style color=#00ffffff size=1>.</style>            %left   '*' '/'
+
+<style color=#00ffffff size=1>.</style>            %type   <v> exp uexp term
+<style color=#00ffffff size=1>.</style>            %token  <v> REAL
+
+<style color=#00ffffff size=1>.</style>            %%
+<style color=#00ffffff size=1>.</style>            top :
+<style color=#00ffffff size=1>.</style>                | top '\n'
+<style color=#00ffffff size=1>.</style>                | top exp '\n'
+<style color=#00ffffff size=1>.</style>                {
+<style color=#00ffffff size=1>.</style>                    sys->print("%g\n", $2)\;
+<style color=#00ffffff size=1>.</style>                }
+<style color=#00ffffff size=1>.</style>                | top error '\n'
+<style color=#00ffffff size=1>.</style>                \;
+
+<style color=#00ffffff size=1>.</style>            exp : uexp
+<style color=#00ffffff size=1>.</style>                | exp '*' exp   { $$ = $1 * $3\; }
+<style color=#00ffffff size=1>.</style>                | exp '/' exp   { $$ = $1 / $3\; }
+<style color=#00ffffff size=1>.</style>                | exp '+' exp   { $$ = $1 + $3\; }
+<style color=#00ffffff size=1>.</style>                | exp '-' exp   { $$ = $1 - $3\; }
+<style color=#00ffffff size=1>.</style>                \;
+
+<style color=#00ffffff size=1>.</style>            uexp    : term
+<style color=#00ffffff size=1>.</style>                | '+' uexp  { $$ = $2\; }
+<style color=#00ffffff size=1>.</style>                | '-' uexp  { $$ = -$2\; }
+<style color=#00ffffff size=1>.</style>                \;
+
+<style color=#00ffffff size=1>.</style>            term    : REAL
+<style color=#00ffffff size=1>.</style>                | '(' exp ')'
+<style color=#00ffffff size=1>.</style>                {
+<style color=#00ffffff size=1>.</style>                    $$ = $2\;
+<style color=#00ffffff size=1>.</style>                }
+<style color=#00ffffff size=1>.</style>                \;
+
+<style color=#00ffffff size=1>.</style>            %%
+
+<style color=#00ffffff size=1>.</style>            in: ref Iobuf\;
+<style color=#00ffffff size=1>.</style>            stderr: ref Sys->FD\;
+
+<style color=#00ffffff size=1>.</style>            init(nil: ref Draw->Context, nil: list of string)
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	sys = load Sys Sys->PATH\;
+<style color=#00ffffff size=1>.</style>            	bufio = load Bufio Bufio->PATH\;
+<style color=#00ffffff size=1>.</style>            	in = bufio->fopen(sys-><action name=fildes(0)>fildes(0)</action>, Bufio->OREAD)\;
+<style color=#00ffffff size=1>.</style>            	stderr = sys-><action name=fildes(2)>fildes(2)</action>\;
+<style color=#00ffffff size=1>.</style>            	lex := ref YYLEX\;
+<style color=#00ffffff size=1>.</style>            	yyparse(lex)\;
+<style color=#00ffffff size=1>.</style>            }
+
+<style color=#00ffffff size=1>.</style>            YYLEX.error(nil: self ref YYLEX, err: string)
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	sys->fprint(stderr, "%s\n", err)\;
+<style color=#00ffffff size=1>.</style>            }
+
+<style color=#00ffffff size=1>.</style>            YYLEX.lex(lex: self ref YYLEX): int
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	for(\;\;){
+<style color=#00ffffff size=1>.</style>            		c := in.getc()\;
+<style color=#00ffffff size=1>.</style>            		case c{
+<style color=#00ffffff size=1>.</style>            		' ' or '\t' =>
+<style color=#00ffffff size=1>.</style>            			\;
+<style color=#00ffffff size=1>.</style>            		'-' or '+' or '*' or '/' or '\n' or '(' or ')' =>
+<style color=#00ffffff size=1>.</style>            			return c\;
+<style color=#00ffffff size=1>.</style>            		'0' to '9' or '.' =>
+<style color=#00ffffff size=1>.</style>            			s := ""\;
+<style color=#00ffffff size=1>.</style>            			i := 0\;
+<style color=#00ffffff size=1>.</style>            			s\[i++\] = c\;
+<style color=#00ffffff size=1>.</style>            			while((c = in.getc()) >= '0' && c <= '9' ||
+<style color=#00ffffff size=1>.</style>            			      c == '.' ||
+<style color=#00ffffff size=1>.</style>            			      c == 'e' || c == 'E')
+<style color=#00ffffff size=1>.</style>            				s\[i++\] = c\;
+<style color=#00ffffff size=1>.</style>            			in.ungetc()\;
+<style color=#00ffffff size=1>.</style>            			lex.lval.v = real s\;
+<style color=#00ffffff size=1>.</style>            			return REAL\;
+<style color=#00ffffff size=1>.</style>            		* =>
+<style color=#00ffffff size=1>.</style>            			return -1\;
+<style color=#00ffffff size=1>.</style>            		}
+<style color=#00ffffff size=1>.</style>            	}
+<style color=#00ffffff size=1>.</style>            }
+
+FILES
+<style color=#00ffffff size=1>.</style>            y.output
+<style color=#00ffffff size=1>.</style>            y.tab.b
+<style color=#00ffffff size=1>.</style>            y.tab.m
+<style color=#00ffffff size=1>.</style>            y.debug
+<style color=#00ffffff size=1>.</style>            /lib/yaccpar  parser prototype
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/yacc.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            S. C. Johnson and R. Sethi, ``Yacc: A parser generator'',
+<style color=#00ffffff size=1>.</style>            Unix Research System Programmer's Manual, Tenth Edition,
+<style color=#00ffffff size=1>.</style>            Volume 2
+<style color=#00ffffff size=1>.</style>            B. W. Kernighan and Rob Pike, The UNIX Programming
+<style color=#00ffffff size=1>.</style>            Environment, Prentice Hall, 1984
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The parser may not have full information when it writes to
+<style color=#00ffffff size=1>.</style>            y.debug so that the names of the tokens returned by
+<style color=#00ffffff size=1>.</style>            ``yylex'' may be missing.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

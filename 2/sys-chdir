@@ -1,0 +1,33 @@
+<action name=SYS-CHDIR(2)>SYS-CHDIR(2)</action>                                         <action name=SYS-CHDIR(2)>SYS-CHDIR(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            chdir - change working directory
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            chdir:  fn(path: string): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Chdir changes the working directory of the invoking process
+<style color=#00ffffff size=1>.</style>            and its file name space group to path.
+
+<style color=#00ffffff size=1>.</style>            The working directory is the starting point for evaluating
+<style color=#00ffffff size=1>.</style>            file names that do not begin with / or #, as explained in
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            When Inferno boots, the initial process has / for its
+<style color=#00ffffff size=1>.</style>            working directory.
+
+<style color=#00ffffff size=1>.</style>            Applications that invoke chdir normally use the FORKNS
+<style color=#00ffffff size=1>.</style>            option of <action name=sys-pctl(2)>sys-pctl(2)</action> to prevent the change from affecting
+<style color=#00ffffff size=1>.</style>            the surrounding environment.
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Returns 0 on success\; -1 on failure.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

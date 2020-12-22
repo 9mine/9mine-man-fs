@@ -1,0 +1,20 @@
+NAME
+<style color=#00ffffff size=1>.</style>            cleanname - clean a path name
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            cleanname \[ -d dir \] name ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Cleanname tidies up each file name it is given and prints
+<style color=#00ffffff size=1>.</style>            the result on standard output. It removes redundant slashes
+<style color=#00ffffff size=1>.</style>            and interprets ``.'' and ``..'' directory names lexically.
+<style color=#00ffffff size=1>.</style>            If the -d option is given, each name that does not not start
+<style color=#00ffffff size=1>.</style>            with / or # will be prefixed by dir/ before processing.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/cleanname.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=basename(1)>basename(1)</action>, <action name=pwd(1)>pwd(1)</action>, <action name=names(2)>names(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

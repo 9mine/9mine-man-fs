@@ -1,0 +1,22 @@
+<action name=NETKEY(1)>NETKEY(1)</action>                                               <action name=NETKEY(1)>NETKEY(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            netkey - calculate response to authentication challenge
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            netkey
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Netkey calculates a response to a challenge made by a system
+<style color=#00ffffff size=1>.</style>            to authenticate a user, based on a shared secret (password),
+<style color=#00ffffff size=1>.</style>            using the same algorithm as a SecureNet device. It reads and
+<style color=#00ffffff size=1>.</style>            writes /dev/cons. It prompts once for the secret (echo is
+<style color=#00ffffff size=1>.</style>            turned off). It then repeatedly prompts for a remote
+<style color=#00ffffff size=1>.</style>            system's challenge, and once given it, calculates and prints
+<style color=#00ffffff size=1>.</style>            the corresponding response. It exits on an empty challenge
+<style color=#00ffffff size=1>.</style>            or end of file.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/netkey.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

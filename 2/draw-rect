@@ -1,0 +1,94 @@
+<action name=DRAW-RECT(2)>DRAW-RECT(2)</action>                                         <action name=DRAW-RECT(2)>DRAW-RECT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Rect - rectangular portion of the plane
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include	"draw.m"\;
+<style color=#00ffffff size=1>.</style>            draw := load Draw Draw->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Rect: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>              min:      Point\;
+<style color=#00ffffff size=1>.</style>              max:      Point\;
+
+<style color=#00ffffff size=1>.</style>              canon:    fn(r: self Rect):             Rect\;
+<style color=#00ffffff size=1>.</style>              dx:       fn(r: self Rect):             int\;
+<style color=#00ffffff size=1>.</style>              dy:       fn(r: self Rect):             int\;
+<style color=#00ffffff size=1>.</style>              eq:       fn(r: self Rect, s: Rect):    int\;
+<style color=#00ffffff size=1>.</style>              Xrect:    fn(r: self Rect, s: Rect):    int\;
+<style color=#00ffffff size=1>.</style>              inrect:   fn(r: self Rect, s: Rect):    int\;
+<style color=#00ffffff size=1>.</style>              clip:     fn(r: self Rect, s: Rect):    (Rect, int)\;
+<style color=#00ffffff size=1>.</style>              combine:  fn(r: self Rect, s: Rect):    Rect\;
+<style color=#00ffffff size=1>.</style>              contains: fn(r: self Rect, p: Point):   int\;
+<style color=#00ffffff size=1>.</style>              addpt:    fn(r: self Rect, p: Point):   Rect\;
+<style color=#00ffffff size=1>.</style>              subpt:    fn(r: self Rect, p: Point):   Rect\;
+<style color=#00ffffff size=1>.</style>              inset:    fn(r: self Rect\; n: int):     Rect\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The type Rect defines a rectangular portion of the integer
+<style color=#00ffffff size=1>.</style>            grid.
+
+<style color=#00ffffff size=1>.</style>            min, max  These members define the upper left (min) and
+<style color=#00ffffff size=1>.</style>                      lower right (max) points for the rectangle. The
+<style color=#00ffffff size=1>.</style>                      rectangle contains the pixels min.x ≤ x < max.x
+<style color=#00ffffff size=1>.</style>                      and min.y ≤ y < max.y. In general, Rect
+<style color=#00ffffff size=1>.</style>                      coordinates should be in canonical form: min.x ≤ 
+<style color=#00ffffff size=1>.</style>                      max.x and min.y ≤ max.y. Some functions give
+<style color=#00ffffff size=1>.</style>                      undefined results if the input rectangles are not
+<style color=#00ffffff size=1>.</style>                      canonical.
+
+<style color=#00ffffff size=1>.</style>            r.canon() Returns a canonical rectangle by sorting the
+<style color=#00ffffff size=1>.</style>                      coordinates of r.
+
+<style color=#00ffffff size=1>.</style>            r.dx()    Returns the horizontal dimension of r.
+
+<style color=#00ffffff size=1>.</style>            r.dy()    Returns the vertical dimension of r.
+
+<style color=#00ffffff size=1>.</style>            r.eq(s)   Returns non-zero if the rectangles r and s have
+<style color=#00ffffff size=1>.</style>                      the same coordinates and zero otherwise.
+
+<style color=#00ffffff size=1>.</style>            r.Xrect(s)
+<style color=#00ffffff size=1>.</style>                      Returns non-zero if the rectangles r and s
+<style color=#00ffffff size=1>.</style>                      intersect and zero otherwise. Intersection means
+<style color=#00ffffff size=1>.</style>                      the rectangles share at least one pixel\;
+<style color=#00ffffff size=1>.</style>                      zero-sized rectangles do not intersect.
+
+<style color=#00ffffff size=1>.</style>            r.inrect(s)
+<style color=#00ffffff size=1>.</style>                      Returns non-zero if r is completely inside s and
+<style color=#00ffffff size=1>.</style>                      zero otherwise. Rectangles with equal coordinates
+<style color=#00ffffff size=1>.</style>                      are considered to be inside each other. Zero-sized
+<style color=#00ffffff size=1>.</style>                      rectangles contain no rectangles.
+
+<style color=#00ffffff size=1>.</style>            r.clip(s) Computes the intersection between r and s. If the
+<style color=#00ffffff size=1>.</style>                      input rectangles intersect, clip returns the
+<style color=#00ffffff size=1>.</style>                      resulting rectangle and a non-zero integer value.
+<style color=#00ffffff size=1>.</style>                      If the rectangles do not intersect, clip returns r
+<style color=#00ffffff size=1>.</style>                      and a zero value.
+
+<style color=#00ffffff size=1>.</style>            r.combine(s)
+<style color=#00ffffff size=1>.</style>                      Returns the smallest rectangle sufficient to cover
+<style color=#00ffffff size=1>.</style>                      all the pixels of r and s.
+
+<style color=#00ffffff size=1>.</style>            r.contains(p)
+<style color=#00ffffff size=1>.</style>                      Returns non-zero if the rectangle r contains the
+<style color=#00ffffff size=1>.</style>                      pixel with the coordinates of p and zero
+<style color=#00ffffff size=1>.</style>                      otherwise. Zero-sized rectangles contain no
+<style color=#00ffffff size=1>.</style>                      points.
+
+<style color=#00ffffff size=1>.</style>            r.addpt(p)
+<style color=#00ffffff size=1>.</style>                      Returns the rectangle (r.min.add(p), r.max.add(p))
+<style color=#00ffffff size=1>.</style>                      .
+
+<style color=#00ffffff size=1>.</style>            r.subpt(p)
+<style color=#00ffffff size=1>.</style>                      Returns the rectangle (r.min.sub(p), r.max.sub(p))
+<style color=#00ffffff size=1>.</style>                      .
+
+<style color=#00ffffff size=1>.</style>            r.inset(n)
+<style color=#00ffffff size=1>.</style>                      Returns the rectangle (r.min.add((n, n)), r
+<style color=#00ffffff size=1>.</style>                      .max.sub((n, n)). The result will not be in
+<style color=#00ffffff size=1>.</style>                      canonical form if the inset amount is too large
+<style color=#00ffffff size=1>.</style>                      for the rectangle.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

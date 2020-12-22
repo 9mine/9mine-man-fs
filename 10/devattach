@@ -1,0 +1,299 @@
+DEVATTACH(10.2)                                   DEVATTACH(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            devattach, devclone, devdir, devgen, devwalk, devdirread,
+<style color=#00ffffff size=1>.</style>            devstat, devopen, devbread, devbwrite, devcreate, devremove,
+<style color=#00ffffff size=1>.</style>            devwstat, devreset, devinit, devshutdown, openmode - common
+<style color=#00ffffff size=1>.</style>            device driver support
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            typedef int Devgen(Chan *c, char *name, Dirtab *tab, int
+<style color=#00ffffff size=1>.</style>            ntab, int i, Dir *dp)
+
+<style color=#00ffffff size=1>.</style>            Chan*	devattach(int tc, char *spec)
+
+<style color=#00ffffff size=1>.</style>            Chan*	devclone(Chan *c)
+
+<style color=#00ffffff size=1>.</style>            void	devdir(Chan *c, Qid qid, char *n, long length, 		char
+<style color=#00ffffff size=1>.</style>            *user, long perm, Dir *dp)
+
+<style color=#00ffffff size=1>.</style>            int	devgen(Chan *c, char *name, Dirtab *tab, int ntab, 		int
+<style color=#00ffffff size=1>.</style>            i, Dir *dp)
+
+<style color=#00ffffff size=1>.</style>            Walkqid* devwalk(Chan *c, Chan *nc, char **name, int nname,
+<style color=#00ffffff size=1>.</style>            		Dirtab *tab, int ntab, Devgen *gen)
+
+<style color=#00ffffff size=1>.</style>            void	devstat(Chan *c, uchar *db, int n, Dirtab *tab, 		int
+<style color=#00ffffff size=1>.</style>            ntab, Devgen *gen)
+
+<style color=#00ffffff size=1>.</style>            long	devdirread(Chan *c, char *d, long n, Dirtab *tab, 		int
+<style color=#00ffffff size=1>.</style>            ntab, Devgen *gen)
+
+<style color=#00ffffff size=1>.</style>            Chan*	devopen(Chan *c, int omode, Dirtab *tab, 		int ntab,
+<style color=#00ffffff size=1>.</style>            Devgen *gen)
+
+<style color=#00ffffff size=1>.</style>            Block*	devbread(Chan *c, long n, ulong offset)
+
+<style color=#00ffffff size=1>.</style>            long	devbwrite(Chan *c, Block *bp, ulong offset)
+
+<style color=#00ffffff size=1>.</style>            void	devcreate(Chan*, char*, int, ulong)
+
+<style color=#00ffffff size=1>.</style>            void	devremove(Chan*)
+
+<style color=#00ffffff size=1>.</style>            void	devwstat(Chan*, uchar*, int)
+
+<style color=#00ffffff size=1>.</style>            void	devreset(void)
+
+<style color=#00ffffff size=1>.</style>            void	devinit(void)
+
+<style color=#00ffffff size=1>.</style>            void	devshutdown(void)
+
+<style color=#00ffffff size=1>.</style>            int	openmode(ulong mode)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Device drivers call these functions to carry out essential
+<style color=#00ffffff size=1>.</style>            tasks and default actions. They do most of the name space
+<style color=#00ffffff size=1>.</style>            management for a driver that serves a simple name space (eg,
+<style color=#00ffffff size=1>.</style>            data and control files), leaving the driver to concentrate
+<style color=#00ffffff size=1>.</style>            on the device-specific details of the I/O requests. More
+<style color=#00ffffff size=1>.</style>            complex drivers also make good use of them at the leaves of
+<style color=#00ffffff size=1>.</style>            their name space, and to help manage the Chan structures
+<style color=#00ffffff size=1>.</style>            correctly.
+
+<style color=#00ffffff size=1>.</style>            A device has an associated type, represented as a Unicode
+<style color=#00ffffff size=1>.</style>            character (`rune') that identifies the device inside and
+<style color=#00ffffff size=1>.</style>            outside the kernel. It appears as the value of the type
+<style color=#00ffffff size=1>.</style>            field in the Dir resulting from a <action name=sys-stat(2)>sys-stat(2)</action> of any file
+<style color=#00ffffff size=1>.</style>            provided by the device. A device is named outside the kernel
+<style color=#00ffffff size=1>.</style>            using a path name starting with # followed by the device
+<style color=#00ffffff size=1>.</style>            character (eg, c in #c for the console). Any subsequent
+<style color=#00ffffff size=1>.</style>            characters before the next '/' or end of string is the
+<style color=#00ffffff size=1>.</style>            `device specifier', interpreted solely by the device itself.
+
+<style color=#00ffffff size=1>.</style>            Devattach returns a new channel representing the root of the
+<style color=#00ffffff size=1>.</style>            file tree corresponding to device type tc, with device
+<style color=#00ffffff size=1>.</style>            specifier spec. It is normally called by a driver's attach
+<style color=#00ffffff size=1>.</style>            function (see dev(10.2)). The qid for the new channel is
+<style color=#00ffffff size=1>.</style>            (Qid){0,0,QTDIR}, suitable for a root directory for many
+<style color=#00ffffff size=1>.</style>            devices, but a device driver is free to change it (provided
+<style color=#00ffffff size=1>.</style>            the QTDIR bit remains in the Qid.type).
+
+<style color=#00ffffff size=1>.</style>            Devclone returns a new channel that is a copy of c. An
+<style color=#00ffffff size=1>.</style>            attempt to clone an open channel causes a panic(10.2).
+
+<style color=#00ffffff size=1>.</style>            The ``Dir'' structure is shown below:
+
+<style color=#00ffffff size=1>.</style>                 typedef
+<style color=#00ffffff size=1>.</style>                 struct Dir
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                     /* system-modified data */
+<style color=#00ffffff size=1>.</style>                     ushort  type\;   /* server type */
+<style color=#00ffffff size=1>.</style>                     uint    dev\;    /* server subtype */
+<style color=#00ffffff size=1>.</style>                     /* file data */
+<style color=#00ffffff size=1>.</style>                     Qid     qid\;    /* unique id from server */
+<style color=#00ffffff size=1>.</style>                     ulong   mode\;   /* permissions */
+<style color=#00ffffff size=1>.</style>                     ulong   atime\;  /* last read time */
+<style color=#00ffffff size=1>.</style>                     ulong   mtime\;  /* last write time */
+<style color=#00ffffff size=1>.</style>                     vlong   length\; /* file length */
+<style color=#00ffffff size=1>.</style>                     char    *name\;  /* last element of path */
+<style color=#00ffffff size=1>.</style>                     char    *uid\;   /* owner name */
+<style color=#00ffffff size=1>.</style>                     char    *gid\;   /* group name */
+<style color=#00ffffff size=1>.</style>                     char    *muid\;  /* last modifier name */
+<style color=#00ffffff size=1>.</style>                 } Dir\;
+
+<style color=#00ffffff size=1>.</style>            This Dir structure corresponds directly to the Limbo Dir adt
+<style color=#00ffffff size=1>.</style>            described in <action name=sys-stat(2)>sys-stat(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            Given a channel and assorted other information, devdir
+<style color=#00ffffff size=1>.</style>            initialises a Dir structure at dp. Devdir supplies the
+<style color=#00ffffff size=1>.</style>            following data itself:
+<style color=#00ffffff size=1>.</style>            atime   last access time (set to current time)
+<style color=#00ffffff size=1>.</style>            mtime   last modification time (set to kernel creation date)
+<style color=#00ffffff size=1>.</style>            gid     group name (set to eve(10.2))
+<style color=#00ffffff size=1>.</style>            length  length in bytes (set to zero, which is normal for
+<style color=#00ffffff size=1>.</style>                    most devices)
+
+<style color=#00ffffff size=1>.</style>            Note that devdir assigns the values of name and user
+<style color=#00ffffff size=1>.</style>            directly to fields of *dp, and consequently those values
+<style color=#00ffffff size=1>.</style>            must remain valid until the last use of *dp. (Sometimes that
+<style color=#00ffffff size=1>.</style>            requires the use of an auxiliary buffer, such as up->genbuf
+<style color=#00ffffff size=1>.</style>            .) If channel c corresponds to a file descriptor on which 9P
+<style color=#00ffffff size=1>.</style>            is served, devdir sets both the flag bit QTMOUNT in dp
+<style color=#00ffffff size=1>.</style>            ->qid.type and the flag bit DMMOUNT in dp->mode (see
+<style color=#00ffffff size=1>.</style>            <action name=sys-export(2)>sys-export(2)</action> and mount in <action name=sys-bind(2)>sys-bind(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            A simple name space can be represented in a driver by an
+<style color=#00ffffff size=1>.</style>            array of Dirtab structures. The array is typically static
+<style color=#00ffffff size=1>.</style>            when the names and permissions are static, but can be
+<style color=#00ffffff size=1>.</style>            dynamically allocated and initialised if required. The
+<style color=#00ffffff size=1>.</style>            structure of Dirtab is shown below:
+
+<style color=#00ffffff size=1>.</style>                 typedef
+<style color=#00ffffff size=1>.</style>                 struct Dirtab
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                         char    name\[KNAMELEN\]\;
+<style color=#00ffffff size=1>.</style>                         Qid     qid\;
+<style color=#00ffffff size=1>.</style>                         vlong   length\;
+<style color=#00ffffff size=1>.</style>                         long    perm\;
+<style color=#00ffffff size=1>.</style>                 } Dirtab\;
+
+<style color=#00ffffff size=1>.</style>            The name `.' must appear as the first entry in a Dirtab if
+<style color=#00ffffff size=1>.</style>            the default devgen function is used. On the other hand, the
+<style color=#00ffffff size=1>.</style>            name `..' must never appear in a Dirtab table. Drivers that
+<style color=#00ffffff size=1>.</style>            support a directory hierarchy must walk up the hierarchy
+<style color=#00ffffff size=1>.</style>            towards the root when their walk function receives `..' as a
+<style color=#00ffffff size=1>.</style>            file name component. The name `.' is never seen by a driver.
+
+<style color=#00ffffff size=1>.</style>            The devdirread, devopen, devstat, and devwalk functions all
+<style color=#00ffffff size=1>.</style>            take a gen function argument, of type Devgen, which they
+<style color=#00ffffff size=1>.</style>            invoke to retrieve the items in a Chan that represents a
+<style color=#00ffffff size=1>.</style>            directory. Gen takes a channel c (a directory), a file name
+<style color=#00ffffff size=1>.</style>            (which is nil except during devwalk), an array of Dirtab
+<style color=#00ffffff size=1>.</style>            structures tab of length ntab, and a table index i. The
+<style color=#00ffffff size=1>.</style>            functions calling gen expect it to place the i'th entry in
+<style color=#00ffffff size=1>.</style>            the directory into *dp. It should return 1 if the call was
+<style color=#00ffffff size=1>.</style>            successful, -1 if i is beyond the index of the last
+<style color=#00ffffff size=1>.</style>            directory entry, or 0 if there is no entry at i, but there
+<style color=#00ffffff size=1>.</style>            are entries beyond it. When i has the special value
+<style color=#00ffffff size=1>.</style>            DEVDOTDOT then gen should set *dp to reflect the parent of c
+<style color=#00ffffff size=1>.</style>            \; if c is a one-level device directory, then `..' is
+<style color=#00ffffff size=1>.</style>            equivalent to `.'. Custom implementations of gen often
+<style color=#00ffffff size=1>.</style>            ignore devtab, and instead return their own dynamically
+<style color=#00ffffff size=1>.</style>            generated set of directory entries from some other source.
+<style color=#00ffffff size=1>.</style>            Exceptionally, during devwalk a non-nil name is provided: it
+<style color=#00ffffff size=1>.</style>            is the name being looked up, and a device-specific gen can
+<style color=#00ffffff size=1>.</style>            short-circuit the search by returning -1 if the name does
+<style color=#00ffffff size=1>.</style>            not exist, or filling in *dp and returning 1 if it does
+<style color=#00ffffff size=1>.</style>            exist.
+
+<style color=#00ffffff size=1>.</style>            The function devgen is compatible with Devgen\; it returns
+<style color=#00ffffff size=1>.</style>            the i'th entry in devtab, and can be used to provide a
+<style color=#00ffffff size=1>.</style>            simple, static set of directory entries.
+
+<style color=#00ffffff size=1>.</style>            Devwalk walks channel c to the file in the device named by
+<style color=#00ffffff size=1>.</style>            the path encoded in name, which is an array of strings of
+<style color=#00ffffff size=1>.</style>            length nname. It provides the interface to <action name=walk(5)>walk(5)</action> within
+<style color=#00ffffff size=1>.</style>            the kernel, and that specification must be well understood
+<style color=#00ffffff size=1>.</style>            to appreciate all the nuances of its interface. Fortunately,
+<style color=#00ffffff size=1>.</style>            in nearly all device drivers, a device's walk function
+<style color=#00ffffff size=1>.</style>            typically passes its parameters on to devwalk (adding the
+<style color=#00ffffff size=1>.</style>            device's own Dirtab array as the the value of tab), and
+<style color=#00ffffff size=1>.</style>            simply returning the result of devwalk.
+
+<style color=#00ffffff size=1>.</style>            Devwalk walks c using the given set of names, and if the
+<style color=#00ffffff size=1>.</style>            walk is successful, the channel nc will refer to the result
+<style color=#00ffffff size=1>.</style>            of the walk (specifically, nc->qid is set to the Qid for the
+<style color=#00ffffff size=1>.</style>            file). If nc is nil, devwalk will allocate a new channel
+<style color=#00ffffff size=1>.</style>            itself, that is initially a clone of c. As in <action name=walk(5)>walk(5)</action>,
+<style color=#00ffffff size=1>.</style>            devwalk can return a partial result, represented by a
+<style color=#00ffffff size=1>.</style>            dynamically allocated value of the following structure:
+
+<style color=#00ffffff size=1>.</style>                 struct Walkqid
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                     Chan  *clone\;
+<style color=#00ffffff size=1>.</style>                     int   nqid\;
+<style color=#00ffffff size=1>.</style>                     Qid   qid\[1\]\;	/* actually nname in length */
+<style color=#00ffffff size=1>.</style>                 }\;
+
+<style color=#00ffffff size=1>.</style>            The value must be freed after use. For each element of name
+<style color=#00ffffff size=1>.</style>            , devwalk passes the tab parameter to gen together with the
+<style color=#00ffffff size=1>.</style>            currently-sought element of name. If the first element is
+<style color=#00ffffff size=1>.</style>            not found, devwalk returns nil\; otherwise, it returns a
+<style color=#00ffffff size=1>.</style>            Walkqid value in which nqid elements of the array qid are
+<style color=#00ffffff size=1>.</style>            set to the qids (see <action name=intro(5)>intro(5)</action>) of each valid element of name
+<style color=#00ffffff size=1>.</style>            . If all nname elements were successfully traversed, then
+<style color=#00ffffff size=1>.</style>            nqid will have the value nname, and clone will refer to the
+<style color=#00ffffff size=1>.</style>            result of the walk, which is either nc if given, or the new
+<style color=#00ffffff size=1>.</style>            channel allocated by devwalk. Otherwise, at least one
+<style color=#00ffffff size=1>.</style>            element succeeded and nqid is less than nname and clone is
+<style color=#00ffffff size=1>.</style>            nil. On an error or incomplete walk, the error string is set
+<style color=#00ffffff size=1>.</style>            to the error that stopped the walk (eg, Enonexist or Enotdir
+<style color=#00ffffff size=1>.</style>            ).
+
+<style color=#00ffffff size=1>.</style>            Devstat fills the array of bytes db with data in the format
+<style color=#00ffffff size=1>.</style>            produced by <action name=stat(5)>stat(5)</action> that describes the file referenced by
+<style color=#00ffffff size=1>.</style>            channel c, which must have a corresponding entry returned by
+<style color=#00ffffff size=1>.</style>            gen (ie, an entry with matching Qid.path). If c is a
+<style color=#00ffffff size=1>.</style>            communications channel connecting a 9P server to a current
+<style color=#00ffffff size=1>.</style>            mount point, the DMMOUNT bit is set in the resulting
+<style color=#00ffffff size=1>.</style>            Dir.mode, and QTMOUNT is set in Dir.qid.type. As in <action name=stat(5)>stat(5)</action>,
+<style color=#00ffffff size=1>.</style>            the length of the data written to db varies\; if more than n
+<style color=#00ffffff size=1>.</style>            bytes are needed, devstat raises the error(10.2) Ebadarg.
+<style color=#00ffffff size=1>.</style>            Otherwise, it returns the number of bytes in db actually
+<style color=#00ffffff size=1>.</style>            used.
+
+<style color=#00ffffff size=1>.</style>            If an entry with the desired qid is not found in the table,
+<style color=#00ffffff size=1>.</style>            but c corresponds to a directory (ie, QTDIR is set in c
+<style color=#00ffffff size=1>.</style>            ->qid.type), it is taken to be a stat of a notional
+<style color=#00ffffff size=1>.</style>            directory containing the files listed in tab. Dirstat then
+<style color=#00ffffff size=1>.</style>            builds the corresponding Dir structure: its Dir.name is
+<style color=#00ffffff size=1>.</style>            taken from c->path->elem\; the length is DIRLEN*nelem(tab)\;
+<style color=#00ffffff size=1>.</style>            and Dir.perm is 0555 (read-execute for all).
+
+<style color=#00ffffff size=1>.</style>            Devdirread calls gen to obtain successive Dir structures
+<style color=#00ffffff size=1>.</style>            representing entries in the open directory c. These are
+<style color=#00ffffff size=1>.</style>            converted to standard format (see convD2M in styx(10.2)) and
+<style color=#00ffffff size=1>.</style>            placed in the buffer b. It returns the number of bytes in
+<style color=#00ffffff size=1>.</style>            the result. At most n bytes will be returned, in multiples
+<style color=#00ffffff size=1>.</style>            of DIRLEN. Because the kernel maintains the current offset
+<style color=#00ffffff size=1>.</style>            in c, successive calls to devdirread return successive
+<style color=#00ffffff size=1>.</style>            directory components.
+
+<style color=#00ffffff size=1>.</style>            Devopen is called to check and complete a request to open
+<style color=#00ffffff size=1>.</style>            channel c for I/O according to omode (the open mode of
+<style color=#00ffffff size=1>.</style>            <action name=sys-open(2)>sys-open(2)</action>). It calls gen to obtain successive directory
+<style color=#00ffffff size=1>.</style>            entries which it searches for a Qid matching that of c, and
+<style color=#00ffffff size=1>.</style>            ensures that the current user has permission to open c with
+<style color=#00ffffff size=1>.</style>            the given mode, omode, and that the mode itself is valid
+<style color=#00ffffff size=1>.</style>            (see openmode below). Permission is checked against the
+<style color=#00ffffff size=1>.</style>            permission in the matching entry. If no matching Qid is
+<style color=#00ffffff size=1>.</style>            found, it is assumed that the notional parent directory of
+<style color=#00ffffff size=1>.</style>            the files represented in tab is to be opened. Such a
+<style color=#00ffffff size=1>.</style>            directory is deemed to have mode 0555, allowing access by
+<style color=#00ffffff size=1>.</style>            any user. A directory can only be opened for reading (OREAD
+<style color=#00ffffff size=1>.</style>            ). Devopen returns the channel c on success. Last, it sets
+<style color=#00ffffff size=1>.</style>            the bit COPEN in Chan.flag to mark c as open. This
+<style color=#00ffffff size=1>.</style>            convention can always be relied upon by the driver's close
+<style color=#00ffffff size=1>.</style>            function to tell if an open succeeded. On the otherhand, if
+<style color=#00ffffff size=1>.</style>            the open request was unsuccessful, devopen raises an
+<style color=#00ffffff size=1>.</style>            appropriate error(10.2) and does not return.
+
+<style color=#00ffffff size=1>.</style>            Devbread returns a Block (see allocb(10.2)) containing up to
+<style color=#00ffffff size=1>.</style>            n bytes read, using devtab\[c->type\]->read, from c starting
+<style color=#00ffffff size=1>.</style>            at the given offset. The read pointer in the returned Block
+<style color=#00ffffff size=1>.</style>            points to the start of the data\; the write pointer points to
+<style color=#00ffffff size=1>.</style>            the next available byte.
+
+<style color=#00ffffff size=1>.</style>            Devbwrite writes the data in Block bp to the file c at the
+<style color=#00ffffff size=1>.</style>            given offset, using the write function devtab\[c
+<style color=#00ffffff size=1>.</style>            ->type\]->write. It then frees the block list bp before
+<style color=#00ffffff size=1>.</style>            returning the number of bytes written.
+
+<style color=#00ffffff size=1>.</style>            Most built-in devices do not allow create, remove or wstat
+<style color=#00ffffff size=1>.</style>            on their files. Devcreate, devremove and devwstat are stubs
+<style color=#00ffffff size=1>.</style>            that raise an error(10.2), Eperm. They can be named directly
+<style color=#00ffffff size=1>.</style>            in a device driver's device switch (the Dev structure in
+<style color=#00ffffff size=1>.</style>            /os/port/portdat.h: see dev(10.2)).
+
+<style color=#00ffffff size=1>.</style>            Devreset, devinit and devshutdown are also stubs\; they do
+<style color=#00ffffff size=1>.</style>            nothing. A device driver puts them in its Dev structure when
+<style color=#00ffffff size=1>.</style>            it need take no action on device reset, initialisation, or
+<style color=#00ffffff size=1>.</style>            shut down.
+
+<style color=#00ffffff size=1>.</style>            Openmode is used by a driver that does not use devopen, to
+<style color=#00ffffff size=1>.</style>            check the open mode it receives in its open routine.
+<style color=#00ffffff size=1>.</style>            Openmode returns mode o, the mode parameter to <action name=sys-open(2)>sys-open(2)</action>
+<style color=#00ffffff size=1>.</style>            or sys-create, shorn of OTRUNC and similar options, and
+<style color=#00ffffff size=1>.</style>            reduced to one of OREAD, OWRITE or ORDWR. In particular,
+<style color=#00ffffff size=1>.</style>            OEXEC becomes OREAD within the kernel. Openmode raises an
+<style color=#00ffffff size=1>.</style>            error(10.2) Ebadarg instead of returning, if o is an invalid
+<style color=#00ffffff size=1>.</style>            mode (eg, reserved bits set).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/dev.c
+<style color=#00ffffff size=1>.</style>            /os/port/dev.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            allocb(10.2), eve(10.2), qio(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,154 @@
+<action name=DEB(1)>DEB(1)</action>                                                     <action name=DEB(1)>DEB(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            deb - graphical Limbo debugger
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wm/deb \[-f file\] \[-p pid\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Wm/deb displays two windows, the main debugging window and a
+<style color=#00ffffff size=1>.</style>            stack window for browsing the data values of the thread
+<style color=#00ffffff size=1>.</style>            currently being debugged.
+
+<style color=#00ffffff size=1>.</style>            Debugging is performed using the facilities of the prog
+<style color=#00ffffff size=1>.</style>            device bound to the local /prog directory (see <action name=prog(3)>prog(3)</action>).
+<style color=#00ffffff size=1>.</style>            Debugging of code running on a remote machine can be
+<style color=#00ffffff size=1>.</style>            performed by binding the remote /prog directory in place of
+<style color=#00ffffff size=1>.</style>            the local one. (See <action name=bind(1)>bind(1)</action>).
+
+<style color=#00ffffff size=1>.</style>            In order to display source code and set breakpoints
+<style color=#00ffffff size=1>.</style>            accurately, an up to date symbol file (.sbl) must be
+<style color=#00ffffff size=1>.</style>            available as well as the limbo source file (.b).
+
+<style color=#00ffffff size=1>.</style>         Main window
+<style color=#00ffffff size=1>.</style>            The main window is comprised of a menu bar, an icon bar and
+<style color=#00ffffff size=1>.</style>            three text panels. One panel, labelled Threads, lists the
+<style color=#00ffffff size=1>.</style>            process IDs (PIDs) of the threads being debugged. Another
+<style color=#00ffffff size=1>.</style>            panel, labelled Break, lists the set of breakpoints, each
+<style color=#00ffffff size=1>.</style>            given a unique number. The third and largest panel displays
+<style color=#00ffffff size=1>.</style>            the source code of the thread being debugged.
+
+<style color=#00ffffff size=1>.</style>            Breakpoint positions are shown by red text in the source
+<style color=#00ffffff size=1>.</style>            code display. Clicking on a breakpoint number in the Break
+<style color=#00ffffff size=1>.</style>            panel results in the source code panel being scrolled or
+<style color=#00ffffff size=1>.</style>            updated to show the breakpoint. Breakpoints are toggled by
+<style color=#00ffffff size=1>.</style>            clicking on the statement or sub-expression in the source
+<style color=#00ffffff size=1>.</style>            code window and clicking the breakpoint button on the icon
+<style color=#00ffffff size=1>.</style>            bar. A breakpoint can be hit by any of the threads being
+<style color=#00ffffff size=1>.</style>            debugged - breakpoints are set on source code, not on
+<style color=#00ffffff size=1>.</style>            individual threads.
+
+<style color=#00ffffff size=1>.</style>            Clicking on a PID in the Threads panel results in the source
+<style color=#00ffffff size=1>.</style>            code panel being scrolled or updated to highlight where in
+<style color=#00ffffff size=1>.</style>            the code the thread is blocked, broken or halted on a
+<style color=#00ffffff size=1>.</style>            breakpoint.
+
+<style color=#00ffffff size=1>.</style>            A running thread can be halted by clicking the stop button
+<style color=#00ffffff size=1>.</style>            on the icon bar. A thread will also halt when it hits a
+<style color=#00ffffff size=1>.</style>            breakpoint. Once a thread is halted (not blocked or broken)
+<style color=#00ffffff size=1>.</style>            its execution can be advanced a step at a time by means of
+<style color=#00ffffff size=1>.</style>            the buttons on the icon bar. The thread can be stepped one
+<style color=#00ffffff size=1>.</style>            operation at a time or a statement at a time. Normally when
+<style color=#00ffffff size=1>.</style>            single stepping, function calls are stepped into. Stepping
+<style color=#00ffffff size=1>.</style>            commands allow for stepping over function calls, whereby the
+<style color=#00ffffff size=1>.</style>            function is still called but its whole execution is treated
+<style color=#00ffffff size=1>.</style>            as a single step. Stepping out of a function is also
+<style color=#00ffffff size=1>.</style>            provided, whereby execution continues unabated until
+<style color=#00ffffff size=1>.</style>            returning from the function. Execution of the halted thread
+<style color=#00ffffff size=1>.</style>            can be continued, running until it terminates, breaks or
+<style color=#00ffffff size=1>.</style>            hits another breakpoint.
+
+<style color=#00ffffff size=1>.</style>            Any of the threads being debugged can be killed or detached
+<style color=#00ffffff size=1>.</style>            from the debugger using buttons on the icon bar. Detaching a
+<style color=#00ffffff size=1>.</style>            halted thread resumes its execution.
+
+<style color=#00ffffff size=1>.</style>            The main window provides a set of menus for viewing source
+<style color=#00ffffff size=1>.</style>            files, attaching to other threads, setting debugger options
+<style color=#00ffffff size=1>.</style>            and searching for text in the source code window.
+
+<style color=#00ffffff size=1>.</style>         Stack Window
+<style color=#00ffffff size=1>.</style>            The stack window is used to inspect the values of local and
+<style color=#00ffffff size=1>.</style>            global variables and function arguments. Items are displayed
+<style color=#00ffffff size=1>.</style>            in a hierarchical manner. Any item that contains other
+<style color=#00ffffff size=1>.</style>            items, such as a variable of an ADT type, can be expanded to
+<style color=#00ffffff size=1>.</style>            show the values of the sub-items. The sub-items are
+<style color=#00ffffff size=1>.</style>            displayed by clicking on the expand button on the left of
+<style color=#00ffffff size=1>.</style>            the containing item, they can be hidden by pressing the
+<style color=#00ffffff size=1>.</style>            button again. The sub-item list is displayed indented from
+<style color=#00ffffff size=1>.</style>            its container as a visual cue to their association.
+
+<style color=#00ffffff size=1>.</style>            The stack window shows the full stack trace of the current
+<style color=#00ffffff size=1>.</style>            thread. The stack trace is displayed as a list of frames,
+<style color=#00ffffff size=1>.</style>            the current frame displayed at the top of the window. Each
+<style color=#00ffffff size=1>.</style>            frame is given by the function name and source location of
+<style color=#00ffffff size=1>.</style>            the code being executed in the frame. Each frame has the
+<style color=#00ffffff size=1>.</style>            following sub-items:
+
+<style color=#00ffffff size=1>.</style>            locals    Local variables declared in the function of the
+<style color=#00ffffff size=1>.</style>                      frame.
+
+<style color=#00ffffff size=1>.</style>            args      The arguments passed to the frame function.
+
+<style color=#00ffffff size=1>.</style>            module    The module global variables in the implementation
+<style color=#00ffffff size=1>.</style>                      module of the frame function.
+
+<style color=#00ffffff size=1>.</style>            Clicking on the name of a variable or function argument
+<style color=#00ffffff size=1>.</style>            highlights the declaration of that name in the source panel
+<style color=#00ffffff size=1>.</style>            of the main debug window. Clicking on the function name of a
+<style color=#00ffffff size=1>.</style>            stack frame causes the main window source panel to display
+<style color=#00ffffff size=1>.</style>            the current statement of the frame.
+
+<style color=#00ffffff size=1>.</style>            The debugger has a stack button which simply brings that
+<style color=#00ffffff size=1>.</style>            window to the front of the display.
+
+<style color=#00ffffff size=1>.</style>            The options menu has a layout configuration which allows the
+<style color=#00ffffff size=1>.</style>            user to have a horizontal scroll bar or to wrap long lines
+<style color=#00ffffff size=1>.</style>            (the default)\; and an option to strip carriage return
+<style color=#00ffffff size=1>.</style>            characters that precede newlines (for the benefit of those
+<style color=#00ffffff size=1>.</style>            using Windows' editors). The state of the options is saved
+<style color=#00ffffff size=1>.</style>            in the file /usr/username/lib/deb if that file can be
+<style color=#00ffffff size=1>.</style>            created. The debugger attempts to read this file on startup
+<style color=#00ffffff size=1>.</style>            to set the user's preferred options.
+
+OPTIONS
+<style color=#00ffffff size=1>.</style>            -f file   Specifies a source file (.b) to load. The
+<style color=#00ffffff size=1>.</style>                      associated executable file (.dis) is not launched
+<style color=#00ffffff size=1>.</style>                      until the continue (run to breakpoint) button is
+<style color=#00ffffff size=1>.</style>                      pressed. This option takes precedence over the -p
+<style color=#00ffffff size=1>.</style>                      option.
+
+<style color=#00ffffff size=1>.</style>            -p pid    Attach to the already running thread given by pid.
+
+PLUMBING
+<style color=#00ffffff size=1>.</style>            wm/deb plumbs the address of text selected using button 3 in
+<style color=#00ffffff size=1>.</style>            the source display panel, as text of the form
+
+<style color=#00ffffff size=1>.</style>                 file-name:line-number
+
+FILES
+<style color=#00ffffff size=1>.</style>            /prog/n/*
+<style color=#00ffffff size=1>.</style>            /usr/username/lib/deb
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/deb.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/debdata.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/debsrc.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=limbo(1)>limbo(1)</action>, <action name=prog(3)>prog(3)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Displaying large arrays in the Stack window can use
+<style color=#00ffffff size=1>.</style>            excessive amounts of memory.
+
+<style color=#00ffffff size=1>.</style>            When setting breakpoints there is no visual cue for the
+<style color=#00ffffff size=1>.</style>            selected statement or operation until the breakpoint is
+<style color=#00ffffff size=1>.</style>            actually set.
+
+<style color=#00ffffff size=1>.</style>            It is only possible to debug modules executed by the
+<style color=#00ffffff size=1>.</style>            interpreter. Code that has been JITed, the compilation
+<style color=#00ffffff size=1>.</style>            execution method, yields stack information that does not
+<style color=#00ffffff size=1>.</style>            correspond to information in the symbol (.sbl) file.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,25 @@
+<action name=WORKDIR(2)>WORKDIR(2)</action>                                             <action name=WORKDIR(2)>WORKDIR(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            workdir - get the current working directory
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "workdir.m"\;
+<style color=#00ffffff size=1>.</style>            workdir := load Workdir Workdir->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:  fn(): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Workdir returns a string representation of the working
+<style color=#00ffffff size=1>.</style>            directory of the invoking process.
+
+<style color=#00ffffff size=1>.</style>            When Inferno boots, the initial process has / for its
+<style color=#00ffffff size=1>.</style>            working directory.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/workdir.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-chdir(2)>sys-chdir(2)</action>, <action name=sys-fd2path(2)>sys-fd2path(2)</action>, <action name=sys-stat(2)>sys-stat(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,46 @@
+<action name=LOCKFS(4)>LOCKFS(4)</action>                                               <action name=LOCKFS(4)>LOCKFS(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            lockfs - exclusive access file server
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            lockfs \[ -A \] \[ -a alg \]... \[ -p addr \] dir \[ mountpoint \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Lockfs acts as a filesystem layer above an existing
+<style color=#00ffffff size=1>.</style>            namespace, allowing multiple-reader, exclusive writer access
+<style color=#00ffffff size=1>.</style>            to the files therein. Opening a file served by lockfs
+<style color=#00ffffff size=1>.</style>            obtains a lock on the file, or blocks until a lock can be
+<style color=#00ffffff size=1>.</style>            obtained. Lockfs serves a single-level directory that
+<style color=#00ffffff size=1>.</style>            initially contains the files in dir. If the -p option is
+<style color=#00ffffff size=1>.</style>            provided, lockfs will listen for incoming connections on
+<style color=#00ffffff size=1>.</style>            addr, authenticating them as required. Each -a argument
+<style color=#00ffffff size=1>.</style>            provides an acceptable algorithm to run on the connection.
+<style color=#00ffffff size=1>.</style>            The list of all algs is passed to server (see security-auth
+<style color=#00ffffff size=1>.</style>            (2)). If no -a arguments are given, -a none is assumed. If
+<style color=#00ffffff size=1>.</style>            the -A option is given, then no authentication will be
+<style color=#00ffffff size=1>.</style>            performed.
+
+<style color=#00ffffff size=1>.</style>            If the -p option is not given, the lockfs file system will
+<style color=#00ffffff size=1>.</style>            be mounted on mountpoint, or dir if mountpoint is not given.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Run a lock server guarding access to /lib/datafiles:
+
+<style color=#00ffffff size=1>.</style>                 lockfs -p 'tcp!*!32454' /lib/datafiles
+
+<style color=#00ffffff size=1>.</style>            Mount the above server (where locksrv was originally run on
+<style color=#00ffffff size=1>.</style>            a server named machine.
+
+<style color=#00ffffff size=1>.</style>                 mount -c tcp!machine!32454 /n/remote
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/lockfs.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            There's no way to break a lock held by a malingering
+<style color=#00ffffff size=1>.</style>            process.
+
+<style color=#00ffffff size=1>.</style>            Should probably support multi-level directories.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

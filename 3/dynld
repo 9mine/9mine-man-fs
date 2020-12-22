@@ -1,0 +1,55 @@
+<action name=DYNLD(3)>DYNLD(3)</action>                                                 <action name=DYNLD(3)>DYNLD(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dynld - load kernel module dynamically
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #L /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/dynld
+<style color=#00ffffff size=1>.</style>            /dev/dynsyms
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dynld serves a directory containing two files that control
+<style color=#00ffffff size=1>.</style>            dynamic loading of modules. When a module is loaded, dynld
+<style color=#00ffffff size=1>.</style>            (10.2)), checks the module's type against a type provided by
+<style color=#00ffffff size=1>.</style>            the driver\; the types must match. Currently the only
+<style color=#00ffffff size=1>.</style>            supported module type is that of a device driver, Dev
+<style color=#00ffffff size=1>.</style>            defined in dev(10.2)).
+
+<style color=#00ffffff size=1>.</style>            The control file dynld can only be opened by the host owner
+<style color=#00ffffff size=1>.</style>            (see eve(10.2)). It accepts the following commands:
+
+<style color=#00ffffff size=1>.</style>            load dev name file \[ \[ tag \] dep ... \]
+<style color=#00ffffff size=1>.</style>                 Load a module for device driver name from the given
+<style color=#00ffffff size=1>.</style>                 file. The optional tag is typically the MD5 or SHA1
+<style color=#00ffffff size=1>.</style>                 hash of the file's contents, to identify a particular
+<style color=#00ffffff size=1>.</style>                 version of the driver.
+
+<style color=#00ffffff size=1>.</style>            unload dev name \[ file \[ tag \] \]
+<style color=#00ffffff size=1>.</style>                 Unload the device driver identified by the given name,
+<style color=#00ffffff size=1>.</style>                 optionally qualified by the other parameters.
+
+<style color=#00ffffff size=1>.</style>            When read, dynld returns a list of the currently-loaded
+<style color=#00ffffff size=1>.</style>            drivers, one per line, most recent first. Each line contain:
+<style color=#00ffffff size=1>.</style>            the module's device type #x used in <action name=bind(1)>bind(1)</action>\; its kernel
+<style color=#00ffffff size=1>.</style>            address\; its total text and data size in bytes\; its name
+<style color=#00ffffff size=1>.</style>            when loaded\; the name of the file from which it was loaded\;
+<style color=#00ffffff size=1>.</style>            and its tag.
+
+<style color=#00ffffff size=1>.</style>            Dynsyms is a read-only text file that lists, one per line,
+<style color=#00ffffff size=1>.</style>            the symbols exported by the running kernel for use by
+<style color=#00ffffff size=1>.</style>            modules it loads. Each line contains: the symbol's kernel
+<style color=#00ffffff size=1>.</style>            address, its type signature, and its name.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/devdynld.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            dynld(10.2), a.out(10.6),
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Dynld does not currently check that a driver is no longer in
+<style color=#00ffffff size=1>.</style>            use before unloading it.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

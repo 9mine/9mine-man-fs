@@ -1,0 +1,41 @@
+<action name=TRANSLATE(6)>TRANSLATE(6)</action>                                         <action name=TRANSLATE(6)>TRANSLATE(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            translate - translation dictionary
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            /locale/dict/app
+<style color=#00ffffff size=1>.</style>            /locale/locale/dict/app
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A dictionary file provides translation text that
+<style color=#00ffffff size=1>.</style>            applications can access using <action name=translate(2)>translate(2)</action>. Each is a
+<style color=#00ffffff size=1>.</style>            Unicode file containing a set of translations, one per line,
+<style color=#00ffffff size=1>.</style>            each line having the following syntax:
+
+<style color=#00ffffff size=1>.</style>                 "source-text" \[ (note-text) \] \[ ="target-text"  \] 
+
+<style color=#00ffffff size=1>.</style>            which defines target-text as the translation for source-text
+<style color=#00ffffff size=1>.</style>            . A missing translation clause defines the identity
+<style color=#00ffffff size=1>.</style>            translation. The optional note-text qualifies the context of
+<style color=#00ffffff size=1>.</style>            the source-text, when the same phrase in the source language
+<style color=#00ffffff size=1>.</style>            might translate to different phrases in the target language,
+<style color=#00ffffff size=1>.</style>            or to distinguish a particular context in the program (eg,
+<style color=#00ffffff size=1>.</style>            particular menus): For example:
+
+<style color=#00ffffff size=1>.</style>                 "Times"(newspaper) = "La Republicca"
+<style color=#00ffffff size=1>.</style>                 "Times"(timetable) = "L'orario"
+<style color=#00ffffff size=1>.</style>                 "ABC"(keypad) = "abc"
+
+<style color=#00ffffff size=1>.</style>            Empty lines and lines beginning with # are ignored. The
+<style color=#00ffffff size=1>.</style>            quoted strings can contain the Limbo escape sequences \n
+<style color=#00ffffff size=1>.</style>            (newline), \t (tab), \r (carriage return), and \\
+<style color=#00ffffff size=1>.</style>            (backslash).
+
+<style color=#00ffffff size=1>.</style>            The default locale is set by binding one or more specific
+<style color=#00ffffff size=1>.</style>            locales onto /locale/dict.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /locale/*/dict/*
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

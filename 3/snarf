@@ -1,0 +1,28 @@
+<action name=SNARF(3)>SNARF(3)</action>                                                 <action name=SNARF(3)>SNARF(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            snarf - host window system clipboard
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #^ /dev
+<style color=#00ffffff size=1>.</style>            bind -b #^ /chan
+
+<style color=#00ffffff size=1>.</style>            /dev/snarf
+<style color=#00ffffff size=1>.</style>            /chan/snarf
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Snarf serves a single file, snarf. Reading the file returns
+<style color=#00ffffff size=1>.</style>            the current contents of the host window system's own
+<style color=#00ffffff size=1>.</style>            clipboard (equivalent to the Inferno window system's `snarf
+<style color=#00ffffff size=1>.</style>            buffer'). If the file is opened for writing, subsequent
+<style color=#00ffffff size=1>.</style>            writes append to an internal buffer\; when the file is
+<style color=#00ffffff size=1>.</style>            closed, that buffer's contents are written to the host
+<style color=#00ffffff size=1>.</style>            window system's clipboard.
+
+<style color=#00ffffff size=1>.</style>            <action name=Emu(1)>Emu(1)</action> automatically binds the device to both /dev and /chan
+<style color=#00ffffff size=1>.</style>            when it starts up, if a window system is configured.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=wm(1)>wm(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

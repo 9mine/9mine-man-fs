@@ -1,0 +1,62 @@
+<action name=CHANGELOGIN(8)>CHANGELOGIN(8)</action>                                     <action name=CHANGELOGIN(8)>CHANGELOGIN(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            changelogin, convpasswd - create/update the password file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            auth/changelogin name
+
+<style color=#00ffffff size=1>.</style>            auth/convpasswd \[ -f \] \[ -v \] \[ -m keydir \] \[ pwfile \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Changelogin helps to administer a password file /keydb/keys
+<style color=#00ffffff size=1>.</style>            (see <action name=keys(6)>keys(6)</action>), a requirement of `signer' servers (see logind
+<style color=#00ffffff size=1>.</style>            (8), <action name=signer(8)>signer(8)</action>, and svc/auth in <action name=svc(8)>svc(8)</action>). Changelogin can
+<style color=#00ffffff size=1>.</style>            only be used on the signing host itself, after <action name=keyfs(4)>keyfs(4)</action> has
+<style color=#00ffffff size=1>.</style>            been started (eg, by svc/auth) to make the entries visible
+<style color=#00ffffff size=1>.</style>            in the name space.
+
+<style color=#00ffffff size=1>.</style>            If a password file entry for name exists, it is modified\;
+<style color=#00ffffff size=1>.</style>            otherwise, a new entry is created. The user is prompted for
+<style color=#00ffffff size=1>.</style>            the following items:
+
+<style color=#00ffffff size=1>.</style>            password
+<style color=#00ffffff size=1>.</style>                 A string at least 8 characters in length. The SHA-1
+<style color=#00ffffff size=1>.</style>                 digest of the entered string is stored in the password
+<style color=#00ffffff size=1>.</style>                 file. See <action name=keyring-sha1(2)>keyring-sha1(2)</action>. By default, the password for
+<style color=#00ffffff size=1>.</style>                 an existing entry is unchanged.
+
+<style color=#00ffffff size=1>.</style>            expiration date
+<style color=#00ffffff size=1>.</style>                 An expiration time in the format DDMMYYYY. The user
+<style color=#00ffffff size=1>.</style>                 input is checked for valid day, month, and year\;
+<style color=#00ffffff size=1>.</style>                 moreover, the new date must be later than the current
+<style color=#00ffffff size=1>.</style>                 time. By default, the current value, if any, is
+<style color=#00ffffff size=1>.</style>                 unchanged for an existing entry and one year from the
+<style color=#00ffffff size=1>.</style>                 current time for a new entry.
+
+<style color=#00ffffff size=1>.</style>            Note that the password expiration date is also used as the
+<style color=#00ffffff size=1>.</style>            default expiration date for any certificate later produced\;
+<style color=#00ffffff size=1>.</style>            see <action name=getauthinfo(8)>getauthinfo(8)</action>.
+
+<style color=#00ffffff size=1>.</style>            Convpasswd converts a Third Edition password file to the
+<style color=#00ffffff size=1>.</style>            <action name=keys(6)>keys(6)</action> file used by the current Edition of the system. It
+<style color=#00ffffff size=1>.</style>            reads password entries from pwfile, /keydb/password by
+<style color=#00ffffff size=1>.</style>            default, and writes corresponding entries into a name space
+<style color=#00ffffff size=1>.</style>            served by <action name=keyfs(4)>keyfs(4)</action>, mounted at keydir, /mnt/keys by default.
+<style color=#00ffffff size=1>.</style>            It copies passwords and expiry times. The `free form'
+<style color=#00ffffff size=1>.</style>            administrative data is discarded. If keydir already has got
+<style color=#00ffffff size=1>.</style>            an entry for a user, it is left as-is, unless the -f option
+<style color=#00ffffff size=1>.</style>            is given to force convpasswd to copy across the entry in
+<style color=#00ffffff size=1>.</style>            pwfile . The -v option causes convpasswd to print each user
+<style color=#00ffffff size=1>.</style>            name after it successfully installs it.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /keydb/keys
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auth/changelogin.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=passwd(1)>passwd(1)</action>, <action name=keyfs(4)>keyfs(4)</action>, <action name=keysrv(4)>keysrv(4)</action>, <action name=keys(6)>keys(6)</action>, <action name=logind(8)>logind(8)</action>, signer
+<style color=#00ffffff size=1>.</style>            (8), <action name=svc(8)>svc(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

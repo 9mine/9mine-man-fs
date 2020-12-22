@@ -1,0 +1,310 @@
+<action name=INTRO(5)>INTRO(5)</action>                                                 <action name=INTRO(5)>INTRO(5)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            intro - introduction to the Plan 9 File Protocol 9P in
+<style color=#00ffffff size=1>.</style>            Inferno
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            #include <lib9.h>
+<style color=#00ffffff size=1>.</style>            #include <styx.h>
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Inferno uses the Plan 9 protocol 9P to make resources
+<style color=#00ffffff size=1>.</style>            visible as file hierarchies. There have been two versions of
+<style color=#00ffffff size=1>.</style>            9P, the most recent being 9P2000. Inferno originally used
+<style color=#00ffffff size=1>.</style>            its own protocol called Styx, which was a simplified version
+<style color=#00ffffff size=1>.</style>            of the first 9P protocol. When 9P was subsequently revised
+<style color=#00ffffff size=1>.</style>            as 9P2000, Inferno adopted that, but still using the name
+<style color=#00ffffff size=1>.</style>            Styx. To reduce confusion and to emphasise that Inferno and
+<style color=#00ffffff size=1>.</style>            Plan 9 use the same protocol, the name Styx is being
+<style color=#00ffffff size=1>.</style>            replaced by 9P. References to `Styx' remain in the programs
+<style color=#00ffffff size=1>.</style>            and documentation, but will eventually be eliminated.
+
+<style color=#00ffffff size=1>.</style>            An Inferno server is an agent that provides one or more
+<style color=#00ffffff size=1>.</style>            hierarchical file systems — file trees — that may be
+<style color=#00ffffff size=1>.</style>            accessed by Inferno processes. A server responds to requests
+<style color=#00ffffff size=1>.</style>            by clients to navigate the hierarchy, and to create, remove,
+<style color=#00ffffff size=1>.</style>            read, and write files. The prototypical server is a separate
+<style color=#00ffffff size=1>.</style>            machine that stores large numbers of user files on permanent
+<style color=#00ffffff size=1>.</style>            media. Another possibility for a server is to synthesize
+<style color=#00ffffff size=1>.</style>            files on demand, perhaps based on information on data
+<style color=#00ffffff size=1>.</style>            structures inside the kernel\; the <action name=prog(3)>prog(3)</action> kernel device is a
+<style color=#00ffffff size=1>.</style>            part of the Inferno kernel that does this. User programs can
+<style color=#00ffffff size=1>.</style>            also act as servers. One easy way is to serve a set of files
+<style color=#00ffffff size=1>.</style>            using the <action name=sys-file2chan(2)>sys-file2chan(2)</action> interface. More complex Limbo
+<style color=#00ffffff size=1>.</style>            file service applications can use <action name=styx(2)>styx(2)</action> to handle the
+<style color=#00ffffff size=1>.</style>            protocol messages directly, or use <action name=styxservers(2)>styxservers(2)</action> to provide
+<style color=#00ffffff size=1>.</style>            a higher-level framework for file serving.
+
+<style color=#00ffffff size=1>.</style>            A connection to a server is a bidirectional communication
+<style color=#00ffffff size=1>.</style>            path from the client to the server. There may be a single
+<style color=#00ffffff size=1>.</style>            client or multiple clients sharing the same connection. A
+<style color=#00ffffff size=1>.</style>            server's file tree is attached to a process group's name
+<style color=#00ffffff size=1>.</style>            space by bind and mount calls\; see <action name=intro(2)>intro(2)</action> and <action name=sys-bind(2)>sys-bind(2)</action>.
+<style color=#00ffffff size=1>.</style>            Processes in the group are then clients of the server:
+<style color=#00ffffff size=1>.</style>            system calls operating on files are translated into requests
+<style color=#00ffffff size=1>.</style>            and responses transmitted on the connection to the
+<style color=#00ffffff size=1>.</style>            appropriate service.
+
+<style color=#00ffffff size=1>.</style>            The Plan 9 File Protocol, 9P, is used for messages between
+<style color=#00ffffff size=1>.</style>            clients and servers. A client transmits requests (T-messages
+<style color=#00ffffff size=1>.</style>            ) to a server, which subsequently returns replies (
+<style color=#00ffffff size=1>.</style>            R-messages) to the client. The combined acts of transmitting
+<style color=#00ffffff size=1>.</style>            (receiving) a request of a particular type, and receiving
+<style color=#00ffffff size=1>.</style>            (transmitting) its reply is called a transaction of that
+<style color=#00ffffff size=1>.</style>            type.
+
+<style color=#00ffffff size=1>.</style>            Each message consists of a sequence of bytes. Two-, four-,
+<style color=#00ffffff size=1>.</style>            and eight-byte fields hold unsigned integers represented in
+<style color=#00ffffff size=1>.</style>            little-endian order (least significant byte first). Data
+<style color=#00ffffff size=1>.</style>            items of larger or variable lengths are represented by a
+<style color=#00ffffff size=1>.</style>            two-byte field specifying a count, n, followed by n bytes of
+<style color=#00ffffff size=1>.</style>            data. Text strings are represented this way, with the text
+<style color=#00ffffff size=1>.</style>            itself stored as a UTF-8 encoded sequence of Unicode
+<style color=#00ffffff size=1>.</style>            characters (see <action name=utf(6)>utf(6)</action>). Text strings in 9P messages are not
+<style color=#00ffffff size=1>.</style>            NUL\c -terminated: n counts the bytes of UTF-8 data, which
+<style color=#00ffffff size=1>.</style>            include no final zero byte. The NUL character is illegal in
+<style color=#00ffffff size=1>.</style>            all text strings in 9P, and is therefore excluded from file
+<style color=#00ffffff size=1>.</style>            names, user names, and so on.
+
+<style color=#00ffffff size=1>.</style>            Each 9P message begins with a four-byte size field
+<style color=#00ffffff size=1>.</style>            specifying the length in bytes of the complete message
+<style color=#00ffffff size=1>.</style>            including the four bytes of the size field itself. The next
+<style color=#00ffffff size=1>.</style>            byte is the message type, one of the constants in the module
+<style color=#00ffffff size=1>.</style>            <action name=styx(2)>styx(2)</action>, and in the C include file <styx.h> (see styx
+<style color=#00ffffff size=1>.</style>            (10.2)). The next two bytes are an identifying tag,
+<style color=#00ffffff size=1>.</style>            described below. The remaining bytes are parameters of
+<style color=#00ffffff size=1>.</style>            different sizes. In the message descriptions, the number of
+<style color=#00ffffff size=1>.</style>            bytes in a field is given in brackets after the field name.
+<style color=#00ffffff size=1>.</style>            The notation parameter\[n\] where n is not a constant
+<style color=#00ffffff size=1>.</style>            represents a variable-length parameter: n\[2\] followed by n
+<style color=#00ffffff size=1>.</style>            bytes of data forming the parameter. The notation string\[s\]
+<style color=#00ffffff size=1>.</style>            (using a literal s character) is shorthand for s\[2\] followed
+<style color=#00ffffff size=1>.</style>            by s bytes of UTF-8 text. (Systems may choose to reduce the
+<style color=#00ffffff size=1>.</style>            set of legal characters to reduce syntactic problems, for
+<style color=#00ffffff size=1>.</style>            example to remove slashes from name components, but the
+<style color=#00ffffff size=1>.</style>            protocol has no such restriction. Inferno names may contain
+<style color=#00ffffff size=1>.</style>            any printable character (that is, any character outside
+<style color=#00ffffff size=1>.</style>            hexadecimal 00-1F and 80-9F) except slash.) Messages are
+<style color=#00ffffff size=1>.</style>            transported in byte form to allow for machine independence\;
+<style color=#00ffffff size=1>.</style>            styx(10.2) describes routines that convert to and from this
+<style color=#00ffffff size=1>.</style>            form into a machine-dependent C structure.
+
+MESSAGES
+<style color=#00ffffff size=1>.</style>                 size\[4\] Tversion tag\[2\] msize\[4\] version\[s\]
+<style color=#00ffffff size=1>.</style>                 size\[4\] Rversion tag\[2\] msize\[4\] version\[s\]
+
+<style color=#00ffffff size=1>.</style>                 size\[4\] Tauth tag\[2\] afid\[4\] uname\[s\] aname\[s\]
+<style color=#00ffffff size=1>.</style>                 size\[4\] Rauth tag\[2\] aqid\[13\]
+
+<style color=#00ffffff size=1>.</style>                 size\[4\] Rerror tag\[2\] ename\[s\]
+
+<style color=#00ffffff size=1>.</style>                 size\[4\] Tflush tag\[2\] oldtag\[2\]
+<style color=#00ffffff size=1>.</style>                 size\[4\] Rflush tag\[2\]
+
+<style color=#00ffffff size=1>.</style>                 size\[4\] Tattach tag\[2\] fid\[4\] afid\[4\] uname\[s\] aname\[s\]
+<style color=#00ffffff size=1>.</style>                 size\[4\] Rattach tag\[2\] qid\[13\]
+
+<style color=#00ffffff size=1>.</style>                 size\[4\] Twalk tag\[2\] fid\[4\] newfid\[4\] nwname\[2\] nwname
+<style color=#00ffffff size=1>.</style>                 *(wname\[s\])
+<style color=#00ffffff size=1>.</style>                 size\[4\] Rwalk tag\[2\] nwqid\[2\] nwqid*(wqid\[13\])
+
+<style color=#00ffffff size=1>.</style>                 size\[4\] Topen tag\[2\] fid\[4\] mode\[1\]
+<style color=#00ffffff size=1>.</style>                 size\[4\] Ropen tag\[2\] qid\[13\] iounit\[4\]
+
+<style color=#00ffffff size=1>.</style>                 size\[4\] Tcreate tag\[2\] fid\[4\] name\[s\] perm\[4\] mode\[1\]
+<style color=#00ffffff size=1>.</style>                 size\[4\] Rcreate tag\[2\] qid\[13\] iounit\[4\]
+
+<style color=#00ffffff size=1>.</style>                 size\[4\] Tread tag\[2\] fid\[4\] offset\[8\] count\[4\]
+<style color=#00ffffff size=1>.</style>                 size\[4\] Rread tag\[2\] count\[4\] data\[count\]
+
+<style color=#00ffffff size=1>.</style>                 size\[4\] Twrite tag\[2\] fid\[4\] offset\[8\] count\[4\] data\[
+<style color=#00ffffff size=1>.</style>                 count\]
+<style color=#00ffffff size=1>.</style>                 size\[4\] Rwrite tag\[2\] count\[4\]
+
+<style color=#00ffffff size=1>.</style>                 size\[4\] Tclunk tag\[2\] fid\[4\]
+<style color=#00ffffff size=1>.</style>                 size\[4\] Rclunk tag\[2\]
+
+<style color=#00ffffff size=1>.</style>                 size\[4\] Tremove tag\[2\] fid\[4\]
+<style color=#00ffffff size=1>.</style>                 size\[4\] Rremove tag\[2\]
+
+<style color=#00ffffff size=1>.</style>                 size\[4\] Tstat tag\[2\] fid\[4\]
+<style color=#00ffffff size=1>.</style>                 size\[4\] Rstat tag\[2\] stat\[n\]
+
+<style color=#00ffffff size=1>.</style>                 size\[4\] Twstat tag\[2\] fid\[4\] stat\[n\]
+<style color=#00ffffff size=1>.</style>                 size\[4\] Rwstat tag\[2\]
+
+<style color=#00ffffff size=1>.</style>            Each T-message has a tag field, chosen and used by the
+<style color=#00ffffff size=1>.</style>            client to identify the message. The reply to the message
+<style color=#00ffffff size=1>.</style>            will have the same tag. Clients must arrange that no two
+<style color=#00ffffff size=1>.</style>            outstanding messages on the same connection have the same
+<style color=#00ffffff size=1>.</style>            tag. An exception is the tag NOTAG, defined as 16rFFFF in
+<style color=#00ffffff size=1>.</style>            <action name=styx(2)>styx(2)</action> and styx(10.2): the client can use it, when
+<style color=#00ffffff size=1>.</style>            establishing a connection, to override tag matching in
+<style color=#00ffffff size=1>.</style>            version messages.
+
+<style color=#00ffffff size=1>.</style>            The type of an R-message will either be one greater than the
+<style color=#00ffffff size=1>.</style>            type of the corresponding T-message or Rerror, indicating
+<style color=#00ffffff size=1>.</style>            that the request failed. In the latter case, the ename field
+<style color=#00ffffff size=1>.</style>            contains a string describing the reason for failure.
+
+<style color=#00ffffff size=1>.</style>            The version message identifies the version of the protocol
+<style color=#00ffffff size=1>.</style>            and indicates the maximum message size the system is
+<style color=#00ffffff size=1>.</style>            prepared to handle. It also initializes the connection and
+<style color=#00ffffff size=1>.</style>            aborts all outstanding I/O on the connection. The set of
+<style color=#00ffffff size=1>.</style>            messages between version requests is called a session.
+
+<style color=#00ffffff size=1>.</style>            Most T-messages contain a fid, a 32-bit unsigned integer
+<style color=#00ffffff size=1>.</style>            that the client uses to identify a ``current file'' on the
+<style color=#00ffffff size=1>.</style>            server. Fids are somewhat like file descriptors in a user
+<style color=#00ffffff size=1>.</style>            process, but they are not restricted to files open for I/O:
+<style color=#00ffffff size=1>.</style>            directories being examined, files being accessed by sys-stat
+<style color=#00ffffff size=1>.</style>            (2) calls, and so on — all files being manipulated by the
+<style color=#00ffffff size=1>.</style>            operating system — are identified by fids. Fids are chosen
+<style color=#00ffffff size=1>.</style>            by the client. All requests on a connection share the same
+<style color=#00ffffff size=1>.</style>            fid space\; when several clients share a connection, the
+<style color=#00ffffff size=1>.</style>            agent managing the sharing must arrange that no two clients
+<style color=#00ffffff size=1>.</style>            choose the same fid.
+
+<style color=#00ffffff size=1>.</style>            The fid supplied in an attach message will be taken by the
+<style color=#00ffffff size=1>.</style>            server to refer to the root of the served file tree. The
+<style color=#00ffffff size=1>.</style>            attach identifies the user to the server and may specify a
+<style color=#00ffffff size=1>.</style>            particular file tree served by the server (for those that
+<style color=#00ffffff size=1>.</style>            supply more than one).
+
+<style color=#00ffffff size=1>.</style>            Permission to attach to the service is proven by providing a
+<style color=#00ffffff size=1>.</style>            special fid, called afid, in the attach message.  This afid
+<style color=#00ffffff size=1>.</style>            is established by exchanging auth messages and subsequently
+<style color=#00ffffff size=1>.</style>            manipulated using read and write messages to exchange
+<style color=#00ffffff size=1>.</style>            authentication information not defined explicitly by 9P.
+<style color=#00ffffff size=1>.</style>            Once the authentication protocol is complete, the afid is
+<style color=#00ffffff size=1>.</style>            presented in the attach to permit the user to access the
+<style color=#00ffffff size=1>.</style>            service.
+
+<style color=#00ffffff size=1>.</style>            A walk message causes the server to change the current file
+<style color=#00ffffff size=1>.</style>            associated with a fid to be a file in the directory that is
+<style color=#00ffffff size=1>.</style>            the old current file, or one of its subdirectories. Walk
+<style color=#00ffffff size=1>.</style>            returns a new fid that refers to the resulting file.
+<style color=#00ffffff size=1>.</style>            Usually, a client maintains a fid for the root, and
+<style color=#00ffffff size=1>.</style>            navigates by walks from the root fid.
+
+<style color=#00ffffff size=1>.</style>            A client can send multiple T-messages without waiting for
+<style color=#00ffffff size=1>.</style>            the corresponding R-messages, but all outstanding T-messages
+<style color=#00ffffff size=1>.</style>            must specify different tags. The server may delay the
+<style color=#00ffffff size=1>.</style>            response to a request and respond to later ones\; this is
+<style color=#00ffffff size=1>.</style>            sometimes necessary, for example when the client reads from
+<style color=#00ffffff size=1>.</style>            a file that the server synthesizes from external events such
+<style color=#00ffffff size=1>.</style>            as keyboard characters.
+
+<style color=#00ffffff size=1>.</style>            Replies (R-messages) to auth, attach, walk, open, and create
+<style color=#00ffffff size=1>.</style>            requests convey a qid field back to the client. The qid
+<style color=#00ffffff size=1>.</style>            represents the server's unique identification for the file
+<style color=#00ffffff size=1>.</style>            being accessed: two files on the same server hierarchy are
+<style color=#00ffffff size=1>.</style>            the same if and only if their qids are the same. (The client
+<style color=#00ffffff size=1>.</style>            may have multiple fids pointing to a single file on a server
+<style color=#00ffffff size=1>.</style>            and hence having a single qid.) The thirteen-byte qid fields
+<style color=#00ffffff size=1>.</style>            hold a one-byte type, specifying whether the file is a
+<style color=#00ffffff size=1>.</style>            directory, append-only file, etc., and two unsigned
+<style color=#00ffffff size=1>.</style>            integers: first the four-byte qid version, then the
+<style color=#00ffffff size=1>.</style>            eight-byte qid path. The path is an integer unique among all
+<style color=#00ffffff size=1>.</style>            files in the hierarchy. If a file is deleted and recreated
+<style color=#00ffffff size=1>.</style>            with the same name in the same directory, the old and new
+<style color=#00ffffff size=1>.</style>            path components of the qids should be different. The version
+<style color=#00ffffff size=1>.</style>            is a version number for a file\; typically, it is incremented
+<style color=#00ffffff size=1>.</style>            every time the file is modified.
+
+<style color=#00ffffff size=1>.</style>            An existing file can be opened, or a new file may be created
+<style color=#00ffffff size=1>.</style>            in the current (directory) file. I/O of a given number of
+<style color=#00ffffff size=1>.</style>            bytes at a given offset on an open file is done by read and
+<style color=#00ffffff size=1>.</style>            write.
+
+<style color=#00ffffff size=1>.</style>            A client should clunk any fid that is no longer needed. The
+<style color=#00ffffff size=1>.</style>            remove transaction deletes files.
+
+<style color=#00ffffff size=1>.</style>            The stat transaction retrieves information about the file.
+<style color=#00ffffff size=1>.</style>            The stat field in the reply includes the file's name, access
+<style color=#00ffffff size=1>.</style>            permissions (read, write and execute for owner, group and
+<style color=#00ffffff size=1>.</style>            public), access and modification times, and owner and group
+<style color=#00ffffff size=1>.</style>            identifications (see <action name=sys-stat(2)>sys-stat(2)</action>). The owner and group
+<style color=#00ffffff size=1>.</style>            identifications are textual names. The wstat transaction
+<style color=#00ffffff size=1>.</style>            allows some of a file's properties to be changed.
+
+<style color=#00ffffff size=1>.</style>            A request can be aborted with a flush request. When a server
+<style color=#00ffffff size=1>.</style>            receives a Tflush, it should not reply to the message with
+<style color=#00ffffff size=1>.</style>            tag oldtag (unless it has already replied), and it should
+<style color=#00ffffff size=1>.</style>            immediately send an Rflush. The client must wait until it
+<style color=#00ffffff size=1>.</style>            gets the Rflush (even if the reply to the original message
+<style color=#00ffffff size=1>.</style>            arrives in the interim), at which point oldtag may be
+<style color=#00ffffff size=1>.</style>            reused.
+
+<style color=#00ffffff size=1>.</style>            Because the message size is negotiable and some elements of
+<style color=#00ffffff size=1>.</style>            the protocol are variable length, it is possible (although
+<style color=#00ffffff size=1>.</style>            unlikely) to have a situation where a valid message is too
+<style color=#00ffffff size=1>.</style>            large to fit within the negotiated size. For example, a very
+<style color=#00ffffff size=1>.</style>            long file name may cause a Rstat of the file or Rread of its
+<style color=#00ffffff size=1>.</style>            directory entry to be too large to send. In most such cases,
+<style color=#00ffffff size=1>.</style>            the server should generate an error rather than modify the
+<style color=#00ffffff size=1>.</style>            data to fit, such as by truncating the file name. The
+<style color=#00ffffff size=1>.</style>            exception is that a long error string in an Rerror message
+<style color=#00ffffff size=1>.</style>            should be truncated if necessary, since the string is only
+<style color=#00ffffff size=1>.</style>            advisory and in some sense arbitrary.
+
+<style color=#00ffffff size=1>.</style>            Most programs do not see the 9P protocol directly\; instead
+<style color=#00ffffff size=1>.</style>            calls to library routines that access files are translated
+<style color=#00ffffff size=1>.</style>            by the mount driver, <action name=mnt(3)>mnt(3)</action>, into 9P messages.
+
+DIRECTORIES
+<style color=#00ffffff size=1>.</style>            Directories are created by create with DMDIR set in the
+<style color=#00ffffff size=1>.</style>            permissions argument (see <action name=stat(5)>stat(5)</action>). The members of a
+<style color=#00ffffff size=1>.</style>            directory can be found with <action name=read(5)>read(5)</action>. All directories must
+<style color=#00ffffff size=1>.</style>            support walks to the directory .. (dot-dot) meaning parent
+<style color=#00ffffff size=1>.</style>            directory, although by convention directories contain no
+<style color=#00ffffff size=1>.</style>            explicit entry for .. or . (dot). The parent of the root
+<style color=#00ffffff size=1>.</style>            directory of a server's tree is itself.
+
+ACCESS PERMISSIONS
+<style color=#00ffffff size=1>.</style>            Each file server maintains a set of user and group names.
+<style color=#00ffffff size=1>.</style>            Each user can be a member of any number of groups. Each
+<style color=#00ffffff size=1>.</style>            group has a group leader who has special privileges (see
+<style color=#00ffffff size=1>.</style>            <action name=stat(5)>stat(5)</action>). Every file request has an implicit user id (copied
+<style color=#00ffffff size=1>.</style>            from the original attach) and an implicit set of groups
+<style color=#00ffffff size=1>.</style>            (every group of which the user is a member).
+
+<style color=#00ffffff size=1>.</style>            Each file has an associated owner and group id and three
+<style color=#00ffffff size=1>.</style>            sets of permissions: those of the owner, those of the group,
+<style color=#00ffffff size=1>.</style>            and those of ``other'' users. When the owner attempts to do
+<style color=#00ffffff size=1>.</style>            something to a file, the owner, group, and other permissions
+<style color=#00ffffff size=1>.</style>            are consulted, and if any of them grant the requested
+<style color=#00ffffff size=1>.</style>            permission, the operation is allowed. For someone who is not
+<style color=#00ffffff size=1>.</style>            the owner, but is a member of the file's group, the group
+<style color=#00ffffff size=1>.</style>            and other permissions are consulted. For everyone else, the
+<style color=#00ffffff size=1>.</style>            other permissions are used. Each set of permissions says
+<style color=#00ffffff size=1>.</style>            whether reading is allowed, whether writing is allowed, and
+<style color=#00ffffff size=1>.</style>            whether executing is allowed. A walk in a directory is
+<style color=#00ffffff size=1>.</style>            regarded as executing the directory, not reading it.
+<style color=#00ffffff size=1>.</style>            Permissions are kept in the low-order bits of the file mode:
+<style color=#00ffffff size=1>.</style>            owner read/write/execute permission represented as 1 in bits
+<style color=#00ffffff size=1>.</style>            8, 7, and 6 respectively (using 0 to number the low order).
+<style color=#00ffffff size=1>.</style>            The group permissions are in bits 5, 4, and 3, and the other
+<style color=#00ffffff size=1>.</style>            permissions are in bits 2, 1, and 0.
+
+<style color=#00ffffff size=1>.</style>            The file mode contains some additional attributes besides
+<style color=#00ffffff size=1>.</style>            the permissions. If bit 31 (DMDIR) is set, the file is a
+<style color=#00ffffff size=1>.</style>            directory\; if bit 30 (DMAPPEND) is set, the file is
+<style color=#00ffffff size=1>.</style>            append-only (offset is ignored in writes)\; if bit 29 (DMEXCL
+<style color=#00ffffff size=1>.</style>            ) is set, the file is exclusive-use (only one client may
+<style color=#00ffffff size=1>.</style>            have it open at a time)\; if bit 27 (DMAUTH) is set, the file
+<style color=#00ffffff size=1>.</style>            is an authentication file established by auth messages\; if
+<style color=#00ffffff size=1>.</style>            bit 26 (DMTMP) is set, the contents of the file (or
+<style color=#00ffffff size=1>.</style>            directory) are not included in nightly archives. (Bit 28 is
+<style color=#00ffffff size=1>.</style>            skipped for historical reasons.) These bits are reproduced,
+<style color=#00ffffff size=1>.</style>            from the top bit down, in the type byte of the Qid: QTDIR,
+<style color=#00ffffff size=1>.</style>            QTAPPEND, QTEXCL, (skipping one bit) QTAUTH, and QTTMP. The
+<style color=#00ffffff size=1>.</style>            name QTFILE, defined to be zero, identifies the value of the
+<style color=#00ffffff size=1>.</style>            type for a plain file.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=intro(2)>intro(2)</action>, <action name=styx(2)>styx(2)</action>, <action name=styxservers(2)>styxservers(2)</action>, <action name=sys-bind(2)>sys-bind(2)</action>, <action name=sys-stat(2)>sys-stat(2)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=mnt(3)>mnt(3)</action>, <action name=prog(3)>prog(3)</action>, <action name=read(5)>read(5)</action>, <action name=stat(5)>stat(5)</action>, styx(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

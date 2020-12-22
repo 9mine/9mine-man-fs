@@ -1,0 +1,36 @@
+<action name=NETSTAT(1)>NETSTAT(1)</action>                                             <action name=NETSTAT(1)>NETSTAT(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            netstat - summarize network connections
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            netstat
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Netstat prints information about network connections. The
+<style color=#00ffffff size=1>.</style>            following is presented for each connection:
+
+<style color=#00ffffff size=1>.</style>                 connection name: the protocol and conversation
+<style color=#00ffffff size=1>.</style>                 directory in /net (eg. tcp/8)
+<style color=#00ffffff size=1>.</style>                 user name
+<style color=#00ffffff size=1>.</style>                 status of the connection
+<style color=#00ffffff size=1>.</style>                 address of each end of the connection (eg host and port
+<style color=#00ffffff size=1>.</style>                 if IP)
+
+<style color=#00ffffff size=1>.</style>            The information is obtained from the status file of each
+<style color=#00ffffff size=1>.</style>            entry under the network directories /net/tcp, /net/udp and
+<style color=#00ffffff size=1>.</style>            /net/il.
+
+<style color=#00ffffff size=1>.</style>            Netstat relies on a populated /net directory\; the #I device
+<style color=#00ffffff size=1>.</style>            must therefore have previously been bound there.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /net/*/status
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/netstat.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ip(3)>ip(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

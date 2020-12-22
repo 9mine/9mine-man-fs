@@ -1,0 +1,329 @@
+<action name=CHARON(1)>CHARON(1)</action>                                               <action name=CHARON(1)>CHARON(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            charon - web browser
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            charon \[ -option \[value\] \] \[url\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Charon is the Inferno graphical web browser, supporting a
+<style color=#00ffffff size=1>.</style>            variety of web standards for the download, viewing,
+<style color=#00ffffff size=1>.</style>            automation and navigation of web based information and
+<style color=#00ffffff size=1>.</style>            images.
+
+<style color=#00ffffff size=1>.</style>            The browser runs under the <action name=wm(1)>wm(1)</action> window manager, or directly
+<style color=#00ffffff size=1>.</style>            on the <action name=draw(3)>draw(3)</action> and <action name=cons(3)>cons(3)</action> devices. When charon starts, it
+<style color=#00ffffff size=1>.</style>            checks to see if wm is running\; if it is then charon creates
+<style color=#00ffffff size=1>.</style>            a new wm window for its display, otherwise it uses the whole
+<style color=#00ffffff size=1>.</style>            area of the display device.
+
+<style color=#00ffffff size=1>.</style>            Charon implements an image cache to help reduce the overhead
+<style color=#00ffffff size=1>.</style>            of revisiting pages. The image cache resides in memory for
+<style color=#00ffffff size=1>.</style>            the duration of a session. The cache is managed by
+<style color=#00ffffff size=1>.</style>            discarding least recently used images once the cache bounds
+<style color=#00ffffff size=1>.</style>            have been reached. Currently, charon does not provide a
+<style color=#00ffffff size=1>.</style>            general purpose web cache\; all other resources have to be
+<style color=#00ffffff size=1>.</style>            reloaded when needed.
+
+<style color=#00ffffff size=1>.</style>         Navigation
+<style color=#00ffffff size=1>.</style>            Charon provides navigation controls familiar to any
+<style color=#00ffffff size=1>.</style>            web-surfer: back, forward, reload, home, stop and URL entry.
+<style color=#00ffffff size=1>.</style>            Navigation of web-based information is by means of following
+<style color=#00ffffff size=1>.</style>            HTML links, this is done by clicking on them using mouse
+<style color=#00ffffff size=1>.</style>            button-1, or the touch-screen. Clicking mouse button-2 on a
+<style color=#00ffffff size=1>.</style>            link causes its address to be displayed in the status line
+<style color=#00ffffff size=1>.</style>            of charon's display. Navigation to other information is
+<style color=#00ffffff size=1>.</style>            achieved by clicking on the URL entry field and typing the
+<style color=#00ffffff size=1>.</style>            address of the resource, followed by the Enter key.
+
+<style color=#00ffffff size=1>.</style>            The retrieval and processing of the current page is
+<style color=#00ffffff size=1>.</style>            immediately terminated by clicking the Stop button.
+
+<style color=#00ffffff size=1>.</style>            As resources are browsed, a history of their web addresses
+<style color=#00ffffff size=1>.</style>            (URLs) is built up. At any time you can navigate forwards
+<style color=#00ffffff size=1>.</style>            and backwards through this list using the Forward and Back
+<style color=#00ffffff size=1>.</style>            buttons. Additionally, clicking the History button, displays
+<style color=#00ffffff size=1>.</style>            the entire history list as a set of links enabling the user
+<style color=#00ffffff size=1>.</style>            to quickly jump to any position in the list.
+
+<style color=#00ffffff size=1>.</style>            Sometimes, it is not possible to retrieve all of the
+<style color=#00ffffff size=1>.</style>            components of a web document at the time that it is
+<style color=#00ffffff size=1>.</style>            requested. Often this is because the remote server is very
+<style color=#00ffffff size=1>.</style>            busy or not available. This can result in the presentation
+<style color=#00ffffff size=1>.</style>            of the document being incomplete or even corrupted. Clicking
+<style color=#00ffffff size=1>.</style>            the Reload button causes charon to attempt to retrieve the
+<style color=#00ffffff size=1>.</style>            current document and all of its components again.
+
+<style color=#00ffffff size=1>.</style>            Charon displays a progress panel to indicate the download
+<style color=#00ffffff size=1>.</style>            status of each of the components of the current document.
+<style color=#00ffffff size=1>.</style>            The progress panel is displayed at the bottom of the charon
+<style color=#00ffffff size=1>.</style>            window. Each component of the current document is
+<style color=#00ffffff size=1>.</style>            represented by a rectangular block in the progress panel. As
+<style color=#00ffffff size=1>.</style>            the download of a component progresses, its corresponding
+<style color=#00ffffff size=1>.</style>            block is gradually filled in. If an error occurs while
+<style color=#00ffffff size=1>.</style>            downloading or processing the component, its block is
+<style color=#00ffffff size=1>.</style>            coloured red. The component address and amount downloaded,
+<style color=#00ffffff size=1>.</style>            or reason for failure, can be obtained by clicking mouse
+<style color=#00ffffff size=1>.</style>            button-1 on its progress block.
+
+<style color=#00ffffff size=1>.</style>         Web Standards
+<style color=#00ffffff size=1>.</style>            Standards are the life-blood of the World-Wide-Web\; without
+<style color=#00ffffff size=1>.</style>            them, the web could not exist. Web standards are under
+<style color=#00ffffff size=1>.</style>            constant review with revised editions and complete new
+<style color=#00ffffff size=1>.</style>            standards being published all of the time. This section
+<style color=#00ffffff size=1>.</style>            lists the standards supported by charon at the time of
+<style color=#00ffffff size=1>.</style>            writing this manual entry. The version of the standard is
+<style color=#00ffffff size=1>.</style>            given, if appropriate, alongside any comments on its
+<style color=#00ffffff size=1>.</style>            implementation.
+
+<style color=#00ffffff size=1>.</style>            Protocols      HTTP versions 1.0 and 1.1
+
+<style color=#00ffffff size=1>.</style>                 HTTPS: SSL Protocol versions 2.0 and 3.0. X.509.v3
+<style color=#00ffffff size=1>.</style>                 server certificates.
+
+<style color=#00ffffff size=1>.</style>                 FTP: charon supports retrieval of plain text files
+<style color=#00ffffff size=1>.</style>                 only, directory listings are not generated.
+
+<style color=#00ffffff size=1>.</style>                 FILE: Charon attempts to determine the file type by a
+<style color=#00ffffff size=1>.</style>                 combination of the filename extension and examination
+<style color=#00ffffff size=1>.</style>                 of the first few bytes of the file.  Directory listings
+<style color=#00ffffff size=1>.</style>                 are not generated.
+
+<style color=#00ffffff size=1>.</style>            HTML It is intended that charon supports HTML version 3.2,
+<style color=#00ffffff size=1>.</style>                 but in reality there is no single standard! Charon
+<style color=#00ffffff size=1>.</style>                 attempts to be as close as possible to Netscape
+<style color=#00ffffff size=1>.</style>                 Navigator Version 3 in terms of its markup support.
+<style color=#00ffffff size=1>.</style>                 Obvious bugs in Navigator 3 and the Netscape security
+<style color=#00ffffff size=1>.</style>                 model have not been adopted.
+
+<style color=#00ffffff size=1>.</style>            JavaScript
+<style color=#00ffffff size=1>.</style>                 Charon implements ECMAscript-262 2nd Edition, which is
+<style color=#00ffffff size=1>.</style>                 roughly equivalent to JavaScript1.1. The ECMA-262
+<style color=#00ffffff size=1>.</style>                 standard does not define the host objects and classes
+<style color=#00ffffff size=1>.</style>                 that should implemented by the browser. Charon
+<style color=#00ffffff size=1>.</style>                 implements the set of host objects and classes of
+<style color=#00ffffff size=1>.</style>                 Netscape Navigator version 3.
+
+<style color=#00ffffff size=1>.</style>            Encodings
+<style color=#00ffffff size=1>.</style>                 US_Ascii, ISO_8859_1, UTF_8, Unicode (big-endian)
+
+<style color=#00ffffff size=1>.</style>            Images
+<style color=#00ffffff size=1>.</style>                 GIF87a and GIF89a - animated GIFs always loop.
+<style color=#00ffffff size=1>.</style>                 JPEG, XBitmap, Inferno BIT <action name=image(6)>image(6)</action> format.
+
+<style color=#00ffffff size=1>.</style>         Configuration
+<style color=#00ffffff size=1>.</style>            While using charon, a sub-set of the configuration options
+<style color=#00ffffff size=1>.</style>            can be modified. Clicking the Configuration button displays
+<style color=#00ffffff size=1>.</style>            a config popup window, enabling the user to modify the
+<style color=#00ffffff size=1>.</style>            current values of the available options.
+
+<style color=#00ffffff size=1>.</style>            The full set of configuration options can be modified on the
+<style color=#00ffffff size=1>.</style>            command line or in a configuration file. Comand line options
+<style color=#00ffffff size=1>.</style>            are processed after the configuration file. The
+<style color=#00ffffff size=1>.</style>            configuration file is loaded from /usr/user/charon/config
+<style color=#00ffffff size=1>.</style>            where user is obtained by reading the file /dev/user. If
+<style color=#00ffffff size=1>.</style>            this file does not exist, the file
+<style color=#00ffffff size=1>.</style>            /services/config/charon.cfg is read instead. Options are
+<style color=#00ffffff size=1>.</style>            processed in order\; some options override settings affected
+<style color=#00ffffff size=1>.</style>            by others and so the order in which they are used is
+<style color=#00ffffff size=1>.</style>            important.
+
+<style color=#00ffffff size=1>.</style>            Options are specified using a key, value pair. On the
+<style color=#00ffffff size=1>.</style>            command line this takes the form:
+
+<style color=#00ffffff size=1>.</style>                 -key value
+
+<style color=#00ffffff size=1>.</style>            Where -key and value are individual items in the argument
+<style color=#00ffffff size=1>.</style>            list to charon.
+
+<style color=#00ffffff size=1>.</style>            In the config file options take the form:
+
+<style color=#00ffffff size=1>.</style>                 key=value
+
+<style color=#00ffffff size=1>.</style>            Where value is the remainder of the input line after the `='
+<style color=#00ffffff size=1>.</style>            character. Any text lines in the config file that start with
+<style color=#00ffffff size=1>.</style>            a `#' character are ignored as comment lines.
+
+OPTIONS
+<style color=#00ffffff size=1>.</style>            userdir
+<style color=#00ffffff size=1>.</style>                 The directory where charon expects to find its
+<style color=#00ffffff size=1>.</style>                 configuration files such as, bookmark and cookie files.
+<style color=#00ffffff size=1>.</style>                 The default value is /usr/user/charon/ where user is
+<style color=#00ffffff size=1>.</style>                 obtained by reading the file /dev/user.
+<style color=#00ffffff size=1>.</style>            starturl
+<style color=#00ffffff size=1>.</style>                 Specifies the URL of the first document to be displayed
+<style color=#00ffffff size=1>.</style>                 by charon at startup. The default value is
+<style color=#00ffffff size=1>.</style>                 file://localhost/services/webget/start.html
+<style color=#00ffffff size=1>.</style>            homeurl
+<style color=#00ffffff size=1>.</style>                 Specifies the URL of the document to retrieve when the
+<style color=#00ffffff size=1>.</style>                 Home button is clicked. The homeurl can only be changed
+<style color=#00ffffff size=1>.</style>                 if the change_homeurl option is enabled. Setting 
+<style color=#00ffffff size=1>.</style>                 homeurl also set the value of the starturl option. The
+<style color=#00ffffff size=1>.</style>                 default value is
+<style color=#00ffffff size=1>.</style>                 file://localhost/services/webget/start.html
+<style color=#00ffffff size=1>.</style>            change_homeurl
+<style color=#00ffffff size=1>.</style>                 Enables editing of the Home URL in the configuration
+<style color=#00ffffff size=1>.</style>                 popup window. A non-zero integer value enables this
+<style color=#00ffffff size=1>.</style>                 option, all other values disable it This option also
+<style color=#00ffffff size=1>.</style>                 enables the homeurl option. The default value is 1.
+<style color=#00ffffff size=1>.</style>            helpurl
+<style color=#00ffffff size=1>.</style>                 Specifies the URL of the document to retrieve when the
+<style color=#00ffffff size=1>.</style>                 Help button is clicked. The default value is
+<style color=#00ffffff size=1>.</style>                 file://localhost/services/webget/help.html
+<style color=#00ffffff size=1>.</style>            httpproxy
+<style color=#00ffffff size=1>.</style>                 Specifies the host name and port of a web proxy server.
+<style color=#00ffffff size=1>.</style>                 The address is given in the form of a URL, where the
+<style color=#00ffffff size=1>.</style>                 optional port number can be specified after the server
+<style color=#00ffffff size=1>.</style>                 name by separating them by a colon `:'. The default
+<style color=#00ffffff size=1>.</style>                 value is the empty string, specifying that no web proxy
+<style color=#00ffffff size=1>.</style>                 server should be used.
+<style color=#00ffffff size=1>.</style>            noproxy or noproxydoms
+<style color=#00ffffff size=1>.</style>                 Specifies a list of network domains for which a web
+<style color=#00ffffff size=1>.</style>                 proxy should not be used. The domains in the list can
+<style color=#00ffffff size=1>.</style>                 be separated by semicolon, comma, space or tab
+<style color=#00ffffff size=1>.</style>                 characters. The default value is the empty list.
+<style color=#00ffffff size=1>.</style>            usessl
+<style color=#00ffffff size=1>.</style>                 Extends SSL support. Accepted values are ``v2'' and ``
+<style color=#00ffffff size=1>.</style>                 v3''. Initially SSL support is configured off. Enabling
+<style color=#00ffffff size=1>.</style>                 version 1 or version 2 support restricts SSL support to
+<style color=#00ffffff size=1>.</style>                 that specific version. Specifying the option twice,
+<style color=#00ffffff size=1>.</style>                 once with each of the options, enables dual version SSL
+<style color=#00ffffff size=1>.</style>                 support whereby the remote server is probed to
+<style color=#00ffffff size=1>.</style>                 determine which version it supports. Some servers only
+<style color=#00ffffff size=1>.</style>                 support one of the versions and may not tolerate the
+<style color=#00ffffff size=1>.</style>                 special version2/3 probe.
+<style color=#00ffffff size=1>.</style>            buttons
+<style color=#00ffffff size=1>.</style>                 Specifies the set of buttons that appear on the window
+<style color=#00ffffff size=1>.</style>                 manager title-bar. The buttons are given as a list of
+<style color=#00ffffff size=1>.</style>                 button names separated by comma, space or tab
+<style color=#00ffffff size=1>.</style>                 characters. Valid button names are help, resize and
+<style color=#00ffffff size=1>.</style>                 hide. The default value is for all buttons to be
+<style color=#00ffffff size=1>.</style>                 displayed.
+<style color=#00ffffff size=1>.</style>            defaultwidth or width
+<style color=#00ffffff size=1>.</style>                 Set the initial window width. This option is only
+<style color=#00ffffff size=1>.</style>                 meaningful when running under the window manager. If
+<style color=#00ffffff size=1>.</style>                 the specified width exceeds the screen width then the
+<style color=#00ffffff size=1>.</style>                 screen width is used. The default value is 630.
+<style color=#00ffffff size=1>.</style>            defaultheight or height
+<style color=#00ffffff size=1>.</style>                 Set the initial height of the main display panel, this
+<style color=#00ffffff size=1>.</style>                 does not include the height of the control and progress
+<style color=#00ffffff size=1>.</style>                 panels. This option is only meaningful when running
+<style color=#00ffffff size=1>.</style>                 under the window manager. If the total height of the
+<style color=#00ffffff size=1>.</style>                 charon window exceeds the screen height, the main
+<style color=#00ffffff size=1>.</style>                 display panel height will be reduced to fit. The
+<style color=#00ffffff size=1>.</style>                 default value is 450.
+<style color=#00ffffff size=1>.</style>            x and/or y
+<style color=#00ffffff size=1>.</style>                 Set the initial window position. These options are only
+<style color=#00ffffff size=1>.</style>                 meaningful when running under the window manager. The
+<style color=#00ffffff size=1>.</style>                 default value for both options is 0.
+<style color=#00ffffff size=1>.</style>            imagelvl
+<style color=#00ffffff size=1>.</style>                 Specify how to handle image components of a document.
+<style color=#00ffffff size=1>.</style>                 This option takes a numeric argument. A value of 0
+<style color=#00ffffff size=1>.</style>                 prevents images from being downloaded or displayed. A
+<style color=#00ffffff size=1>.</style>                 value of 1 will download and display images but not
+<style color=#00ffffff size=1>.</style>                 animate GIFS - only the first frame of an animated GIF
+<style color=#00ffffff size=1>.</style>                 will be displayed. A value of 2 or more enables full
+<style color=#00ffffff size=1>.</style>                 image processing. The default value enables full image
+<style color=#00ffffff size=1>.</style>                 processing.
+<style color=#00ffffff size=1>.</style>            imagecachenum
+<style color=#00ffffff size=1>.</style>                 Specify the maximum number of images that can remain
+<style color=#00ffffff size=1>.</style>                 resident in the image cache. The default value is 60.
+<style color=#00ffffff size=1>.</style>            imagecachemem
+<style color=#00ffffff size=1>.</style>                 Specify the maximum amount of image memory available to
+<style color=#00ffffff size=1>.</style>                 the image cache in bytes. The cache is managed such
+<style color=#00ffffff size=1>.</style>                 that neither the imagecachenum nor imagecachemem limits
+<style color=#00ffffff size=1>.</style>                 are exceeded. The image cache tries to ensure that no
+<style color=#00ffffff size=1>.</style>                 more than 80% of available system image memory is taken
+<style color=#00ffffff size=1>.</style>                 by the cache, irrespective of the value of this option.
+<style color=#00ffffff size=1>.</style>                 The default value is 80% of the system image memory
+<style color=#00ffffff size=1>.</style>                 that was available when charon was started.
+<style color=#00ffffff size=1>.</style>            docookies
+<style color=#00ffffff size=1>.</style>                 Enable cookie handling. A non-zero numeric value
+<style color=#00ffffff size=1>.</style>                 enables cookie handling, all other values disable it.
+<style color=#00ffffff size=1>.</style>                 The cookie cache is maintained in the cookies file in
+<style color=#00ffffff size=1>.</style>                 the userdir directory. The default value is 0, cookie
+<style color=#00ffffff size=1>.</style>                 handling disabled.
+<style color=#00ffffff size=1>.</style>            doscripts
+<style color=#00ffffff size=1>.</style>                 Enable JavaScript support. A non-zero numeric value
+<style color=#00ffffff size=1>.</style>                 enables JavaScript, all other values disable it. The
+<style color=#00ffffff size=1>.</style>                 default value is 0, JavaScript processing disabled.
+<style color=#00ffffff size=1>.</style>            showprogress
+<style color=#00ffffff size=1>.</style>                 A non-zero numeric value results in the progress panel
+<style color=#00ffffff size=1>.</style>                 being displayed. All other values hide the progress
+<style color=#00ffffff size=1>.</style>                 panel, leaving more vertical space for the main display
+<style color=#00ffffff size=1>.</style>                 area. The default value is 1, causing the progress
+<style color=#00ffffff size=1>.</style>                 panel to be displayed
+<style color=#00ffffff size=1>.</style>            http Set the version of HTTP to use when communicating with
+<style color=#00ffffff size=1>.</style>                 web servers. Supported versions are 1.0 and 1.1. Any
+<style color=#00ffffff size=1>.</style>                 value other than 1.1 results in HTTP1.0 being used. The
+<style color=#00ffffff size=1>.</style>                 default value is 1.0.
+<style color=#00ffffff size=1>.</style>            nthreads
+<style color=#00ffffff size=1>.</style>                 Specifies the maximum number of concurrent downloads of
+<style color=#00ffffff size=1>.</style>                 document components. Generally, if this number is
+<style color=#00ffffff size=1>.</style>                 higher, pages will complete faster as charon will not
+<style color=#00ffffff size=1>.</style>                 have to wait for the download of one component to
+<style color=#00ffffff size=1>.</style>                 complete before another can be started. The downside is
+<style color=#00ffffff size=1>.</style>                 that a higher number of concurrent downloads will use
+<style color=#00ffffff size=1>.</style>                 more memory during the download process. The default
+<style color=#00ffffff size=1>.</style>                 value is 4.
+FILES
+<style color=#00ffffff size=1>.</style>            /services/config/charon.cfg  The default configuration file.
+<style color=#00ffffff size=1>.</style>            userdir/config               The user specific configuration
+<style color=#00ffffff size=1>.</style>                                         file. userdir is given by the
+<style color=#00ffffff size=1>.</style>                                         value of the userdir option.
+<style color=#00ffffff size=1>.</style>            userdir/cookies              The cookie cache. userdir is
+<style color=#00ffffff size=1>.</style>                                         given by the value of the
+<style color=#00ffffff size=1>.</style>                                         userdir option.
+<style color=#00ffffff size=1>.</style>            /services/webget/start.html  The default start page.
+<style color=#00ffffff size=1>.</style>            /services/webget/help.html   The default help page.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/charon/          The main charon source files.
+<style color=#00ffffff size=1>.</style>            /appl/lib/ecmascript/  Javascript (ECMA-262) implementation.
+BUGS
+<style color=#00ffffff size=1>.</style>            Charon has more than its fair share of real bugs. The
+<style color=#00ffffff size=1>.</style>            following list documents the problems that are most likely
+<style color=#00ffffff size=1>.</style>            to be encountered.
+
+<style color=#00ffffff size=1>.</style>            Charon implements its table layout as per the algorithm
+<style color=#00ffffff size=1>.</style>            described in rfc1942. This sometimes results in table-based
+<style color=#00ffffff size=1>.</style>            documents being laid out differently to other browsers.
+
+<style color=#00ffffff size=1>.</style>            JavaScript is a source of many problems. Many scripts do not
+<style color=#00ffffff size=1>.</style>            specify the language version they employ. Additionally
+<style color=#00ffffff size=1>.</style>            different language versions and browsers imply a different
+<style color=#00ffffff size=1>.</style>            set of host objects and classes. Such differences often give
+<style color=#00ffffff size=1>.</style>            rise to syntax or null reference errors. This whole
+<style color=#00ffffff size=1>.</style>            situation places a great burden on the script author to
+<style color=#00ffffff size=1>.</style>            write safe and compliant scripts\; unfortunately authors are
+<style color=#00ffffff size=1>.</style>            rarely aware of this burden!
+
+<style color=#00ffffff size=1>.</style>            The following elements of JavaScript1.1 are not fully
+<style color=#00ffffff size=1>.</style>            implemented:
+
+<style color=#00ffffff size=1>.</style>            Document.applets, Document.embeds and Document.plugins: Java
+<style color=#00ffffff size=1>.</style>            Applets are not supported, the arrays are always empty.
+
+<style color=#00ffffff size=1>.</style>            Document.onunload: The property exists and can be assigned
+<style color=#00ffffff size=1>.</style>            to, but the event is never raised.
+
+<style color=#00ffffff size=1>.</style>            Window.open(): A new window is never opened. If a URL is
+<style color=#00ffffff size=1>.</style>            specified for the new window, the current document will be
+<style color=#00ffffff size=1>.</style>            replaced with that of the new URL.
+
+<style color=#00ffffff size=1>.</style>            Other annoyances include:
+
+<style color=#00ffffff size=1>.</style>            Window resize forces a complete document reload.
+
+<style color=#00ffffff size=1>.</style>            Frames in a frameset are processed one at a time, not
+<style color=#00ffffff size=1>.</style>            concurrently.
+
+<style color=#00ffffff size=1>.</style>            It is not possible to save downloaded data to file.  This is
+<style color=#00ffffff size=1>.</style>            particularly annoying for MIME types that charon does not
+<style color=#00ffffff size=1>.</style>            support.
+
+<style color=#00ffffff size=1>.</style>            The history list can get confused, especially when following
+<style color=#00ffffff size=1>.</style>            links in framesets before the complete frameset has been
+<style color=#00ffffff size=1>.</style>            downloaded.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,34 @@
+<action name=SYS-FAUTH(2)>SYS-FAUTH(2)</action>                                         <action name=SYS-FAUTH(2)>SYS-FAUTH(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            fauth - set up authentication on a file descriptor to a file
+<style color=#00ffffff size=1>.</style>            server
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            fauth:  fn(fd: ref FD, aname: string): ref FD\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Fauth provides a means for the current user to authenticate
+<style color=#00ffffff size=1>.</style>            to access resources available through the 9P connection
+<style color=#00ffffff size=1>.</style>            represented by fd. The return value is a file descriptor,
+<style color=#00ffffff size=1>.</style>            conventionally called afd, that is subsequently used to
+<style color=#00ffffff size=1>.</style>            execute the authentication protocol for the server. After
+<style color=#00ffffff size=1>.</style>            successful authentication, afd may be passed as the second
+<style color=#00ffffff size=1>.</style>            argument to a subsequent mount call (see <action name=sys-bind(2)>sys-bind(2)</action>), with
+<style color=#00ffffff size=1>.</style>            the same aname, as a ticket-of-entry for the user.
+
+<style color=#00ffffff size=1>.</style>            If fauth returns nil, the error case, that means the file
+<style color=#00ffffff size=1>.</style>            server does not require authentication for the connection,
+<style color=#00ffffff size=1>.</style>            and afd should be nil in the call to mount.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=attach(5)>attach(5)</action>, <action name=security-auth(2)>security-auth(2)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            The system error string is set on error, including the
+<style color=#00ffffff size=1>.</style>            server not requiring authentication, and fauth returns nil.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

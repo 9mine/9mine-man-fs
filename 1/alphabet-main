@@ -1,0 +1,129 @@
+<action name=ALPHABET-MAIN(1)>ALPHABET-MAIN(1)</action>                                 <action name=ALPHABET-MAIN(1)>ALPHABET-MAIN(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            main - operators on the basic Alphabet types
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load alphabet
+<style color=#00ffffff size=1>.</style>            type /string
+<style color=#00ffffff size=1>.</style>            type /fd
+<style color=#00ffffff size=1>.</style>            type /wfd
+<style color=#00ffffff size=1>.</style>            type /status
+<style color=#00ffffff size=1>.</style>            type /cmd
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Main refers to operators defined Alphabet's (see sh-alphabet
+<style color=#00ffffff size=1>.</style>            (1)) root typeset (/).
+
+<style color=#00ffffff size=1>.</style>            In the following description of the modules provided, an
+<style color=#00ffffff size=1>.</style>            entry such as:
+
+<style color=#00ffffff size=1>.</style>            echo string -> fd
+
+<style color=#00ffffff size=1>.</style>            describes a verb echo, which takes one argument of type
+<style color=#00ffffff size=1>.</style>            string, and the result of which is of type fd. If the type
+<style color=#00ffffff size=1>.</style>            is not one of those described above, it should be taken to
+<style color=#00ffffff size=1>.</style>            be of type string.
+
+<style color=#00ffffff size=1>.</style>            All types and modules names are taken to be relative to the
+<style color=#00ffffff size=1>.</style>            typeset root, /.
+
+<style color=#00ffffff size=1>.</style>            Modules defined within main include:
+
+<style color=#00ffffff size=1>.</style>            auth \[-v\] \[-k keyfile\] \[-C alg\] wfd -> wfd
+<style color=#00ffffff size=1>.</style>                      Auth authenticates to a server connected to its
+<style color=#00ffffff size=1>.</style>                      argument wfd, and optionally adds encryption to
+<style color=#00ffffff size=1>.</style>                      the stream. If keyfile is given, it gives the
+<style color=#00ffffff size=1>.</style>                      filename of a key file (by default /usr/user
+<style color=#00ffffff size=1>.</style>                      /keyring/default is used). If alg is given, it
+<style color=#00ffffff size=1>.</style>                      specifies the encryption/hash algorithm to push
+<style color=#00ffffff size=1>.</style>                      (e.g. rc4_256/md5). If the -v flag is given, auth
+<style color=#00ffffff size=1>.</style>                      will print the name of the authenticated user to
+<style color=#00ffffff size=1>.</style>                      its diagnostic stream.
+
+<style color=#00ffffff size=1>.</style>            cat \[fd...\] -> fd
+<style color=#00ffffff size=1>.</style>                      Cat reads all the data from each fd in sequence
+<style color=#00ffffff size=1>.</style>                      and writes it to its resulting fd.
+
+<style color=#00ffffff size=1>.</style>            create fd f -> status
+<style color=#00ffffff size=1>.</style>                      Create creates a file named f and writes to it all
+<style color=#00ffffff size=1>.</style>                      the data from fd. Status will be empty if the
+<style color=#00ffffff size=1>.</style>                      writing has completed successfully.
+
+<style color=#00ffffff size=1>.</style>            dial addr -> wfd
+<style color=#00ffffff size=1>.</style>                      Dial makes a connection to network address addr
+<style color=#00ffffff size=1>.</style>                      (see <action name=dial(2)>dial(2)</action> for the address format), and returns
+<style color=#00ffffff size=1>.</style>                      the resulting connection.
+
+<style color=#00ffffff size=1>.</style>            echo \[-n\] string -> fd
+<style color=#00ffffff size=1>.</style>                      Echo writes its argument string to its resulting
+<style color=#00ffffff size=1>.</style>                      fd. If the -n option is given, no newline will be
+<style color=#00ffffff size=1>.</style>                      appended.
+
+<style color=#00ffffff size=1>.</style>            export dir -> wfd
+<style color=#00ffffff size=1>.</style>                      Export exports the namespace rooted at dir and
+<style color=#00ffffff size=1>.</style>                      serves it as a styx service on wfd.
+
+<style color=#00ffffff size=1>.</style>            fd n -> wfd
+<style color=#00ffffff size=1>.</style>                      Fd takes file descriptor n, and makes it available
+<style color=#00ffffff size=1>.</style>                      for reading and/or writing as wfd.
+
+<style color=#00ffffff size=1>.</style>            filter fd cmd arg... -> fd
+<style color=#00ffffff size=1>.</style>                      Filter starts the shell command cmd, and pipes
+<style color=#00ffffff size=1>.</style>                      through this all the data from its argument fd to
+<style color=#00ffffff size=1>.</style>                      its resulting fd. The provided arguments are
+<style color=#00ffffff size=1>.</style>                      accessible in the shell command as $*.
+
+<style color=#00ffffff size=1>.</style>            mount \[-abc\] \[-x aname\] wfd dir -> status
+<style color=#00ffffff size=1>.</style>                      Mount mounts a connection to a styx server (wfd)
+<style color=#00ffffff size=1>.</style>                      onto dir. The meaning of the -a, -b, and -c flags
+<style color=#00ffffff size=1>.</style>                      is the same as for <action name=mount(1)>mount(1)</action>. Aname, if given,
+<style color=#00ffffff size=1>.</style>                      gives the attach name that will be passed with the
+<style color=#00ffffff size=1>.</style>                      mount request.
+
+<style color=#00ffffff size=1>.</style>            parse string -> cmd
+<style color=#00ffffff size=1>.</style>                      Parse parses string as a shell command or alphabet
+<style color=#00ffffff size=1>.</style>                      expression, and returns the result.
+
+<style color=#00ffffff size=1>.</style>            print fd n -> status
+<style color=#00ffffff size=1>.</style>                      Print writes all the data from fd to file
+<style color=#00ffffff size=1>.</style>                      descriptor n.
+
+<style color=#00ffffff size=1>.</style>            pretty cmd -> string
+<style color=#00ffffff size=1>.</style>                      Pretty returns a string representation of the
+<style color=#00ffffff size=1>.</style>                      alphabet expression cmd which is intended to be
+<style color=#00ffffff size=1>.</style>                      easier to read.
+
+<style color=#00ffffff size=1>.</style>            read f -> fd
+<style color=#00ffffff size=1>.</style>                      Read reads the data from file f and writes it to
+<style color=#00ffffff size=1>.</style>                      its resulting fd.
+
+<style color=#00ffffff size=1>.</style>            rewrite \[-d dsttype\] cmd cmd -> cmd
+<style color=#00ffffff size=1>.</style>                      Rewrite rewrites an alphabet expression to its
+<style color=#00ffffff size=1>.</style>                      canonical form, applying all auto-conversions,
+<style color=#00ffffff size=1>.</style>                      expanding all definitions, expanding pipe notation
+<style color=#00ffffff size=1>.</style>                      and checking that all types are compatible. The
+<style color=#00ffffff size=1>.</style>                      first cmd argument gives the alphabet expression
+<style color=#00ffffff size=1>.</style>                      to be rewritten\; the second cmd should contain
+<style color=#00ffffff size=1>.</style>                      shell commands acceptable to <action name=sh-alphabet(1)>sh-alphabet(1)</action>,
+<style color=#00ffffff size=1>.</style>                      declaring all the modules used in the expression.
+<style color=#00ffffff size=1>.</style>                      If dsttype is given, it specifies the return type
+<style color=#00ffffff size=1>.</style>                      of the final expression\; auto-conversions will be
+<style color=#00ffffff size=1>.</style>                      applied to attain this type, if possible.
+
+<style color=#00ffffff size=1>.</style>            unparse cmd -> string
+<style color=#00ffffff size=1>.</style>                      Unparse is the inverse operation to parse: it
+<style color=#00ffffff size=1>.</style>                      converts cmd to a string, and returns the result.
+
+<style color=#00ffffff size=1>.</style>            2fd wfd -> fd
+<style color=#00ffffff size=1>.</style>                      2fd converts the read-write file wfd to the
+<style color=#00ffffff size=1>.</style>                      read-only fd.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/alphabet/alphabet.b
+<style color=#00ffffff size=1>.</style>            /appl/alphabet/main/*.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh-alphabet(1)>sh-alphabet(1)</action>, <action name=alphabet-main(2)>alphabet-main(2)</action>, <action name=sh(1)>sh(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

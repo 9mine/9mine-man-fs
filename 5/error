@@ -1,0 +1,19 @@
+<action name=ERROR(5)>ERROR(5)</action>                                                 <action name=ERROR(5)>ERROR(5)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            error - return an error
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            size\[4\] Rerror tag\[2\] ename\[s\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Rerror message (there is no Terror) is used to return an
+<style color=#00ffffff size=1>.</style>            error string describing the failure of a transaction. It
+<style color=#00ffffff size=1>.</style>            replaces the corresponding reply message that would
+<style color=#00ffffff size=1>.</style>            accompany a successful call\; its tag is that of the failing
+<style color=#00ffffff size=1>.</style>            request.
+
+<style color=#00ffffff size=1>.</style>            By convention, clients may truncate error messages after
+<style color=#00ffffff size=1>.</style>            Sys->ERRMAX-1 bytes.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,334 @@
+<action name=PREP(8)>PREP(8)</action>                                                   <action name=PREP(8)>PREP(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            prep, fdisk, format, mbr - prepare hard and floppy
+<style color=#00ffffff size=1>.</style>            diskettes, flashes
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            disk/prep \[ -bcfnprw \] \[ -a name \]... \[ -s sectorsize \]
+<style color=#00ffffff size=1>.</style>            plan9partition
+
+<style color=#00ffffff size=1>.</style>            disk/fdisk \[ -abfprw \] \[ -s sectorsize \] disk
+
+<style color=#00ffffff size=1>.</style>            disk/format \[ -dfvx \] \[ -b bootblock \] \[ -c csize \] \[ -l
+<style color=#00ffffff size=1>.</style>            label \] \[ -r nresrv \] \[ -t type \] disk \[ file... \]
+
+<style color=#00ffffff size=1>.</style>            disk/mbr \[ -9 \] \[ -m mbrfile \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A partition table is stored on a hard disk to specify the
+<style color=#00ffffff size=1>.</style>            division of the physical disk into a set of logical units.
+<style color=#00ffffff size=1>.</style>            On PCs, the partition table is stored at the end of the
+<style color=#00ffffff size=1>.</style>            master boot record of the disk. Partitions of type 0x39 are
+<style color=#00ffffff size=1>.</style>            Plan 9 partitions. Inferno uses the same type and follows
+<style color=#00ffffff size=1>.</style>            other Plan 9 conventions described here. The names of PC
+<style color=#00ffffff size=1>.</style>            partitions are chosen by convention from the type: dos,
+<style color=#00ffffff size=1>.</style>            plan9, etc. Second and subsequent partitions of the same
+<style color=#00ffffff size=1>.</style>            type on a given disk are given unique names by appending a
+<style color=#00ffffff size=1>.</style>            number (or a period and a number if the name already ends in
+<style color=#00ffffff size=1>.</style>            a number).
+
+<style color=#00ffffff size=1>.</style>            Plan 9 partitions (and Plan 9 disks on non-PCs) are
+<style color=#00ffffff size=1>.</style>            themselves divided, using a textual partition table, called
+<style color=#00ffffff size=1>.</style>            the Plan 9 partition table, in the second sector of the
+<style color=#00ffffff size=1>.</style>            partition (the first is left for architecture-specific boot
+<style color=#00ffffff size=1>.</style>            data, such as PC boot blocks). Inferno again uses the same
+<style color=#00ffffff size=1>.</style>            conventions. The table is a sequence of lines of the format
+<style color=#00ffffff size=1>.</style>            part name start end, where start and end name the starting
+<style color=#00ffffff size=1>.</style>            and ending sector. Sector 0 is the first sector of the Plan
+<style color=#00ffffff size=1>.</style>            9 partition or disk, regardless of its position in a larger
+<style color=#00ffffff size=1>.</style>            disk. Partition extents do not contain the ending sector, so
+<style color=#00ffffff size=1>.</style>            a partition from 0 to 5 and a partition from 5 to 10 do not
+<style color=#00ffffff size=1>.</style>            overlap.
+
+<style color=#00ffffff size=1>.</style>            The Plan 9 partition often contains a number of
+<style color=#00ffffff size=1>.</style>            conventionally named subpartitions. Only 9fat, fs and nvram
+<style color=#00ffffff size=1>.</style>            are currently used by Inferno, but the others are included
+<style color=#00ffffff size=1>.</style>            for reference. They include:
+<style color=#00ffffff size=1>.</style>            9fat    A small FAT file system used to hold configuration
+<style color=#00ffffff size=1>.</style>                    information (such as plan9.ini and plan9.nvr) and
+<style color=#00ffffff size=1>.</style>                    kernels. This typically begins in the first sector
+<style color=#00ffffff size=1>.</style>                    of the partition, and contains the partition table
+<style color=#00ffffff size=1>.</style>                    as a ``reserved'' sector. See the discussion of the
+<style color=#00ffffff size=1>.</style>                    -r option to format.
+<style color=#00ffffff size=1>.</style>            arenas  A Plan 9 venti arenas partition.
+<style color=#00ffffff size=1>.</style>            cache   A Plan 9 cfs file system cache.
+<style color=#00ffffff size=1>.</style>            fossil  A Plan 9 fossil file system.
+<style color=#00ffffff size=1>.</style>            fs      A <action name=kfs(4)>kfs(4)</action> file system.
+<style color=#00ffffff size=1>.</style>            fscfg   A one-sector partition used to store a <action name=ds(3)>ds(3)</action>
+<style color=#00ffffff size=1>.</style>                    configuration.
+<style color=#00ffffff size=1>.</style>            isect   A Plan 9 venti index section.
+<style color=#00ffffff size=1>.</style>            nvram   A one-sector partition used to simulate non-volatile
+<style color=#00ffffff size=1>.</style>                    RAM on PCs.
+<style color=#00ffffff size=1>.</style>            other   A non-archived Plan 9 fossil file system.
+<style color=#00ffffff size=1>.</style>            swap    A Plan 9 swap partition.
+
+<style color=#00ffffff size=1>.</style>            Fdisk edits the PC partition table and is usually invoked
+<style color=#00ffffff size=1>.</style>            with a disk like /dev/sdC0/data as its argument, while prep
+<style color=#00ffffff size=1>.</style>            edits the Plan 9 partition table and is usually invoked with
+<style color=#00ffffff size=1>.</style>            a disk partition like /dev/sdC0/plan9 as its argument. Fdisk
+<style color=#00ffffff size=1>.</style>            works in units of disk ``cylinders'': the cylinder size in
+<style color=#00ffffff size=1>.</style>            bytes is printed when fdisk starts. Prep works in units of
+<style color=#00ffffff size=1>.</style>            disk sectors, which are almost always 512 bytes. Fdisk and
+<style color=#00ffffff size=1>.</style>            prep share most of their options:
+
+<style color=#00ffffff size=1>.</style>            -a   Automatically partition the disk. Fdisk will create a
+<style color=#00ffffff size=1>.</style>                 Plan 9 partition in the largest unused area on the
+<style color=#00ffffff size=1>.</style>                 disk, doing nothing if a Plan 9 partition already
+<style color=#00ffffff size=1>.</style>                 exists. If no other partition on the disk is marked
+<style color=#00ffffff size=1>.</style>                 active (i.e. marked as the boot partition), fdisk will
+<style color=#00ffffff size=1>.</style>                 mark the new partition active. Prep's -a flag takes the
+<style color=#00ffffff size=1>.</style>                 name of a partition to create. (See the list above for
+<style color=#00ffffff size=1>.</style>                 partition names.) It can be repeated to specify a list
+<style color=#00ffffff size=1>.</style>                 of partitions to create. If the disk is currently
+<style color=#00ffffff size=1>.</style>                 unpartitioned, prep will create the named partitions on
+<style color=#00ffffff size=1>.</style>                 the disk, attempting to use the entire disk in a
+<style color=#00ffffff size=1>.</style>                 sensible manner. The partition names must be from the
+<style color=#00ffffff size=1>.</style>                 list given above.
+
+<style color=#00ffffff size=1>.</style>            -b   Start with a blank disk, ignoring any extant partition
+<style color=#00ffffff size=1>.</style>                 table.
+
+<style color=#00ffffff size=1>.</style>            -p   Print a sequence of commands that when sent to the disk
+<style color=#00ffffff size=1>.</style>                 device's ctl file will bring the partition table
+<style color=#00ffffff size=1>.</style>                 information kept by the <action name=sd(3)>sd(3)</action> driver up to date. Then
+<style color=#00ffffff size=1>.</style>                 exit. Prep will check to see if it is being called with
+<style color=#00ffffff size=1>.</style>                 a disk partition (rather than an entire disk) as its
+<style color=#00ffffff size=1>.</style>                 argument\; if so, it will translate the printed sectors
+<style color=#00ffffff size=1>.</style>                 by the partition's offset within the disk. Since fdisk
+<style color=#00ffffff size=1>.</style>                 operates on a table of unnamed partitions, it assigns
+<style color=#00ffffff size=1>.</style>                 names based on the partition type (e.g., plan9, dos,
+<style color=#00ffffff size=1>.</style>                 ntfs, linux, linuxswap) and resolves collisions by
+<style color=#00ffffff size=1>.</style>                 appending a numbered suffix. (e.g., dos, dos1, dos2).
+
+<style color=#00ffffff size=1>.</style>            -r   In the absence of the -p and -w flags, prep and fdisk
+<style color=#00ffffff size=1>.</style>                 enter an interactive partition editor\; the -r flag runs
+<style color=#00ffffff size=1>.</style>                 the editor in read-only mode.
+
+<style color=#00ffffff size=1>.</style>            -s sectorsize
+<style color=#00ffffff size=1>.</style>                 Specify the disk's sector size. In the absence of this
+<style color=#00ffffff size=1>.</style>                 flag, prep and fdisk look for a disk ctl file and read
+<style color=#00ffffff size=1>.</style>                 it to find the disk's sector size. If the ctl file
+<style color=#00ffffff size=1>.</style>                 cannot be found, a message is printed and a sector size
+<style color=#00ffffff size=1>.</style>                 of 512 bytes is assumed.
+
+<style color=#00ffffff size=1>.</style>            -w   Write the partition table to the disk and exit. This is
+<style color=#00ffffff size=1>.</style>                 useful when used in conjunction with -a or -b.
+
+<style color=#00ffffff size=1>.</style>            If neither the -p flag nor the -w flag is given, prep and
+<style color=#00ffffff size=1>.</style>            fdisk enter an interactive partition editor that operates on
+<style color=#00ffffff size=1>.</style>            named partitions. The PC partition table distinguishes
+<style color=#00ffffff size=1>.</style>            between primary partitions, which can be listed in the boot
+<style color=#00ffffff size=1>.</style>            sector at the beginning of the disk, and secondary (or
+<style color=#00ffffff size=1>.</style>            extended) partitions, arbitrarily many of which may be
+<style color=#00ffffff size=1>.</style>            chained together in place of a primary partition. Primary
+<style color=#00ffffff size=1>.</style>            partitions are named pn, secondary partitions sn. The number
+<style color=#00ffffff size=1>.</style>            of primary partitions plus number of contiguous chains of
+<style color=#00ffffff size=1>.</style>            secondary partitions cannot exceed four.
+
+<style color=#00ffffff size=1>.</style>            The commands are as follows. In the descriptions, read
+<style color=#00ffffff size=1>.</style>            ``sector'' as ``cylinder'' when using fdisk.
+
+<style color=#00ffffff size=1>.</style>            a  name  \[ start  \[ end  \] \]
+<style color=#00ffffff size=1>.</style>                 Create a partition named name starting at sector offset
+<style color=#00ffffff size=1>.</style>                 start and ending at offset end. The new partition will
+<style color=#00ffffff size=1>.</style>                 not be created if it overlaps an extant partition. If
+<style color=#00ffffff size=1>.</style>                 start or end are omitted, prep and fdisk will prompt
+<style color=#00ffffff size=1>.</style>                 for them. In fdisk, the newly created partition has
+<style color=#00ffffff size=1>.</style>                 type ``PLAN9\;'' to set a different type, use the t
+<style color=#00ffffff size=1>.</style>                 command (q.v.). Start and end may be expressions using
+<style color=#00ffffff size=1>.</style>                 the operators +, -, *, and /, numeric constants, and
+<style color=#00ffffff size=1>.</style>                 the pseudovariables . and $. At the start of the
+<style color=#00ffffff size=1>.</style>                 program, . is set to zero\; each time a partition is
+<style color=#00ffffff size=1>.</style>                 created, it is set to the end sector of the new
+<style color=#00ffffff size=1>.</style>                 partition. It can also be explicitly set using the .
+<style color=#00ffffff size=1>.</style>                 command. When evaluating start, $ is set to one past
+<style color=#00ffffff size=1>.</style>                 the last disk sector. When evaluating end, $ is set to
+<style color=#00ffffff size=1>.</style>                 the maximum value that end can take on without running
+<style color=#00ffffff size=1>.</style>                 off the disk or into another partition. Finally, the
+<style color=#00ffffff size=1>.</style>                 expression n% evaluates to (n×disksize)/100. As an
+<style color=#00ffffff size=1>.</style>                 example, a . .+20% creates a new partition starting at
+<style color=#00ffffff size=1>.</style>                 . that takes up a fifth of the disk, and a 1000 $
+<style color=#00ffffff size=1>.</style>                 creates a new partition starting at sector 1000 and
+<style color=#00ffffff size=1>.</style>                 extending as far as possible.
+
+<style color=#00ffffff size=1>.</style>            .  newdot
+<style color=#00ffffff size=1>.</style>                 Set the value of the variable . to newdot, which is an
+<style color=#00ffffff size=1>.</style>                 arithmetic expression as described in the discussion of
+<style color=#00ffffff size=1>.</style>                 the a command.
+
+<style color=#00ffffff size=1>.</style>            d name
+<style color=#00ffffff size=1>.</style>                 Delete the named partition.
+
+<style color=#00ffffff size=1>.</style>            h    Print a help message listing command synopses.
+
+<style color=#00ffffff size=1>.</style>            p    Print the disk partition table. Unpartitioned regions
+<style color=#00ffffff size=1>.</style>                 are also listed. The table consists of a number of
+<style color=#00ffffff size=1>.</style>                 lines containing partition name, beginning and ending
+<style color=#00ffffff size=1>.</style>                 sectors, and total size. A ' is prefixed to the names
+<style color=#00ffffff size=1>.</style>                 of partitions whose entries have been modified but not
+<style color=#00ffffff size=1>.</style>                 written to disk. Fdisk adds to the end of each line a
+<style color=#00ffffff size=1>.</style>                 textual partition type, and places a * next to the name
+<style color=#00ffffff size=1>.</style>                 of the active partition (see the A command below).
+
+<style color=#00ffffff size=1>.</style>            P    Print the partition table in the format accepted by the
+<style color=#00ffffff size=1>.</style>                 disk's ctl file, which is also the format of the output
+<style color=#00ffffff size=1>.</style>                 of the -p option.
+
+<style color=#00ffffff size=1>.</style>            w    Write the partition table to disk. Prep will also
+<style color=#00ffffff size=1>.</style>                 inform the kernel of the changed partition table. The
+<style color=#00ffffff size=1>.</style>                 write will fail if any programs have any of the disk's
+<style color=#00ffffff size=1>.</style>                 partitions open. If the write fails (for this or any
+<style color=#00ffffff size=1>.</style>                 other reason), prep and fdisk will attempt to restore
+<style color=#00ffffff size=1>.</style>                 the partition table to its former state.
+
+<style color=#00ffffff size=1>.</style>            q    Quit the program. If the partition table has been
+<style color=#00ffffff size=1>.</style>                 modified but not written, a warning is printed. Typing
+<style color=#00ffffff size=1>.</style>                 q again will quit the program.
+
+<style color=#00ffffff size=1>.</style>            Fdisk also has the following commands.
+
+<style color=#00ffffff size=1>.</style>            A name
+<style color=#00ffffff size=1>.</style>                 Set the named partition active. The active partition is
+<style color=#00ffffff size=1>.</style>                 the one whose boot block is used when booting a PC from
+<style color=#00ffffff size=1>.</style>                 disk.
+
+<style color=#00ffffff size=1>.</style>            e    Print the names of empty slots in the partition table,
+<style color=#00ffffff size=1>.</style>                 i.e., the valid names to use when creating a new
+<style color=#00ffffff size=1>.</style>                 partition.
+
+<style color=#00ffffff size=1>.</style>            t \[ type \]
+<style color=#00ffffff size=1>.</style>                 Set the partition type.  If it is not given, fdisk will
+<style color=#00ffffff size=1>.</style>                 display a list of choices and then prompt for it.
+
+<style color=#00ffffff size=1>.</style>            Format prepares for use the floppy diskette or hard disk
+<style color=#00ffffff size=1>.</style>            partition in the file named disk, for example /dev/fd0disk
+<style color=#00ffffff size=1>.</style>            or /dev/sdC0/9fat. The options are:
+
+<style color=#00ffffff size=1>.</style>            -f   Do not physically format the disc. Used to install a
+<style color=#00ffffff size=1>.</style>                 FAT file system on a previously formatted disc. If disk
+<style color=#00ffffff size=1>.</style>                 is not a floppy device, this flag is a no-op.
+
+<style color=#00ffffff size=1>.</style>            -t   specify a density and type of disk to be prepared. The
+<style color=#00ffffff size=1>.</style>                 possible types are:
+
+<style color=#00ffffff size=1>.</style>                 3½DD 3½" double density, 737280 bytes
+
+<style color=#00ffffff size=1>.</style>                 3½HD 3½" high density, 1474560 bytes
+
+<style color=#00ffffff size=1>.</style>                 5¼DD 5¼" double density, 368640 bytes
+
+<style color=#00ffffff size=1>.</style>                 5¼HD 5¼"  high density, 1146880 bytes
+
+<style color=#00ffffff size=1>.</style>                 hard fixed disk
+
+<style color=#00ffffff size=1>.</style>                 The default when disk is a floppy drive is the highest
+<style color=#00ffffff size=1>.</style>                 possible on the device. When disk is a regular file,
+<style color=#00ffffff size=1>.</style>                 the default is 3½HD. When disk is an <action name=sd(3)>sd(3)</action> device, the
+<style color=#00ffffff size=1>.</style>                 default is hard.
+
+<style color=#00ffffff size=1>.</style>            -d   initialize a FAT file system on the disk.
+
+<style color=#00ffffff size=1>.</style>            -b   use the contents of bootblock as a bootstrap block to
+<style color=#00ffffff size=1>.</style>                 be installed in sector 0.
+
+<style color=#00ffffff size=1>.</style>            The remaining options have effect only when -d is specified:
+
+<style color=#00ffffff size=1>.</style>            -c   use a FAT cluster size of csize sectors when creating
+<style color=#00ffffff size=1>.</style>                 the FAT.
+
+<style color=#00ffffff size=1>.</style>            -l   add a label when creating the FAT file system.
+
+<style color=#00ffffff size=1>.</style>            -r   mark the first nresrv sectors of the partition as
+<style color=#00ffffff size=1>.</style>                 ``reserved''. Since the first sector always contains
+<style color=#00ffffff size=1>.</style>                 the FAT parameter block, this really marks the nresrv-1
+<style color=#00ffffff size=1>.</style>                 sectors starting at sector 1 as ``reserved''. When
+<style color=#00ffffff size=1>.</style>                 formatting the 9fat partition, -r 2 should be used to
+<style color=#00ffffff size=1>.</style>                 jump over the partition table sector.
+
+<style color=#00ffffff size=1>.</style>            Again under -d, any files listed are added, in order, to the
+<style color=#00ffffff size=1>.</style>            root directory of the FAT file system.  The files are
+<style color=#00ffffff size=1>.</style>            contiguously allocated. If a file is named 9load, it will be
+<style color=#00ffffff size=1>.</style>            created with the SYSTEM attribute set so that <action name=dossrv(4)>dossrv(4)</action>
+<style color=#00ffffff size=1>.</style>            keeps it contiguous when modifying it.
+
+<style color=#00ffffff size=1>.</style>            Format checks for a number of common mistakes\; in
+<style color=#00ffffff size=1>.</style>            particular, it will refuse to format a 9fat partition unless
+<style color=#00ffffff size=1>.</style>            -r is specified with nresrv larger than two. It also refuses
+<style color=#00ffffff size=1>.</style>            to format a raw <action name=sd(3)>sd(3)</action> partition that begins at offset zero
+<style color=#00ffffff size=1>.</style>            in the disk. (The beginning of the disk should contain an
+<style color=#00ffffff size=1>.</style>            fdisk partition table with master boot record, not a FAT
+<style color=#00ffffff size=1>.</style>            file system or boot block.) Both checks are disabled by the
+<style color=#00ffffff size=1>.</style>            -x option. The -v option prints debugging information.
+
+<style color=#00ffffff size=1>.</style>            The file /Inferno/386/pbs is an example of a suitable bfile
+<style color=#00ffffff size=1>.</style>            to make the disk a boot disk. It gets loaded by the BIOS at
+<style color=#00ffffff size=1>.</style>            0x7C00, reads the root directory into address 0x7E00, and
+<style color=#00ffffff size=1>.</style>            looks at the first root directory entry. If that file is
+<style color=#00ffffff size=1>.</style>            called 9LOAD, it uses single sector reads to load the file
+<style color=#00ffffff size=1>.</style>            into address 0x10000 and then jumps to the loaded file
+<style color=#00ffffff size=1>.</style>            image. The file /Inferno/386/pbslba is similar, but because
+<style color=#00ffffff size=1>.</style>            it uses LBA addressing (not supported by all BIOSes), it can
+<style color=#00ffffff size=1>.</style>            access more than the first 8.5GB of the disk.
+
+<style color=#00ffffff size=1>.</style>            Mbr installs a new boot block in sector 0 (the master boot
+<style color=#00ffffff size=1>.</style>            record) of a disk such as /dev/sdC0/data. This boot block
+<style color=#00ffffff size=1>.</style>            should not be confused with the boot block used by format,
+<style color=#00ffffff size=1>.</style>            which goes in sector 0 of a partition. Typically, the boot
+<style color=#00ffffff size=1>.</style>            block in the master boot record scans the PC partition table
+<style color=#00ffffff size=1>.</style>            to find an active partition and then executes the boot block
+<style color=#00ffffff size=1>.</style>            for that partition. The partition boot block then loads a
+<style color=#00ffffff size=1>.</style>            bootstrap program such as 9load(10.8), which then loads the
+<style color=#00ffffff size=1>.</style>            operating system. If MS-DOS or Windows 9\[58\] is already
+<style color=#00ffffff size=1>.</style>            installed on your hard disk, the master boot record already
+<style color=#00ffffff size=1>.</style>            has a suitable boot block. Otherwise, /Inferno/386/mbr is an
+<style color=#00ffffff size=1>.</style>            appropriate mbrfile. It detects and uses LBA addressing when
+<style color=#00ffffff size=1>.</style>            available from the BIOS (the same could not be done in the
+<style color=#00ffffff size=1>.</style>            case of pbs due to space considerations). If the mbrfile is
+<style color=#00ffffff size=1>.</style>            not specified, a boot block is installed that prints a
+<style color=#00ffffff size=1>.</style>            message explaining that the disk is not bootable. The -9
+<style color=#00ffffff size=1>.</style>            option initialises the partition table to consist of one
+<style color=#00ffffff size=1>.</style>            plan9 partition which spans the entire disc starting at the
+<style color=#00ffffff size=1>.</style>            end of the first track.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Initialize the kernel disk driver with the partition
+<style color=#00ffffff size=1>.</style>            information from the FAT boot sectors. If Plan 9 partitions
+<style color=#00ffffff size=1>.</style>            exist, pass that partition information as well.
+
+<style color=#00ffffff size=1>.</style>                 for(disk in /dev/sd??) {
+<style color=#00ffffff size=1>.</style>                 	if(ftest -f $disk/data && ftest -f $disk/ctl){
+<style color=#00ffffff size=1>.</style>                 		disk/fdisk -p $disk/data >$disk/ctl
+<style color=#00ffffff size=1>.</style>                 	}
+<style color=#00ffffff size=1>.</style>                 	for(part in $disk/plan9*){
+<style color=#00ffffff size=1>.</style>                 		if(ftest -f $part){
+<style color=#00ffffff size=1>.</style>                 			disk/prep -p $part >$disk/ctl
+<style color=#00ffffff size=1>.</style>                 		}
+<style color=#00ffffff size=1>.</style>                 	}
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>            Create a boot floppy on a previously formatted diskette:
+
+<style color=#00ffffff size=1>.</style>                 disk/format -b /Inferno/386/pbs -df /dev/fd0disk /Inferno/386/9load /tmp/plan9.ini
+
+<style color=#00ffffff size=1>.</style>            Initialize the blank hard disk /dev/sdC0/data.
+
+<style color=#00ffffff size=1>.</style>                 disk/mbr -m /Inferno/386/mbr /dev/sdC0/data
+<style color=#00ffffff size=1>.</style>                 disk/fdisk -baw /dev/sdC0/data
+<style color=#00ffffff size=1>.</style>                 disk/prep -bw -a^(9fat fs) /dev/sdC0/plan9
+<style color=#00ffffff size=1>.</style>                 disk/format -b /Inferno/386/pbslba -d -r 2 /dev/sdC0/9fat 9load 9pcdisk plan9.ini
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/disk/prep
+<style color=#00ffffff size=1>.</style>            /appl/cmd/disk/format.b
+<style color=#00ffffff size=1>.</style>            /os/boot/pc
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=floppy(3)>floppy(3)</action>, <action name=sd(3)>sd(3)</action>, 9load(10.8), plan9.ini(10.8)
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Format can create FAT12 and FAT16 file systems, but not
+<style color=#00ffffff size=1>.</style>            FAT32 file systems. The boot block can only read from FAT12
+<style color=#00ffffff size=1>.</style>            and FAT16 file systems.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

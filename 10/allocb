@@ -1,0 +1,170 @@
+ALLOCB(10.2)                                         ALLOCB(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            allocb, iallocb, freeb, freeblist, BLEN, blocklen,
+<style color=#00ffffff size=1>.</style>            concatblock, copyblock, trimblock, packblock, padblock,
+<style color=#00ffffff size=1>.</style>            pullblock, pullupblock, adjustblock, checkb - data block
+<style color=#00ffffff size=1>.</style>            management
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            Block*	allocb(int size)
+
+<style color=#00ffffff size=1>.</style>            Block*	iallocb(int size)
+
+<style color=#00ffffff size=1>.</style>            void	freeb(Block *b)
+
+<style color=#00ffffff size=1>.</style>            void	freeblist(Block *b)
+
+<style color=#00ffffff size=1>.</style>            long	BLEN(Block *b)
+
+<style color=#00ffffff size=1>.</style>            int	blocklen(Block *b)
+
+<style color=#00ffffff size=1>.</style>            Block*	concatblock(Block *b)
+
+<style color=#00ffffff size=1>.</style>            Block*	copyblock(Block *b, int n)
+
+<style color=#00ffffff size=1>.</style>            Block*	trimblock(Block *b, int offset, int n)
+
+<style color=#00ffffff size=1>.</style>            Block*	packblock(Block *b)
+
+<style color=#00ffffff size=1>.</style>            Block*	padblock(Block *b, int n)
+
+<style color=#00ffffff size=1>.</style>            int	pullblock(Block **bph, int n)
+
+<style color=#00ffffff size=1>.</style>            Block*	pullupblock(Block *b, int n)
+
+<style color=#00ffffff size=1>.</style>            Block*	adjustblock(Block *b, int n)
+
+<style color=#00ffffff size=1>.</style>            void	checkb(Block *b, char *msg)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A Block provides a receptacle for data:
+
+<style color=#00ffffff size=1>.</style>                 typedef
+<style color=#00ffffff size=1>.</style>                 struct Block
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                     Block*  next\;
+<style color=#00ffffff size=1>.</style>                     Block*  list\;
+<style color=#00ffffff size=1>.</style>                     uchar*  rp\;     /* first unconsumed byte */
+<style color=#00ffffff size=1>.</style>                     uchar*  wp\;     /* first empty byte */
+<style color=#00ffffff size=1>.</style>                     uchar*  lim\;    /* 1 past the end of the buffer */
+<style color=#00ffffff size=1>.</style>                     uchar*  base\;   /* start of the buffer */
+<style color=#00ffffff size=1>.</style>                     void    (*free)(Block*)\;
+<style color=#00ffffff size=1>.</style>                     ulong   flag\;
+<style color=#00ffffff size=1>.</style>                 } Block\;
+
+<style color=#00ffffff size=1>.</style>            Each Block has an associated buffer, located at base, and
+<style color=#00ffffff size=1>.</style>            accessed via wp when filling the buffer, or rp when fetching
+<style color=#00ffffff size=1>.</style>            data from it. Each pointer should be incremented to reflect
+<style color=#00ffffff size=1>.</style>            the amount of data written or read. A Block is empty when rp
+<style color=#00ffffff size=1>.</style>            reaches wp. The pointer lim bounds the allocated space. Some
+<style color=#00ffffff size=1>.</style>            operations described below accept lists of Blocks, which are
+<style color=#00ffffff size=1>.</style>            chained via their next pointers, with a null pointer ending
+<style color=#00ffffff size=1>.</style>            the list. Blocks are usually intended for a Queue (see qio
+<style color=#00ffffff size=1>.</style>            (10.2)), but can be used independently.
+
+<style color=#00ffffff size=1>.</style>            A Block and its buffer are normally allocated by one call to
+<style color=#00ffffff size=1>.</style>            malloc(10.2) and aligned on an 8 byte (BY2V) boundary. Some
+<style color=#00ffffff size=1>.</style>            devices with particular allocation constraints (eg,
+<style color=#00ffffff size=1>.</style>            requiring certain addresses for DMA) might allocate their
+<style color=#00ffffff size=1>.</style>            own Block and buffer\; free must then point to a function
+<style color=#00ffffff size=1>.</style>            that can deallocate the specially allocated Block.
+
+<style color=#00ffffff size=1>.</style>            Many Block operations cannot be used in interrupt handlers
+<style color=#00ffffff size=1>.</style>            because they either sleep(10.2) or raise an error(10.2). Of
+<style color=#00ffffff size=1>.</style>            operations that allocate blocks, only iallocb is usable.
+
+<style color=#00ffffff size=1>.</style>            Allocb allocates a Block of at least size bytes. The block
+<style color=#00ffffff size=1>.</style>            is initially empty: rp and wp point to the start of the
+<style color=#00ffffff size=1>.</style>            data. If it cannot allocate memory, allocb raises an error
+<style color=#00ffffff size=1>.</style>            (10.2)\; it cannot be used by an interrupt handler.
+
+<style color=#00ffffff size=1>.</style>            Iallocb is similar to allocb but is intended for use by
+<style color=#00ffffff size=1>.</style>            interrupt handlers, and returns a null pointer if no memory
+<style color=#00ffffff size=1>.</style>            is available. It also limits its allocation to a quota
+<style color=#00ffffff size=1>.</style>            allocated at system initialisation to interrupt-time
+<style color=#00ffffff size=1>.</style>            buffering.
+
+<style color=#00ffffff size=1>.</style>            Freeb frees a single Block (and its buffer).
+
+<style color=#00ffffff size=1>.</style>            Freeblist frees the whole list of blocks headed by b.
+
+<style color=#00ffffff size=1>.</style>            BLEN returns the number of unread bytes in a single block b\;
+<style color=#00ffffff size=1>.</style>            it is implemented as a macro.
+
+<style color=#00ffffff size=1>.</style>            Blocklen returns the number of bytes of unread data in the
+<style color=#00ffffff size=1>.</style>            whole list of blocks headed by b.
+
+<style color=#00ffffff size=1>.</style>            Concatblock returns b if it is not a list, and otherwise
+<style color=#00ffffff size=1>.</style>            returns a single Block containing all the data in the list
+<style color=#00ffffff size=1>.</style>            of blocks b, which it frees.
+
+<style color=#00ffffff size=1>.</style>            Copyblock by contrast returns a single Block containing a
+<style color=#00ffffff size=1>.</style>            copy of the first n bytes of data in the block list b,
+<style color=#00ffffff size=1>.</style>            padding with zeroes if the list contained less than n bytes.
+<style color=#00ffffff size=1>.</style>            The list b is unchanged.
+
+<style color=#00ffffff size=1>.</style>            Padblock can pad a single Block at either end, to reserve
+<style color=#00ffffff size=1>.</style>            space for protocol headers or trailers. If n≥0, it inserts n
+<style color=#00ffffff size=1>.</style>            bytes at the start of the block, setting the read pointer rp
+<style color=#00ffffff size=1>.</style>            to point to the new space. If n<0, it adds n bytes at the
+<style color=#00ffffff size=1>.</style>            end of the block, leaving the write pointer wp pointing at
+<style color=#00ffffff size=1>.</style>            the new space. In both cases, it allocates a new Block if
+<style color=#00ffffff size=1>.</style>            necessary, freeing the old, and it always returns a pointer
+<style color=#00ffffff size=1>.</style>            to the resulting Block.
+
+<style color=#00ffffff size=1>.</style>            Trimblock trims the list b to contain no more than n bytes
+<style color=#00ffffff size=1>.</style>            starting at offset bytes into the data of the original list.
+<style color=#00ffffff size=1>.</style>            It returns a new list, freeing unneeded parts of the old. If
+<style color=#00ffffff size=1>.</style>            no data remains, it returns a null pointer.
+
+<style color=#00ffffff size=1>.</style>            Packblock examines each Block in the list b, reallocating
+<style color=#00ffffff size=1>.</style>            any block in the list that has four times more available
+<style color=#00ffffff size=1>.</style>            space than actual data. It returns a pointer to the revised
+<style color=#00ffffff size=1>.</style>            list.
+
+<style color=#00ffffff size=1>.</style>            Pullblock discards up to n bytes from the start of the list
+<style color=#00ffffff size=1>.</style>            headed by *bph. Unneeded blocks are freed. Pullblock sets *
+<style color=#00ffffff size=1>.</style>            bph to point to the new list head and returns the number of
+<style color=#00ffffff size=1>.</style>            bytes discarded (which might be less than n). It is used by
+<style color=#00ffffff size=1>.</style>            transport protocols to discard ack'd data at the head of a
+<style color=#00ffffff size=1>.</style>            retransmission queue.
+
+<style color=#00ffffff size=1>.</style>            Pullupblock rearranges the data in the list of blocks b to
+<style color=#00ffffff size=1>.</style>            ensure that there are at least n bytes of contiguous data in
+<style color=#00ffffff size=1>.</style>            the first block, and returns a pointer to the new list head.
+<style color=#00ffffff size=1>.</style>            It frees any blocks that it empties. It returns a null
+<style color=#00ffffff size=1>.</style>            pointer if there is not enough data in the list.
+
+<style color=#00ffffff size=1>.</style>            Adjustblock ensures that the block b has at least n bytes of
+<style color=#00ffffff size=1>.</style>            data, reallocating or padding with zero if necessary. It
+<style color=#00ffffff size=1>.</style>            returns a pointer to the new Block. (If n is negative, it
+<style color=#00ffffff size=1>.</style>            frees the block and returns a null pointer.)
+
+<style color=#00ffffff size=1>.</style>            Checkb does some consistency checking of the state of b\; a
+<style color=#00ffffff size=1>.</style>            panic(10.2) results if things look grim. It is intended for
+<style color=#00ffffff size=1>.</style>            internal use by the queue I/O routines (see qio(10.2)) but
+<style color=#00ffffff size=1>.</style>            could be used elsewhere.
+
+<style color=#00ffffff size=1>.</style>            The only functions that can be called at interrupt level are
+<style color=#00ffffff size=1>.</style>            iallocb, freeb, freeblist, BLEN, blocklen, trimblock and
+<style color=#00ffffff size=1>.</style>            pullupblock. The others allocate memory and can potentially
+<style color=#00ffffff size=1>.</style>            block.
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Many functions directly or indirectly can raise an error
+<style color=#00ffffff size=1>.</style>            (10.2), and callers must therefore provide for proper error
+<style color=#00ffffff size=1>.</style>            recovery as described therein to prevent memory leaks and
+<style color=#00ffffff size=1>.</style>            other bugs. Except for iallocb, any functions that allocate
+<style color=#00ffffff size=1>.</style>            new blocks or lists are unsuitable for use by interrupt
+<style color=#00ffffff size=1>.</style>            handlers. Iallocb returns a null pointer when it runs out of
+<style color=#00ffffff size=1>.</style>            memory.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/qio.c
+<style color=#00ffffff size=1>.</style>            /emu/port/qio.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            qio(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

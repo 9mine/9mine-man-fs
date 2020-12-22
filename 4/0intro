@@ -1,0 +1,14 @@
+<action name=INTRO(4)>INTRO(4)</action>                                                 <action name=INTRO(4)>INTRO(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            intro - introduction to file servers
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This section describes programs that serve 9P (see intro
+<style color=#00ffffff size=1>.</style>            (5)), and can therefore be mounted, generating a new part of
+<style color=#00ffffff size=1>.</style>            the name space. Some, such as dossrv, thereby make the
+<style color=#00ffffff size=1>.</style>            contents of a foreign file format visible directly to
+<style color=#00ffffff size=1>.</style>            Inferno applications\; others, such as acme, provide their
+<style color=#00ffffff size=1>.</style>            own services through operations on files in a name space.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

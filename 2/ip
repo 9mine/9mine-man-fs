@@ -1,0 +1,219 @@
+<action name=IP(2)>IP(2)</action>                                                       <action name=IP(2)>IP(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            IP - Internet Protocol addresses and interfaces
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "ip.m"\;
+<style color=#00ffffff size=1>.</style>            ip := load IP IP->PATH\;
+<style color=#00ffffff size=1>.</style>            IPaddr: import IP\;
+
+<style color=#00ffffff size=1>.</style>            IPaddr: adt {
+<style color=#00ffffff size=1>.</style>               newv6:   fn(nil: array of byte): IPaddr\;
+<style color=#00ffffff size=1>.</style>               newv4:   fn(nil: array of byte): IPaddr\;
+<style color=#00ffffff size=1>.</style>               copy:    fn(nil: self IPaddr): IPaddr\;
+<style color=#00ffffff size=1>.</style>               eq:      fn(nil: self IPaddr, v: IPaddr): int\;
+<style color=#00ffffff size=1>.</style>               mask:    fn(nil: self IPaddr, m: IPaddr): IPaddr\;
+<style color=#00ffffff size=1>.</style>               isv4:    fn(nil: self IPaddr): int\;
+<style color=#00ffffff size=1>.</style>               ismulticast: fn(nil: self IPaddr): int\;
+<style color=#00ffffff size=1>.</style>               isvalid: fn(nil: self IPaddr): int\;
+
+<style color=#00ffffff size=1>.</style>               v4:      fn(nil: self IPaddr): array of byte\;
+<style color=#00ffffff size=1>.</style>               v6:      fn(nil: self IPaddr): array of byte\;
+<style color=#00ffffff size=1>.</style>               class:   fn(nil: self IPaddr): int\;
+<style color=#00ffffff size=1>.</style>               classmask: fn(nil: self IPaddr): IPaddr\;
+
+<style color=#00ffffff size=1>.</style>               parse:     fn(s: string): (int, IPaddr)\;
+<style color=#00ffffff size=1>.</style>               parsemask: fn(s: string): (int, IPaddr)\;
+<style color=#00ffffff size=1>.</style>               parsecidr: fn(s: string): (int, IPaddr, IPaddr)\;
+
+<style color=#00ffffff size=1>.</style>               text:     fn(nil: self IPaddr): string\;
+<style color=#00ffffff size=1>.</style>               masktext: fn(nil: self IPaddr): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            v4bcast, v4allsys, v4allrouter, noaddr, allbits: IPaddr\;
+<style color=#00ffffff size=1>.</style>            selfv6, selfv4: IPaddr\;
+<style color=#00ffffff size=1>.</style>            v4prefix: array of byte\;
+
+<style color=#00ffffff size=1>.</style>            Ifcaddr: adt {
+<style color=#00ffffff size=1>.</style>               ip:   IPaddr\;     # local interface address
+<style color=#00ffffff size=1>.</style>               mask: IPaddr\;     # subnet mask
+<style color=#00ffffff size=1>.</style>               net:  IPaddr\;     # ip & mask
+<style color=#00ffffff size=1>.</style>               preflt:  big\;     # preferred life time
+<style color=#00ffffff size=1>.</style>               validlt: big\;     # valid life time
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Ipifc: adt {
+<style color=#00ffffff size=1>.</style>               index:   int\;     # /net/ipifc/N
+<style color=#00ffffff size=1>.</style>               dev:     string\;  # bound device
+<style color=#00ffffff size=1>.</style>               addrs:   list of ref Ifcaddr\;
+<style color=#00ffffff size=1>.</style>               sendra:  int\;     # !=0, send router adverts
+<style color=#00ffffff size=1>.</style>               recvra:  int\;     # !=0, receive router adverts
+<style color=#00ffffff size=1>.</style>               mtu:     int\;
+<style color=#00ffffff size=1>.</style>               pktin:   big\;     # packets in
+<style color=#00ffffff size=1>.</style>               pktout:  big\;     # packets out
+<style color=#00ffffff size=1>.</style>               errin:   big\;     # input errors
+<style color=#00ffffff size=1>.</style>               errout:  big\;     # output errors
+<style color=#00ffffff size=1>.</style>               rp:      IPv6rp\;  # IPv6 route advert parameters
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            IPv6rp: adt {
+<style color=#00ffffff size=1>.</style>               mflag:   int\;
+<style color=#00ffffff size=1>.</style>               oflag:   int\;
+<style color=#00ffffff size=1>.</style>               maxraint: int\;    # max route advert interval
+<style color=#00ffffff size=1>.</style>               minraint: int\;    # min route advert interval
+<style color=#00ffffff size=1>.</style>               linkmtu:  int\;
+<style color=#00ffffff size=1>.</style>               reachtime: int\;
+<style color=#00ffffff size=1>.</style>               rxmitra:   int\;
+<style color=#00ffffff size=1>.</style>               ttl:       int\;
+<style color=#00ffffff size=1>.</style>               routerlt:  int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init: fn()\;
+<style color=#00ffffff size=1>.</style>            readipifc:  fn(net: string, index: int): (list of ref Ipifc, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            IP provides data types and operations that manipulate
+<style color=#00ffffff size=1>.</style>            Internet Protocol addresses, and operations that convert
+<style color=#00ffffff size=1>.</style>            between internal and textual address forms, for both IPv4
+<style color=#00ffffff size=1>.</style>            and IPv6. The textual forms are those defined by RFC2373.
+<style color=#00ffffff size=1>.</style>            Briefly, an IPv6 address is 16 bytes, represented textually
+<style color=#00ffffff size=1>.</style>            as a sequence of 8 colon-separated hexadecimal values
+<style color=#00ffffff size=1>.</style>            ranging from 0 to FFFF, except that any one sequence of
+<style color=#00ffffff size=1>.</style>            zeroes can be replaced by ::. IPv4 addresses are embedded in
+<style color=#00ffffff size=1>.</style>            the IPv6 space with a prefix of either 0:0:0:0:0:FFFF (for
+<style color=#00ffffff size=1>.</style>            addresses of `IPv4-mapped' nodes), or 0:0:0:0:0:0 (for
+<style color=#00ffffff size=1>.</style>            `IPv4-compatible' IPv6 nodes). See RFC2373 for the
+<style color=#00ffffff size=1>.</style>            distinction. For convenience in working with such addresses,
+<style color=#00ffffff size=1>.</style>            the textual syntax allows the last 4 bytes of an IPv6
+<style color=#00ffffff size=1>.</style>            address to be specified using a restricted IPv4 syntax,
+<style color=#00ffffff size=1>.</style>            allowing an address to end in four dot-separated decimal
+<style color=#00ffffff size=1>.</style>            values (for example, 0:0:0:0:0:FFFF:127.0.0.1 for the IPv4
+<style color=#00ffffff size=1>.</style>            loopback address). The functions here also accept the common
+<style color=#00ffffff size=1>.</style>            forms of IPv4 syntax with one or two values omitted (eg,
+<style color=#00ffffff size=1>.</style>            127.1 for the loopback address), and accept IPv4 format for
+<style color=#00ffffff size=1>.</style>            masks (eg, 255.255.254.0).
+
+<style color=#00ffffff size=1>.</style>            Init must be called once before using any value or function
+<style color=#00ffffff size=1>.</style>            of the module.
+
+<style color=#00ffffff size=1>.</style>            An Internet address or network mask  is represented by an
+<style color=#00ffffff size=1>.</style>            IPaddr value. It has the following operations:
+
+<style color=#00ffffff size=1>.</style>            IPaddr.newv6(a)
+<style color=#00ffffff size=1>.</style>                 Return an IPaddr representing the IPv6 address stored
+<style color=#00ffffff size=1>.</style>                 in a as an array of 16 bytes
+
+<style color=#00ffffff size=1>.</style>            IPaddr.newv4(a)
+<style color=#00ffffff size=1>.</style>                 Return an IPaddr representing the IPv4 address stored
+<style color=#00ffffff size=1>.</style>                 in a as an array of 4 bytes
+
+<style color=#00ffffff size=1>.</style>            IPaddr.parse(s)
+<style color=#00ffffff size=1>.</style>                 Return a tuple (ok,ip). If ok is 0, ip is an IPaddr
+<style color=#00ffffff size=1>.</style>                 representing the address in textual format in the
+<style color=#00ffffff size=1>.</style>                 string s, which can be in either IPv4 or IPv6 syntax.
+<style color=#00ffffff size=1>.</style>                 If ok is negative, s was invalid.
+
+<style color=#00ffffff size=1>.</style>            IPaddr.parsemask(s)
+<style color=#00ffffff size=1>.</style>                 S is a text string defining a mask, in one of three
+<style color=#00ffffff size=1>.</style>                 forms: /nbits where nbits is the number of leading one
+<style color=#00ffffff size=1>.</style>                 bits in the mask, ranging from 0 to 128\; an IPv4 mask
+<style color=#00ffffff size=1>.</style>                 (eg, 255.255.254.0)\; or an IPv6 mask. Return a tuple (
+<style color=#00ffffff size=1>.</style>                 ok,m). If ok is 0, m is an IPaddr representing the mask
+<style color=#00ffffff size=1>.</style>                 given by s. If ok is negative, s was invalid.
+
+<style color=#00ffffff size=1>.</style>            IPaddr.parsecidr(s)
+<style color=#00ffffff size=1>.</style>                 S is an address-mask combination in Classless
+<style color=#00ffffff size=1>.</style>                 Inter-Domain Routing (CIDR) format: ip-address/
+<style color=#00ffffff size=1>.</style>                 prefix-length, where ip-address is an address in any
+<style color=#00ffffff size=1>.</style>                 form accepted by parse above, and prefix-length is a
+<style color=#00ffffff size=1>.</style>                 decimal value giving the number of leftmost bits in
+<style color=#00ffffff size=1>.</style>                 ip-address that form the addressing prefix (ie, subnet
+<style color=#00ffffff size=1>.</style>                 prefix). Return a tuple (ok,ip,m). If ok is 0, ip and m
+<style color=#00ffffff size=1>.</style>                 are IPaddr values for the address and mask given by s.
+<style color=#00ffffff size=1>.</style>                 If ok is negative, s is invalid.
+
+<style color=#00ffffff size=1>.</style>            ip.copy()
+<style color=#00ffffff size=1>.</style>                 Return a copy of the value ip
+
+<style color=#00ffffff size=1>.</style>            ip.eq(v)
+<style color=#00ffffff size=1>.</style>                 Return true (non-zero) if ip represents the same
+<style color=#00ffffff size=1>.</style>                 address as v\; return false (zero) otherwise.
+
+<style color=#00ffffff size=1>.</style>            ip.mask(m)
+<style color=#00ffffff size=1>.</style>                 Return the value (ip&m), that is, address ip masked by
+<style color=#00ffffff size=1>.</style>                 m
+
+<style color=#00ffffff size=1>.</style>            ip.isv4()
+<style color=#00ffffff size=1>.</style>                 Return true if ip is an IPv4 address\; return false if
+<style color=#00ffffff size=1>.</style>                 otherwise (it can only be used on a full IPv6 network)
+
+<style color=#00ffffff size=1>.</style>            ip.v4()
+<style color=#00ffffff size=1>.</style>                 Return the value of ip as a 4-byte array in IPv4
+<style color=#00ffffff size=1>.</style>                 representation if it can be so represented\; if ip is
+<style color=#00ffffff size=1>.</style>                 not an IPv4 address, return nil.
+
+<style color=#00ffffff size=1>.</style>            ip.v6()
+<style color=#00ffffff size=1>.</style>                 Return the value of ip in IPv6 addressing format as an
+<style color=#00ffffff size=1>.</style>                 array of 16 bytes
+
+<style color=#00ffffff size=1>.</style>            ip.class()
+<style color=#00ffffff size=1>.</style>                 If ip is an IPv4 address, return its class (0 to 3)\; if
+<style color=#00ffffff size=1>.</style>                 it is an IPv6 address, return 6.
+
+<style color=#00ffffff size=1>.</style>            ip.classmask()
+<style color=#00ffffff size=1>.</style>                 If ip is an IPv4 address, return the mask associated
+<style color=#00ffffff size=1>.</style>                 with its class\; if ip is an IPv6 address, return a mask
+<style color=#00ffffff size=1>.</style>                 that is all ones.
+
+<style color=#00ffffff size=1>.</style>            ip.ismulticast()
+<style color=#00ffffff size=1>.</style>                 Return true if ip is a multicast or broadcast address.
+
+<style color=#00ffffff size=1>.</style>            ip.isvalid()
+<style color=#00ffffff size=1>.</style>                 Return true if ip is not the zero address in either
+<style color=#00ffffff size=1>.</style>                 IPv4 or IPv6 address space
+
+<style color=#00ffffff size=1>.</style>            ip.text()
+<style color=#00ffffff size=1>.</style>                 Return a textual representation of the address ip in
+<style color=#00ffffff size=1>.</style>                 either IPv4 or IPv6 format as appropriate.
+
+<style color=#00ffffff size=1>.</style>            ip.masktext()
+<style color=#00ffffff size=1>.</style>                 Return a textual representation of the address ip as
+<style color=#00ffffff size=1>.</style>                 one of: an IPv4 mask\; /n where n is the number of
+<style color=#00ffffff size=1>.</style>                 leading 1 bits, as used in CIDR syntax\; or as a full
+<style color=#00ffffff size=1>.</style>                 IPv6 textual address. The format used is appropriate to
+<style color=#00ffffff size=1>.</style>                 the structure of the value.
+
+<style color=#00ffffff size=1>.</style>            The module provides some predefined IPaddr values, mainly
+<style color=#00ffffff size=1>.</style>            for common IPv4 addresses: v4bcast (broadcast address),
+<style color=#00ffffff size=1>.</style>            v4allsys (all hosts multicast address), v4allrouter (all
+<style color=#00ffffff size=1>.</style>            routers multicast address), selfv4 (loopback in IPv4),
+<style color=#00ffffff size=1>.</style>            selfv6 (loopback in IPv6), noaddr (all zero address, used
+<style color=#00ffffff size=1>.</style>            before a node has an address), v4noaddr (all zero address
+<style color=#00ffffff size=1>.</style>            with IPv4 prefix), and allbits (address of all 1 bits). The
+<style color=#00ffffff size=1>.</style>            12-byte IPv6 prefix for IPv4 embedded addresses is provided
+<style color=#00ffffff size=1>.</style>            in the array of bytes v4prefix.
+
+<style color=#00ffffff size=1>.</style>            Readipifc returns a list of the host's IP interfaces and the
+<style color=#00ffffff size=1>.</style>            attributes and addresses of each, read from the interface
+<style color=#00ffffff size=1>.</style>            status files in /net/ipifc. On an error, the string in the
+<style color=#00ffffff size=1>.</style>            returned tuple contains a diagnostic and the list is nil.
+<style color=#00ffffff size=1>.</style>            Each interface is represented by an Ipifc value, which
+<style color=#00ffffff size=1>.</style>            contains a list of local interface addresses, addrs. Each
+<style color=#00ffffff size=1>.</style>            local address is represented by an Iplifc value in that
+<style color=#00ffffff size=1>.</style>            list.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /net/ipifc           directory of IP interfaces
+<style color=#00ffffff size=1>.</style>            /net/ipifc/n/status  status and addresses of interface n
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/ip.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ether(2)>ether(2)</action>, <action name=ip(3)>ip(3)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Readipifc is currently only usable in native Inferno. That
+<style color=#00ffffff size=1>.</style>            will change shortly.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

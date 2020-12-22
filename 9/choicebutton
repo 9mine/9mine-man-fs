@@ -1,0 +1,130 @@
+<action name=CHOICEBUTTON(9)>CHOICEBUTTON(9)</action>                                   <action name=CHOICEBUTTON(9)>CHOICEBUTTON(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            choicebutton - create and manipulate choicebutton widgets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            choicebutton pathName ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -activebackground -borderwidth      -relief
+<style color=#00ffffff size=1>.</style>            -activeforeground -font             -text
+<style color=#00ffffff size=1>.</style>            -anchor           -foreground
+<style color=#00ffffff size=1>.</style>            -background       -image
+<style color=#00ffffff size=1>.</style>            -bitmap           -justify
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -command command
+<style color=#00ffffff size=1>.</style>                 Specifies a Tk command to associate with the button.
+<style color=#00ffffff size=1>.</style>                 This command is typically invoked when mouse button 1
+<style color=#00ffffff size=1>.</style>                 is released over the button window.  The button's
+<style color=#00ffffff size=1>.</style>                 global variable (-variable option) will be updated
+<style color=#00ffffff size=1>.</style>                 before the command is invoked.
+
+<style color=#00ffffff size=1>.</style>            -height dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired height for the button. If this
+<style color=#00ffffff size=1>.</style>                 option isn't specified, the button's desired height is
+<style color=#00ffffff size=1>.</style>                 computed from the size of the highest item in the
+<style color=#00ffffff size=1>.</style>                 -values list.
+
+<style color=#00ffffff size=1>.</style>            -selectcolor colour
+<style color=#00ffffff size=1>.</style>                 Specifies a background colour to use when the button is
+<style color=#00ffffff size=1>.</style>                 selected. If specified as an empty string, no special
+<style color=#00ffffff size=1>.</style>                 colour is used for displaying when the widget is
+<style color=#00ffffff size=1>.</style>                 selected.
+
+<style color=#00ffffff size=1>.</style>            -values list
+<style color=#00ffffff size=1>.</style>                 Specifies a list of all the values the choicebutton can
+<style color=#00ffffff size=1>.</style>                 choose from.
+
+<style color=#00ffffff size=1>.</style>            -variable string
+<style color=#00ffffff size=1>.</style>                 Specifies name of global variable to set whenever this
+<style color=#00ffffff size=1>.</style>                 button is selected. The variable will be set to the
+<style color=#00ffffff size=1>.</style>                 index of the currently selected item. Changes in this
+<style color=#00ffffff size=1>.</style>                 variable also cause the button to choose the
+<style color=#00ffffff size=1>.</style>                 appropriate item (provided it is an integer and within
+<style color=#00ffffff size=1>.</style>                 range).
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired width for the button. If this
+<style color=#00ffffff size=1>.</style>                 option isn't specified, the button's desired width is
+<style color=#00ffffff size=1>.</style>                 computed from the size of the widest item in the
+<style color=#00ffffff size=1>.</style>                 -values list.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The choicebutton command creates a new window (given by the
+<style color=#00ffffff size=1>.</style>            pathName argument) and makes it into a choicebutton widget.
+<style color=#00ffffff size=1>.</style>            Additional options, described above, may be specified on the
+<style color=#00ffffff size=1>.</style>            command line to configure aspects of the choicebutton such
+<style color=#00ffffff size=1>.</style>            as its colours, font, text, and initial relief.  The 
+<style color=#00ffffff size=1>.</style>            choicebutton command returns its pathName argument.  At the
+<style color=#00ffffff size=1>.</style>            time this command is invoked, there must not exist a window
+<style color=#00ffffff size=1>.</style>            named pathName.
+
+<style color=#00ffffff size=1>.</style>            A choicebutton is a widget that displays a textual string,
+<style color=#00ffffff size=1>.</style>            one of the items given in the list argument to the -values
+<style color=#00ffffff size=1>.</style>            option. When clicked on, the choicebutton displays a menu
+<style color=#00ffffff size=1>.</style>            showing all the available choices, allowing the user to
+<style color=#00ffffff size=1>.</style>            change the choice by selecting an item. In the description
+<style color=#00ffffff size=1>.</style>            below, an index is a zero-based index into the set of values
+<style color=#00ffffff size=1>.</style>            specified with the -values option.
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The choicebutton command creates a new Tk command whose name
+<style color=#00ffffff size=1>.</style>            is pathName.  This command may be used to invoke various
+<style color=#00ffffff size=1>.</style>            operations on the widget.  It has the following general
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathName option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            Option and the args determine the exact behaviour of the
+<style color=#00ffffff size=1>.</style>            command.  The following commands are possible for
+<style color=#00ffffff size=1>.</style>            choicebutton widgets:
+
+<style color=#00ffffff size=1>.</style>            pathName cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the choicebutton command.
+
+<style color=#00ffffff size=1>.</style>            pathName configure ?option? ?value option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathName.  If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the choicebutton command.
+
+<style color=#00ffffff size=1>.</style>            pathName get ?value?
+<style color=#00ffffff size=1>.</style>                 Get the index of the first item with value. If value is
+<style color=#00ffffff size=1>.</style>                 not given, get the index of the currently selected
+<style color=#00ffffff size=1>.</style>                 item.
+
+<style color=#00ffffff size=1>.</style>            pathName set index
+<style color=#00ffffff size=1>.</style>                 Sets the current item to the indexth value.
+
+<style color=#00ffffff size=1>.</style>            pathName getvalue ?index?
+<style color=#00ffffff size=1>.</style>                 Get the value of the indexth item. If index is not
+<style color=#00ffffff size=1>.</style>                 given, get the value of the currently selected item.
+
+<style color=#00ffffff size=1>.</style>            pathName setvalue value
+<style color=#00ffffff size=1>.</style>                 Set the current item to the first item having value. If
+<style color=#00ffffff size=1>.</style>                 no item has that value, no change is made, and an error
+<style color=#00ffffff size=1>.</style>                 is returned.
+
+<style color=#00ffffff size=1>.</style>            pathName invoke index
+<style color=#00ffffff size=1>.</style>                 Does just what would have happened if the user invoked
+<style color=#00ffffff size=1>.</style>                 the choicebutton with the mouse and selected the item
+<style color=#00ffffff size=1>.</style>                 at index: sets the current item to index and runs its
+<style color=#00ffffff size=1>.</style>                 associated Tk command, if there is one. The return
+<style color=#00ffffff size=1>.</style>                 value is that from invoking the Tk command, or an empty
+<style color=#00ffffff size=1>.</style>                 string if there is no associated command.
+
+<style color=#00ffffff size=1>.</style>            pathName valuecount
+<style color=#00ffffff size=1>.</style>                 Returns the number of values configured in the
+<style color=#00ffffff size=1>.</style>                 choicebutton.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=button(9)>button(9)</action>, check<action name=button(9)>button(9)</action>, <action name=options(9)>options(9)</action>, <action name=radio<action name=button(9)>button(9)</action>>radio<action name=button(9)>button(9)</action></action>, types
+<style color=#00ffffff size=1>.</style>            (9)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

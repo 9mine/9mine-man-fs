@@ -1,0 +1,44 @@
+<action name=SYS-PIPE(2)>SYS-PIPE(2)</action>                                           <action name=SYS-PIPE(2)>SYS-PIPE(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            pipe - create an interprocess channel
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            pipe: fn(fds: array of ref FD): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Pipe creates a buffered channel for interprocess I/O via
+<style color=#00ffffff size=1>.</style>            file descriptors. It allocates a pipe from the pipe device
+<style color=#00ffffff size=1>.</style>            and returns in the array fds file descriptors for the two
+<style color=#00ffffff size=1>.</style>            pipe ends. Both returned file descriptors are opened for
+<style color=#00ffffff size=1>.</style>            both reading and writing (Sys->ORDWR). Data written on one
+<style color=#00ffffff size=1>.</style>            file descriptor can be read from the other. The details of
+<style color=#00ffffff size=1>.</style>            flow control and buffering are given in <action name=pipe(3)>pipe(3)</action>. When no
+<style color=#00ffffff size=1>.</style>            references remain to the file descriptor representing one
+<style color=#00ffffff size=1>.</style>            end of a pipe, and all remaining data has been read at the
+<style color=#00ffffff size=1>.</style>            other end, subsequent reads at that end will return 0 bytes.
+<style color=#00ffffff size=1>.</style>            Writes to a pipe with no reader produce an exception.
+
+<style color=#00ffffff size=1>.</style>            The array fds passed to the system call must have a length
+<style color=#00ffffff size=1>.</style>            of at least 2\; only entries 0 and 1 are updated.
+
+<style color=#00ffffff size=1>.</style>            Limbo applications typically use typed Limbo channels, not
+<style color=#00ffffff size=1>.</style>            pipes, for efficient communication by cooperating processes.
+<style color=#00ffffff size=1>.</style>            Pipes are still useful, however, to connect applications
+<style color=#00ffffff size=1>.</style>            that do not (or cannot) share such channels, or when a
+<style color=#00ffffff size=1>.</style>            system interface requires a file descriptor. For instance, a
+<style color=#00ffffff size=1>.</style>            process that serves the 9P protocol can pass the file
+<style color=#00ffffff size=1>.</style>            descriptor for one end of a pipe to Sys->mount (see sys-bind
+<style color=#00ffffff size=1>.</style>            (2)), and read and write 9P messages on the other end of the
+<style color=#00ffffff size=1>.</style>            pipe.
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Returns 0 on success\; -1 on failure.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=pipe(3)>pipe(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

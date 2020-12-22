@@ -1,0 +1,402 @@
+<action name=SPKI(2)>SPKI(2)</action>                                                   <action name=SPKI(2)>SPKI(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            SPKI: Cert, Hash, Key, Name, Seqel, Signature, Subject,
+<style color=#00ffffff size=1>.</style>            Toplev, Valid - simple public key infrastructure
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "bufio.m"\;
+<style color=#00ffffff size=1>.</style>            include "sexprs.m"\;
+<style color=#00ffffff size=1>.</style>            include "keyring.m"\;
+<style color=#00ffffff size=1>.</style>            include "spki.m"\;
+<style color=#00ffffff size=1>.</style>            spki := load SPKI SPKI->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Hash: adt {
+<style color=#00ffffff size=1>.</style>                alg:    string\;
+<style color=#00ffffff size=1>.</style>                hash:   array of byte\;
+
+<style color=#00ffffff size=1>.</style>                sexp:   fn(h: self ref Hash): ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>                text:   fn(h: self ref Hash): string\;
+<style color=#00ffffff size=1>.</style>                eq:     fn(h1: self ref Hash, h2: ref Hash): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Key: adt {
+<style color=#00ffffff size=1>.</style>                pk:     ref Keyring->PK\;    # either pk/sk or hash might be nil
+<style color=#00ffffff size=1>.</style>                sk:     ref Keyring->SK\;
+<style color=#00ffffff size=1>.</style>                nbits:  int\;
+<style color=#00ffffff size=1>.</style>                halg:   string\;             # basic signature hash algorithm
+<style color=#00ffffff size=1>.</style>                henc:   string\;             # pre-signature encoding
+<style color=#00ffffff size=1>.</style>                hash:   list of ref Hash\;
+
+<style color=#00ffffff size=1>.</style>                hashed:  fn(k: self ref Key, alg: string): array of byte\;
+<style color=#00ffffff size=1>.</style>                hashexp: fn(k: self ref Key, alg: string): ref Hash\;
+<style color=#00ffffff size=1>.</style>                public:  fn(k: self ref Key): ref Key\;
+<style color=#00ffffff size=1>.</style>                sigalg:  fn(k: self ref Key): string\;
+<style color=#00ffffff size=1>.</style>                text:    fn(k: self ref Key): string\;
+<style color=#00ffffff size=1>.</style>                sexp:    fn(k: self ref Key): ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>                eq:      fn(k1: self ref Key, k2: ref Key): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Name: adt {
+<style color=#00ffffff size=1>.</style>                principal:  ref Key\;
+<style color=#00ffffff size=1>.</style>                names:  list of string\;
+
+<style color=#00ffffff size=1>.</style>                isprincipal: fn(n: self ref Name): int\;
+<style color=#00ffffff size=1>.</style>                local:    fn(n: self ref Name): ref Name\;
+<style color=#00ffffff size=1>.</style>                islocal:  fn(n: self ref Name): int\;
+<style color=#00ffffff size=1>.</style>                isprefix: fn(n1: self ref Name, n2: ref Name): int\;
+<style color=#00ffffff size=1>.</style>                text:     fn(n: self ref Name): string\;
+<style color=#00ffffff size=1>.</style>                sexp:     fn(n: self ref Name): ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>                eq:       fn(n1: self ref Name, n2: ref Name): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Cert: adt {
+<style color=#00ffffff size=1>.</style>                e:        ref Sexprs->Sexp\;   # S-expression, if originally parsed
+<style color=#00ffffff size=1>.</style>                issuer:   ref Name\;
+<style color=#00ffffff size=1>.</style>                subject:  ref Subject\;
+<style color=#00ffffff size=1>.</style>                valid:    ref Valid\;
+<style color=#00ffffff size=1>.</style>                pick {
+<style color=#00ffffff size=1>.</style>                A or KH or O => # auth, keyholder or object
+<style color=#00ffffff size=1>.</style>                    delegate:   int\;
+<style color=#00ffffff size=1>.</style>                    tag:        ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>                N =>    # name
+<style color=#00ffffff size=1>.</style>                }
+
+<style color=#00ffffff size=1>.</style>                text:     fn(c: self ref Cert): string\;
+<style color=#00ffffff size=1>.</style>                sexp:     fn(c: self ref Cert): ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Subject: adt {
+<style color=#00ffffff size=1>.</style>                pick{
+<style color=#00ffffff size=1>.</style>                P =>
+<style color=#00ffffff size=1>.</style>                    key:    ref Key\;
+<style color=#00ffffff size=1>.</style>                N =>
+<style color=#00ffffff size=1>.</style>                    name:   ref Name\;
+<style color=#00ffffff size=1>.</style>                O =>
+<style color=#00ffffff size=1>.</style>                    hash:   ref Hash\;
+<style color=#00ffffff size=1>.</style>                KH =>
+<style color=#00ffffff size=1>.</style>                    holder: ref Name\;
+<style color=#00ffffff size=1>.</style>                T =>
+<style color=#00ffffff size=1>.</style>                    k, n:   int\;
+<style color=#00ffffff size=1>.</style>                    subs:   cyclic list of ref Subject\;
+<style color=#00ffffff size=1>.</style>                }
+
+<style color=#00ffffff size=1>.</style>                eq:     fn(s1: self ref Subject, s2: ref Subject): int\;
+<style color=#00ffffff size=1>.</style>                principal:  fn(s: self ref Subject): ref Key\;
+<style color=#00ffffff size=1>.</style>                text:   fn(s: self ref Subject): string\;
+<style color=#00ffffff size=1>.</style>                sexp:   fn(s: self ref Subject): ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Signature: adt {
+<style color=#00ffffff size=1>.</style>                hash:   ref Hash\;
+<style color=#00ffffff size=1>.</style>                key:    ref Key\;    # find by hash if necessary
+<style color=#00ffffff size=1>.</style>                sa:     string\;     # alg\[-\[encoding-\]hash
+<style color=#00ffffff size=1>.</style>                sig:    list of (string, array of byte)\;
+
+<style color=#00ffffff size=1>.</style>                algs:   fn(s: self ref Signature): (string, string, string)\;
+<style color=#00ffffff size=1>.</style>                sexp:   fn(s: self ref Signature): ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>                text:   fn(s: self ref Signature): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Seqel: adt {
+<style color=#00ffffff size=1>.</style>                pick{
+<style color=#00ffffff size=1>.</style>                C =>
+<style color=#00ffffff size=1>.</style>                    c: ref Cert\;
+<style color=#00ffffff size=1>.</style>                K =>
+<style color=#00ffffff size=1>.</style>                    k: ref Key\;
+<style color=#00ffffff size=1>.</style>                O =>
+<style color=#00ffffff size=1>.</style>                    op: string\;
+<style color=#00ffffff size=1>.</style>                    args: list of ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>                S =>
+<style color=#00ffffff size=1>.</style>                    sig: ref Signature\;
+<style color=#00ffffff size=1>.</style>                E =>
+<style color=#00ffffff size=1>.</style>                    exp:    ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>                }
+
+<style color=#00ffffff size=1>.</style>                sexp:   fn(se: self ref Seqeql): ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>                text:   fn(se: self ref Seqel): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Valid: adt {
+<style color=#00ffffff size=1>.</style>                notbefore:  string\;
+<style color=#00ffffff size=1>.</style>                notafter:   string\;
+
+<style color=#00ffffff size=1>.</style>                intersect:  fn(a: self Valid, b: Valid): (int, Valid)\;
+<style color=#00ffffff size=1>.</style>                text:   fn(a: self Valid): string\;
+<style color=#00ffffff size=1>.</style>                sexp:   fn(a: self Valid): ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Toplev: adt {
+<style color=#00ffffff size=1>.</style>                pick {
+<style color=#00ffffff size=1>.</style>                C =>
+<style color=#00ffffff size=1>.</style>                    v:  ref Cert\;
+<style color=#00ffffff size=1>.</style>                Sig =>
+<style color=#00ffffff size=1>.</style>                    v:  ref Signature\;
+<style color=#00ffffff size=1>.</style>                K =>
+<style color=#00ffffff size=1>.</style>                    v:  ref Key\;
+<style color=#00ffffff size=1>.</style>                Seq =>
+<style color=#00ffffff size=1>.</style>                    v:  list of ref Seqel\;
+<style color=#00ffffff size=1>.</style>                }
+
+<style color=#00ffffff size=1>.</style>                sexp:   fn(t: self ref Toplev): ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>                text:   fn(t: self ref Toplev): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:   fn()\;
+<style color=#00ffffff size=1>.</style>            date2epoch: fn(s: string): int\; # YYYY-MM-DD_HH:MM:SS
+<style color=#00ffffff size=1>.</style>            epoch2date: fn(t: int): string\;
+<style color=#00ffffff size=1>.</style>            time2secs:  fn(s: string): int\; # HH:MM:SS
+<style color=#00ffffff size=1>.</style>            secs2time:  fn(t: int): string\;
+<style color=#00ffffff size=1>.</style>            sigalgs:    fn(spec: string): (string, string, string)\;
+
+<style color=#00ffffff size=1>.</style>            # parse structures
+<style color=#00ffffff size=1>.</style>            parse:      fn(s: ref Sexprs->Sexp): (ref Toplev, string)\;
+<style color=#00ffffff size=1>.</style>            parseseq:   fn(s: ref Sexprs->Sexp): list of ref Seqel\;
+<style color=#00ffffff size=1>.</style>            parsecert:  fn(s: ref Sexprs->Sexp): ref Cert\;
+<style color=#00ffffff size=1>.</style>            parsesig:   fn(s: ref Sexprs->Sexp): ref Signature\;
+<style color=#00ffffff size=1>.</style>            parsename:  fn(s: ref Sexprs->Sexp): ref Name\;
+<style color=#00ffffff size=1>.</style>            parsekey:   fn(s: ref Sexprs->Sexp): ref Key\;
+<style color=#00ffffff size=1>.</style>            parsehash:  fn(s: ref Sexprs->Sexp): ref Hash\;
+<style color=#00ffffff size=1>.</style>            parsecompound:  fn(s: ref Sexprs->Sexp): ref Name\;
+<style color=#00ffffff size=1>.</style>            parsevalid: fn(s: ref Sexprs->Sexp): ref Valid\;
+
+<style color=#00ffffff size=1>.</style>            # signature checking
+<style color=#00ffffff size=1>.</style>            checksig:   fn(c: ref Cert, sig: ref Signature): string\;
+<style color=#00ffffff size=1>.</style>            sig2icert:  fn(sig: ref Signature, signer: string, exp: int): ref Keyring->Certificate\;
+
+<style color=#00ffffff size=1>.</style>            # signature making
+<style color=#00ffffff size=1>.</style>            signcert:   fn(c: ref Cert, sigalg: string, key: ref Key):
+<style color=#00ffffff size=1>.</style>                             (ref Signature, string)\;
+<style color=#00ffffff size=1>.</style>            signbytes:  fn(a: array of byte, sigalg: string, key: ref Key):
+<style color=#00ffffff size=1>.</style>                             (ref Signature, string)\;
+
+<style color=#00ffffff size=1>.</style>            # tags
+<style color=#00ffffff size=1>.</style>            maketag:    fn(e: ref Sexprs->Sexp): ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>            tagintersect:  fn(t1: ref Sexprs->Sexp, t2: ref Sexprs->Sexp):
+<style color=#00ffffff size=1>.</style>                             ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>            tagimplies: fn(t1: ref Sexprs->Sexp, t2: ref Sexprs->Sexp): int\;
+
+<style color=#00ffffff size=1>.</style>            # hash canonical s-expression
+<style color=#00ffffff size=1>.</style>            hashbytes:  fn(a: array of byte, alg: string): array of byte\;
+<style color=#00ffffff size=1>.</style>            hashexp:    fn(e: ref Sexprs->Sexp, alg: string): array of byte\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            SPKI provides data types and operations to help build
+<style color=#00ffffff size=1>.</style>            implementations of the Simple Public Key Infrastructure
+<style color=#00ffffff size=1>.</style>            (SPKI). It provides types for hash values, public and
+<style color=#00ffffff size=1>.</style>            private keys, local and extended names, principals and
+<style color=#00ffffff size=1>.</style>            compound principles, certificates, validity periods,
+<style color=#00ffffff size=1>.</style>            signatures, and proof sequences. It also provides operations
+<style color=#00ffffff size=1>.</style>            on authorisation tags. Externally, SPKI represents all such
+<style color=#00ffffff size=1>.</style>            things as particular forms of S-expression, internally
+<style color=#00ffffff size=1>.</style>            represented using Sexprs->Sexp from <action name=sexprs(2)>sexprs(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before invoking any other operation of
+<style color=#00ffffff size=1>.</style>            the module.
+
+<style color=#00ffffff size=1>.</style>            Most types defined here provide several common operations:
+
+<style color=#00ffffff size=1>.</style>            t1.eq(t2)
+<style color=#00ffffff size=1>.</style>                 Return true iff values t1 and t2 are equal.
+
+<style color=#00ffffff size=1>.</style>            t.sexp()
+<style color=#00ffffff size=1>.</style>                 Return an S-expression s representing the value of t.
+<style color=#00ffffff size=1>.</style>                 Subsequently, the Sexp operation s.pack() will yield an
+<style color=#00ffffff size=1>.</style>                 array of bytes containing the value t in SPKI's
+<style color=#00ffffff size=1>.</style>                 canonical S-expression form.
+
+<style color=#00ffffff size=1>.</style>            t.text()
+<style color=#00ffffff size=1>.</style>                 Return a textual representation of the value t\; it is
+<style color=#00ffffff size=1>.</style>                 often just the textual representation of the
+<style color=#00ffffff size=1>.</style>                 corresponding S-expression.
+
+<style color=#00ffffff size=1>.</style>            Hash is the internal representation of hash values,
+<style color=#00ffffff size=1>.</style>            containing an algorithm name alg and then the hash itself as
+<style color=#00ffffff size=1>.</style>            an array of bytes. SPKI entities such as the public key of a
+<style color=#00ffffff size=1>.</style>            principal or a signed certificate are often represented by
+<style color=#00ffffff size=1>.</style>            the hash values of their corresponding S-expressions, where
+<style color=#00ffffff size=1>.</style>            the hash value is later used as a compact way to refer to
+<style color=#00ffffff size=1>.</style>            the original entity. For example, a <principal> is either a
+<style color=#00ffffff size=1>.</style>            <public-key> or a <hash-of-key>, where the latter refers to
+<style color=#00ffffff size=1>.</style>            some instance of the former. Current hash algorithms are 
+<style color=#00ffffff size=1>.</style>            "sha1" and "md5. A Hash value can be created from an
+<style color=#00ffffff size=1>.</style>            S-expression representing a SPKI <hash> element by parsehash
+<style color=#00ffffff size=1>.</style>            . It returns nil if the S-expression was ill-formed.
+
+<style color=#00ffffff size=1>.</style>            Key represents public and private keys, with an optional
+<style color=#00ffffff size=1>.</style>            associated pre-hash encoding henc, the hash algorithm halg
+<style color=#00ffffff size=1>.</style>            to be used when signing, and an optional list of currently
+<style color=#00ffffff size=1>.</style>            known hashes of the public component of the key itself. SPKI
+<style color=#00ffffff size=1>.</style>            identifies principals and public keys, thus each instance of
+<style color=#00ffffff size=1>.</style>            a principal in the other data structures is represented by a
+<style color=#00ffffff size=1>.</style>            Key giving the corresponding public key, or its hash, or
+<style color=#00ffffff size=1>.</style>            both. Currently the public and private (secret) key values
+<style color=#00ffffff size=1>.</style>            have types defined by <action name=keyring-intro(2)>keyring-intro(2)</action>. A Key value can be
+<style color=#00ffffff size=1>.</style>            created from an S-expression representing a SPKI
+<style color=#00ffffff size=1>.</style>            <public-key> element by parsekey. It returns nil if the
+<style color=#00ffffff size=1>.</style>            S-expression was ill-formed. For a given Key k:
+
+<style color=#00ffffff size=1>.</style>            k.ishash()
+<style color=#00ffffff size=1>.</style>                 Returns true if k is just a hash of a key, with no
+<style color=#00ffffff size=1>.</style>                 public or private components.
+
+<style color=#00ffffff size=1>.</style>            k.public()
+<style color=#00ffffff size=1>.</style>                 Returns the public key for k, which is simply k if it
+<style color=#00ffffff size=1>.</style>                 is already a public key, but if it is a private key,
+<style color=#00ffffff size=1>.</style>                 then a new key is returned that has only public
+<style color=#00ffffff size=1>.</style>                 components. Public returns a nil value if k is just a
+<style color=#00ffffff size=1>.</style>                 hash of a key value.
+
+<style color=#00ffffff size=1>.</style>            k.sigalg()
+<style color=#00ffffff size=1>.</style>                 Returns the SPKI signature algorithm for the key.
+
+<style color=#00ffffff size=1>.</style>            k.hashed(alg)
+<style color=#00ffffff size=1>.</style>                 Return an array of bytes giving the hash of the Key k
+<style color=#00ffffff size=1>.</style>                 using algorithm alg. It returns nil if k.ishash() is
+<style color=#00ffffff size=1>.</style>                 true, and k has no associated hash value for alg.
+
+<style color=#00ffffff size=1>.</style>            k.hashexp(alg)
+<style color=#00ffffff size=1>.</style>                 Similar to hashed, but returns a Hash value instead of
+<style color=#00ffffff size=1>.</style>                 the raw data.
+
+<style color=#00ffffff size=1>.</style>            Name represents both local and extended names, and simple
+<style color=#00ffffff size=1>.</style>            principals consisting of just a key. The field principal
+<style color=#00ffffff size=1>.</style>            gives the key that defines the name space in which the list
+<style color=#00ffffff size=1>.</style>            of names is interpreted. For simple principles, the list of
+<style color=#00ffffff size=1>.</style>            names is nil. A local name has exactly one name in the list.
+<style color=#00ffffff size=1>.</style>            Two parsing functions convert to Name from S-expressions.
+<style color=#00ffffff size=1>.</style>            Parsename parses a SPKI <name> element: (name \[ principal \]
+<style color=#00ffffff size=1>.</style>            name ... ), where principal is either a <public-key> or a
+<style color=#00ffffff size=1>.</style>            <hash> element. Parsecompound accepts either a <name>
+<style color=#00ffffff size=1>.</style>            element as above, or a <public-key> or its <hash>. Both
+<style color=#00ffffff size=1>.</style>            functions return nil if the S-expression is ill-formed.
+
+<style color=#00ffffff size=1>.</style>            Subject represents the subjects of SPKI name and
+<style color=#00ffffff size=1>.</style>            authorisation certificates. It has several variants in a
+<style color=#00ffffff size=1>.</style>            pick adt, with suitable fields for each variant:
+
+<style color=#00ffffff size=1>.</style>            Subject.P
+<style color=#00ffffff size=1>.</style>                 A simple principal: a key.
+
+<style color=#00ffffff size=1>.</style>            Subject.N
+<style color=#00ffffff size=1>.</style>                 A group of principals or a delayed binding to a
+<style color=#00ffffff size=1>.</style>                 principal: a name.
+
+<style color=#00ffffff size=1>.</style>            Subject.O
+<style color=#00ffffff size=1>.</style>                 The hash of an object.
+
+<style color=#00ffffff size=1>.</style>            Subject.KH
+<style color=#00ffffff size=1>.</style>                 A keyholder certificate, that says something about a
+<style color=#00ffffff size=1>.</style>                 key's holder (represented by a Name).
+
+<style color=#00ffffff size=1>.</style>            Subject.T
+<style color=#00ffffff size=1>.</style>                 A threshold subject, used only in authorisation
+<style color=#00ffffff size=1>.</style>                 certificates. The n subsidiary subjects are listed in
+<style color=#00ffffff size=1>.</style>                 subs\; of those, at least k must sign a request for it
+<style color=#00ffffff size=1>.</style>                 to be authorised.
+
+<style color=#00ffffff size=1>.</style>            Subject
+<style color=#00ffffff size=1>.</style>                 provides the common operations eq, sexp and text, and a
+<style color=#00ffffff size=1>.</style>                 further operation:
+
+<style color=#00ffffff size=1>.</style>            s.principal()
+<style color=#00ffffff size=1>.</style>                 If s is a simple principal or a name, return the Key
+<style color=#00ffffff size=1>.</style>                 defining the principal, if known\; return nil otherwise.
+
+<style color=#00ffffff size=1>.</style>            Subjects appear only as a subsidiary item in certificates
+<style color=#00ffffff size=1>.</style>            and do not have a parsing function.
+
+<style color=#00ffffff size=1>.</style>            Cert represents SPKI certificates. There are four variants,
+<style color=#00ffffff size=1>.</style>            represented by a pick adt: Cert.A (authorisation)\; Cert.KH
+<style color=#00ffffff size=1>.</style>            (keyholder)\; Cert.O (object)\; and Cert.N (name). The
+<style color=#00ffffff size=1>.</style>            following fields and operations are common to all variants:
+
+<style color=#00ffffff size=1>.</style>            e    original S-expression (if created by parsecert) to
+<style color=#00ffffff size=1>.</style>                 allow hashes and signatures to be computed on the SPKI
+<style color=#00ffffff size=1>.</style>                 canonical form of the certificate
+
+<style color=#00ffffff size=1>.</style>            issuer
+<style color=#00ffffff size=1>.</style>                 The simple principal (represented as a name) that
+<style color=#00ffffff size=1>.</style>                 issued an authorisation, keyholder or object
+<style color=#00ffffff size=1>.</style>                 certificate, or the <issuer-name> of a name certificate
+<style color=#00ffffff size=1>.</style>                 (allowing both local and extended names not just simple
+<style color=#00ffffff size=1>.</style>                 principals).
+
+<style color=#00ffffff size=1>.</style>            subject
+<style color=#00ffffff size=1>.</style>                 The Subject of the certificate. Name certificates may
+<style color=#00ffffff size=1>.</style>                 not have threshold subjects.
+
+<style color=#00ffffff size=1>.</style>            valid
+<style color=#00ffffff size=1>.</style>                 Optional restriction on the certificate's validity (see
+<style color=#00ffffff size=1>.</style>                 Valid for details).
+
+<style color=#00ffffff size=1>.</style>            Name certificates have only the fields above\; the others
+<style color=#00ffffff size=1>.</style>            have several more fields:
+
+<style color=#00ffffff size=1>.</style>                 delegate True iff the certificate carries delegation
+<style color=#00ffffff size=1>.</style>                 rights (ie, (propagate) in the S-expression
+<style color=#00ffffff size=1>.</style>                 representation).
+
+<style color=#00ffffff size=1>.</style>            tag  An S-expression that expresses the authority granted by
+<style color=#00ffffff size=1>.</style>                 the certificate. The expression (tag (*)) means `all
+<style color=#00ffffff size=1>.</style>                 permissions'.
+
+<style color=#00ffffff size=1>.</style>            A Cert value can be created from an S-expression
+<style color=#00ffffff size=1>.</style>            representing a SPKI <cert> element by parsecert. It returns
+<style color=#00ffffff size=1>.</style>            nil if the expression was ill-formed.
+
+<style color=#00ffffff size=1>.</style>            SPKI tag expressions, represented internally by
+<style color=#00ffffff size=1>.</style>            Sexprs->Sexpr trees, form a partial order, including the
+<style color=#00ffffff size=1>.</style>            pattern operations (*), (* set ... ), (* prefix ... ), (*
+<style color=#00ffffff size=1>.</style>            range ... ), and as an extension, (* suffix ... ). Given two
+<style color=#00ffffff size=1>.</style>            tag expressions t1 and t2, tagintersect returns a tag
+<style color=#00ffffff size=1>.</style>            expression representing t1 ∩ t2\; tagimplies returns true iff
+<style color=#00ffffff size=1>.</style>            tag t1 implies tag t2: (t1∩t2)=t2. Both functions work
+<style color=#00ffffff size=1>.</style>            correctly when t1 and t2 contain any legal combination of
+<style color=#00ffffff size=1>.</style>            pattern operations.
+
+<style color=#00ffffff size=1>.</style>            SPKI structures are converted to a canonical form of
+<style color=#00ffffff size=1>.</style>            S-expression to be hashed or signed (with or without
+<style color=#00ffffff size=1>.</style>            hashing). Hashbytes returns an array of bytes containing the
+<style color=#00ffffff size=1>.</style>            result of hashing array a using hash algorithm alg (either
+<style color=#00ffffff size=1>.</style>            sha1 or md5). Hashexp returns an array of bytes containing
+<style color=#00ffffff size=1>.</style>            the hash of the canonical form of expression e using hash
+<style color=#00ffffff size=1>.</style>            algorithm alg.
+
+<style color=#00ffffff size=1>.</style>            Signature associates hash , the Hash value of something (eg,
+<style color=#00ffffff size=1>.</style>            a public key) with the result of applying a public-key
+<style color=#00ffffff size=1>.</style>            signature algorithm sa  to that hash value. The name of the
+<style color=#00ffffff size=1>.</style>            algorithm has the form
+
+<style color=#00ffffff size=1>.</style>                 alg\[-\[encoding-\]hash\]
+<style color=#00ffffff size=1>.</style>                 with up to three subcomponents (separated by dashes),
+<style color=#00ffffff size=1>.</style>                 where alg is a public key algorithm such as rsa or dsa,
+<style color=#00ffffff size=1>.</style>                 encoding is an optional encoding to apply to the value
+<style color=#00ffffff size=1>.</style>                 before signing, and hash is the secure hash algorithm
+<style color=#00ffffff size=1>.</style>                 to apply to the encoded value before signing. For
+<style color=#00ffffff size=1>.</style>                 example, the usual algorithms for RSA keys are
+<style color=#00ffffff size=1>.</style>                 rsa-pkcs1-sha1 and rsa-pkcs1-md5.
+
+<style color=#00ffffff size=1>.</style>            Signatures are created by signcert, which signs a SPKI
+<style color=#00ffffff size=1>.</style>            certificate represented by c with key using the signature
+<style color=#00ffffff size=1>.</style>            algorithm sigalg. Key must contain both public and secret
+<style color=#00ffffff size=1>.</style>            (private) components. Any other binary data can be signed by
+<style color=#00ffffff size=1>.</style>            signbytes, which signs arbitrary data represented by an
+<style color=#00ffffff size=1>.</style>            array of bytes a. Both functions apply any encoding and hash
+<style color=#00ffffff size=1>.</style>            algorithms mentioned by sigalg, and return a tuple (sig,err
+<style color=#00ffffff size=1>.</style>            ). On success, sig refers to a Signature value that can be
+<style color=#00ffffff size=1>.</style>            converted to an S-expression using sig.sexp() and err is
+<style color=#00ffffff size=1>.</style>            nil. On an error, sig is nil and err contains a diagnostic.
+
+<style color=#00ffffff size=1>.</style>            A certificate's signature can be checked by checksig. If sig
+<style color=#00ffffff size=1>.</style>            is a valid signature for certificate c, checksig returns
+<style color=#00ffffff size=1>.</style>            nil. If the signature is invalid, checksig returns a
+<style color=#00ffffff size=1>.</style>            diagnostic.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/spki.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bufio(2)>bufio(2)</action>, <action name=sexprs(2)>sexprs(2)</action>, <action name=spki-verifier(2)>spki-verifier(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

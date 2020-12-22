@@ -1,0 +1,32 @@
+<action name=BUFIO-CHANFILL(2)>BUFIO-CHANFILL(2)</action>                               <action name=BUFIO-CHANFILL(2)>BUFIO-CHANFILL(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            bufio: chanfill - buffered I/O interface to named channel
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "bufio.m"\;
+<style color=#00ffffff size=1>.</style>            chanfill := load ChanFill ChanFill->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:   fn(data: array of byte, fid: int,
+<style color=#00ffffff size=1>.</style>                        wc: Sys->Rwrite, r: ref Sys->FileIO,
+<style color=#00ffffff size=1>.</style>                        b: Bufio): ref Bufio->Iobuf\;
+<style color=#00ffffff size=1>.</style>            fill:   fn(b: ref Bufio->Iobuf): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            ChanFill is an implementation of BufioFill (see <action name=bufio(2)>bufio(2)</action>)
+<style color=#00ffffff size=1>.</style>            that refills an Iobuf as data is written to a file created
+<style color=#00ffffff size=1>.</style>            by <action name=sys-file2chan(2)>sys-file2chan(2)</action>, which is allowed only one writer. Init
+<style color=#00ffffff size=1>.</style>            returns an Iobuf allocated from the Bufio instance b, that
+<style color=#00ffffff size=1>.</style>            when read will return data written to the file by another
+<style color=#00ffffff size=1>.</style>            process. Data, fid and wc are the values in the tuple
+<style color=#00ffffff size=1>.</style>            presented by Sys->file2chan on the first write. Data becomes
+<style color=#00ffffff size=1>.</style>            the initial data for the Iobuf\; init replies to the writer
+<style color=#00ffffff size=1>.</style>            on wc. The other values are saved for use by fill: on later
+<style color=#00ffffff size=1>.</style>            calls to by Bufio to refill the buffer, fill waits for a new
+<style color=#00ffffff size=1>.</style>            write request on fio.write and either fills the buffer or
+<style color=#00ffffff size=1>.</style>            signals end-of-file appropriately.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bufio(2)>bufio(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

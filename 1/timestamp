@@ -1,0 +1,31 @@
+<action name=TIMESTAMP(1)>TIMESTAMP(1)</action>                                         <action name=TIMESTAMP(1)>TIMESTAMP(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            timestamp - log event times
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            timestamp \[ tag \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Timestamp reads lines from its standard input and writes
+<style color=#00ffffff size=1>.</style>            them to its standard output, prefixing each line with the
+<style color=#00ffffff size=1>.</style>            time that it was written, in decimal milliseconds since
+<style color=#00ffffff size=1>.</style>            timestamp was started. If tag is given, it is written along
+<style color=#00ffffff size=1>.</style>            with the time stamp on each line, to enable tagging if
+<style color=#00ffffff size=1>.</style>            several writers are each writing to the same log file.
+
+<style color=#00ffffff size=1>.</style>            The first line written gives the time that timestamp was
+<style color=#00ffffff size=1>.</style>            started, in milliseconds since the epoch. Note that logging
+<style color=#00ffffff size=1>.</style>            events can cause timings to change, and that the timestamps
+<style color=#00ffffff size=1>.</style>            are only as accurate as the times reported by /dev/time.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/timestamp.b
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            % {echo hello\; sleep 1\; echo goodbye} | timestamp eg
+<style color=#00ffffff size=1>.</style>            0000000000 eg start 1080156139468
+<style color=#00ffffff size=1>.</style>            0000000007 eg hello
+<style color=#00ffffff size=1>.</style>            0000000988 eg goodbye
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,1195 @@
+<action name=TEXT(9)>TEXT(9)</action>                                                   <action name=TEXT(9)>TEXT(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            text - Create and manipulate text widgets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            text pathName ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -background  -pady              -takefocus
+<style color=#00ffffff size=1>.</style>            -borderwidth -relief            -xscrollcommand
+<style color=#00ffffff size=1>.</style>            -font        -selectbackground  -yscrollcommand
+<style color=#00ffffff size=1>.</style>            -foreground  -selectborderwidth
+<style color=#00ffffff size=1>.</style>            -padx        -selectforeground
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -height dist
+<style color=#00ffffff size=1>.</style>                 Specifies the desired height for the window.
+
+<style color=#00ffffff size=1>.</style>            -spacing1 dist
+<style color=#00ffffff size=1>.</style>                 Requests additional space above each text line in the
+<style color=#00ffffff size=1>.</style>                 widget, using any of the standard forms for screen
+<style color=#00ffffff size=1>.</style>                 distances. If a line wraps, this option only applies to
+<style color=#00ffffff size=1>.</style>                 the first line on the display. This option may be
+<style color=#00ffffff size=1>.</style>                 overriden with -spacing1 options in tags.
+
+<style color=#00ffffff size=1>.</style>            -spacing2 dist
+<style color=#00ffffff size=1>.</style>                 For lines that wrap (so that they cover more than one
+<style color=#00ffffff size=1>.</style>                 line on the display) this option specifies additional
+<style color=#00ffffff size=1>.</style>                 space to provide between the display lines that
+<style color=#00ffffff size=1>.</style>                 represent a single line of text. The value may have any
+<style color=#00ffffff size=1>.</style>                 of the standard forms for screen distances. This option
+<style color=#00ffffff size=1>.</style>                 may be overriden with -spacing2 options in tags.
+
+<style color=#00ffffff size=1>.</style>            -spacing3 dist
+<style color=#00ffffff size=1>.</style>                 Requests additional space below each text line in the
+<style color=#00ffffff size=1>.</style>                 widget, using any of the standard forms for screen
+<style color=#00ffffff size=1>.</style>                 distances. If a line wraps, this option only applies to
+<style color=#00ffffff size=1>.</style>                 the last line on the display. This option may be
+<style color=#00ffffff size=1>.</style>                 overriden with -spacing3 options in tags.
+
+<style color=#00ffffff size=1>.</style>            -state state
+<style color=#00ffffff size=1>.</style>                 Specifies one of two states for the text:  normal or 
+<style color=#00ffffff size=1>.</style>                 disabled. If the text is disabled then characters may
+<style color=#00ffffff size=1>.</style>                 not be inserted or deleted and no insertion cursor will
+<style color=#00ffffff size=1>.</style>                 be displayed, even if the input focus is in the widget.
+
+<style color=#00ffffff size=1>.</style>            -tabs dist
+<style color=#00ffffff size=1>.</style>                 Specifies a set of tab stops for the window.  The
+<style color=#00ffffff size=1>.</style>                 option's value consists of a list of dist values giving
+<style color=#00ffffff size=1>.</style>                 the positions of the tab stops.  Each dist may
+<style color=#00ffffff size=1>.</style>                 optionally be followed in the next list element by one
+<style color=#00ffffff size=1>.</style>                 of the keywords left, right, center, or numeric, which
+<style color=#00ffffff size=1>.</style>                 specifies how to justify text relative to the tab stop.
+<style color=#00ffffff size=1>.</style>                 Left is the default\; it causes the text following the
+<style color=#00ffffff size=1>.</style>                 tab character to be positioned with its left edge at
+<style color=#00ffffff size=1>.</style>                 the tab position.  Right means that the right edge of
+<style color=#00ffffff size=1>.</style>                 the text following the tab character is positioned at
+<style color=#00ffffff size=1>.</style>                 the tab position, and center means that the text is
+<style color=#00ffffff size=1>.</style>                 centered at the tab position. Numeric means that the
+<style color=#00ffffff size=1>.</style>                 decimal point in the text is positioned at the tab
+<style color=#00ffffff size=1>.</style>                 position\;  if there is no decimal point then the least
+<style color=#00ffffff size=1>.</style>                 significant digit of the number is positioned just to
+<style color=#00ffffff size=1>.</style>                 the left of the tab position\;  if there is no number in
+<style color=#00ffffff size=1>.</style>                 the text then the text is right-justified at the tab
+<style color=#00ffffff size=1>.</style>                 position. For example, -tabs {2c left 4c 6c center}
+<style color=#00ffffff size=1>.</style>                 creates three tab stops at two-centimeter intervals\;
+<style color=#00ffffff size=1>.</style>                 the first two use left justification and the third uses
+<style color=#00ffffff size=1>.</style>                 center justification. If the list of tab stops does not
+<style color=#00ffffff size=1>.</style>                 have enough elements to cover all of the tabs in a text
+<style color=#00ffffff size=1>.</style>                 line, then Tk extrapolates new tab stops using the
+<style color=#00ffffff size=1>.</style>                 spacing and alignment from the last tab stop in the
+<style color=#00ffffff size=1>.</style>                 list. The value of the tabs option may be overridden by
+<style color=#00ffffff size=1>.</style>                 -tabs options in tags. If no -tabs option is specified,
+<style color=#00ffffff size=1>.</style>                 or if it is specified as an empty list, then Tk uses
+<style color=#00ffffff size=1>.</style>                 default tabs spaced every eight (average size)
+<style color=#00ffffff size=1>.</style>                 characters.
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies the desired width for the window.
+
+<style color=#00ffffff size=1>.</style>            -wrap val
+<style color=#00ffffff size=1>.</style>                 Specifies how to handle lines in the text that are too
+<style color=#00ffffff size=1>.</style>                 long to be displayed in a single line of the text's
+<style color=#00ffffff size=1>.</style>                 window. The value must be none or char or word. A wrap
+<style color=#00ffffff size=1>.</style>                 mode of none means that each line of text appears as
+<style color=#00ffffff size=1>.</style>                 exactly one line on the screen\;  extra characters that
+<style color=#00ffffff size=1>.</style>                 don't fit on the screen are not displayed. In the other
+<style color=#00ffffff size=1>.</style>                 modes each line of text will be broken up into several
+<style color=#00ffffff size=1>.</style>                 screen lines if necessary to keep all the characters
+<style color=#00ffffff size=1>.</style>                 visible. In char mode a screen line break may occur
+<style color=#00ffffff size=1>.</style>                 after any character\; in word mode a line break will
+<style color=#00ffffff size=1>.</style>                 only be made at word boundaries.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The text command creates a new window (given by the pathName
+<style color=#00ffffff size=1>.</style>            argument) and makes it into a text widget. Additional
+<style color=#00ffffff size=1>.</style>            options, described above, may be specified on the command
+<style color=#00ffffff size=1>.</style>            line to configure aspects of the text such as its default
+<style color=#00ffffff size=1>.</style>            background colour and relief.  The text command returns the
+<style color=#00ffffff size=1>.</style>            path name of the new window.
+
+<style color=#00ffffff size=1>.</style>            A text widget displays one or more lines of text and allows
+<style color=#00ffffff size=1>.</style>            that text to be edited. Text widgets support three different
+<style color=#00ffffff size=1>.</style>            kinds of annotations on the text, called tags, marks, and
+<style color=#00ffffff size=1>.</style>            embedded windows. Tags allow different portions of the text
+<style color=#00ffffff size=1>.</style>            to be displayed with different fonts and colours. In
+<style color=#00ffffff size=1>.</style>            addition, Tk commands can be associated with tags so that
+<style color=#00ffffff size=1>.</style>            scripts are invoked when particular actions such as
+<style color=#00ffffff size=1>.</style>            keystrokes and mouse button presses occur in particular
+<style color=#00ffffff size=1>.</style>            ranges of the text. See TAGS below for more details.
+
+<style color=#00ffffff size=1>.</style>            The second form of annotation consists of marks, which are
+<style color=#00ffffff size=1>.</style>            floating markers in the text. Marks are used to keep track
+<style color=#00ffffff size=1>.</style>            of various interesting positions in the text as it is
+<style color=#00ffffff size=1>.</style>            edited. See MARKS below for more details.
+
+<style color=#00ffffff size=1>.</style>            The third form of annotation allows arbitrary windows to be
+<style color=#00ffffff size=1>.</style>            embedded in a text widget. See EMBEDDED WINDOWS below for
+<style color=#00ffffff size=1>.</style>            more details.
+
+INDICES
+<style color=#00ffffff size=1>.</style>            Many of the widget commands for texts take one or more
+<style color=#00ffffff size=1>.</style>            indices as arguments. An index is a string used to indicate
+<style color=#00ffffff size=1>.</style>            a particular place within a text, such as a place to insert
+<style color=#00ffffff size=1>.</style>            characters or one endpoint of a range of characters to
+<style color=#00ffffff size=1>.</style>            delete. Indices have the syntax
+<style color=#00ffffff size=1>.</style>                 base modifier modifier modifier ...
+<style color=#00ffffff size=1>.</style>            Where base gives a starting point and the modifiers adjust
+<style color=#00ffffff size=1>.</style>            the index from the starting point (e.g. move forward or
+<style color=#00ffffff size=1>.</style>            backward one character).  Every index must contain a base,
+<style color=#00ffffff size=1>.</style>            but the modifiers are optional.
+
+<style color=#00ffffff size=1>.</style>            The base for an index must have one of the following forms:
+
+<style color=#00ffffff size=1>.</style>            line.char   Indicates char'th character on line line. Lines
+<style color=#00ffffff size=1>.</style>                        are numbered from 1 for consistency with other
+<style color=#00ffffff size=1>.</style>                        UNIX programs that use this numbering scheme.
+<style color=#00ffffff size=1>.</style>                        Within a line, characters are numbered from 0.
+<style color=#00ffffff size=1>.</style>                        If char is end then it refers to the newline
+<style color=#00ffffff size=1>.</style>                        character that ends the line.
+
+<style color=#00ffffff size=1>.</style>            @x,y        Indicates the character that covers the pixel
+<style color=#00ffffff size=1>.</style>                        whose x and y coordinates within the text's
+<style color=#00ffffff size=1>.</style>                        window are x and y.
+
+<style color=#00ffffff size=1>.</style>            end         Indicates the end of the text (the character
+<style color=#00ffffff size=1>.</style>                        just after the last newline).
+
+<style color=#00ffffff size=1>.</style>            mark        Indicates the character just after the mark
+<style color=#00ffffff size=1>.</style>                        whose name is mark.
+
+<style color=#00ffffff size=1>.</style>            tag.first   Indicates the first character in the text that
+<style color=#00ffffff size=1>.</style>                        has been tagged with tag. This form generates an
+<style color=#00ffffff size=1>.</style>                        error if no characters are currently tagged with
+<style color=#00ffffff size=1>.</style>                        tag.
+
+<style color=#00ffffff size=1>.</style>            tag.last    Indicates the character just after the last one
+<style color=#00ffffff size=1>.</style>                        in the text that has been tagged with tag. This
+<style color=#00ffffff size=1>.</style>                        form generates an error if no characters are
+<style color=#00ffffff size=1>.</style>                        currently tagged with tag.
+
+<style color=#00ffffff size=1>.</style>            pathName    Indicates the position of the embedded window
+<style color=#00ffffff size=1>.</style>                        whose name is pathName. This form generates an
+<style color=#00ffffff size=1>.</style>                        error if there is no embedded window by the
+<style color=#00ffffff size=1>.</style>                        given name.
+
+<style color=#00ffffff size=1>.</style>            If modifiers follow the base index, each one of them must
+<style color=#00ffffff size=1>.</style>            have one of the forms listed below.
+
+<style color=#00ffffff size=1>.</style>            + count chars
+<style color=#00ffffff size=1>.</style>                 Adjust the index forward by count characters, moving to
+<style color=#00ffffff size=1>.</style>                 later lines in the text if necessary.  If there are
+<style color=#00ffffff size=1>.</style>                 fewer than count characters in the text after the
+<style color=#00ffffff size=1>.</style>                 current index, then set the index to the last character
+<style color=#00ffffff size=1>.</style>                 in the text. Spaces on either side of count are
+<style color=#00ffffff size=1>.</style>                 optional.
+
+<style color=#00ffffff size=1>.</style>            - count chars
+<style color=#00ffffff size=1>.</style>                 Adjust the index backward by count characters, moving
+<style color=#00ffffff size=1>.</style>                 to earlier lines in the text if necessary.  If there
+<style color=#00ffffff size=1>.</style>                 are fewer than count characters in the text before the
+<style color=#00ffffff size=1>.</style>                 current index, then set the index to the first
+<style color=#00ffffff size=1>.</style>                 character in the text. Spaces on either side of count
+<style color=#00ffffff size=1>.</style>                 are optional.
+
+<style color=#00ffffff size=1>.</style>            + count lines
+<style color=#00ffffff size=1>.</style>                 Adjust the index forward by count lines, retaining the
+<style color=#00ffffff size=1>.</style>                 same character position within the line.  If there are
+<style color=#00ffffff size=1>.</style>                 fewer than count lines after the line containing the
+<style color=#00ffffff size=1>.</style>                 current index, then set the index to refer to the same
+<style color=#00ffffff size=1>.</style>                 character position on the last line of the text. Then,
+<style color=#00ffffff size=1>.</style>                 if the line is not long enough to contain a character
+<style color=#00ffffff size=1>.</style>                 at the indicated character position, adjust the
+<style color=#00ffffff size=1>.</style>                 character position to refer to the last character of
+<style color=#00ffffff size=1>.</style>                 the line (the newline). Spaces on either side of count
+<style color=#00ffffff size=1>.</style>                 are optional.
+
+<style color=#00ffffff size=1>.</style>            - count lines
+<style color=#00ffffff size=1>.</style>                 Adjust the index backward by count lines, retaining the
+<style color=#00ffffff size=1>.</style>                 same character position within the line.  If there are
+<style color=#00ffffff size=1>.</style>                 fewer than count lines before the line containing the
+<style color=#00ffffff size=1>.</style>                 current index, then set the index to refer to the same
+<style color=#00ffffff size=1>.</style>                 character position on the first line of the text. Then,
+<style color=#00ffffff size=1>.</style>                 if the line is not long enough to contain a character
+<style color=#00ffffff size=1>.</style>                 at the indicated character position, adjust the
+<style color=#00ffffff size=1>.</style>                 character position to refer to the last character of
+<style color=#00ffffff size=1>.</style>                 the line (the newline). Spaces on either side of count
+<style color=#00ffffff size=1>.</style>                 are optional.
+
+<style color=#00ffffff size=1>.</style>            linestart
+<style color=#00ffffff size=1>.</style>                 Adjust the index to refer to the first character on the
+<style color=#00ffffff size=1>.</style>                 line.
+
+<style color=#00ffffff size=1>.</style>            lineend
+<style color=#00ffffff size=1>.</style>                 Adjust the index to refer to the last character on the
+<style color=#00ffffff size=1>.</style>                 line (the newline).
+
+<style color=#00ffffff size=1>.</style>            wordstart
+<style color=#00ffffff size=1>.</style>                 Adjust the index to refer to the first character of the
+<style color=#00ffffff size=1>.</style>                 word containing the current index.  A word consists of
+<style color=#00ffffff size=1>.</style>                 any number of adjacent characters that are letters,
+<style color=#00ffffff size=1>.</style>                 digits, or underscores, or a single character that is
+<style color=#00ffffff size=1>.</style>                 not one of these.
+
+<style color=#00ffffff size=1>.</style>            wordend
+<style color=#00ffffff size=1>.</style>                 Adjust the index to refer to the character just after
+<style color=#00ffffff size=1>.</style>                 the last one of the word containing the current index.
+<style color=#00ffffff size=1>.</style>                 If the current index refers to the last character of
+<style color=#00ffffff size=1>.</style>                 the text then it is not modified.
+
+<style color=#00ffffff size=1>.</style>            If more than one modifier is present then they are applied
+<style color=#00ffffff size=1>.</style>            in left-to-right order.  For example, the index ``end - 1
+<style color=#00ffffff size=1>.</style>            chars'' refers to the next-to-last character in the text and
+<style color=#00ffffff size=1>.</style>            the index ``insert wordstart - 1 c'' refers to the character
+<style color=#00ffffff size=1>.</style>            just before the first one in the word containing the
+<style color=#00ffffff size=1>.</style>            insertion cursor.
+
+TAGS
+<style color=#00ffffff size=1>.</style>            The first form of annotation in text widgets is a tag. A tag
+<style color=#00ffffff size=1>.</style>            is a textual string that is associated with some of the
+<style color=#00ffffff size=1>.</style>            characters in a text. Tags may contain arbitrary characters,
+<style color=#00ffffff size=1>.</style>            but it is probably best to avoid using the the characters ``
+<style color=#00ffffff size=1>.</style>            '' (space), +, or -: these characters have special meaning
+<style color=#00ffffff size=1>.</style>            in indices, so tags containing them can't be used as
+<style color=#00ffffff size=1>.</style>            indices. The tag name may not begin with a digit. There may
+<style color=#00ffffff size=1>.</style>            be any number of tags associated with characters in a text.
+<style color=#00ffffff size=1>.</style>            Each tag may refer to a single character, a range of
+<style color=#00ffffff size=1>.</style>            characters, or several ranges of characters. An individual
+<style color=#00ffffff size=1>.</style>            character may have any number of tags associated with it.
+
+<style color=#00ffffff size=1>.</style>            A priority order is defined among tags, and this order is
+<style color=#00ffffff size=1>.</style>            used in implementing some of the tag-related functions
+<style color=#00ffffff size=1>.</style>            described below. When a tag is defined (by associating it
+<style color=#00ffffff size=1>.</style>            with characters or setting its display options or binding
+<style color=#00ffffff size=1>.</style>            commands to it), it is given a priority higher than any
+<style color=#00ffffff size=1>.</style>            existing tag. The priority order of tags may be redefined
+<style color=#00ffffff size=1>.</style>            using the ``pathName tag raise'' and ``pathName tag lower''
+<style color=#00ffffff size=1>.</style>            widget commands.
+
+<style color=#00ffffff size=1>.</style>            Tags serve three purposes in text widgets. First, they
+<style color=#00ffffff size=1>.</style>            control the way information is displayed on the screen. By
+<style color=#00ffffff size=1>.</style>            default, characters are displayed as determined by the
+<style color=#00ffffff size=1>.</style>            background, font, and foreground options for the text
+<style color=#00ffffff size=1>.</style>            widget. However, display options may be associated with
+<style color=#00ffffff size=1>.</style>            individual tags using the ``pathName tag configure'' widget
+<style color=#00ffffff size=1>.</style>            command. If a character has been tagged, then the display
+<style color=#00ffffff size=1>.</style>            options associated with the tag override the default display
+<style color=#00ffffff size=1>.</style>            style. The following options are currently supported for
+<style color=#00ffffff size=1>.</style>            tags:
+
+<style color=#00ffffff size=1>.</style>            -background colour
+<style color=#00ffffff size=1>.</style>                 Color specifies the background colour to use for
+<style color=#00ffffff size=1>.</style>                 characters associated with the tag.
+
+<style color=#00ffffff size=1>.</style>            -borderwidth dist
+<style color=#00ffffff size=1>.</style>                 Dist specifies the width of a 3-D border to draw around
+<style color=#00ffffff size=1>.</style>                 the background. This option is used in conjunction with
+<style color=#00ffffff size=1>.</style>                 the -relief option to give a 3-D appearance to the
+<style color=#00ffffff size=1>.</style>                 background for characters\; it is ignored unless the 
+<style color=#00ffffff size=1>.</style>                 -background option has been set for the tag.
+
+<style color=#00ffffff size=1>.</style>            -font font
+<style color=#00ffffff size=1>.</style>                 Font is the name of a font to use for drawing
+<style color=#00ffffff size=1>.</style>                 characters.
+
+<style color=#00ffffff size=1>.</style>            -foreground colour
+<style color=#00ffffff size=1>.</style>                 Color specifies the colour to use when drawing text and
+<style color=#00ffffff size=1>.</style>                 other foreground information such as underlines.
+
+<style color=#00ffffff size=1>.</style>            -justify justify
+<style color=#00ffffff size=1>.</style>                 If the first character of a display line has a tag for
+<style color=#00ffffff size=1>.</style>                 which this option has been specified, then justify
+<style color=#00ffffff size=1>.</style>                 determines how to justify the line. It must be one of 
+<style color=#00ffffff size=1>.</style>                 left, right, or center. If a line wraps, then the
+<style color=#00ffffff size=1>.</style>                 justification for each line on the display is
+<style color=#00ffffff size=1>.</style>                 determined by the first character of that display line.
+
+<style color=#00ffffff size=1>.</style>            -lmargin1 dist
+<style color=#00ffffff size=1>.</style>                 If the first character of a text line has a tag for
+<style color=#00ffffff size=1>.</style>                 which this option has been specified, then dist
+<style color=#00ffffff size=1>.</style>                 specifies how much the line should be indented from the
+<style color=#00ffffff size=1>.</style>                 left edge of the window. Dist may have any of the
+<style color=#00ffffff size=1>.</style>                 standard forms for screen distances. If a line of text
+<style color=#00ffffff size=1>.</style>                 wraps, this option only applies to the first line on
+<style color=#00ffffff size=1>.</style>                 the display\;  the -lmargin2 option controls the
+<style color=#00ffffff size=1>.</style>                 indentation for subsequent lines.
+
+<style color=#00ffffff size=1>.</style>            -lmargin2 dist
+<style color=#00ffffff size=1>.</style>                 If the first character of a display line has a tag for
+<style color=#00ffffff size=1>.</style>                 which this option has been specified, and if the
+<style color=#00ffffff size=1>.</style>                 display line is not the first for its text line (i.e.,
+<style color=#00ffffff size=1>.</style>                 the text line has wrapped), then dist specifies how
+<style color=#00ffffff size=1>.</style>                 much the line should be indented from the left edge of
+<style color=#00ffffff size=1>.</style>                 the window. Dist may have any of the standard forms for
+<style color=#00ffffff size=1>.</style>                 screen distances. This option is only used when
+<style color=#00ffffff size=1>.</style>                 wrapping is enabled, and it only applies to the second
+<style color=#00ffffff size=1>.</style>                 and later display lines for a text line.
+
+<style color=#00ffffff size=1>.</style>            -offset dist
+<style color=#00ffffff size=1>.</style>                 Dist specifies an amount by which the text's baseline
+<style color=#00ffffff size=1>.</style>                 should be offset vertically from the baseline of the
+<style color=#00ffffff size=1>.</style>                 overall line, in pixels. For example, a positive offset
+<style color=#00ffffff size=1>.</style>                 can be used for superscripts and a negative offset can
+<style color=#00ffffff size=1>.</style>                 be used for subscripts. Dist may have any of the
+<style color=#00ffffff size=1>.</style>                 standard forms for screen distances.
+
+<style color=#00ffffff size=1>.</style>            -overstrike boolean
+<style color=#00ffffff size=1>.</style>                 Specifies whether or not to draw a horizontal rule
+<style color=#00ffffff size=1>.</style>                 through the middle of characters.
+
+<style color=#00ffffff size=1>.</style>            -relief relief
+<style color=#00ffffff size=1>.</style>                 Relief specifies the 3-D relief to use for drawing
+<style color=#00ffffff size=1>.</style>                 backgrounds. This option is used in conjunction with
+<style color=#00ffffff size=1>.</style>                 the -borderwidth option to give a 3-D appearance to the
+<style color=#00ffffff size=1>.</style>                 background for characters\; it is ignored unless the 
+<style color=#00ffffff size=1>.</style>                 -background option has been set for the tag.
+
+<style color=#00ffffff size=1>.</style>            -rmargin dist
+<style color=#00ffffff size=1>.</style>                 If the first character of a display line has a tag for
+<style color=#00ffffff size=1>.</style>                 which this option has been specified, then dist
+<style color=#00ffffff size=1>.</style>                 specifies how wide a margin to leave between the end of
+<style color=#00ffffff size=1>.</style>                 the line and the right edge of the window. This option
+<style color=#00ffffff size=1>.</style>                 is only used when wrapping is enabled. If a text line
+<style color=#00ffffff size=1>.</style>                 wraps, the right margin for each line on the display is
+<style color=#00ffffff size=1>.</style>                 determined by the first character of that display line.
+
+<style color=#00ffffff size=1>.</style>            -spacing1 dist
+<style color=#00ffffff size=1>.</style>                 Dist specifies how much additional space should be left
+<style color=#00ffffff size=1>.</style>                 above each text line, using any of the standard forms
+<style color=#00ffffff size=1>.</style>                 for screen distances. If a line wraps, this option only
+<style color=#00ffffff size=1>.</style>                 applies to the first line on the display.
+
+<style color=#00ffffff size=1>.</style>            -spacing2 dist
+<style color=#00ffffff size=1>.</style>                 For lines that wrap, this option specifies how much
+<style color=#00ffffff size=1>.</style>                 additional space to leave between the display lines for
+<style color=#00ffffff size=1>.</style>                 a single text line. Dist may have any of the standard
+<style color=#00ffffff size=1>.</style>                 forms for screen distances.
+
+<style color=#00ffffff size=1>.</style>            -spacing3 dist
+<style color=#00ffffff size=1>.</style>                 Dist specifies how much additional space should be left
+<style color=#00ffffff size=1>.</style>                 below each text line, using any of the standard forms
+<style color=#00ffffff size=1>.</style>                 for screen distances. If a line wraps, this option only
+<style color=#00ffffff size=1>.</style>                 applies to the last line on the display.
+
+<style color=#00ffffff size=1>.</style>            -tabs tabList
+<style color=#00ffffff size=1>.</style>                 TabList specifies a set of tab stops in the same form
+<style color=#00ffffff size=1>.</style>                 as for the -tabs option for the text widget.  This
+<style color=#00ffffff size=1>.</style>                 option only applies to a display line if it applies to
+<style color=#00ffffff size=1>.</style>                 the first character on that display line. If this
+<style color=#00ffffff size=1>.</style>                 option is specified as an empty string, it cancels the
+<style color=#00ffffff size=1>.</style>                 option, leaving it unspecified for the tag (the
+<style color=#00ffffff size=1>.</style>                 default). If the option is specified as a non-empty
+<style color=#00ffffff size=1>.</style>                 string that is an empty list, such as -tabs\0{\0}, then
+<style color=#00ffffff size=1>.</style>                 it requests default 8-character tabs as described for
+<style color=#00ffffff size=1>.</style>                 the tabs widget option.
+
+<style color=#00ffffff size=1>.</style>            -underline boolean
+<style color=#00ffffff size=1>.</style>                 Boolean specifies whether or not to draw an underline
+<style color=#00ffffff size=1>.</style>                 underneath characters.
+
+<style color=#00ffffff size=1>.</style>            -wrap mode
+<style color=#00ffffff size=1>.</style>                 Mode specifies how to handle lines that are wider than
+<style color=#00ffffff size=1>.</style>                 the text's window. It has the same legal values as the 
+<style color=#00ffffff size=1>.</style>                 -wrap option for the text widget:  none, char, or word.
+<style color=#00ffffff size=1>.</style>                 If this tag option is specified, it overrides the -wrap
+<style color=#00ffffff size=1>.</style>                 option for the text widget.
+
+<style color=#00ffffff size=1>.</style>            If a character has several tags associated with it, and if
+<style color=#00ffffff size=1>.</style>            their display options conflict, then the options of the
+<style color=#00ffffff size=1>.</style>            highest priority tag are used. If a particular display
+<style color=#00ffffff size=1>.</style>            option hasn't been specified for a particular tag, or if it
+<style color=#00ffffff size=1>.</style>            is specified as an empty string, then that option will never
+<style color=#00ffffff size=1>.</style>            be used\;  the next-highest-priority tag's option will be
+<style color=#00ffffff size=1>.</style>            used instead. If no tag specifies a particular display
+<style color=#00ffffff size=1>.</style>            option, then the default style for the widget will be used.
+
+<style color=#00ffffff size=1>.</style>            The second purpose for tags is event bindings. You can
+<style color=#00ffffff size=1>.</style>            associate bindings with a tag in much the same way you can
+<style color=#00ffffff size=1>.</style>            associate bindings with a widget class:  whenever particular
+<style color=#00ffffff size=1>.</style>            events occur on characters with the given tag, a given Tk
+<style color=#00ffffff size=1>.</style>            command will be executed. Tag bindings can be used to give
+<style color=#00ffffff size=1>.</style>            behaviours to ranges of characters\; among other things, this
+<style color=#00ffffff size=1>.</style>            allows hypertext-like features to be implemented. For
+<style color=#00ffffff size=1>.</style>            details, see the description of the tag bind widget command
+<style color=#00ffffff size=1>.</style>            below.
+
+<style color=#00ffffff size=1>.</style>            The third use for tags is in managing the selection. See THE
+<style color=#00ffffff size=1>.</style>            SELECTION below.
+
+MARKS
+<style color=#00ffffff size=1>.</style>            The second form of annotation in text widgets is a mark.
+<style color=#00ffffff size=1>.</style>            Marks are used for remembering particular places in a text.
+<style color=#00ffffff size=1>.</style>            They are something like tags, in that they have names and
+<style color=#00ffffff size=1>.</style>            they refer to places in the file, but a mark isn't
+<style color=#00ffffff size=1>.</style>            associated with particular characters. Instead, a mark is
+<style color=#00ffffff size=1>.</style>            associated with the gap between two characters. Only a
+<style color=#00ffffff size=1>.</style>            single position may be associated with a mark at any given
+<style color=#00ffffff size=1>.</style>            time. If the characters around a mark are deleted the mark
+<style color=#00ffffff size=1>.</style>            will still remain\;  it will just have new neighbour
+<style color=#00ffffff size=1>.</style>            characters. In contrast, if the characters containing a tag
+<style color=#00ffffff size=1>.</style>            are deleted then the tag will no longer have an association
+<style color=#00ffffff size=1>.</style>            with characters in the file. Marks may be manipulated with
+<style color=#00ffffff size=1>.</style>            the ``pathName mark'' widget command, and their current
+<style color=#00ffffff size=1>.</style>            locations may be determined by using the mark name as an
+<style color=#00ffffff size=1>.</style>            index in widget commands.
+
+<style color=#00ffffff size=1>.</style>            Each mark also has a gravity, which is either left or right.
+<style color=#00ffffff size=1>.</style>            The gravity for a mark specifies what happens to the mark
+<style color=#00ffffff size=1>.</style>            when text is inserted at the point of the mark. If a mark
+<style color=#00ffffff size=1>.</style>            has left gravity, then the mark is treated as if it were
+<style color=#00ffffff size=1>.</style>            attached to the character on its left, so the mark will
+<style color=#00ffffff size=1>.</style>            remain to the left of any text inserted at the mark
+<style color=#00ffffff size=1>.</style>            position. If the mark has right gravity, new text inserted
+<style color=#00ffffff size=1>.</style>            at the mark position will appear to the right of the mark.
+<style color=#00ffffff size=1>.</style>            The gravity for a mark defaults to right.
+
+<style color=#00ffffff size=1>.</style>            The name space for marks is different from that for tags:
+<style color=#00ffffff size=1>.</style>            the same name may be used for both a mark and a tag, but
+<style color=#00ffffff size=1>.</style>            they will refer to different things.
+
+<style color=#00ffffff size=1>.</style>            Two marks have special significance. First, the mark insert
+<style color=#00ffffff size=1>.</style>            is associated with the insertion cursor, as described under
+<style color=#00ffffff size=1>.</style>            THE INSERTION CURSOR below. Second, the mark current is
+<style color=#00ffffff size=1>.</style>            associated with the character closest to the mouse and is
+<style color=#00ffffff size=1>.</style>            adjusted automatically to track the mouse position and any
+<style color=#00ffffff size=1>.</style>            changes to the text in the widget (one exception:  current
+<style color=#00ffffff size=1>.</style>            is not updated in response to mouse motions if a mouse
+<style color=#00ffffff size=1>.</style>            button is down\;  the update will be deferred until all mouse
+<style color=#00ffffff size=1>.</style>            buttons have been released). Neither of these special marks
+<style color=#00ffffff size=1>.</style>            may be deleted.
+
+EMBEDDED WINDOWS
+<style color=#00ffffff size=1>.</style>            The third form of annotation in text widgets is an embedded
+<style color=#00ffffff size=1>.</style>            window. Each embedded window annotation causes a window to
+<style color=#00ffffff size=1>.</style>            be displayed at a particular point in  the text. There may
+<style color=#00ffffff size=1>.</style>            be any number of embedded windows in a text widget, and any
+<style color=#00ffffff size=1>.</style>            widget may be used as an embedded window. The embedded
+<style color=#00ffffff size=1>.</style>            window's position on the screen will be updated as the text
+<style color=#00ffffff size=1>.</style>            is modified or scrolled. Each embedded window occupies one
+<style color=#00ffffff size=1>.</style>            character's worth of index space in the text widget, and it
+<style color=#00ffffff size=1>.</style>            may be referred to either by the name of its embedded window
+<style color=#00ffffff size=1>.</style>            or by its position in the widget's index space. If the range
+<style color=#00ffffff size=1>.</style>            of text containing the embedded window is deleted and the
+<style color=#00ffffff size=1>.</style>            window is a child of the text widget then the window is
+<style color=#00ffffff size=1>.</style>            destroyed.
+
+<style color=#00ffffff size=1>.</style>            When an embedded window is added to a text widget with the
+<style color=#00ffffff size=1>.</style>            window create widget command, several configuration options
+<style color=#00ffffff size=1>.</style>            may be associated with it. These options may be  modified
+<style color=#00ffffff size=1>.</style>            later with the window configure widget command. The
+<style color=#00ffffff size=1>.</style>            following options are currently supported:
+
+<style color=#00ffffff size=1>.</style>            -align where
+<style color=#00ffffff size=1>.</style>                 If the window is not as tall as the line in which it is
+<style color=#00ffffff size=1>.</style>                 displayed, this option determines where the window is
+<style color=#00ffffff size=1>.</style>                 displayed in the line. Where must have one of the
+<style color=#00ffffff size=1>.</style>                 values top (align the top of the window with the top of
+<style color=#00ffffff size=1>.</style>                 the line), center (center the window within the range
+<style color=#00ffffff size=1>.</style>                 of the line), bottom (align the bottom of the window
+<style color=#00ffffff size=1>.</style>                 with the bottom of the line's area), or baseline (align
+<style color=#00ffffff size=1>.</style>                 the bottom of the window with the baseline of the
+<style color=#00ffffff size=1>.</style>                 line).
+
+<style color=#00ffffff size=1>.</style>            -padx dist
+<style color=#00ffffff size=1>.</style>                 Dist specifies the amount of extra space to leave on
+<style color=#00ffffff size=1>.</style>                 each side of the embedded window. It may have any of
+<style color=#00ffffff size=1>.</style>                 the usual forms defined for a screen distance.
+
+<style color=#00ffffff size=1>.</style>            -pady dist
+<style color=#00ffffff size=1>.</style>                 Dist specifies the amount of extra space to leave on
+<style color=#00ffffff size=1>.</style>                 the top and on the bottom of the embedded window. It
+<style color=#00ffffff size=1>.</style>                 may have any of the usual forms defined for a screen
+<style color=#00ffffff size=1>.</style>                 distance.
+
+<style color=#00ffffff size=1>.</style>            -stretch boolean
+<style color=#00ffffff size=1>.</style>                 If the requested height of the embedded window is less
+<style color=#00ffffff size=1>.</style>                 than the height of the line in which it is displayed,
+<style color=#00ffffff size=1>.</style>                 this option can be used to specify whether the window
+<style color=#00ffffff size=1>.</style>                 should be stretched vertically to fill its line. If the
+<style color=#00ffffff size=1>.</style>                 -pady option has been specified as well, then the
+<style color=#00ffffff size=1>.</style>                 requested padding will be retained even if the window
+<style color=#00ffffff size=1>.</style>                 is stretched.
+
+<style color=#00ffffff size=1>.</style>            -window pathName
+<style color=#00ffffff size=1>.</style>                 Specifies the name of a window to display in the
+<style color=#00ffffff size=1>.</style>                 annotation.
+
+THE SELECTION
+<style color=#00ffffff size=1>.</style>            Selection support is implemented via tags. The sel tag is
+<style color=#00ffffff size=1>.</style>            automatically defined when a text widget is created, and it
+<style color=#00ffffff size=1>.</style>            may not be deleted with the ``pathName tag delete'' widget
+<style color=#00ffffff size=1>.</style>            command.  Furthermore, the selectbackground,
+<style color=#00ffffff size=1>.</style>            selectborderwidth, and selectforeground options for the text
+<style color=#00ffffff size=1>.</style>            widget are tied to the background, borderwidth, and 
+<style color=#00ffffff size=1>.</style>            foreground options for the sel tag:  changes in either will
+<style color=#00ffffff size=1>.</style>            automatically be reflected in the other.
+
+THE INSERTION CURSOR
+<style color=#00ffffff size=1>.</style>            The mark named insert has special significance in text
+<style color=#00ffffff size=1>.</style>            widgets. It is defined automatically when a text widget is
+<style color=#00ffffff size=1>.</style>            created and it may not be unset with the ``pathName mark
+<style color=#00ffffff size=1>.</style>            unset'' widget command. The insert mark represents the
+<style color=#00ffffff size=1>.</style>            position of the insertion cursor, and the insertion cursor
+<style color=#00ffffff size=1>.</style>            will automatically be drawn at this point whenever the text
+<style color=#00ffffff size=1>.</style>            widget has the input focus.
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The text command creates a new Tk command whose name is the
+<style color=#00ffffff size=1>.</style>            same as the path name of the text's window.  This command
+<style color=#00ffffff size=1>.</style>            may be used to invoke various operations on the widget.  It
+<style color=#00ffffff size=1>.</style>            has the following general form:
+<style color=#00ffffff size=1>.</style>                 pathName option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            PathName is the name of the command, which is the same as
+<style color=#00ffffff size=1>.</style>            the text widget's path name.  Option and the args determine
+<style color=#00ffffff size=1>.</style>            the exact behaviour of the command.  The following commands
+<style color=#00ffffff size=1>.</style>            are possible for text widgets:
+
+<style color=#00ffffff size=1>.</style>            pathName bbox index
+<style color=#00ffffff size=1>.</style>                 Returns a list of four elements describing the screen
+<style color=#00ffffff size=1>.</style>                 area of the character given by index. The first two
+<style color=#00ffffff size=1>.</style>                 elements of the list give the x and y coordinates of
+<style color=#00ffffff size=1>.</style>                 the upper-left corner of the area occupied by the
+<style color=#00ffffff size=1>.</style>                 character, and the last two elements give the width and
+<style color=#00ffffff size=1>.</style>                 height of the area. If the character is only partially
+<style color=#00ffffff size=1>.</style>                 visible on the screen, then the return value reflects
+<style color=#00ffffff size=1>.</style>                 just the visible part. If the character is not visible
+<style color=#00ffffff size=1>.</style>                 on the screen then the return value is an empty list.
+
+<style color=#00ffffff size=1>.</style>            pathName cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the text command.
+
+<style color=#00ffffff size=1>.</style>            pathName compare index1 op index2
+<style color=#00ffffff size=1>.</style>                 Compares the indices given by index1 and index2
+<style color=#00ffffff size=1>.</style>                 according to the relational operator given by op, and
+<style color=#00ffffff size=1>.</style>                 returns 1 if the relationship is satisfied and 0 if it
+<style color=#00ffffff size=1>.</style>                 isn't. Op must be one of the operators <, <=, ==, >=,
+<style color=#00ffffff size=1>.</style>                 >, or !=. If op is == then 1 is returned if the two
+<style color=#00ffffff size=1>.</style>                 indices refer to the same character, if op is < then 1
+<style color=#00ffffff size=1>.</style>                 is returned if index1 refers to an earlier character in
+<style color=#00ffffff size=1>.</style>                 the text than index2, and so on.
+
+<style color=#00ffffff size=1>.</style>            pathName configure ?option? ?value option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathName.  If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, then the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the text command.
+
+<style color=#00ffffff size=1>.</style>            pathName debug ?boolean?
+<style color=#00ffffff size=1>.</style>                 If the value is a true one then internal consistency
+<style color=#00ffffff size=1>.</style>                 checks will be turned on in the code associated with
+<style color=#00ffffff size=1>.</style>                 text widgets. If boolean has a false value then the
+<style color=#00ffffff size=1>.</style>                 debugging checks will be turned off. In either case the
+<style color=#00ffffff size=1>.</style>                 command returns an empty string. If boolean is not
+<style color=#00ffffff size=1>.</style>                 specified then the command returns on or off to
+<style color=#00ffffff size=1>.</style>                 indicate whether or not debugging is turned on. There
+<style color=#00ffffff size=1>.</style>                 is a single debugging switch shared by all text
+<style color=#00ffffff size=1>.</style>                 widgets:  turning debugging on or off in any widget
+<style color=#00ffffff size=1>.</style>                 turns it on or off for all widgets. For widgets with
+<style color=#00ffffff size=1>.</style>                 large amounts of text, the consistency checks may cause
+<style color=#00ffffff size=1>.</style>                 a noticeable slow-down.
+
+<style color=#00ffffff size=1>.</style>            pathName delete index1 ?index2?
+<style color=#00ffffff size=1>.</style>                 Delete a range of characters from the text. If both 
+<style color=#00ffffff size=1>.</style>                 index1 and index2 are specified, then delete all the
+<style color=#00ffffff size=1>.</style>                 characters starting with the one given by index1 and
+<style color=#00ffffff size=1>.</style>                 stopping just before index2 (i.e. the character at
+<style color=#00ffffff size=1>.</style>                 index2 is not deleted). If index2 doesn't specify a
+<style color=#00ffffff size=1>.</style>                 position later in the text than index1 then no
+<style color=#00ffffff size=1>.</style>                 characters are deleted. If index2 isn't specified then
+<style color=#00ffffff size=1>.</style>                 the single character at index1 is deleted. It is not
+<style color=#00ffffff size=1>.</style>                 allowable to delete characters in a way that would
+<style color=#00ffffff size=1>.</style>                 leave the text without a newline as the last character.
+<style color=#00ffffff size=1>.</style>                 The command returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName dlineinfo index
+<style color=#00ffffff size=1>.</style>                 Returns a list with five elements describing the area
+<style color=#00ffffff size=1>.</style>                 occupied by the display line containing index. The
+<style color=#00ffffff size=1>.</style>                 first two elements of the list give the x and y
+<style color=#00ffffff size=1>.</style>                 coordinates of the upper-left corner of the area
+<style color=#00ffffff size=1>.</style>                 occupied by the line, the third and fourth elements
+<style color=#00ffffff size=1>.</style>                 give the width and height of the area, and the fifth
+<style color=#00ffffff size=1>.</style>                 element gives the position of the baseline for the
+<style color=#00ffffff size=1>.</style>                 line, measured down from the top of the area. All of
+<style color=#00ffffff size=1>.</style>                 this information is measured in pixels. If the current
+<style color=#00ffffff size=1>.</style>                 wrap mode is none and the line extends beyond the
+<style color=#00ffffff size=1>.</style>                 boundaries of the window, the area returned reflects
+<style color=#00ffffff size=1>.</style>                 the entire area of the line, including the portions
+<style color=#00ffffff size=1>.</style>                 that are out of the window. If the line is shorter than
+<style color=#00ffffff size=1>.</style>                 the full width of the window then the area returned
+<style color=#00ffffff size=1>.</style>                 reflects just the portion of the line that is occupied
+<style color=#00ffffff size=1>.</style>                 by characters and embedded windows. If the display line
+<style color=#00ffffff size=1>.</style>                 containing index is not visible on the screen then the
+<style color=#00ffffff size=1>.</style>                 return value is an empty list.
+
+<style color=#00ffffff size=1>.</style>            pathName get index1 ?index2?
+<style color=#00ffffff size=1>.</style>                 Return a range of characters from the text. The return
+<style color=#00ffffff size=1>.</style>                 value will be all the characters in the text starting
+<style color=#00ffffff size=1>.</style>                 with the one whose index is index1 and ending just
+<style color=#00ffffff size=1>.</style>                 before the one whose index is index2 (the character at 
+<style color=#00ffffff size=1>.</style>                 index2 will not be returned). If index2 is omitted then
+<style color=#00ffffff size=1>.</style>                 the single character at index1 is returned. If there
+<style color=#00ffffff size=1>.</style>                 are no characters in the specified range (e.g. index1
+<style color=#00ffffff size=1>.</style>                 is past the end of the file or index2 is less than or
+<style color=#00ffffff size=1>.</style>                 equal to index1) then an empty string is returned. If
+<style color=#00ffffff size=1>.</style>                 the specified range contains embedded windows, no
+<style color=#00ffffff size=1>.</style>                 information about them is included in the returned
+<style color=#00ffffff size=1>.</style>                 string.
+
+<style color=#00ffffff size=1>.</style>            pathName index index
+<style color=#00ffffff size=1>.</style>                 Returns the position corresponding to index in the form
+<style color=#00ffffff size=1>.</style>                 line.char where line is the line number and char is the
+<style color=#00ffffff size=1>.</style>                 character number. Index may have any of the forms
+<style color=#00ffffff size=1>.</style>                 described under INDICES above.
+
+<style color=#00ffffff size=1>.</style>            pathName insert index chars ?tagList chars tagList ...?
+<style color=#00ffffff size=1>.</style>                 Inserts all of the chars arguments just before the
+<style color=#00ffffff size=1>.</style>                 character at index. If index refers to the end of the
+<style color=#00ffffff size=1>.</style>                 text (the character after the last newline) then the
+<style color=#00ffffff size=1>.</style>                 new text is inserted just before the last newline
+<style color=#00ffffff size=1>.</style>                 instead. If there is a single chars argument and no 
+<style color=#00ffffff size=1>.</style>                 tagList, then the new text will receive any tags that
+<style color=#00ffffff size=1>.</style>                 are present on both the character before and the
+<style color=#00ffffff size=1>.</style>                 character after the insertion point\; if a tag is
+<style color=#00ffffff size=1>.</style>                 present on only one of these characters then it will
+<style color=#00ffffff size=1>.</style>                 not be applied to the new text. If tagList is specified
+<style color=#00ffffff size=1>.</style>                 then it consists of a list of tag names\;  the new
+<style color=#00ffffff size=1>.</style>                 characters will receive all of the tags in this list
+<style color=#00ffffff size=1>.</style>                 and no others, regardless of the tags present around
+<style color=#00ffffff size=1>.</style>                 the insertion point. If multiple chars-tagList argument
+<style color=#00ffffff size=1>.</style>                 pairs are present, they produce the same effect as if a
+<style color=#00ffffff size=1>.</style>                 separate insert widget command had been issued for each
+<style color=#00ffffff size=1>.</style>                 pair, in order. The last tagList argument may be
+<style color=#00ffffff size=1>.</style>                 omitted.
+
+<style color=#00ffffff size=1>.</style>            pathName mark option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>                 This command is used to manipulate marks.  The exact
+<style color=#00ffffff size=1>.</style>                 behaviour of the command depends on the option argument
+<style color=#00ffffff size=1>.</style>                 that follows the mark argument.  The following forms of
+<style color=#00ffffff size=1>.</style>                 the command are currently supported:
+
+<style color=#00ffffff size=1>.</style>                 pathName mark gravity markName ?direction?
+<style color=#00ffffff size=1>.</style>                      If direction is not specified, returns left or 
+<style color=#00ffffff size=1>.</style>                      right to indicate which of its adjacent characters
+<style color=#00ffffff size=1>.</style>                      markName is attached to. If direction is
+<style color=#00ffffff size=1>.</style>                      specified, it must be left or right\; the gravity
+<style color=#00ffffff size=1>.</style>                      of markName is set to the given value.
+
+<style color=#00ffffff size=1>.</style>                 pathName mark names
+<style color=#00ffffff size=1>.</style>                      Returns a list whose elements are the names of all
+<style color=#00ffffff size=1>.</style>                      the marks that are currently set.
+
+<style color=#00ffffff size=1>.</style>                 pathName mark next index
+<style color=#00ffffff size=1>.</style>                      Returns the name of the next mark at or after 
+<style color=#00ffffff size=1>.</style>                      index. If index is specified in numerical form,
+<style color=#00ffffff size=1>.</style>                      then the search for the next mark begins at that
+<style color=#00ffffff size=1>.</style>                      index. If index is the name of a mark, then the
+<style color=#00ffffff size=1>.</style>                      search for the next mark begins immediately after
+<style color=#00ffffff size=1>.</style>                      that mark. This can still return a mark at the
+<style color=#00ffffff size=1>.</style>                      same position if there are multiple marks at the
+<style color=#00ffffff size=1>.</style>                      same index. If a mark has been set to the special 
+<style color=#00ffffff size=1>.</style>                      end index, then it appears to be after end with
+<style color=#00ffffff size=1>.</style>                      respect to the mark next operation. An empty
+<style color=#00ffffff size=1>.</style>                      string is returned if there are no marks after 
+<style color=#00ffffff size=1>.</style>                      index.
+
+<style color=#00ffffff size=1>.</style>                 pathName mark previous index
+<style color=#00ffffff size=1>.</style>                      Returns the name of the mark at or before index.
+<style color=#00ffffff size=1>.</style>                      If index is specified in numerical form, then the
+<style color=#00ffffff size=1>.</style>                      search for the previous mark begins with the
+<style color=#00ffffff size=1>.</style>                      character just before that index. If index is the
+<style color=#00ffffff size=1>.</style>                      name of a mark, then the search for the next mark
+<style color=#00ffffff size=1>.</style>                      begins immediately before that mark. This can
+<style color=#00ffffff size=1>.</style>                      still return a mark at the same position if there
+<style color=#00ffffff size=1>.</style>                      are multiple marks at the same index. An empty
+<style color=#00ffffff size=1>.</style>                      string is returned if there are no marks before 
+<style color=#00ffffff size=1>.</style>                      index.
+
+<style color=#00ffffff size=1>.</style>                 pathName mark set markName index
+<style color=#00ffffff size=1>.</style>                      Sets the mark named markName to a position just
+<style color=#00ffffff size=1>.</style>                      before the character at index. If markName already
+<style color=#00ffffff size=1>.</style>                      exists, it is moved from its old position\; if it
+<style color=#00ffffff size=1>.</style>                      doesn't exist, a new mark is created. This command
+<style color=#00ffffff size=1>.</style>                      returns an empty string.
+
+<style color=#00ffffff size=1>.</style>                 pathName mark unset markName ?markName markName ...?
+<style color=#00ffffff size=1>.</style>                      Remove the mark corresponding to each of the 
+<style color=#00ffffff size=1>.</style>                      markName arguments. The removed marks will not be
+<style color=#00ffffff size=1>.</style>                      usable in indices and will not be returned by
+<style color=#00ffffff size=1>.</style>                      future calls to ``pathName mark names''. This
+<style color=#00ffffff size=1>.</style>                      command returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName scan option args
+<style color=#00ffffff size=1>.</style>                 This command is used to implement scanning on texts.
+<style color=#00ffffff size=1>.</style>                 It has two forms, depending on option:
+
+<style color=#00ffffff size=1>.</style>                 pathName scan mark x y
+<style color=#00ffffff size=1>.</style>                      Records x and y and the current view in the text
+<style color=#00ffffff size=1>.</style>                      window, for use in conjunction with later scan
+<style color=#00ffffff size=1>.</style>                      dragto commands. Typically this command is
+<style color=#00ffffff size=1>.</style>                      associated with a mouse button press in the
+<style color=#00ffffff size=1>.</style>                      widget.  It returns an empty string.
+
+<style color=#00ffffff size=1>.</style>                 pathName scan dragto x y
+<style color=#00ffffff size=1>.</style>                      This command computes the difference between its x
+<style color=#00ffffff size=1>.</style>                      and y arguments and the x and y arguments to the
+<style color=#00ffffff size=1>.</style>                      last scan mark command for the widget. It then
+<style color=#00ffffff size=1>.</style>                      adjusts the view by 10 times the difference in
+<style color=#00ffffff size=1>.</style>                      coordinates. This command is typically associated
+<style color=#00ffffff size=1>.</style>                      with mouse motion events in the widget, to produce
+<style color=#00ffffff size=1>.</style>                      the effect of dragging the text at high speed
+<style color=#00ffffff size=1>.</style>                      through the window.  The return value is an empty
+<style color=#00ffffff size=1>.</style>                      string.
+
+<style color=#00ffffff size=1>.</style>            pathName search ?switches? pattern index ?stopIndex?
+<style color=#00ffffff size=1>.</style>                 Searches the text in pathName starting at index for a
+<style color=#00ffffff size=1>.</style>                 range of characters that matches pattern. If a match is
+<style color=#00ffffff size=1>.</style>                 found, the index of the first character in the match is
+<style color=#00ffffff size=1>.</style>                 returned as result\;  otherwise an empty string is
+<style color=#00ffffff size=1>.</style>                 returned. One or more of the following switches may be
+<style color=#00ffffff size=1>.</style>                 specified to control the search:
+
+<style color=#00ffffff size=1>.</style>                 -backwards
+<style color=#00ffffff size=1>.</style>                      The search will proceed backward through the text,
+<style color=#00ffffff size=1>.</style>                      finding the matching range closest to index whose
+<style color=#00ffffff size=1>.</style>                      first character is before index.
+
+<style color=#00ffffff size=1>.</style>                 -nocase
+<style color=#00ffffff size=1>.</style>                      Ignore case differences between the pattern and
+<style color=#00ffffff size=1>.</style>                      the text.
+
+<style color=#00ffffff size=1>.</style>                 --   This switch has no effect except to terminate the
+<style color=#00ffffff size=1>.</style>                      list of switches: the next argument will be
+<style color=#00ffffff size=1>.</style>                      treated as pattern even if it starts with -.
+
+<style color=#00ffffff size=1>.</style>                 The matching range must be entirely within a single
+<style color=#00ffffff size=1>.</style>                 line of text. If stopIndex is specified, the search
+<style color=#00ffffff size=1>.</style>                 stops at that index: for forward searches, no match at
+<style color=#00ffffff size=1>.</style>                 or after stopIndex will be considered\;  for backward
+<style color=#00ffffff size=1>.</style>                 searches, no match earlier in the text than stopIndex
+<style color=#00ffffff size=1>.</style>                 will be considered. If stopIndex is omitted, the entire
+<style color=#00ffffff size=1>.</style>                 text will be searched: when the beginning or end of the
+<style color=#00ffffff size=1>.</style>                 text is reached, the search continues at the other end
+<style color=#00ffffff size=1>.</style>                 until the starting location is reached again\;  if 
+<style color=#00ffffff size=1>.</style>                 stopIndex is specified, no wrap-around will occur.
+
+<style color=#00ffffff size=1>.</style>            pathName see index
+<style color=#00ffffff size=1>.</style>                 Adjusts the view in the window so that the character
+<style color=#00ffffff size=1>.</style>                 given by index is completely visible. If index is
+<style color=#00ffffff size=1>.</style>                 already visible then the command does nothing. If index
+<style color=#00ffffff size=1>.</style>                 is a short distance out of view, the command adjusts
+<style color=#00ffffff size=1>.</style>                 the view just enough to make index visible at the edge
+<style color=#00ffffff size=1>.</style>                 of the window. If index is far out of view, then the
+<style color=#00ffffff size=1>.</style>                 command centers index in the window.
+
+<style color=#00ffffff size=1>.</style>            pathName tag option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>                 This command is used to manipulate tags.  The exact
+<style color=#00ffffff size=1>.</style>                 behaviour of the command depends on the option argument
+<style color=#00ffffff size=1>.</style>                 that follows the tag argument.  The following forms of
+<style color=#00ffffff size=1>.</style>                 the command are currently supported:
+
+<style color=#00ffffff size=1>.</style>                 pathName tag add tagName index1 ?index2 index1 index2
+<style color=#00ffffff size=1>.</style>                      ...?
+<style color=#00ffffff size=1>.</style>                      Associate the tag tagName with all of the
+<style color=#00ffffff size=1>.</style>                      characters starting with index1 and ending just
+<style color=#00ffffff size=1>.</style>                      before index2 (the character at index2 isn't
+<style color=#00ffffff size=1>.</style>                      tagged). A single command may contain any number
+<style color=#00ffffff size=1>.</style>                      of index1-index2 pairs. If the last index2 is
+<style color=#00ffffff size=1>.</style>                      omitted then the single character at index1 is
+<style color=#00ffffff size=1>.</style>                      tagged. If there are no characters in the
+<style color=#00ffffff size=1>.</style>                      specified range (e.g. index1 is past the end of
+<style color=#00ffffff size=1>.</style>                      the file or index2 is less than or equal to index1
+<style color=#00ffffff size=1>.</style>                      ) then the command has no effect.
+
+<style color=#00ffffff size=1>.</style>                 pathName tag bind tagName ?sequence? ?script?
+<style color=#00ffffff size=1>.</style>                      This command associates script with the tag given
+<style color=#00ffffff size=1>.</style>                      by tagName. Whenever the event sequence given by 
+<style color=#00ffffff size=1>.</style>                      sequence occurs for a character that has been
+<style color=#00ffffff size=1>.</style>                      tagged with tagName, the script will be invoked.
+<style color=#00ffffff size=1>.</style>                      This widget command is similar to the bind command
+<style color=#00ffffff size=1>.</style>                      except that it operates on characters in a text
+<style color=#00ffffff size=1>.</style>                      rather than entire widgets. See the bind manual
+<style color=#00ffffff size=1>.</style>                      entry for complete details on the syntax of 
+<style color=#00ffffff size=1>.</style>                      sequence and the substitutions performed on script
+<style color=#00ffffff size=1>.</style>                      before invoking it. If all arguments are specified
+<style color=#00ffffff size=1>.</style>                      then a new binding is created, replacing any
+<style color=#00ffffff size=1>.</style>                      existing binding for the same sequence and tagName
+<style color=#00ffffff size=1>.</style>                      (if the first character of script is ``+'' then 
+<style color=#00ffffff size=1>.</style>                      script augments an existing binding rather than
+<style color=#00ffffff size=1>.</style>                      replacing it). In this case the return value is an
+<style color=#00ffffff size=1>.</style>                      empty string.
+
+<style color=#00ffffff size=1>.</style>                      The only events for which bindings may be
+<style color=#00ffffff size=1>.</style>                      specified are those related to the mouse and
+<style color=#00ffffff size=1>.</style>                      keyboard, such as Enter, Leave, ButtonPress, 
+<style color=#00ffffff size=1>.</style>                      Motion, and KeyPress. Event bindings for a text
+<style color=#00ffffff size=1>.</style>                      widget use the current mark described under MARKS
+<style color=#00ffffff size=1>.</style>                      above. An Enter event triggers for a tag when the
+<style color=#00ffffff size=1>.</style>                      tag first becomes present on the current
+<style color=#00ffffff size=1>.</style>                      character, and a Leave event triggers for a tag
+<style color=#00ffffff size=1>.</style>                      when it ceases to be present on the current
+<style color=#00ffffff size=1>.</style>                      character. Enter and Leave events can happen
+<style color=#00ffffff size=1>.</style>                      either because the current mark moved or because
+<style color=#00ffffff size=1>.</style>                      the character at that position changed. Note that
+<style color=#00ffffff size=1>.</style>                      these events are different than Enter and Leave
+<style color=#00ffffff size=1>.</style>                      events for windows. Mouse and keyboard events are
+<style color=#00ffffff size=1>.</style>                      directed to the current character.
+
+<style color=#00ffffff size=1>.</style>                      It is possible for the current character to have
+<style color=#00ffffff size=1>.</style>                      multiple tags, and for each of them to have a
+<style color=#00ffffff size=1>.</style>                      binding for a particular event sequence. When this
+<style color=#00ffffff size=1>.</style>                      occurs, one binding is invoked for each tag, in
+<style color=#00ffffff size=1>.</style>                      order from lowest-priority to highest priority. If
+<style color=#00ffffff size=1>.</style>                      there are multiple matching bindings for a single
+<style color=#00ffffff size=1>.</style>                      tag, then the most specific binding is chosen (see
+<style color=#00ffffff size=1>.</style>                      the manual entry for the bind command for
+<style color=#00ffffff size=1>.</style>                      details).
+
+<style color=#00ffffff size=1>.</style>                      If bindings are created for the widget as a whole
+<style color=#00ffffff size=1>.</style>                      using the bind command, then those bindings will
+<style color=#00ffffff size=1>.</style>                      supplement the tag bindings. The tag bindings will
+<style color=#00ffffff size=1>.</style>                      be invoked first, followed by bindings for the
+<style color=#00ffffff size=1>.</style>                      window as a whole.
+
+<style color=#00ffffff size=1>.</style>                 pathName tag cget tagName option
+<style color=#00ffffff size=1>.</style>                      This command returns the current value of the
+<style color=#00ffffff size=1>.</style>                      option named option associated with the tag given
+<style color=#00ffffff size=1>.</style>                      by tagName. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                      accepted by the tag configure widget command.
+
+<style color=#00ffffff size=1>.</style>                 pathName tag configure tagName ?option? ?value? ?option
+<style color=#00ffffff size=1>.</style>                      value ...?
+<style color=#00ffffff size=1>.</style>                      This command is similar to the configure widget
+<style color=#00ffffff size=1>.</style>                      command except that it modifies options associated
+<style color=#00ffffff size=1>.</style>                      with the tag given by tagName instead of modifying
+<style color=#00ffffff size=1>.</style>                      options for the overall text widget. If one or
+<style color=#00ffffff size=1>.</style>                      more option-value pairs are specified, then the
+<style color=#00ffffff size=1>.</style>                      command modifies the given option(s) to have the
+<style color=#00ffffff size=1>.</style>                      given value(s) in tagName. See TAGS above for
+<style color=#00ffffff size=1>.</style>                      details on the options available for tags.
+
+<style color=#00ffffff size=1>.</style>                 pathName tag delete tagName ?tagName ...?
+<style color=#00ffffff size=1>.</style>                      Deletes all tag information for each of the 
+<style color=#00ffffff size=1>.</style>                      tagName arguments. The command removes the tags
+<style color=#00ffffff size=1>.</style>                      from all characters in the file and also deletes
+<style color=#00ffffff size=1>.</style>                      any other information associated with the tags,
+<style color=#00ffffff size=1>.</style>                      such as bindings and display information. The
+<style color=#00ffffff size=1>.</style>                      command returns an empty string.
+
+<style color=#00ffffff size=1>.</style>                 pathName tag lower tagName ?belowThis?
+<style color=#00ffffff size=1>.</style>                      Changes the priority of tag tagName so that it is
+<style color=#00ffffff size=1>.</style>                      just lower in priority than the tag whose name is 
+<style color=#00ffffff size=1>.</style>                      belowThis. If belowThis is omitted, then tagName's
+<style color=#00ffffff size=1>.</style>                      priority is changed to make it lowest priority of
+<style color=#00ffffff size=1>.</style>                      all tags.
+
+<style color=#00ffffff size=1>.</style>                 pathName tag names ?index?
+<style color=#00ffffff size=1>.</style>                      Returns a list whose elements are the names of all
+<style color=#00ffffff size=1>.</style>                      the tags that are active at the character position
+<style color=#00ffffff size=1>.</style>                      given by index. If index is omitted, then the
+<style color=#00ffffff size=1>.</style>                      return value will describe all of the tags that
+<style color=#00ffffff size=1>.</style>                      exist for the text (this includes all tags that
+<style color=#00ffffff size=1>.</style>                      have been named in a ``pathName tag'' widget
+<style color=#00ffffff size=1>.</style>                      command but haven't been deleted by a ``pathName 
+<style color=#00ffffff size=1>.</style>                      tag delete'' widget command, even if no characters
+<style color=#00ffffff size=1>.</style>                      are currently marked with the tag). The list will
+<style color=#00ffffff size=1>.</style>                      be sorted in order from highest priority to lowest
+<style color=#00ffffff size=1>.</style>                      priority.
+
+<style color=#00ffffff size=1>.</style>                 pathName tag nextrange tagName index1 ?index2?
+<style color=#00ffffff size=1>.</style>                      This command searches the text for a range of
+<style color=#00ffffff size=1>.</style>                      characters tagged with tagName where the first
+<style color=#00ffffff size=1>.</style>                      character of the range is no earlier than the
+<style color=#00ffffff size=1>.</style>                      character at index1 and no later than the
+<style color=#00ffffff size=1>.</style>                      character just before index2 (a range starting at
+<style color=#00ffffff size=1>.</style>                      index2 will not be considered). If several
+<style color=#00ffffff size=1>.</style>                      matching ranges exist, the first one is chosen.
+<style color=#00ffffff size=1>.</style>                      The command's return value is a list containing
+<style color=#00ffffff size=1>.</style>                      two elements, which are the index of the first
+<style color=#00ffffff size=1>.</style>                      character of the range and the index of the
+<style color=#00ffffff size=1>.</style>                      character just after the last one in the range. If
+<style color=#00ffffff size=1>.</style>                      no matching range is found then the return value
+<style color=#00ffffff size=1>.</style>                      is an empty string. If index2 is not given then it
+<style color=#00ffffff size=1>.</style>                      defaults to the end of the text.
+
+<style color=#00ffffff size=1>.</style>                 pathName tag prevrange tagName index1 ?index2?
+<style color=#00ffffff size=1>.</style>                      This command searches the text for a range of
+<style color=#00ffffff size=1>.</style>                      characters tagged with tagName where the first
+<style color=#00ffffff size=1>.</style>                      character of the range is before the character at 
+<style color=#00ffffff size=1>.</style>                      index1 and no earlier than the character at index2
+<style color=#00ffffff size=1>.</style>                      (a range starting at index2 will be considered).
+<style color=#00ffffff size=1>.</style>                      If several matching ranges exist, the one closest
+<style color=#00ffffff size=1>.</style>                      to index1 is chosen. The command's return value is
+<style color=#00ffffff size=1>.</style>                      a list containing two elements, which are the
+<style color=#00ffffff size=1>.</style>                      index of the first character of the range and the
+<style color=#00ffffff size=1>.</style>                      index of the character just after the last one in
+<style color=#00ffffff size=1>.</style>                      the range. If no matching range is found then the
+<style color=#00ffffff size=1>.</style>                      return value is an empty string. If index2 is not
+<style color=#00ffffff size=1>.</style>                      given then it defaults to the beginning of the
+<style color=#00ffffff size=1>.</style>                      text.
+
+<style color=#00ffffff size=1>.</style>                 pathName tag raise tagName ?aboveThis?
+<style color=#00ffffff size=1>.</style>                      Changes the priority of tag tagName so that it is
+<style color=#00ffffff size=1>.</style>                      just higher in priority than the tag whose name is
+<style color=#00ffffff size=1>.</style>                      aboveThis. If aboveThis is omitted, then tagName's
+<style color=#00ffffff size=1>.</style>                      priority is changed to make it highest priority of
+<style color=#00ffffff size=1>.</style>                      all tags.
+
+<style color=#00ffffff size=1>.</style>                 pathName tag ranges tagName
+<style color=#00ffffff size=1>.</style>                      Returns a list describing all of the ranges of
+<style color=#00ffffff size=1>.</style>                      text that have been tagged with tagName. The first
+<style color=#00ffffff size=1>.</style>                      two elements of the list describe the first tagged
+<style color=#00ffffff size=1>.</style>                      range in the text, the next two elements describe
+<style color=#00ffffff size=1>.</style>                      the second range, and so on. The first element of
+<style color=#00ffffff size=1>.</style>                      each pair contains the index of the first
+<style color=#00ffffff size=1>.</style>                      character of the range, and the second element of
+<style color=#00ffffff size=1>.</style>                      the pair contains the index of the character just
+<style color=#00ffffff size=1>.</style>                      after the last one in the range. If there are no
+<style color=#00ffffff size=1>.</style>                      characters tagged with tag then an empty string is
+<style color=#00ffffff size=1>.</style>                      returned.
+
+<style color=#00ffffff size=1>.</style>                 pathName tag remove tagName index1 ?index2 index1
+<style color=#00ffffff size=1>.</style>                      index2 ...?
+<style color=#00ffffff size=1>.</style>                      Remove the tag tagName from all of the characters
+<style color=#00ffffff size=1>.</style>                      starting at index1 and ending just before index2
+<style color=#00ffffff size=1>.</style>                      (the character at index2 isn't affected). A single
+<style color=#00ffffff size=1>.</style>                      command may contain any number of index1-index2
+<style color=#00ffffff size=1>.</style>                      pairs. If the last index2 is omitted then the
+<style color=#00ffffff size=1>.</style>                      single character at index1 is tagged. If there are
+<style color=#00ffffff size=1>.</style>                      no characters in the specified range (e.g. index1
+<style color=#00ffffff size=1>.</style>                      is past the end of the file or index2 is less than
+<style color=#00ffffff size=1>.</style>                      or equal to index1) then the command has no
+<style color=#00ffffff size=1>.</style>                      effect. This command returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName window option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>                 This command is used to manipulate embedded windows.
+<style color=#00ffffff size=1>.</style>                 The behaviour of the command depends on the option
+<style color=#00ffffff size=1>.</style>                 argument that follows the window argument. The
+<style color=#00ffffff size=1>.</style>                 following forms of the command are currently supported:
+
+<style color=#00ffffff size=1>.</style>                 pathName window cget index option
+<style color=#00ffffff size=1>.</style>                      Returns the value of a configuration option for an
+<style color=#00ffffff size=1>.</style>                      embedded window. Index identifies the embedded
+<style color=#00ffffff size=1>.</style>                      window, and option specifies a particular
+<style color=#00ffffff size=1>.</style>                      configuration option, which must be one of the
+<style color=#00ffffff size=1>.</style>                      ones listed in the section EMBEDDED WINDOWS.
+
+<style color=#00ffffff size=1>.</style>                 pathName window configure index ?option value ...?
+<style color=#00ffffff size=1>.</style>                      Query or modify the configuration options for an
+<style color=#00ffffff size=1>.</style>                      embedded window. If one or more option-value pairs
+<style color=#00ffffff size=1>.</style>                      are specified, then the command modifies the given
+<style color=#00ffffff size=1>.</style>                      option(s) to have the given value(s). See EMBEDDED
+<style color=#00ffffff size=1>.</style>                      WINDOWS for information on the options that are
+<style color=#00ffffff size=1>.</style>                      supported.
+
+<style color=#00ffffff size=1>.</style>                 pathName window create index ?option value ...?
+<style color=#00ffffff size=1>.</style>                      This command creates a new window annotation,
+<style color=#00ffffff size=1>.</style>                      which will appear in the text at the position
+<style color=#00ffffff size=1>.</style>                      given by index. Any number of option-value pairs
+<style color=#00ffffff size=1>.</style>                      may be specified to configure the annotation. See
+<style color=#00ffffff size=1>.</style>                      EMBEDDED WINDOWS for information on the options
+<style color=#00ffffff size=1>.</style>                      that are supported. Returns an empty string.
+
+<style color=#00ffffff size=1>.</style>                 pathName window names
+<style color=#00ffffff size=1>.</style>                      Returns a list whose elements are the names of all
+<style color=#00ffffff size=1>.</style>                      windows currently embedded in window.
+
+<style color=#00ffffff size=1>.</style>            pathName xview option args
+<style color=#00ffffff size=1>.</style>                 This command is used to query and change the horizontal
+<style color=#00ffffff size=1>.</style>                 position of the text in the widget's window.  It can
+<style color=#00ffffff size=1>.</style>                 take any of the following forms:
+
+<style color=#00ffffff size=1>.</style>                 pathName xview
+<style color=#00ffffff size=1>.</style>                      Returns a list containing two elements. Each
+<style color=#00ffffff size=1>.</style>                      element is a real fraction between 0 and 1\;
+<style color=#00ffffff size=1>.</style>                      together they describe the portion of the
+<style color=#00ffffff size=1>.</style>                      document's horizontal span that is visible in the
+<style color=#00ffffff size=1>.</style>                      window. For example, if the first element is .2
+<style color=#00ffffff size=1>.</style>                      and the second element is .6, 20% of the text is
+<style color=#00ffffff size=1>.</style>                      off-screen to the left, the middle 40% is visible
+<style color=#00ffffff size=1>.</style>                      in the window, and 40% of the text is off-screen
+<style color=#00ffffff size=1>.</style>                      to the right. The fractions refer only to the
+<style color=#00ffffff size=1>.</style>                      lines that are actually visible in the window:  if
+<style color=#00ffffff size=1>.</style>                      the lines in the window are all very short, so
+<style color=#00ffffff size=1>.</style>                      that they are entirely visible, the returned
+<style color=#00ffffff size=1>.</style>                      fractions will be 0 and 1, even if there are other
+<style color=#00ffffff size=1>.</style>                      lines in the text that are much wider than the
+<style color=#00ffffff size=1>.</style>                      window. These are the same values passed to
+<style color=#00ffffff size=1>.</style>                      scrollbars via the -xscrollcommand option.
+
+<style color=#00ffffff size=1>.</style>                 pathName xview moveto fraction
+<style color=#00ffffff size=1>.</style>                      Adjusts the view in the window so that fraction of
+<style color=#00ffffff size=1>.</style>                      the horizontal span of the text is off-screen to
+<style color=#00ffffff size=1>.</style>                      the left. Fraction is a fraction between 0 and 1.
+
+<style color=#00ffffff size=1>.</style>                 pathName xview scroll number what
+<style color=#00ffffff size=1>.</style>                      This command shifts the view in the window left or
+<style color=#00ffffff size=1>.</style>                      right according to number and what. Number must be
+<style color=#00ffffff size=1>.</style>                      an integer. What must be either units or pages. If
+<style color=#00ffffff size=1>.</style>                      what is units, the view adjusts left or right by
+<style color=#00ffffff size=1>.</style>                      number average-width characters on the display\;
+<style color=#00ffffff size=1>.</style>                      if it is pages then the view adjusts by number
+<style color=#00ffffff size=1>.</style>                      screenfuls. If number is negative then characters
+<style color=#00ffffff size=1>.</style>                      farther to the left become visible\;  if it is
+<style color=#00ffffff size=1>.</style>                      positive then characters farther to the right
+<style color=#00ffffff size=1>.</style>                      become visible.
+
+<style color=#00ffffff size=1>.</style>            pathName yview ?args?
+<style color=#00ffffff size=1>.</style>                 This command is used to query and change the vertical
+<style color=#00ffffff size=1>.</style>                 position of the text in the widget's window. It can
+<style color=#00ffffff size=1>.</style>                 take any of the following forms:
+
+<style color=#00ffffff size=1>.</style>                 pathName yview
+<style color=#00ffffff size=1>.</style>                      Returns a list containing two elements, both of
+<style color=#00ffffff size=1>.</style>                      which are real fractions between 0 and 1. The
+<style color=#00ffffff size=1>.</style>                      first element gives the position of the first
+<style color=#00ffffff size=1>.</style>                      character in the top line in the window, relative
+<style color=#00ffffff size=1>.</style>                      to the text as a whole (0.5 means it is halfway
+<style color=#00ffffff size=1>.</style>                      through the text, for example). The second element
+<style color=#00ffffff size=1>.</style>                      gives the position of the character just after the
+<style color=#00ffffff size=1>.</style>                      last one in the bottom line of the window,
+<style color=#00ffffff size=1>.</style>                      relative to the text as a whole. These are the
+<style color=#00ffffff size=1>.</style>                      same values passed to scrollbars via the 
+<style color=#00ffffff size=1>.</style>                      -yscrollcommand option.
+
+<style color=#00ffffff size=1>.</style>                 pathName yview moveto fraction
+<style color=#00ffffff size=1>.</style>                      Adjusts the view in the window so that the
+<style color=#00ffffff size=1>.</style>                      character given by fraction appears on the top
+<style color=#00ffffff size=1>.</style>                      line of the window. Fraction is a fraction between
+<style color=#00ffffff size=1>.</style>                      0 and 1\;  0 indicates the first character in the
+<style color=#00ffffff size=1>.</style>                      text, 0.33 indicates the character one-third the
+<style color=#00ffffff size=1>.</style>                      way through the text, and so on.
+
+<style color=#00ffffff size=1>.</style>                 pathName yview scroll number what
+<style color=#00ffffff size=1>.</style>                      This command adjust the view in the window up or
+<style color=#00ffffff size=1>.</style>                      down according to number and what. Number must be
+<style color=#00ffffff size=1>.</style>                      an integer. What must be either units or pages. If
+<style color=#00ffffff size=1>.</style>                      what is units, the view adjusts up or down by
+<style color=#00ffffff size=1>.</style>                      number lines on the display\;  if it is pages then
+<style color=#00ffffff size=1>.</style>                      the view adjusts by number screenfuls. If number
+<style color=#00ffffff size=1>.</style>                      is negative then earlier positions in the text
+<style color=#00ffffff size=1>.</style>                      become visible\;  if it is positive then later
+<style color=#00ffffff size=1>.</style>                      positions in the text become visible.
+
+<style color=#00ffffff size=1>.</style>                 pathName yview ?-pickplace? index
+<style color=#00ffffff size=1>.</style>                      Changes the view in the widget's window to make 
+<style color=#00ffffff size=1>.</style>                      index visible. If the -pickplace option isn't
+<style color=#00ffffff size=1>.</style>                      specified then index will appear at the top of the
+<style color=#00ffffff size=1>.</style>                      window. If -pickplace is specified then the widget
+<style color=#00ffffff size=1>.</style>                      chooses where index appears in the window:
+
+<style color=#00ffffff size=1>.</style>                      \[1\]  If index is already visible somewhere in the
+<style color=#00ffffff size=1>.</style>                           window then the command does nothing.
+
+<style color=#00ffffff size=1>.</style>                      \[2\]  If index is only a few lines off-screen above
+<style color=#00ffffff size=1>.</style>                           the window then it will be positioned at the
+<style color=#00ffffff size=1>.</style>                           top of the window.
+
+<style color=#00ffffff size=1>.</style>                      \[3\]  If index is only a few lines off-screen below
+<style color=#00ffffff size=1>.</style>                           the window then it will be positioned at the
+<style color=#00ffffff size=1>.</style>                           bottom of the window.
+
+<style color=#00ffffff size=1>.</style>                      \[4\]  Otherwise, index will be centered in the
+<style color=#00ffffff size=1>.</style>                           window.
+
+<style color=#00ffffff size=1>.</style>                      The -pickplace option has been made obsolete by
+<style color=#00ffffff size=1>.</style>                      the see widget command (see handles both x- and
+<style color=#00ffffff size=1>.</style>                      y-motion to make a location visible, whereas 
+<style color=#00ffffff size=1>.</style>                      -pickplace only handles motion in y).
+
+BINDINGS
+<style color=#00ffffff size=1>.</style>            Tk automatically creates bindings for texts that give them
+<style color=#00ffffff size=1>.</style>            the following default behaviour. In the descriptions below,
+<style color=#00ffffff size=1>.</style>            ``word'' refers to a contiguous group of letters, digits, or
+<style color=#00ffffff size=1>.</style>            ``_'' characters, or any single character other than these.
+
+<style color=#00ffffff size=1>.</style>            \[1\]  Clicking mouse button 1 positions the insertion cursor
+<style color=#00ffffff size=1>.</style>                 just before the character underneath the mouse cursor,
+<style color=#00ffffff size=1>.</style>                 sets the input focus to this widget, and clears any
+<style color=#00ffffff size=1>.</style>                 selection in the widget. Dragging with mouse button 1
+<style color=#00ffffff size=1>.</style>                 strokes out a selection between the insertion cursor
+<style color=#00ffffff size=1>.</style>                 and the character under the mouse.
+
+<style color=#00ffffff size=1>.</style>            \[2\]  Double-clicking with mouse button 1 selects the word
+<style color=#00ffffff size=1>.</style>                 under the mouse and positions the insertion cursor at
+<style color=#00ffffff size=1>.</style>                 the beginning of the word. Dragging after a double
+<style color=#00ffffff size=1>.</style>                 click is ignored.
+
+<style color=#00ffffff size=1>.</style>            \[3\]  If any normal printing characters are typed, they are
+<style color=#00ffffff size=1>.</style>                 inserted at the point of the insertion cursor,
+<style color=#00ffffff size=1>.</style>                 replacing the current selection.
+
+<style color=#00ffffff size=1>.</style>            \[4\]  If the mouse is dragged out of the widget while button
+<style color=#00ffffff size=1>.</style>                 1 is pressed, the entry will automatically scroll to
+<style color=#00ffffff size=1>.</style>                 make more text visible (if there is more text
+<style color=#00ffffff size=1>.</style>                 off-screen on the side where the mouse left the
+<style color=#00ffffff size=1>.</style>                 window).
+
+<style color=#00ffffff size=1>.</style>            \[5\]  The Left and Right keys move the insertion cursor one
+<style color=#00ffffff size=1>.</style>                 character to the left or right\;  they also clear any
+<style color=#00ffffff size=1>.</style>                 selection in the text. Control-b and Control-f behave
+<style color=#00ffffff size=1>.</style>                 the same as Left and Right, respectively.
+
+<style color=#00ffffff size=1>.</style>            \[6\]  The Up and Down keys move the insertion cursor one line
+<style color=#00ffffff size=1>.</style>                 up or down and clear any selection in the text.
+<style color=#00ffffff size=1>.</style>                 Control-p and Control-n behave the same as Up and Down,
+<style color=#00ffffff size=1>.</style>                 respectively.
+
+<style color=#00ffffff size=1>.</style>            \[7\]  The Page-up and Page-down keys move the view up or down
+<style color=#00ffffff size=1>.</style>                 one screenful without moving the insertion cursor or
+<style color=#00ffffff size=1>.</style>                 adjusting the selection. IControl-v behaves the same as
+<style color=#00ffffff size=1>.</style>                 Page-down.
+
+<style color=#00ffffff size=1>.</style>            \[8\]  Home, Control-a and Control-< move the insertion cursor
+<style color=#00ffffff size=1>.</style>                 to the beginning of its line and clear any selection in
+<style color=#00ffffff size=1>.</style>                 the widget.
+
+<style color=#00ffffff size=1>.</style>            \[9\]  End, Control-e and Control-> move the insertion cursor
+<style color=#00ffffff size=1>.</style>                 to the end of the line and clear any selection in the
+<style color=#00ffffff size=1>.</style>                 widget.
+
+<style color=#00ffffff size=1>.</style>            \[10\] The Delete key deletes the selection, if there is one
+<style color=#00ffffff size=1>.</style>                 in the widget. If there is no selection, it deletes the
+<style color=#00ffffff size=1>.</style>                 character to the right of the insertion cursor.
+
+<style color=#00ffffff size=1>.</style>            \[11\] Backspace and Control-h delete the selection, if there
+<style color=#00ffffff size=1>.</style>                 is one in the widget. If there is no selection, they
+<style color=#00ffffff size=1>.</style>                 delete the character to the left of the insertion
+<style color=#00ffffff size=1>.</style>                 cursor.
+
+<style color=#00ffffff size=1>.</style>            \[12\] Control-d deletes the character to the right of the
+<style color=#00ffffff size=1>.</style>                 insertion cursor.
+
+<style color=#00ffffff size=1>.</style>            \[13\] Control-k deletes from the insertion cursor to the end
+<style color=#00ffffff size=1>.</style>                 of its line\; if the insertion cursor is already at the
+<style color=#00ffffff size=1>.</style>                 end of a line, then Control-k deletes all of the next
+<style color=#00ffffff size=1>.</style>                 line.
+
+<style color=#00ffffff size=1>.</style>            \[14\] Control-o opens a new line by inserting a newline
+<style color=#00ffffff size=1>.</style>                 character in front of the insertion cursor without
+<style color=#00ffffff size=1>.</style>                 moving the insertion cursor.
+
+<style color=#00ffffff size=1>.</style>            \[15\] Control-u deletes from the insertion cursor to the
+<style color=#00ffffff size=1>.</style>                 start of its line\; if the insertion cursor is already
+<style color=#00ffffff size=1>.</style>                 at the start of the line, then the current line is
+<style color=#00ffffff size=1>.</style>                 joined with the previous one.
+
+<style color=#00ffffff size=1>.</style>            \[16\] Control-w deletes from the insertion cursor to the
+<style color=#00ffffff size=1>.</style>                 start of the word that contains it\; if the insertion
+<style color=#00ffffff size=1>.</style>                 cursor is at the start of the line, then the current
+<style color=#00ffffff size=1>.</style>                 line is joined with the previous one.
+
+<style color=#00ffffff size=1>.</style>            If the widget is disabled using the -state option, then its
+<style color=#00ffffff size=1>.</style>            view can still be adjusted and text can still be selected,
+<style color=#00ffffff size=1>.</style>            but no insertion cursor will be displayed and no text
+<style color=#00ffffff size=1>.</style>            modifications will take place.
+
+<style color=#00ffffff size=1>.</style>            The behaviour of texts can be changed by defining new
+<style color=#00ffffff size=1>.</style>            bindings for individual widgets.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Tab alignment doesn't work correctly.
+
+<style color=#00ffffff size=1>.</style>            The -stretch option on embedded windows is not implemented.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=entry(9)>entry(9)</action>, <action name=options(9)>options(9)</action>, <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

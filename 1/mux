@@ -1,0 +1,86 @@
+<action name=MUX(1)>MUX(1)</action>                                                     <action name=MUX(1)>MUX(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mux - interactive television demo
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            mux/mux
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Mux is a standalone application environment run from the
+<style color=#00ffffff size=1>.</style>            Inferno console in <action name=emu(1)>emu(1)</action> or started automatically by init
+<style color=#00ffffff size=1>.</style>            (8) in a native environment. It directly uses the <action name=draw(3)>draw(3)</action>
+<style color=#00ffffff size=1>.</style>            device and either keyboard or Infrared, and cannot be run
+<style color=#00ffffff size=1>.</style>            under <action name=wm(1)>wm(1)</action>. It is included in this release only as an
+<style color=#00ffffff size=1>.</style>            example of the use of the Prefab graphics module described
+<style color=#00ffffff size=1>.</style>            by <action name=prefab-intro(2)>prefab-intro(2)</action>. The simpler style of graphics and
+<style color=#00ffffff size=1>.</style>            interaction provided by Prefab and demonstrated by mux might
+<style color=#00ffffff size=1>.</style>            be more appropriate than Tk on devices that use infrared
+<style color=#00ffffff size=1>.</style>            remote control for interaction, such as televisions, or
+<style color=#00ffffff size=1>.</style>            devices with limited screen space, such as pocket devices or
+<style color=#00ffffff size=1>.</style>            portable telephones.
+
+<style color=#00ffffff size=1>.</style>         Configuration
+<style color=#00ffffff size=1>.</style>            Mux produces a menu derived from the configuration file
+<style color=#00ffffff size=1>.</style>            /services/basic. Each line in the file has three fields,
+<style color=#00ffffff size=1>.</style>            separated by :, of the following form:
+
+<style color=#00ffffff size=1>.</style>                 icon:app:label
+
+<style color=#00ffffff size=1>.</style>            The icon is the name of a bitmap file to displayed in the
+<style color=#00ffffff size=1>.</style>            menu alongside the textual label (which is the rest of the
+<style color=#00ffffff size=1>.</style>            line). When the item is selected, as described below, mux
+<style color=#00ffffff size=1>.</style>            runs the Dis file
+
+<style color=#00ffffff size=1>.</style>                 /dis/mux/app.dis
+
+<style color=#00ffffff size=1>.</style>         Applications
+<style color=#00ffffff size=1>.</style>            The following applications are available:
+<style color=#00ffffff size=1>.</style>            fnn       Financial reports: a scrolling `ticker tape' along
+<style color=#00ffffff size=1>.</style>                      the bottom of the screen.
+<style color=#00ffffff size=1>.</style>            movie     Movies: select a film from a menu of categories
+<style color=#00ffffff size=1>.</style>            news      Today's Newspaper: on-screen newspapers
+<style color=#00ffffff size=1>.</style>            tv        Television
+<style color=#00ffffff size=1>.</style>            tvlist    TV Timetable
+<style color=#00ffffff size=1>.</style>            pizza     Order Pizza
+<style color=#00ffffff size=1>.</style>            email     Internet mail
+<style color=#00ffffff size=1>.</style>            web       Internet Web Browser: simplistic web browser
+<style color=#00ffffff size=1>.</style>            register  Register with a service provider
+<style color=#00ffffff size=1>.</style>            ovid      Presentations
+<style color=#00ffffff size=1>.</style>            audioctl  Audio Control
+
+<style color=#00ffffff size=1>.</style>         Interaction
+<style color=#00ffffff size=1>.</style>            Mux can be controlled using an infrared device, but for
+<style color=#00ffffff size=1>.</style>            demonstration purposes under <action name=emu(1)>emu(1)</action> the infrared is emulated
+<style color=#00ffffff size=1>.</style>            using the keyboard (see <action name=ir(2)>ir(2)</action>). The following are the common
+<style color=#00ffffff size=1>.</style>            controls:
+<style color=#00ffffff size=1>.</style>            r        channel up
+<style color=#00ffffff size=1>.</style>            c        channel down
+<style color=#00ffffff size=1>.</style>            t        volume up
+<style color=#00ffffff size=1>.</style>            v        volume down
+<style color=#00ffffff size=1>.</style>            i        cursor up
+<style color=#00ffffff size=1>.</style>            m        cursor down
+<style color=#00ffffff size=1>.</style>            j        cursor left\; rewind
+<style color=#00ffffff size=1>.</style>            k        cursor right\; fast forward
+<style color=#00ffffff size=1>.</style>            x        return to main menu leaving application running\;
+<style color=#00ffffff size=1>.</style>                     recall
+<style color=#00ffffff size=1>.</style>            newline  select item
+<style color=#00ffffff size=1>.</style>            space    exit and return to the previous screen or menu
+FILES
+<style color=#00ffffff size=1>.</style>            /services/basic
+<style color=#00ffffff size=1>.</style>            /icons/*.bit
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/mux
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=wm(1)>wm(1)</action>, <action name=ir(2)>ir(2)</action>, <action name=prefab-intro(2)>prefab-intro(2)</action>, <action name=virgil(2)>virgil(2)</action>, <action name=manufacture(8)>manufacture(8)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=register(8)>register(8)</action>, <action name=signer(8)>signer(8)</action>, <action name=virgild(8)>virgild(8)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The video demonstrations currently work only on native
+<style color=#00ffffff size=1>.</style>            machines with specific hardware.
+<style color=#00ffffff size=1>.</style>            For copyright reasons, some databases are not distributed,
+<style color=#00ffffff size=1>.</style>            or have randomly-generated content.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

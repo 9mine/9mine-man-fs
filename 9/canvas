@@ -1,0 +1,1270 @@
+<action name=CANVAS(9)>CANVAS(9)</action>                                               <action name=CANVAS(9)>CANVAS(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            canvas - Create and manipulate canvas widgets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            canvas pathName ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -background        -selectbackground  -takefocus
+<style color=#00ffffff size=1>.</style>            -borderwidth       -selectborderwidth -xscrollcommand
+<style color=#00ffffff size=1>.</style>            -relief            -selectforeground  -yscrollcommand
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -closeenough dist
+<style color=#00ffffff size=1>.</style>                 Specifies a floating-point value indicating how close
+<style color=#00ffffff size=1>.</style>                 the mouse cursor must be to an item before it is
+<style color=#00ffffff size=1>.</style>                 considered to be ``inside'' the item. Defaults to 1.0.
+
+<style color=#00ffffff size=1>.</style>            -confine boolean
+<style color=#00ffffff size=1>.</style>                 Specifies a boolean value that indicates whether or not
+<style color=#00ffffff size=1>.</style>                 it should be allowable to set the canvas's view outside
+<style color=#00ffffff size=1>.</style>                 the region defined by the scrollregion option. Defaults
+<style color=#00ffffff size=1>.</style>                 to true, which means that the view will be constrained
+<style color=#00ffffff size=1>.</style>                 within the scroll region.
+
+<style color=#00ffffff size=1>.</style>            -height dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired window height that the canvas
+<style color=#00ffffff size=1>.</style>                 widget should request from its geometry manager.  The
+<style color=#00ffffff size=1>.</style>                 value may be specified in any of the forms described in
+<style color=#00ffffff size=1>.</style>                 the COORDINATES section below.
+
+<style color=#00ffffff size=1>.</style>            -scrollregion list
+<style color=#00ffffff size=1>.</style>                 Specifies a list with four dist coordinates describing
+<style color=#00ffffff size=1>.</style>                 the left, top, right, and bottom coordinates of a
+<style color=#00ffffff size=1>.</style>                 rectangular region. This region is used for scrolling
+<style color=#00ffffff size=1>.</style>                 purposes and is considered to be the boundary of the
+<style color=#00ffffff size=1>.</style>                 information in the canvas. Each of the coordinates may
+<style color=#00ffffff size=1>.</style>                 be specified in any of the forms given in the
+<style color=#00ffffff size=1>.</style>                 COORDINATES section below.
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired window width that the canvas widget
+<style color=#00ffffff size=1>.</style>                 should request from its geometry manager.  The value
+<style color=#00ffffff size=1>.</style>                 may be specified in any of the forms described in the
+<style color=#00ffffff size=1>.</style>                 COORDINATES section below.
+
+<style color=#00ffffff size=1>.</style>            -xscrollincrement dist
+<style color=#00ffffff size=1>.</style>                 Specifies an increment for horizontal scrolling, in any
+<style color=#00ffffff size=1>.</style>                 of the usual forms permitted for screen distances.  If
+<style color=#00ffffff size=1>.</style>                 the value of this option is greater than zero, the
+<style color=#00ffffff size=1>.</style>                 horizontal view in the window will be constrained so
+<style color=#00ffffff size=1>.</style>                 that the canvas x coordinate at the left edge of the
+<style color=#00ffffff size=1>.</style>                 window is always an even multiple of xscrollicrement\;
+<style color=#00ffffff size=1>.</style>                 furthermore, the units for scrolling (e.g., the change
+<style color=#00ffffff size=1>.</style>                 in view when the left and right arrows of a scrollbar
+<style color=#00ffffff size=1>.</style>                 are selected) will also be xscrollicrement.  If the
+<style color=#00ffffff size=1>.</style>                 value of this option is less than or equal to zero,
+<style color=#00ffffff size=1>.</style>                 then horizontal scrolling is unconstrained.
+
+<style color=#00ffffff size=1>.</style>            -yscrollincrement dist
+<style color=#00ffffff size=1>.</style>                 Specifies an increment for vertical scrolling, in any
+<style color=#00ffffff size=1>.</style>                 of the usual forms permitted for screen distances.  If
+<style color=#00ffffff size=1>.</style>                 the value of this option is greater than zero, the
+<style color=#00ffffff size=1>.</style>                 vertical view in the window will be constrained so that
+<style color=#00ffffff size=1>.</style>                 the canvas y coordinate at the top edge of the window
+<style color=#00ffffff size=1>.</style>                 is always an even multiple of yscrollicrement\;
+<style color=#00ffffff size=1>.</style>                 furthermore, the units for scrolling (e.g., the change
+<style color=#00ffffff size=1>.</style>                 in view when the top and bottom arrows of a scrollbar
+<style color=#00ffffff size=1>.</style>                 are selected) will also be yscrollicrement.  If the
+<style color=#00ffffff size=1>.</style>                 value of this option is less than or equal to zero,
+<style color=#00ffffff size=1>.</style>                 then vertical scrolling is unconstrained.
+
+<style color=#00ffffff size=1>.</style>            -buffer what
+<style color=#00ffffff size=1>.</style>                 Specifies how much of the canvas region will be backed
+<style color=#00ffffff size=1>.</style>                 by an offscreen bitmap buffer. What can be one of all
+<style color=#00ffffff size=1>.</style>                 (the entire scroll region will be buffered), visible
+<style color=#00ffffff size=1>.</style>                 (only the visible area), none (no buffering) or auto
+<style color=#00ffffff size=1>.</style>                 (equivalent to either none or visible depending on
+<style color=#00ffffff size=1>.</style>                 whether the canvas is packed inside another canvas or
+<style color=#00ffffff size=1>.</style>                 not).
+
+INTRODUCTION
+<style color=#00ffffff size=1>.</style>            The canvas command creates a new window (given by the 
+<style color=#00ffffff size=1>.</style>            pathName argument) and makes it into a canvas widget.
+<style color=#00ffffff size=1>.</style>            Additional options, described above, may be specified on the
+<style color=#00ffffff size=1>.</style>            command line to configure aspects of the canvas such as its
+<style color=#00ffffff size=1>.</style>            colours and 3-D relief. The canvas command returns its
+<style color=#00ffffff size=1>.</style>            pathName argument.  At the time this command is invoked,
+<style color=#00ffffff size=1>.</style>            there must not exist a window named pathName.
+
+<style color=#00ffffff size=1>.</style>            Canvas widgets implement structured graphics. A canvas
+<style color=#00ffffff size=1>.</style>            displays any number of items, which may be things like
+<style color=#00ffffff size=1>.</style>            rectangles, circles, lines, and text. Items may be
+<style color=#00ffffff size=1>.</style>            manipulated (e.g. moved or re-coloured) and commands may be
+<style color=#00ffffff size=1>.</style>            associated with items in much the same way that the bind
+<style color=#00ffffff size=1>.</style>            command allows commands to be bound to widgets.  For
+<style color=#00ffffff size=1>.</style>            example, a particular command may be associated with the
+<style color=#00ffffff size=1>.</style>            <Button-1> event so that the command is invoked whenever
+<style color=#00ffffff size=1>.</style>            button 1 is pressed with the mouse cursor over an item. This
+<style color=#00ffffff size=1>.</style>            means that items in a canvas can have behaviours defined by
+<style color=#00ffffff size=1>.</style>            the Tk scripts bound to them.
+
+DISPLAY LIST
+<style color=#00ffffff size=1>.</style>            The items in a canvas are ordered for purposes of display,
+<style color=#00ffffff size=1>.</style>            with the first item in the display list being displayed
+<style color=#00ffffff size=1>.</style>            first, followed by the next item in the list, and so on.
+<style color=#00ffffff size=1>.</style>            Items later in the display list obscure those that are
+<style color=#00ffffff size=1>.</style>            earlier in the display list and are sometimes referred to as
+<style color=#00ffffff size=1>.</style>            being ``on top'' of earlier items. When a new item is
+<style color=#00ffffff size=1>.</style>            created it is placed at the end of the display list, on top
+<style color=#00ffffff size=1>.</style>            of everything else. Widget commands may be used to
+<style color=#00ffffff size=1>.</style>            re-arrange the order of the display list.
+
+ITEM IDS AND TAGS
+<style color=#00ffffff size=1>.</style>            Items in a canvas widget may be named in either of two ways:
+<style color=#00ffffff size=1>.</style>            by id or by tag. Each item has a unique identifying number
+<style color=#00ffffff size=1>.</style>            which is assigned to that item when it is created.  The id
+<style color=#00ffffff size=1>.</style>            of an item never changes and id numbers are never re-used
+<style color=#00ffffff size=1>.</style>            within the lifetime of a canvas widget.
+
+<style color=#00ffffff size=1>.</style>            Each item may also have any number of tags associated with
+<style color=#00ffffff size=1>.</style>            it.  A tag is just a string of characters, and it may take
+<style color=#00ffffff size=1>.</style>            any form except that of an integer. For example, ``x123'' is
+<style color=#00ffffff size=1>.</style>            OK but ``123'' isn't. The same tag may be associated with
+<style color=#00ffffff size=1>.</style>            many different items. This is commonly done to group items
+<style color=#00ffffff size=1>.</style>            in various interesting ways\;  for example, all selected
+<style color=#00ffffff size=1>.</style>            items might be given the tag ``selected''.
+
+<style color=#00ffffff size=1>.</style>            The tag all is implicitly associated with every item in the
+<style color=#00ffffff size=1>.</style>            canvas\;  it may be used to invoke operations on all the
+<style color=#00ffffff size=1>.</style>            items in the canvas.
+
+<style color=#00ffffff size=1>.</style>            The tag current is managed automatically by Tk\; it applies
+<style color=#00ffffff size=1>.</style>            to the current item, which is the topmost item whose drawn
+<style color=#00ffffff size=1>.</style>            area covers the position of the mouse cursor. If the mouse
+<style color=#00ffffff size=1>.</style>            is not in the canvas widget or is not over an item, then no
+<style color=#00ffffff size=1>.</style>            item has the current tag.
+
+<style color=#00ffffff size=1>.</style>            When specifying items in canvas widget commands, if the
+<style color=#00ffffff size=1>.</style>            specifier is an integer then it is assumed to refer to the
+<style color=#00ffffff size=1>.</style>            single item with that id. If the specifier is not an
+<style color=#00ffffff size=1>.</style>            integer, then it is assumed to refer to all of the items in
+<style color=#00ffffff size=1>.</style>            the canvas that have a tag matching the specifier. The
+<style color=#00ffffff size=1>.</style>            symbol tagOrId is used below to indicate that an argument
+<style color=#00ffffff size=1>.</style>            specifies either an id that selects a single item or a tag
+<style color=#00ffffff size=1>.</style>            that selects zero or more items. Some widget commands only
+<style color=#00ffffff size=1>.</style>            operate on a single item at a time\;  if tagOrId is specified
+<style color=#00ffffff size=1>.</style>            in a way that names multiple items, then the normal
+<style color=#00ffffff size=1>.</style>            behaviour is for the command to use the first (lowest) of
+<style color=#00ffffff size=1>.</style>            these items in the display list that is suitable for the
+<style color=#00ffffff size=1>.</style>            command. Exceptions are noted in the widget command
+<style color=#00ffffff size=1>.</style>            descriptions below.
+
+COORDINATES
+<style color=#00ffffff size=1>.</style>            All coordinates related to canvases are stored as
+<style color=#00ffffff size=1>.</style>            fixed-point numbers. Coordinates and distances are specified
+<style color=#00ffffff size=1>.</style>            as documented in the dist section of <action name=types(9)>types(9)</action>.
+
+TRANSFORMATIONS
+<style color=#00ffffff size=1>.</style>            Normally the origin of the canvas coordinate system is at
+<style color=#00ffffff size=1>.</style>            the upper-left corner of the window containing the canvas.
+<style color=#00ffffff size=1>.</style>            It is possible to adjust the origin of the canvas coordinate
+<style color=#00ffffff size=1>.</style>            system relative to the origin of the window using the xview
+<style color=#00ffffff size=1>.</style>            and yview widget commands\;  this is typically used for
+<style color=#00ffffff size=1>.</style>            scrolling. Canvases do not support scaling or rotation of
+<style color=#00ffffff size=1>.</style>            the canvas coordinate system relative to the window
+<style color=#00ffffff size=1>.</style>            coordinate system.
+
+<style color=#00ffffff size=1>.</style>            Individual items may be moved or scaled using widget
+<style color=#00ffffff size=1>.</style>            commands described below, but they may not be rotated.
+
+INDICES
+<style color=#00ffffff size=1>.</style>            Text items support the notion of an index for identifying
+<style color=#00ffffff size=1>.</style>            particular positions within the item. Indices are used for
+<style color=#00ffffff size=1>.</style>            commands such as inserting text, deleting a range of
+<style color=#00ffffff size=1>.</style>            characters, and setting the insertion cursor position. An
+<style color=#00ffffff size=1>.</style>            index may be specified in any of a number of ways, and
+<style color=#00ffffff size=1>.</style>            different types of items may support different forms for
+<style color=#00ffffff size=1>.</style>            specifying indices. Text items support the following forms
+<style color=#00ffffff size=1>.</style>            for an index. Note that it is possible to refer to the
+<style color=#00ffffff size=1>.</style>            character just after the last one in the text item\;  this is
+<style color=#00ffffff size=1>.</style>            necessary for such tasks as inserting new text at the end of
+<style color=#00ffffff size=1>.</style>            the item.
+
+<style color=#00ffffff size=1>.</style>            number    A decimal number giving the position of the
+<style color=#00ffffff size=1>.</style>                      desired character within the text item. 0 refers
+<style color=#00ffffff size=1>.</style>                      to the first character, 1 to the next character,
+<style color=#00ffffff size=1>.</style>                      and so on. A number less than 0 is treated as if
+<style color=#00ffffff size=1>.</style>                      it were zero, and a number greater than the length
+<style color=#00ffffff size=1>.</style>                      of the text item is treated as if it were equal to
+<style color=#00ffffff size=1>.</style>                      the length of the text item.
+
+<style color=#00ffffff size=1>.</style>            end       Refers to the character just after the last one in
+<style color=#00ffffff size=1>.</style>                      the item (same as the number of characters in the
+<style color=#00ffffff size=1>.</style>                      item).
+
+<style color=#00ffffff size=1>.</style>            insert    Refers to the character just before which the
+<style color=#00ffffff size=1>.</style>                      insertion cursor is drawn in this item.
+
+<style color=#00ffffff size=1>.</style>            sel.first Refers to the first selected character in the
+<style color=#00ffffff size=1>.</style>                      item. If the selection isn't in this item then
+<style color=#00ffffff size=1>.</style>                      this form is illegal.
+
+<style color=#00ffffff size=1>.</style>            sel.last  Refers to the last selected character in the item.
+<style color=#00ffffff size=1>.</style>                      If the selection isn't in this item then this form
+<style color=#00ffffff size=1>.</style>                      is illegal.
+
+<style color=#00ffffff size=1>.</style>            @x,y      Refers to the character at the point given by x
+<style color=#00ffffff size=1>.</style>                      and y, where x and y are specified in the
+<style color=#00ffffff size=1>.</style>                      coordinate system of the canvas. If x and y lie
+<style color=#00ffffff size=1>.</style>                      outside the coordinates covered by the text item,
+<style color=#00ffffff size=1>.</style>                      then they refer to the first or last character in
+<style color=#00ffffff size=1>.</style>                      the line that is closest to the given point.
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The canvas command creates a new Tk command whose name is 
+<style color=#00ffffff size=1>.</style>            pathName.  This command may be used to invoke various
+<style color=#00ffffff size=1>.</style>            operations on the widget.  It has the following general
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathName option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            Option and the args determine the exact behaviour of the
+<style color=#00ffffff size=1>.</style>            command. The following widget commands are possible for
+<style color=#00ffffff size=1>.</style>            canvas widgets:
+
+<style color=#00ffffff size=1>.</style>            pathName addtag tag searchSpec ?arg arg ...?
+<style color=#00ffffff size=1>.</style>                 For each item that meets the constraints specified by
+<style color=#00ffffff size=1>.</style>                 searchSpec and the args, add tag to the list of tags
+<style color=#00ffffff size=1>.</style>                 associated with the item if it isn't already present on
+<style color=#00ffffff size=1>.</style>                 that list. It is possible that no items will satisfy
+<style color=#00ffffff size=1>.</style>                 the constraints given by searchSpec and args, in which
+<style color=#00ffffff size=1>.</style>                 case the command has no effect. This command returns an
+<style color=#00ffffff size=1>.</style>                 empty string as result. SearchSpec and arg's may take
+<style color=#00ffffff size=1>.</style>                 any of the following forms:
+
+<style color=#00ffffff size=1>.</style>                 above tagOrId
+<style color=#00ffffff size=1>.</style>                      Selects the item just after (above) the one given
+<style color=#00ffffff size=1>.</style>                      by tagOrId in the display list. If tagOrId denotes
+<style color=#00ffffff size=1>.</style>                      more than one item, then the last (topmost) of
+<style color=#00ffffff size=1>.</style>                      these items in the display list is used.
+
+<style color=#00ffffff size=1>.</style>                 all  Selects all the items in the canvas.
+
+<style color=#00ffffff size=1>.</style>                 below tagOrId
+<style color=#00ffffff size=1>.</style>                      Selects the item just before (below) the one given
+<style color=#00ffffff size=1>.</style>                      by tagOrId in the display list. If tagOrId denotes
+<style color=#00ffffff size=1>.</style>                      more than one item, then the first (lowest) of
+<style color=#00ffffff size=1>.</style>                      these items in the display list is used.
+
+<style color=#00ffffff size=1>.</style>                 closest x y ?halo? ?start?
+<style color=#00ffffff size=1>.</style>                      Selects the item closest to the point given by x
+<style color=#00ffffff size=1>.</style>                      and y. If more than one item is at the same
+<style color=#00ffffff size=1>.</style>                      closest distance (e.g. two items overlap the
+<style color=#00ffffff size=1>.</style>                      point), then the top-most of these items (the last
+<style color=#00ffffff size=1>.</style>                      one in the display list) is used. If halo is
+<style color=#00ffffff size=1>.</style>                      specified, then it must be a non-negative value.
+<style color=#00ffffff size=1>.</style>                      Any item closer than halo to the point is
+<style color=#00ffffff size=1>.</style>                      considered to overlap it. The start argument may
+<style color=#00ffffff size=1>.</style>                      be used to step circularly through all the closest
+<style color=#00ffffff size=1>.</style>                      items. If start is specified, it names an item
+<style color=#00ffffff size=1>.</style>                      using a tag or id (if by tag, it selects the first
+<style color=#00ffffff size=1>.</style>                      item in the display list with the given tag).
+<style color=#00ffffff size=1>.</style>                      Instead of selecting the topmost closest item,
+<style color=#00ffffff size=1>.</style>                      this form will select the topmost closest item
+<style color=#00ffffff size=1>.</style>                      that is below start in the display list\;  if no
+<style color=#00ffffff size=1>.</style>                      such item exists, then the selection behaves as if
+<style color=#00ffffff size=1>.</style>                      the start argument had not been specified.
+
+<style color=#00ffffff size=1>.</style>                 enclosed x1 y1 x2 y2
+<style color=#00ffffff size=1>.</style>                      Selects all the items completely enclosed within
+<style color=#00ffffff size=1>.</style>                      the rectangular region given by x1, y1, x2, and y2
+<style color=#00ffffff size=1>.</style>                      . X1 must be no greater then x2 and y1 must be no
+<style color=#00ffffff size=1>.</style>                      greater than y2.
+
+<style color=#00ffffff size=1>.</style>                 overlapping x1 y1 x2 y2
+<style color=#00ffffff size=1>.</style>                      Selects all the items that overlap or are enclosed
+<style color=#00ffffff size=1>.</style>                      within the rectangular region given by x1, y1, x2,
+<style color=#00ffffff size=1>.</style>                      and y2. X1 must be no greater then x2 and y1 must
+<style color=#00ffffff size=1>.</style>                      be no greater than y2.
+
+<style color=#00ffffff size=1>.</style>                 withtag tagOrId
+<style color=#00ffffff size=1>.</style>                      Selects all the items given by tagOrId.
+
+<style color=#00ffffff size=1>.</style>            pathName bbox tagOrId ?tagOrId tagOrId ...?
+<style color=#00ffffff size=1>.</style>                 Returns a list with four elements giving an approximate
+<style color=#00ffffff size=1>.</style>                 bounding box for all the items named by the tagOrId
+<style color=#00ffffff size=1>.</style>                 arguments. The list has the form ``x1 y1 x2 y2'' such
+<style color=#00ffffff size=1>.</style>                 that the drawn areas of all the named elements are
+<style color=#00ffffff size=1>.</style>                 within the region bounded by x1 on the left, x2 on the
+<style color=#00ffffff size=1>.</style>                 right, y1 on the top, and y2 on the bottom. The return
+<style color=#00ffffff size=1>.</style>                 value may overestimate the actual bounding box by a few
+<style color=#00ffffff size=1>.</style>                 pixels. If no items match any of the tagOrId arguments
+<style color=#00ffffff size=1>.</style>                 or if the matching items have empty bounding boxes
+<style color=#00ffffff size=1>.</style>                 (i.e. they have nothing to display) then an empty
+<style color=#00ffffff size=1>.</style>                 string is returned.
+
+<style color=#00ffffff size=1>.</style>            pathName bind tagOrId ?sequence? ?command?
+<style color=#00ffffff size=1>.</style>                 This command associates command with all the items
+<style color=#00ffffff size=1>.</style>                 given by tagOrId such that whenever the event sequence
+<style color=#00ffffff size=1>.</style>                 given by sequence occurs for one of the items the
+<style color=#00ffffff size=1>.</style>                 command will be invoked. This widget command is similar
+<style color=#00ffffff size=1>.</style>                 to the bind command except that it operates on items in
+<style color=#00ffffff size=1>.</style>                 a canvas rather than entire widgets. See the bind
+<style color=#00ffffff size=1>.</style>                 manual entry for complete details on the syntax of 
+<style color=#00ffffff size=1>.</style>                 sequence and the substitutions performed on command
+<style color=#00ffffff size=1>.</style>                 before invoking it. If all arguments are specified then
+<style color=#00ffffff size=1>.</style>                 a new binding is created, replacing any existing
+<style color=#00ffffff size=1>.</style>                 binding for the same sequence and tagOrId (if the first
+<style color=#00ffffff size=1>.</style>                 character of command is ``+'' then command augments an
+<style color=#00ffffff size=1>.</style>                 existing binding rather than replacing it). In this
+<style color=#00ffffff size=1>.</style>                 case the return value is an empty string. If command is
+<style color=#00ffffff size=1>.</style>                 omitted then the command returns the command associated
+<style color=#00ffffff size=1>.</style>                 with tagOrId and sequence (an error occurs if there is
+<style color=#00ffffff size=1>.</style>                 no such binding). If both command and sequence are
+<style color=#00ffffff size=1>.</style>                 omitted then the command returns a list of all the
+<style color=#00ffffff size=1>.</style>                 sequences for which bindings have been defined for 
+<style color=#00ffffff size=1>.</style>                 tagOrId.
+
+<style color=#00ffffff size=1>.</style>                 The only events for which bindings may be specified are
+<style color=#00ffffff size=1>.</style>                 those related to the mouse and keyboard, such as Enter,
+<style color=#00ffffff size=1>.</style>                 Leave, ButtonPress, Motion, and KeyPress. The handling
+<style color=#00ffffff size=1>.</style>                 of events in canvases uses the current item defined in
+<style color=#00ffffff size=1>.</style>                 ITEM IDS AND TAGS above. Enter and Leave events trigger
+<style color=#00ffffff size=1>.</style>                 for an item when it becomes the current item or ceases
+<style color=#00ffffff size=1>.</style>                 to be the current item\;  note that these events are
+<style color=#00ffffff size=1>.</style>                 different than Enter and Leave events for windows.
+<style color=#00ffffff size=1>.</style>                 Mouse-related events are directed to the current item,
+<style color=#00ffffff size=1>.</style>                 if any. Keyboard-related events are directed to the
+<style color=#00ffffff size=1>.</style>                 focus item, if any (see the focus widget command below
+<style color=#00ffffff size=1>.</style>                 for more on this).
+
+<style color=#00ffffff size=1>.</style>                 It is possible for multiple bindings to match a
+<style color=#00ffffff size=1>.</style>                 particular event. This could occur, for example, if one
+<style color=#00ffffff size=1>.</style>                 binding is associated with the item's id and another is
+<style color=#00ffffff size=1>.</style>                 associated with one of the item's tags. When this
+<style color=#00ffffff size=1>.</style>                 occurs, all of the matching bindings are invoked. A
+<style color=#00ffffff size=1>.</style>                 binding associated with the all tag is invoked first,
+<style color=#00ffffff size=1>.</style>                 followed by one binding for each of the item's tags (in
+<style color=#00ffffff size=1>.</style>                 order), followed by a binding associated with the
+<style color=#00ffffff size=1>.</style>                 item's id. If there are multiple matching bindings for
+<style color=#00ffffff size=1>.</style>                 a single tag, then only the most specific binding is
+<style color=#00ffffff size=1>.</style>                 invoked. A continue command in a binding script
+<style color=#00ffffff size=1>.</style>                 terminates that script, and a break command terminates
+<style color=#00ffffff size=1>.</style>                 that script and skips any remaining scripts for the
+<style color=#00ffffff size=1>.</style>                 event, just as for the bind command.
+
+<style color=#00ffffff size=1>.</style>                 If bindings have been created for a canvas window using
+<style color=#00ffffff size=1>.</style>                 the bind command, then they are invoked in addition to
+<style color=#00ffffff size=1>.</style>                 bindings created for the canvas's items using the bind
+<style color=#00ffffff size=1>.</style>                 widget command. The bindings for items will be invoked
+<style color=#00ffffff size=1>.</style>                 before any of the bindings for the window as a whole.
+
+<style color=#00ffffff size=1>.</style>            pathName canvasx screenx ?gridspacing?
+<style color=#00ffffff size=1>.</style>                 Given a window x-coordinate in the canvas screenx, this
+<style color=#00ffffff size=1>.</style>                 command returns the canvas x-coordinate that is
+<style color=#00ffffff size=1>.</style>                 displayed at that location. If gridspacing is
+<style color=#00ffffff size=1>.</style>                 specified, then the canvas coordinate is rounded to the
+<style color=#00ffffff size=1>.</style>                 nearest multiple of gridspacing units.
+
+<style color=#00ffffff size=1>.</style>            pathName canvasy screeny ?gridspacing?
+<style color=#00ffffff size=1>.</style>                 Given a window y-coordinate in the canvas screeny this
+<style color=#00ffffff size=1>.</style>                 command returns the canvas y-coordinate that is
+<style color=#00ffffff size=1>.</style>                 displayed at that location. If gridspacing is
+<style color=#00ffffff size=1>.</style>                 specified, then the canvas coordinate is rounded to the
+<style color=#00ffffff size=1>.</style>                 nearest multiple of gridspacing units.
+
+<style color=#00ffffff size=1>.</style>            pathName cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the canvas command.
+
+<style color=#00ffffff size=1>.</style>            pathName configure ?option? ?value? ?option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathName.  If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, then the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the canvas command.
+
+<style color=#00ffffff size=1>.</style>            pathName coords tagOrId ?x0 y0 ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the coordinates that define an item. If
+<style color=#00ffffff size=1>.</style>                 no coordinates are specified, this command returns a
+<style color=#00ffffff size=1>.</style>                 list whose elements are the coordinates of the item
+<style color=#00ffffff size=1>.</style>                 named by tagOrId. If coordinates are specified, then
+<style color=#00ffffff size=1>.</style>                 they replace the current coordinates for the named
+<style color=#00ffffff size=1>.</style>                 item. If tagOrId refers to multiple items, then the
+<style color=#00ffffff size=1>.</style>                 first one in the display list is used.
+
+<style color=#00ffffff size=1>.</style>            pathName create type x y ?x y ...? ?option value ...?
+<style color=#00ffffff size=1>.</style>                 Create a new item in pathName of type type. The exact
+<style color=#00ffffff size=1>.</style>                 format of the arguments after type depends on type, but
+<style color=#00ffffff size=1>.</style>                 usually they consist of the coordinates for one or more
+<style color=#00ffffff size=1>.</style>                 points, followed by specifications for zero or more
+<style color=#00ffffff size=1>.</style>                 item options. See the subsections on individual item
+<style color=#00ffffff size=1>.</style>                 types below for more on the syntax of this command.
+<style color=#00ffffff size=1>.</style>                 This command returns the id for the new item.
+
+<style color=#00ffffff size=1>.</style>            pathName dchars tagOrId first ?last?
+<style color=#00ffffff size=1>.</style>                 For each item given by tagOrId, delete the characters
+<style color=#00ffffff size=1>.</style>                 in the range given by first and last, inclusive. If
+<style color=#00ffffff size=1>.</style>                 some of the items given by tagOrId don't support text
+<style color=#00ffffff size=1>.</style>                 operations, then they are ignored. First and last are
+<style color=#00ffffff size=1>.</style>                 indices of characters within the item(s) as described
+<style color=#00ffffff size=1>.</style>                 in INDICES above. If last is omitted, it defaults to 
+<style color=#00ffffff size=1>.</style>                 first. This command returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName delete ?tagOrId tagOrId ...?
+<style color=#00ffffff size=1>.</style>                 Delete each of the items given by each tagOrId, and
+<style color=#00ffffff size=1>.</style>                 return an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName dtag tagOrId ?tagToDelete?
+<style color=#00ffffff size=1>.</style>                 For each of the items given by tagOrId, delete the tag
+<style color=#00ffffff size=1>.</style>                 given by tagToDelete from the list of those associated
+<style color=#00ffffff size=1>.</style>                 with the item. If an item doesn't have the tag 
+<style color=#00ffffff size=1>.</style>                 tagToDelete then the item is unaffected by the command.
+<style color=#00ffffff size=1>.</style>                 If tagToDelete is omitted then it defaults to tagOrId.
+<style color=#00ffffff size=1>.</style>                 This command returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName find searchCommand ?arg arg ...?
+<style color=#00ffffff size=1>.</style>                 This command returns a list consisting of all the items
+<style color=#00ffffff size=1>.</style>                 that meet the constraints specified by searchCommand
+<style color=#00ffffff size=1>.</style>                 and arg's. SearchCommand and args have any of the forms
+<style color=#00ffffff size=1>.</style>                 accepted by the addtag command. If searchCommand is 
+<style color=#00ffffff size=1>.</style>                 enclosed, overlapping, or all, the items are returned
+<style color=#00ffffff size=1>.</style>                 in display-list order, i.e. bottommost first.
+
+<style color=#00ffffff size=1>.</style>            pathName focus ?tagOrId?
+<style color=#00ffffff size=1>.</style>                 Set the keyboard focus for the canvas widget to the
+<style color=#00ffffff size=1>.</style>                 item given by tagOrId. If tagOrId refers to several
+<style color=#00ffffff size=1>.</style>                 items, then the focus is set to the first such item in
+<style color=#00ffffff size=1>.</style>                 the display list that supports the insertion cursor. If
+<style color=#00ffffff size=1>.</style>                 tagOrId doesn't refer to any items, or if none of them
+<style color=#00ffffff size=1>.</style>                 support the insertion cursor, then the focus isn't
+<style color=#00ffffff size=1>.</style>                 changed. If tagOrId is an empty string, then the focus
+<style color=#00ffffff size=1>.</style>                 item is reset so that no item has the focus. If tagOrId
+<style color=#00ffffff size=1>.</style>                 is not specified then the command returns the id for
+<style color=#00ffffff size=1>.</style>                 the item that currently has the focus, or an empty
+<style color=#00ffffff size=1>.</style>                 string if no item has the focus.
+
+<style color=#00ffffff size=1>.</style>                 Once the focus has been set to an item, the item will
+<style color=#00ffffff size=1>.</style>                 display the insertion cursor and all keyboard events
+<style color=#00ffffff size=1>.</style>                 will be directed to that item. The focus item within a
+<style color=#00ffffff size=1>.</style>                 canvas and the focus window on the screen (set with the
+<style color=#00ffffff size=1>.</style>                 focus command) are totally independent: a given item
+<style color=#00ffffff size=1>.</style>                 doesn't actually have the input focus unless (a) its
+<style color=#00ffffff size=1>.</style>                 canvas is the focus window and (b) the item is the
+<style color=#00ffffff size=1>.</style>                 focus item within the canvas. In most cases it is
+<style color=#00ffffff size=1>.</style>                 advisable to follow the focus widget command with the 
+<style color=#00ffffff size=1>.</style>                 focus command to set the focus window to the canvas (if
+<style color=#00ffffff size=1>.</style>                 it wasn't there already).
+
+<style color=#00ffffff size=1>.</style>            pathName gettags tagOrId
+<style color=#00ffffff size=1>.</style>                 Return a list whose elements are the tags associated
+<style color=#00ffffff size=1>.</style>                 with the item given by tagOrId. If tagOrId refers to
+<style color=#00ffffff size=1>.</style>                 more than one item, then the tags are returned from the
+<style color=#00ffffff size=1>.</style>                 first such item in the display list. If tagOrId doesn't
+<style color=#00ffffff size=1>.</style>                 refer to any items, then an error is returned. If the
+<style color=#00ffffff size=1>.</style>                 item contains no tags, then an empty string is
+<style color=#00ffffff size=1>.</style>                 returned.
+
+<style color=#00ffffff size=1>.</style>            pathName grab what tagOrId
+<style color=#00ffffff size=1>.</style>                 Does for canvas widgets what <action name=grab(9)>grab(9)</action> does for normal tk
+<style color=#00ffffff size=1>.</style>                 widgets: mouse events will only be delivered to tagOrId
+<style color=#00ffffff size=1>.</style>                 . If tagOrId refers to more than one item, then the
+<style color=#00ffffff size=1>.</style>                 first such item in the display list is grabbed. What is
+<style color=#00ffffff size=1>.</style>                 as described in <action name=grab(9)>grab(9)</action>.
+
+<style color=#00ffffff size=1>.</style>            Note that the canvas grab item, as set by this command, and
+<style color=#00ffffff size=1>.</style>            the tk grab item, as set by <action name=grab(9)>grab(9)</action> are totally independent\;
+<style color=#00ffffff size=1>.</style>            a canvas item doesn't actually grab the mouse unless a) the
+<style color=#00ffffff size=1>.</style>            canvas itself has grabbed the mouse or b) the mouse events
+<style color=#00ffffff size=1>.</style>            are being delivered to the canvas as a matter of course.
+
+<style color=#00ffffff size=1>.</style>            pathName icursor tagOrId index
+<style color=#00ffffff size=1>.</style>                 Set the position of the insertion cursor for the
+<style color=#00ffffff size=1>.</style>                 item(s) given by tagOrId to just before the character
+<style color=#00ffffff size=1>.</style>                 whose position is given by index. If some or all of the
+<style color=#00ffffff size=1>.</style>                 items given by tagOrId don't support an insertion
+<style color=#00ffffff size=1>.</style>                 cursor then this command has no effect on them. See
+<style color=#00ffffff size=1>.</style>                 INDICES above for a description of the legal forms for 
+<style color=#00ffffff size=1>.</style>                 index. Note:  the insertion cursor is only displayed in
+<style color=#00ffffff size=1>.</style>                 an item if that item currently has the keyboard focus
+<style color=#00ffffff size=1>.</style>                 (see the widget command focus, below), but the cursor
+<style color=#00ffffff size=1>.</style>                 position may be set even when the item doesn't have the
+<style color=#00ffffff size=1>.</style>                 focus. This command returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName index tagOrId index
+<style color=#00ffffff size=1>.</style>                 This command returns a decimal string giving the
+<style color=#00ffffff size=1>.</style>                 numerical index within tagOrId corresponding to index.
+<style color=#00ffffff size=1>.</style>                 Index gives a textual description of the desired
+<style color=#00ffffff size=1>.</style>                 position as described in INDICES above. The return
+<style color=#00ffffff size=1>.</style>                 value is guaranteed to lie between 0 and the number of
+<style color=#00ffffff size=1>.</style>                 characters within the item, inclusive. If tagOrId
+<style color=#00ffffff size=1>.</style>                 refers to multiple items, then the index is processed
+<style color=#00ffffff size=1>.</style>                 in the first of these items that supports indexing
+<style color=#00ffffff size=1>.</style>                 operations (in display list order).
+
+<style color=#00ffffff size=1>.</style>            pathName insert tagOrId beforeThis string
+<style color=#00ffffff size=1>.</style>                 For each of the items given by tagOrId, if the item
+<style color=#00ffffff size=1>.</style>                 supports text insertion then string is inserted into
+<style color=#00ffffff size=1>.</style>                 the item's text just before the character whose index
+<style color=#00ffffff size=1>.</style>                 is beforeThis. See INDICES above for information about
+<style color=#00ffffff size=1>.</style>                 the forms allowed for beforeThis. This command returns
+<style color=#00ffffff size=1>.</style>                 an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName itemcget tagOrId option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 for the item given by tagOrId whose name is option.
+<style color=#00ffffff size=1>.</style>                 This command is similar to the cget widget command
+<style color=#00ffffff size=1>.</style>                 except that it applies to a particular item rather than
+<style color=#00ffffff size=1>.</style>                 the widget as a whole. Option may have any of the
+<style color=#00ffffff size=1>.</style>                 values accepted by the create widget command when the
+<style color=#00ffffff size=1>.</style>                 item was created. If tagOrId is a tag that refers to
+<style color=#00ffffff size=1>.</style>                 more than one item, the first (lowest) such item is
+<style color=#00ffffff size=1>.</style>                 used.
+
+<style color=#00ffffff size=1>.</style>            pathName itemconfigure tagOrId ?option? ?value? ?option
+<style color=#00ffffff size=1>.</style>                 value ...?
+<style color=#00ffffff size=1>.</style>                 This command is similar to the configure widget command
+<style color=#00ffffff size=1>.</style>                 except that it modifies item-specific options for the
+<style color=#00ffffff size=1>.</style>                 items given by tagOrId instead of modifying options for
+<style color=#00ffffff size=1>.</style>                 the overall canvas widget. If one or more option-value
+<style color=#00ffffff size=1>.</style>                 pairs are specified, then the command modifies the
+<style color=#00ffffff size=1>.</style>                 given widget option(s) to have the given value(s) in
+<style color=#00ffffff size=1>.</style>                 each of the items given by tagOrId\;  in this case the
+<style color=#00ffffff size=1>.</style>                 command returns an empty string. The options and values
+<style color=#00ffffff size=1>.</style>                 are the same as those permissible in the create widget
+<style color=#00ffffff size=1>.</style>                 command when the item(s) were created\; see the sections
+<style color=#00ffffff size=1>.</style>                 describing individual item types below for details on
+<style color=#00ffffff size=1>.</style>                 the legal options.
+
+<style color=#00ffffff size=1>.</style>            pathName lower tagOrId ?belowThis?
+<style color=#00ffffff size=1>.</style>                 Move all of the items given by tagOrId to a new
+<style color=#00ffffff size=1>.</style>                 position in the display list just before the item given
+<style color=#00ffffff size=1>.</style>                 by belowThis. If tagOrId refers to more than one item
+<style color=#00ffffff size=1>.</style>                 then all are moved but the relative order of the moved
+<style color=#00ffffff size=1>.</style>                 items will not be changed. BelowThis is a tag or id\;
+<style color=#00ffffff size=1>.</style>                 if it refers to more than one item then the first
+<style color=#00ffffff size=1>.</style>                 (lowest) of these items in the display list is used as
+<style color=#00ffffff size=1>.</style>                 the destination location for the moved items. This
+<style color=#00ffffff size=1>.</style>                 command returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName move tagOrId xAmount yAmount
+<style color=#00ffffff size=1>.</style>                 Move each of the items given by tagOrId in the canvas
+<style color=#00ffffff size=1>.</style>                 coordinate space by adding xAmount to the x-coordinate
+<style color=#00ffffff size=1>.</style>                 of each point associated with the item and yAmount to
+<style color=#00ffffff size=1>.</style>                 the y-coordinate of each point associated with the
+<style color=#00ffffff size=1>.</style>                 item. This command returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName raise tagOrId ?aboveThis?
+<style color=#00ffffff size=1>.</style>                 Move all of the items given by tagOrId to a new
+<style color=#00ffffff size=1>.</style>                 position in the display list just after the item given
+<style color=#00ffffff size=1>.</style>                 by aboveThis. If tagOrId refers to more than one item
+<style color=#00ffffff size=1>.</style>                 then all are moved but the relative order of the moved
+<style color=#00ffffff size=1>.</style>                 items will not be changed. AboveThis is a tag or id\;
+<style color=#00ffffff size=1>.</style>                 if it refers to more than one item then the last
+<style color=#00ffffff size=1>.</style>                 (topmost) of these items in the display list is used as
+<style color=#00ffffff size=1>.</style>                 the destination location for the moved items. This
+<style color=#00ffffff size=1>.</style>                 command returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName scale tagOrId xOrigin yOrigin xScale yScale
+<style color=#00ffffff size=1>.</style>                 Rescale all of the items given by tagOrId in canvas
+<style color=#00ffffff size=1>.</style>                 coordinate space. XOrigin and yOrigin identify the
+<style color=#00ffffff size=1>.</style>                 origin for the scaling operation and xScale and yScale
+<style color=#00ffffff size=1>.</style>                 identify the scale factors for x- and y-coordinates,
+<style color=#00ffffff size=1>.</style>                 respectively (a scale factor of 1.0 implies no change
+<style color=#00ffffff size=1>.</style>                 to that coordinate). For each of the points defining
+<style color=#00ffffff size=1>.</style>                 each item, the x-coordinate is adjusted to change the
+<style color=#00ffffff size=1>.</style>                 distance from xOrigin by a factor of xScale. Similarly,
+<style color=#00ffffff size=1>.</style>                 each y-coordinate is adjusted to change the distance
+<style color=#00ffffff size=1>.</style>                 from yOrigin by a factor of yScale. This command
+<style color=#00ffffff size=1>.</style>                 returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName screenx canvasx
+<style color=#00ffffff size=1>.</style>                 Given an x-coordinate canvasx in the canvas, this
+<style color=#00ffffff size=1>.</style>                 command returns the equivalent screen x-coordinate.
+
+<style color=#00ffffff size=1>.</style>            pathName screeny canvasy
+<style color=#00ffffff size=1>.</style>                 Given an x-coordinate canvasy in the canvas, this
+<style color=#00ffffff size=1>.</style>                 command returns the equivalent screen y-coordinate.
+
+<style color=#00ffffff size=1>.</style>            pathName see x1 y1 ?x2 y2?
+<style color=#00ffffff size=1>.</style>                 Adjusts the view in the window such that, if possible
+<style color=#00ffffff size=1>.</style>                 the point \[x1, y1\] (and, if given, the point \[x2, y2\])
+<style color=#00ffffff size=1>.</style>                 are made visible.
+
+<style color=#00ffffff size=1>.</style>            pathName select option ?tagOrId arg?
+<style color=#00ffffff size=1>.</style>                 Manipulates the selection in one of several ways,
+<style color=#00ffffff size=1>.</style>                 depending on option. The command may take any of the
+<style color=#00ffffff size=1>.</style>                 forms described below. In all of the descriptions
+<style color=#00ffffff size=1>.</style>                 below, tagOrId must refer to an item that supports
+<style color=#00ffffff size=1>.</style>                 indexing and selection\;  if it refers to multiple items
+<style color=#00ffffff size=1>.</style>                 then the first of these that supports indexing and the
+<style color=#00ffffff size=1>.</style>                 selection is used. Index gives a textual description of
+<style color=#00ffffff size=1>.</style>                 a position within tagOrId, as described in INDICES
+<style color=#00ffffff size=1>.</style>                 above.
+
+<style color=#00ffffff size=1>.</style>                 pathName select adjust tagOrId index
+<style color=#00ffffff size=1>.</style>                      Locate the end of the selection in tagOrId nearest
+<style color=#00ffffff size=1>.</style>                      to the character given by index, and adjust that
+<style color=#00ffffff size=1>.</style>                      end of the selection to be at index (i.e.
+<style color=#00ffffff size=1>.</style>                      including but not going beyond index). The other
+<style color=#00ffffff size=1>.</style>                      end of the selection is made the anchor point for
+<style color=#00ffffff size=1>.</style>                      future select to commands. If the selection isn't
+<style color=#00ffffff size=1>.</style>                      currently in tagOrId then this command behaves the
+<style color=#00ffffff size=1>.</style>                      same as the select to widget command. Returns an
+<style color=#00ffffff size=1>.</style>                      empty string.
+
+<style color=#00ffffff size=1>.</style>                 pathName select clear
+<style color=#00ffffff size=1>.</style>                      Clear the selection if it is in this widget. If
+<style color=#00ffffff size=1>.</style>                      the selection isn't in this widget then the
+<style color=#00ffffff size=1>.</style>                      command has no effect. Returns an empty string.
+
+<style color=#00ffffff size=1>.</style>                 pathName select from tagOrId index
+<style color=#00ffffff size=1>.</style>                      Set the selection anchor point for the widget to
+<style color=#00ffffff size=1>.</style>                      be just before the character given by index in the
+<style color=#00ffffff size=1>.</style>                      item given by tagOrId. This command doesn't change
+<style color=#00ffffff size=1>.</style>                      the selection\;  it just sets the fixed end of the
+<style color=#00ffffff size=1>.</style>                      selection for future select to commands. Returns
+<style color=#00ffffff size=1>.</style>                      an empty string.
+
+<style color=#00ffffff size=1>.</style>                 pathName select item
+<style color=#00ffffff size=1>.</style>                      Returns the id of the selected item, if the
+<style color=#00ffffff size=1>.</style>                      selection is in an item in this canvas. If the
+<style color=#00ffffff size=1>.</style>                      selection is not in this canvas then an empty
+<style color=#00ffffff size=1>.</style>                      string is returned.
+
+<style color=#00ffffff size=1>.</style>                 pathName select to tagOrId index
+<style color=#00ffffff size=1>.</style>                      Set the selection to consist of those characters
+<style color=#00ffffff size=1>.</style>                      of tagOrId between the selection anchor point and
+<style color=#00ffffff size=1>.</style>                      index. The new selection will include the
+<style color=#00ffffff size=1>.</style>                      character given by index\; it will include the
+<style color=#00ffffff size=1>.</style>                      character given by the anchor point only if index
+<style color=#00ffffff size=1>.</style>                      is greater than or equal to the anchor point. The
+<style color=#00ffffff size=1>.</style>                      anchor point is determined by the most recent 
+<style color=#00ffffff size=1>.</style>                      select adjust or select from command for this
+<style color=#00ffffff size=1>.</style>                      widget. If the selection anchor point for the
+<style color=#00ffffff size=1>.</style>                      widget isn't currently in tagOrId, then it is set
+<style color=#00ffffff size=1>.</style>                      to the same character given by index. Returns an
+<style color=#00ffffff size=1>.</style>                      empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName type tagOrId
+<style color=#00ffffff size=1>.</style>                 Returns the type of the item given by tagOrId, such as
+<style color=#00ffffff size=1>.</style>                 rectangle or text. If tagOrId refers to more than one
+<style color=#00ffffff size=1>.</style>                 item, then the type of the first item in the display
+<style color=#00ffffff size=1>.</style>                 list is returned. If tagOrId doesn't refer to any items
+<style color=#00ffffff size=1>.</style>                 at all then an empty string is returned.
+
+<style color=#00ffffff size=1>.</style>            pathName xview  ?args?
+<style color=#00ffffff size=1>.</style>                 This command is used to query and change the horizontal
+<style color=#00ffffff size=1>.</style>                 position of the information displayed in the canvas's
+<style color=#00ffffff size=1>.</style>                 window. It can take any of the following forms:
+
+<style color=#00ffffff size=1>.</style>                 pathName xview
+<style color=#00ffffff size=1>.</style>                      Returns a list containing two elements. Each
+<style color=#00ffffff size=1>.</style>                      element is a real fraction between 0 and 1\;
+<style color=#00ffffff size=1>.</style>                      together they describe the horizontal span that is
+<style color=#00ffffff size=1>.</style>                      visible in the window. For example, if the first
+<style color=#00ffffff size=1>.</style>                      element is .2 and the second element is .6, 20% of
+<style color=#00ffffff size=1>.</style>                      the canvas's area (as defined by the -scrollregion
+<style color=#00ffffff size=1>.</style>                      option) is off-screen to the left, the middle 40%
+<style color=#00ffffff size=1>.</style>                      is visible in the window, and 40% of the canvas is
+<style color=#00ffffff size=1>.</style>                      off-screen to the right. These are the same values
+<style color=#00ffffff size=1>.</style>                      passed to scrollbars via the -xscrollcommand
+<style color=#00ffffff size=1>.</style>                      option.
+
+<style color=#00ffffff size=1>.</style>                 pathName xview moveto fraction
+<style color=#00ffffff size=1>.</style>                      Adjusts the view in the window so that fraction of
+<style color=#00ffffff size=1>.</style>                      the total width of the canvas is off-screen to the
+<style color=#00ffffff size=1>.</style>                      left. Fraction must be a fraction between 0 and 1.
+
+<style color=#00ffffff size=1>.</style>                 pathName xview scroll number what
+<style color=#00ffffff size=1>.</style>                      This command shifts the view in the window left or
+<style color=#00ffffff size=1>.</style>                      right according to number and what. Number must be
+<style color=#00ffffff size=1>.</style>                      an integer. What must be either units or pages. If
+<style color=#00ffffff size=1>.</style>                      what is units, the view adjusts left or right in
+<style color=#00ffffff size=1>.</style>                      units of the xscrollicrement option, if it is
+<style color=#00ffffff size=1>.</style>                      greater than zero, or in units of one-tenth the
+<style color=#00ffffff size=1>.</style>                      window's width otherwise. If what is pages then
+<style color=#00ffffff size=1>.</style>                      the view adjusts in units of nine-tenths the
+<style color=#00ffffff size=1>.</style>                      window's width. If number is negative then
+<style color=#00ffffff size=1>.</style>                      information farther to the left becomes visible\;
+<style color=#00ffffff size=1>.</style>                      if it is positive then information farther to the
+<style color=#00ffffff size=1>.</style>                      right becomes visible.
+
+<style color=#00ffffff size=1>.</style>            pathName yview ?args?
+<style color=#00ffffff size=1>.</style>                 This command is used to query and change the vertical
+<style color=#00ffffff size=1>.</style>                 position of the information displayed in the canvas's
+<style color=#00ffffff size=1>.</style>                 window. It can take any of the following forms:
+
+<style color=#00ffffff size=1>.</style>                 pathName yview
+<style color=#00ffffff size=1>.</style>                      Returns a list containing two elements. Each
+<style color=#00ffffff size=1>.</style>                      element is a real fraction between 0 and 1\;
+<style color=#00ffffff size=1>.</style>                      together they describe the vertical span that is
+<style color=#00ffffff size=1>.</style>                      visible in the window. For example, if the first
+<style color=#00ffffff size=1>.</style>                      element is .6 and the second element is 1.0, the
+<style color=#00ffffff size=1>.</style>                      lowest 40% of the canvas's area (as defined by the
+<style color=#00ffffff size=1>.</style>                      -scrollregion option) is visible in the window.
+<style color=#00ffffff size=1>.</style>                      These are the same values passed to scrollbars via
+<style color=#00ffffff size=1>.</style>                      the -yscrollcommand option.
+
+<style color=#00ffffff size=1>.</style>                 pathName yview moveto fraction
+<style color=#00ffffff size=1>.</style>                      Adjusts the view in the window so that fraction of
+<style color=#00ffffff size=1>.</style>                      the canvas's area is off-screen to the top.
+<style color=#00ffffff size=1>.</style>                      Fraction is a fraction between 0 and 1.
+
+<style color=#00ffffff size=1>.</style>                 pathName yview scroll number what
+<style color=#00ffffff size=1>.</style>                      This command adjusts the view in the window up or
+<style color=#00ffffff size=1>.</style>                      down according to number and what. Number must be
+<style color=#00ffffff size=1>.</style>                      an integer. What must be either units or pages. If
+<style color=#00ffffff size=1>.</style>                      what is units, the view adjusts up or down in
+<style color=#00ffffff size=1>.</style>                      units of the yscrollicrement option, if it is
+<style color=#00ffffff size=1>.</style>                      greater than zero, or in units of one-tenth the
+<style color=#00ffffff size=1>.</style>                      window's height otherwise. If what is pages then
+<style color=#00ffffff size=1>.</style>                      the view adjusts in units of nine-tenths the
+<style color=#00ffffff size=1>.</style>                      window's height. If number is negative then higher
+<style color=#00ffffff size=1>.</style>                      information becomes visible\;  if it is positive
+<style color=#00ffffff size=1>.</style>                      then lower information becomes visible.
+
+OVERVIEW OF ITEM TYPES
+<style color=#00ffffff size=1>.</style>            The sections below describe the various types of items
+<style color=#00ffffff size=1>.</style>            supported by canvas widgets.  Each item type is
+<style color=#00ffffff size=1>.</style>            characterized by two things: first, the form of the create
+<style color=#00ffffff size=1>.</style>            command used to create instances of the type\;  and second, a
+<style color=#00ffffff size=1>.</style>            set of configuration options for items of that type, which
+<style color=#00ffffff size=1>.</style>            may be used in the create and itemconfigure widget commands.
+<style color=#00ffffff size=1>.</style>            Most items don't support indexing or selection or the
+<style color=#00ffffff size=1>.</style>            commands related to them, such as index and insert. Where
+<style color=#00ffffff size=1>.</style>            items do support these facilities, it is noted explicitly in
+<style color=#00ffffff size=1>.</style>            the descriptions below (at present, only text items provide
+<style color=#00ffffff size=1>.</style>            this support).
+
+ARC ITEMS
+<style color=#00ffffff size=1>.</style>            Items of type arc appear on the display as arc-shaped
+<style color=#00ffffff size=1>.</style>            regions. An arc is a section of an oval delimited by two
+<style color=#00ffffff size=1>.</style>            angles (specified by the -start and -extent options) and
+<style color=#00ffffff size=1>.</style>            displayed in one of several ways (specified by the -style
+<style color=#00ffffff size=1>.</style>            option). Arcs are created with widget commands of the
+<style color=#00ffffff size=1>.</style>            following form:
+<style color=#00ffffff size=1>.</style>                 pathName create arc x1 y1 x2 y2 ?option value option value ...?
+<style color=#00ffffff size=1>.</style>            The arguments x1, y1, x2, and y2 give the coordinates of two
+<style color=#00ffffff size=1>.</style>            diagonally opposite corners of a rectangular region
+<style color=#00ffffff size=1>.</style>            enclosing the oval that defines the arc. After the
+<style color=#00ffffff size=1>.</style>            coordinates there may be any number of option-value pairs,
+<style color=#00ffffff size=1>.</style>            each of which sets one of the configuration options for the
+<style color=#00ffffff size=1>.</style>            item.  These same option-value pairs may be used in 
+<style color=#00ffffff size=1>.</style>            itemconfigure widget commands to change the item's
+<style color=#00ffffff size=1>.</style>            configuration. The following options are supported for arcs:
+
+<style color=#00ffffff size=1>.</style>            -extent degrees
+<style color=#00ffffff size=1>.</style>                 Specifies the size of the angular range occupied by the
+<style color=#00ffffff size=1>.</style>                 arc. The arc's range extends for degrees degrees
+<style color=#00ffffff size=1>.</style>                 counter-clockwise from the starting angle given by the 
+<style color=#00ffffff size=1>.</style>                 -start option. Degrees may be negative. If it is
+<style color=#00ffffff size=1>.</style>                 greater than 360 or less than -360, then degrees modulo
+<style color=#00ffffff size=1>.</style>                 360 is used as the extent.
+
+<style color=#00ffffff size=1>.</style>            -fill colour
+<style color=#00ffffff size=1>.</style>                 Fill the region of the arc with colour. If colour is an
+<style color=#00ffffff size=1>.</style>                 empty string (the default), then the arc will not be
+<style color=#00ffffff size=1>.</style>                 filled.
+
+<style color=#00ffffff size=1>.</style>            -outline colour
+<style color=#00ffffff size=1>.</style>                 Colour specifies a colour to use for drawing the arc's
+<style color=#00ffffff size=1>.</style>                 outline. This option defaults to black.  If colour is
+<style color=#00ffffff size=1>.</style>                 specified as an empty string then no outline is drawn
+<style color=#00ffffff size=1>.</style>                 for the arc.
+
+<style color=#00ffffff size=1>.</style>            -start degrees
+<style color=#00ffffff size=1>.</style>                 Specifies the beginning of the angular range occupied
+<style color=#00ffffff size=1>.</style>                 by the arc. Degrees is given in units of degrees
+<style color=#00ffffff size=1>.</style>                 measured counter-clockwise from the 3-o'clock position\;
+<style color=#00ffffff size=1>.</style>                 it may be either positive or negative.
+
+<style color=#00ffffff size=1>.</style>            -stipple bitmap
+<style color=#00ffffff size=1>.</style>                 Indicates that the arc should be filled in a stipple
+<style color=#00ffffff size=1>.</style>                 pattern\; bitmap specifies the stipple pattern to use.
+<style color=#00ffffff size=1>.</style>                 If the -fill option hasn't been specified then this
+<style color=#00ffffff size=1>.</style>                 option has no effect. If bitmap is an empty string (the
+<style color=#00ffffff size=1>.</style>                 default), then filling is done in a solid fashion. The
+<style color=#00ffffff size=1>.</style>                 results are undefined if bitmap is not a 1-bit image.
+
+<style color=#00ffffff size=1>.</style>            -style type
+<style color=#00ffffff size=1>.</style>                 Specifies how to draw the arc.  If type is pieslice
+<style color=#00ffffff size=1>.</style>                 (the default) then the arc's region is defined by a
+<style color=#00ffffff size=1>.</style>                 section of the oval's perimeter plus two line segments,
+<style color=#00ffffff size=1>.</style>                 one between the center of the oval and each end of the
+<style color=#00ffffff size=1>.</style>                 perimeter section. If type is chord then the arc's
+<style color=#00ffffff size=1>.</style>                 region is defined by a section of the oval's perimeter
+<style color=#00ffffff size=1>.</style>                 plus a single line segment connecting the two end
+<style color=#00ffffff size=1>.</style>                 points of the perimeter section. This type is not
+<style color=#00ffffff size=1>.</style>                 implemented at the moment. It behaves as arc. If type
+<style color=#00ffffff size=1>.</style>                 is arc then the arc's region consists of a section of
+<style color=#00ffffff size=1>.</style>                 the perimeter alone. In this last case the -fill option
+<style color=#00ffffff size=1>.</style>                 is ignored.
+
+<style color=#00ffffff size=1>.</style>            -tags tagList
+<style color=#00ffffff size=1>.</style>                 Specifies a set of tags to apply to the item. TagList
+<style color=#00ffffff size=1>.</style>                 consists of a list of tag names, which replace any
+<style color=#00ffffff size=1>.</style>                 existing tags for the item. TagList may be an empty
+<style color=#00ffffff size=1>.</style>                 list.
+
+<style color=#00ffffff size=1>.</style>            -width outlineWidth
+<style color=#00ffffff size=1>.</style>                 Specifies the width of the outline to be drawn around
+<style color=#00ffffff size=1>.</style>                 the arc's region, in any of the forms described in the
+<style color=#00ffffff size=1>.</style>                 COORDINATES section above. If the -outline option has
+<style color=#00ffffff size=1>.</style>                 been specified as an empty string then this option has
+<style color=#00ffffff size=1>.</style>                 no effect. Wide outlines will be drawn centered on the
+<style color=#00ffffff size=1>.</style>                 edges of the arc's region. This option defaults to 1.0.
+
+BITMAP ITEMS
+<style color=#00ffffff size=1>.</style>            Items of type bitmap appear on the display as images with
+<style color=#00ffffff size=1>.</style>            two colours, foreground and background. Bitmaps are created
+<style color=#00ffffff size=1>.</style>            with widget commands of the following form:
+<style color=#00ffffff size=1>.</style>                 pathName create bitmap x y ?option value option value ...?
+<style color=#00ffffff size=1>.</style>            The arguments x and y specify the coordinates of a point
+<style color=#00ffffff size=1>.</style>            used to position the bitmap on the display (see the -anchor
+<style color=#00ffffff size=1>.</style>            option below for more information on how bitmaps are
+<style color=#00ffffff size=1>.</style>            displayed). After the coordinates there may be any number of
+<style color=#00ffffff size=1>.</style>            option-value pairs, each of which sets one of the
+<style color=#00ffffff size=1>.</style>            configuration options for the item.  These same option-value
+<style color=#00ffffff size=1>.</style>            pairs may be used in itemconfigure widget commands to change
+<style color=#00ffffff size=1>.</style>            the item's configuration. The following options are
+<style color=#00ffffff size=1>.</style>            supported for bitmaps:
+
+<style color=#00ffffff size=1>.</style>            -anchor anchorPos
+<style color=#00ffffff size=1>.</style>                 AnchorPos tells how to position the bitmap relative to
+<style color=#00ffffff size=1>.</style>                 the positioning point for the item.  For example, if 
+<style color=#00ffffff size=1>.</style>                 anchorPos is center then the bitmap is centered on the
+<style color=#00ffffff size=1>.</style>                 point\;  if anchorPos is n then the bitmap will be drawn
+<style color=#00ffffff size=1>.</style>                 so that its top center point is at the positioning
+<style color=#00ffffff size=1>.</style>                 point. This option defaults to center.
+
+<style color=#00ffffff size=1>.</style>            -bitmap bitmap
+<style color=#00ffffff size=1>.</style>                 Specifies the bitmap to display in the item.
+
+<style color=#00ffffff size=1>.</style>            -tags tagList
+<style color=#00ffffff size=1>.</style>                 Specifies a set of tags to apply to the item. TagList
+<style color=#00ffffff size=1>.</style>                 consists of a list of tag names, which replace any
+<style color=#00ffffff size=1>.</style>                 existing tags for the item. TagList may be an empty
+<style color=#00ffffff size=1>.</style>                 list.
+
+IMAGE ITEMS
+<style color=#00ffffff size=1>.</style>            Items of type image are used to display images on a canvas.
+<style color=#00ffffff size=1>.</style>            Images are created with widget commands of the following
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathName create image x y ?option value option value ...?
+<style color=#00ffffff size=1>.</style>            The arguments x and y specify the coordinates of a point
+<style color=#00ffffff size=1>.</style>            used to position the image on the display (see the -anchor
+<style color=#00ffffff size=1>.</style>            option below for more information). After the coordinates
+<style color=#00ffffff size=1>.</style>            there may be any number of option-value pairs, each of which
+<style color=#00ffffff size=1>.</style>            sets one of the configuration options for the item.  These
+<style color=#00ffffff size=1>.</style>            same option-value pairs may be used in itemconfigure widget
+<style color=#00ffffff size=1>.</style>            commands to change the item's configuration. The following
+<style color=#00ffffff size=1>.</style>            options are supported for images:
+
+<style color=#00ffffff size=1>.</style>            -anchor anchorPos
+<style color=#00ffffff size=1>.</style>                 AnchorPos tells how to position the image relative to
+<style color=#00ffffff size=1>.</style>                 the positioning point for the item.  For example, if 
+<style color=#00ffffff size=1>.</style>                 anchorPos is center then the image is centered on the
+<style color=#00ffffff size=1>.</style>                 point\;  if anchorPos is n then the image will be drawn
+<style color=#00ffffff size=1>.</style>                 so that its top center point is at the positioning
+<style color=#00ffffff size=1>.</style>                 point. This option defaults to center.
+
+<style color=#00ffffff size=1>.</style>            -image name
+<style color=#00ffffff size=1>.</style>                 Specifies the name of the image to display in the item.
+<style color=#00ffffff size=1>.</style>                 This image must have been created previously with the
+<style color=#00ffffff size=1>.</style>                 image create command.
+
+<style color=#00ffffff size=1>.</style>            -tags tagList
+<style color=#00ffffff size=1>.</style>                 Specifies a set of tags to apply to the item. TagList
+<style color=#00ffffff size=1>.</style>                 consists of a list of tag names, which replace any
+<style color=#00ffffff size=1>.</style>                 existing tags for the item\;  it may be an empty list.
+
+LINE ITEMS
+<style color=#00ffffff size=1>.</style>            Items of type line appear on the display as one or more
+<style color=#00ffffff size=1>.</style>            connected line segments or curves. Lines are created with
+<style color=#00ffffff size=1>.</style>            widget commands of the following form:
+<style color=#00ffffff size=1>.</style>                 pathName create line x1 y1... xn yn ?option value option value ...?
+<style color=#00ffffff size=1>.</style>            The arguments x1 through yn give the coordinates for a
+<style color=#00ffffff size=1>.</style>            series of two or more points that describe a series of
+<style color=#00ffffff size=1>.</style>            connected line segments. After the coordinates there may be
+<style color=#00ffffff size=1>.</style>            any number of option-value pairs, each of which sets one of
+<style color=#00ffffff size=1>.</style>            the configuration options for the item.  These same option-
+<style color=#00ffffff size=1>.</style>            value pairs may be used in itemconfigure widget commands to
+<style color=#00ffffff size=1>.</style>            change the item's configuration. The following options are
+<style color=#00ffffff size=1>.</style>            supported for lines:
+
+<style color=#00ffffff size=1>.</style>            -arrow where
+<style color=#00ffffff size=1>.</style>                 Indicates whether or not arrowheads are to be drawn at
+<style color=#00ffffff size=1>.</style>                 one or both ends of the line. Where must have one of
+<style color=#00ffffff size=1>.</style>                 the values none (for no arrowheads), first (for an
+<style color=#00ffffff size=1>.</style>                 arrowhead at the first point of the line), last (for an
+<style color=#00ffffff size=1>.</style>                 arrowhead at the last point of the line), or both (for
+<style color=#00ffffff size=1>.</style>                 arrowheads at both ends). This option defaults to none.
+
+<style color=#00ffffff size=1>.</style>            -arrowshape shape
+<style color=#00ffffff size=1>.</style>                 This option indicates how to draw arrowheads. The shape
+<style color=#00ffffff size=1>.</style>                 argument must be a list with three elements, each
+<style color=#00ffffff size=1>.</style>                 specifying a distance in any of the forms described in
+<style color=#00ffffff size=1>.</style>                 the COORDINATES section above. The first element of the
+<style color=#00ffffff size=1>.</style>                 list gives the distance along the line from the neck of
+<style color=#00ffffff size=1>.</style>                 the arrowhead to its tip. The second element gives the
+<style color=#00ffffff size=1>.</style>                 distance along the line from the trailing points of the
+<style color=#00ffffff size=1>.</style>                 arrowhead to the tip, and the third element gives the
+<style color=#00ffffff size=1>.</style>                 distance from the outside edge of the line to the
+<style color=#00ffffff size=1>.</style>                 trailing points. If this option isn't specified then Tk
+<style color=#00ffffff size=1>.</style>                 picks a ``reasonable'' shape.
+
+<style color=#00ffffff size=1>.</style>            -capstyle style
+<style color=#00ffffff size=1>.</style>                 Specifies the ways in which caps are to be drawn at the
+<style color=#00ffffff size=1>.</style>                 endpoints of the line. Style may one of butt, 
+<style color=#00ffffff size=1>.</style>                 projecting, or round. If this option isn't specified
+<style color=#00ffffff size=1>.</style>                 then it defaults to butt. Where arrowheads are drawn
+<style color=#00ffffff size=1>.</style>                 the cap style is ignored. Note that the first two
+<style color=#00ffffff size=1>.</style>                 options currently have the same effect.
+
+<style color=#00ffffff size=1>.</style>            -fill colour
+<style color=#00ffffff size=1>.</style>                 Colour specifies a colour to use for drawing the line.
+<style color=#00ffffff size=1>.</style>                 It may also be an empty string, in which case the line
+<style color=#00ffffff size=1>.</style>                 will be transparent. This option defaults to black.
+
+<style color=#00ffffff size=1>.</style>            -smooth boolean
+<style color=#00ffffff size=1>.</style>                 Boolean indicates whether or not the line should be
+<style color=#00ffffff size=1>.</style>                 drawn as a curve. If so, the line is rendered as a set
+<style color=#00ffffff size=1>.</style>                 of Bezier splines: one spline is drawn for the first
+<style color=#00ffffff size=1>.</style>                 and second line segments, one for the second and third,
+<style color=#00ffffff size=1>.</style>                 and so on.  Straight-line segments can be generated
+<style color=#00ffffff size=1>.</style>                 within a curve by duplicating the end-points of the
+<style color=#00ffffff size=1>.</style>                 desired line segment.
+
+<style color=#00ffffff size=1>.</style>            -stipple bitmap
+<style color=#00ffffff size=1>.</style>                 Indicates that the line should be filled in a stipple
+<style color=#00ffffff size=1>.</style>                 pattern\; bitmap specifies the stipple pattern to use.
+<style color=#00ffffff size=1>.</style>                 If bitmap is an empty string (the default), then
+<style color=#00ffffff size=1>.</style>                 filling is done in a solid fashion. The results are
+<style color=#00ffffff size=1>.</style>                 undefined if bitmap is not a 1-bit image.
+
+<style color=#00ffffff size=1>.</style>            -tags tagList
+<style color=#00ffffff size=1>.</style>                 Specifies a set of tags to apply to the item. TagList
+<style color=#00ffffff size=1>.</style>                 consists of a list of tag names, which replace any
+<style color=#00ffffff size=1>.</style>                 existing tags for the item. TagList may be an empty
+<style color=#00ffffff size=1>.</style>                 list.
+
+<style color=#00ffffff size=1>.</style>            -width lineWidth
+<style color=#00ffffff size=1>.</style>                 LineWidth specifies the width of the line, in any of
+<style color=#00ffffff size=1>.</style>                 the forms described in the COORDINATES section above.
+<style color=#00ffffff size=1>.</style>                 Wide lines will be drawn centered on the path specified
+<style color=#00ffffff size=1>.</style>                 by the points. If this option isn't specified then it
+<style color=#00ffffff size=1>.</style>                 defaults to 1.0.
+
+OVAL ITEMS
+<style color=#00ffffff size=1>.</style>            Items of type oval appear as circular or oval regions on the
+<style color=#00ffffff size=1>.</style>            display.  Each oval may have an outline, a fill, or both.
+<style color=#00ffffff size=1>.</style>            Ovals are created with widget commands of the following
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathName create oval x1 y1 x2 y2 ?option value option value ...?
+<style color=#00ffffff size=1>.</style>            The arguments x1, y1, x2, and y2 give the coordinates of two
+<style color=#00ffffff size=1>.</style>            diagonally opposite corners of a rectangular region
+<style color=#00ffffff size=1>.</style>            enclosing the oval. The oval will include the top and left
+<style color=#00ffffff size=1>.</style>            edges of the rectangle not the lower or right edges. If the
+<style color=#00ffffff size=1>.</style>            region is square then the resulting oval is circular\;
+<style color=#00ffffff size=1>.</style>            otherwise it is elongated in shape. After the coordinates
+<style color=#00ffffff size=1>.</style>            there may be any number of option-value pairs, each of which
+<style color=#00ffffff size=1>.</style>            sets one of the configuration options for the item.  These
+<style color=#00ffffff size=1>.</style>            same option-value pairs may be used in itemconfigure widget
+<style color=#00ffffff size=1>.</style>            commands to change the item's configuration. The following
+<style color=#00ffffff size=1>.</style>            options are supported for ovals:
+
+<style color=#00ffffff size=1>.</style>            -fill colour
+<style color=#00ffffff size=1>.</style>                 Fill the area of the oval with colour. If colour is an
+<style color=#00ffffff size=1>.</style>                 empty string (the default), then then the oval will not
+<style color=#00ffffff size=1>.</style>                 be filled.
+
+<style color=#00ffffff size=1>.</style>            -outline colour
+<style color=#00ffffff size=1>.</style>                 Colour specifies a colour to use for drawing the oval's
+<style color=#00ffffff size=1>.</style>                 outline. This option defaults to black. If colour is an
+<style color=#00ffffff size=1>.</style>                 empty string then no outline will be drawn for the
+<style color=#00ffffff size=1>.</style>                 oval.
+
+<style color=#00ffffff size=1>.</style>            -stipple bitmap
+<style color=#00ffffff size=1>.</style>                 Indicates that the oval should be filled in a stipple
+<style color=#00ffffff size=1>.</style>                 pattern\; bitmap specifies the stipple pattern to use.
+<style color=#00ffffff size=1>.</style>                 If the -fill option hasn't been specified then this
+<style color=#00ffffff size=1>.</style>                 option has no effect. If bitmap is an empty string (the
+<style color=#00ffffff size=1>.</style>                 default), then filling is done in a solid fashion. The
+<style color=#00ffffff size=1>.</style>                 results are undefined if bitmap is not a 1-bit image.
+
+<style color=#00ffffff size=1>.</style>            -tags tagList
+<style color=#00ffffff size=1>.</style>                 Specifies a set of tags to apply to the item. TagList
+<style color=#00ffffff size=1>.</style>                 consists of a list of tag names, which replace any
+<style color=#00ffffff size=1>.</style>                 existing tags for the item. TagList may be an empty
+<style color=#00ffffff size=1>.</style>                 list.
+
+<style color=#00ffffff size=1>.</style>            -width outlineWidth
+<style color=#00ffffff size=1>.</style>                 outlineWidth specifies the width of the outline to be
+<style color=#00ffffff size=1>.</style>                 drawn around the oval, in any of the forms described in
+<style color=#00ffffff size=1>.</style>                 the COORDINATES section above. If the -outline option
+<style color=#00ffffff size=1>.</style>                 hasn't been specified then this option has no effect.
+<style color=#00ffffff size=1>.</style>                 Wide outlines are drawn centered on the oval path
+<style color=#00ffffff size=1>.</style>                 defined by x1, y1, x2, and y2. This option defaults to
+<style color=#00ffffff size=1>.</style>                 1.0.
+
+POLYGON ITEMS
+<style color=#00ffffff size=1>.</style>            Items of type polygon appear as polygonal or curved filled
+<style color=#00ffffff size=1>.</style>            regions on the display. Polygons are created with widget
+<style color=#00ffffff size=1>.</style>            commands of the following form:
+<style color=#00ffffff size=1>.</style>                 pathName create polygon x1 y1 ... xn yn ?option value option value ...?
+<style color=#00ffffff size=1>.</style>            The arguments x1 through yn specify the coordinates for
+<style color=#00ffffff size=1>.</style>            three or more points that define a closed polygon. The first
+<style color=#00ffffff size=1>.</style>            and last points may be the same\;  whether they are or not,
+<style color=#00ffffff size=1>.</style>            Tk will draw the polygon as a closed polygon. After the
+<style color=#00ffffff size=1>.</style>            coordinates there may be any number of option-value pairs,
+<style color=#00ffffff size=1>.</style>            each of which sets one of the configuration options for the
+<style color=#00ffffff size=1>.</style>            item.  These same option-value pairs may be used in 
+<style color=#00ffffff size=1>.</style>            itemconfigure widget commands to change the item's
+<style color=#00ffffff size=1>.</style>            configuration. The following options are supported for
+<style color=#00ffffff size=1>.</style>            polygons:
+
+<style color=#00ffffff size=1>.</style>            -fill colour
+<style color=#00ffffff size=1>.</style>                 Colour specifies a colour to use for filling the area
+<style color=#00ffffff size=1>.</style>                 of the polygon. If colour is an empty string then the
+<style color=#00ffffff size=1>.</style>                 polygon will be transparent. This option defaults to
+<style color=#00ffffff size=1>.</style>                 the empty string (transparent).
+
+<style color=#00ffffff size=1>.</style>            -outline colour
+<style color=#00ffffff size=1>.</style>                 Colour specifies a colour to use for drawing the
+<style color=#00ffffff size=1>.</style>                 polygon's outline. If colour is an empty string then no
+<style color=#00ffffff size=1>.</style>                 outline will be drawn for the polygon. This option
+<style color=#00ffffff size=1>.</style>                 defaults to black.
+
+<style color=#00ffffff size=1>.</style>            -smooth boolean
+<style color=#00ffffff size=1>.</style>                 Boolean indicates whether or not the polygon should be
+<style color=#00ffffff size=1>.</style>                 drawn with a curved perimeter. If so, the outline of
+<style color=#00ffffff size=1>.</style>                 the polygon becomes a set of Bezier splines, one spline
+<style color=#00ffffff size=1>.</style>                 for the first and second line segments, one for the
+<style color=#00ffffff size=1>.</style>                 second and third, and so on.  Straight-line segments
+<style color=#00ffffff size=1>.</style>                 can be generated in a smoothed polygon by duplicating
+<style color=#00ffffff size=1>.</style>                 the end-points of the desired line segment.
+
+<style color=#00ffffff size=1>.</style>            -stipple bitmap
+<style color=#00ffffff size=1>.</style>                 Indicates that the polygon should be filled in a
+<style color=#00ffffff size=1>.</style>                 stipple pattern\; bitmap specifies the stipple pattern
+<style color=#00ffffff size=1>.</style>                 to use. If bitmap is an empty string (the default),
+<style color=#00ffffff size=1>.</style>                 then filling is done in a solid fashion. The results
+<style color=#00ffffff size=1>.</style>                 are undefined if bitmap is not a 1-bit image.
+
+<style color=#00ffffff size=1>.</style>            -tags tagList
+<style color=#00ffffff size=1>.</style>                 Specifies a set of tags to apply to the item. TagList
+<style color=#00ffffff size=1>.</style>                 consists of a list of tag names, which replace any
+<style color=#00ffffff size=1>.</style>                 existing tags for the item. TagList may be an empty
+<style color=#00ffffff size=1>.</style>                 list.
+
+<style color=#00ffffff size=1>.</style>            -winding type
+<style color=#00ffffff size=1>.</style>                 Specifies the winding rule to use when filling the
+<style color=#00ffffff size=1>.</style>                 polygon. Type can be either nonzero (the default) or 
+<style color=#00ffffff size=1>.</style>                 odd See fillpoly in <action name=draw-image(2)>draw-image(2)</action> for an explanation.
+
+<style color=#00ffffff size=1>.</style>            -width outlineWidth
+<style color=#00ffffff size=1>.</style>                 OutlineWidth specifies the width of the outline to be
+<style color=#00ffffff size=1>.</style>                 drawn around the polygon, in any of the forms described
+<style color=#00ffffff size=1>.</style>                 in the COORDINATES section above. If the -outline
+<style color=#00ffffff size=1>.</style>                 option hasn't been specified then this option has no
+<style color=#00ffffff size=1>.</style>                 effect.  This option defaults to 1.0.
+
+<style color=#00ffffff size=1>.</style>            Polygon items are different from other items such as
+<style color=#00ffffff size=1>.</style>            rectangles, ovals and arcs in that interior points are
+<style color=#00ffffff size=1>.</style>            considered to be ``inside'' a polygon (e.g. for purposes of
+<style color=#00ffffff size=1>.</style>            the find closest and find overlapping widget commands) even
+<style color=#00ffffff size=1>.</style>            if it is not filled. For most other item types, an interior
+<style color=#00ffffff size=1>.</style>            point is considered to be inside the item only if the item
+<style color=#00ffffff size=1>.</style>            is filled or if it has neither a fill nor an outline.  If
+<style color=#00ffffff size=1>.</style>            you would like an unfilled polygon whose interior points are
+<style color=#00ffffff size=1>.</style>            not considered to be inside the polygon, use a line item
+<style color=#00ffffff size=1>.</style>            instead.
+
+RECTANGLE ITEMS
+<style color=#00ffffff size=1>.</style>            Items of type rectangle appear as rectangular regions on the
+<style color=#00ffffff size=1>.</style>            display.  Each rectangle may have an outline, a fill, or
+<style color=#00ffffff size=1>.</style>            both.  Rectangles are created with widget commands of the
+<style color=#00ffffff size=1>.</style>            following form:
+<style color=#00ffffff size=1>.</style>                 pathName create rectangle x1 y1 x2 y2 ?option value option value ...?
+<style color=#00ffffff size=1>.</style>            The arguments x1, y1, x2, and y2 give the coordinates of two
+<style color=#00ffffff size=1>.</style>            diagonally opposite corners of the rectangle (the rectangle
+<style color=#00ffffff size=1>.</style>            will include its upper and left edges but not its lower or
+<style color=#00ffffff size=1>.</style>            right edges). After the coordinates there may be any number
+<style color=#00ffffff size=1>.</style>            of option-value pairs, each of which sets one of the
+<style color=#00ffffff size=1>.</style>            configuration options for the item.  These same option-value
+<style color=#00ffffff size=1>.</style>            pairs may be used in itemconfigure widget commands to change
+<style color=#00ffffff size=1>.</style>            the item's configuration. The following options are
+<style color=#00ffffff size=1>.</style>            supported for rectangles:
+
+<style color=#00ffffff size=1>.</style>            -fill colour
+<style color=#00ffffff size=1>.</style>                 Fill the area of the rectangle with colour. If colour
+<style color=#00ffffff size=1>.</style>                 is an empty string (the default), then the rectangle
+<style color=#00ffffff size=1>.</style>                 will not be filled.
+
+<style color=#00ffffff size=1>.</style>            -outline colour
+<style color=#00ffffff size=1>.</style>                 Draw an outline around the edge of the rectangle in 
+<style color=#00ffffff size=1>.</style>                 colour. This option defaults to black. If colour is an
+<style color=#00ffffff size=1>.</style>                 empty string then no outline will be drawn for the
+<style color=#00ffffff size=1>.</style>                 rectangle.
+
+<style color=#00ffffff size=1>.</style>            -stipple bitmap
+<style color=#00ffffff size=1>.</style>                 Indicates that the rectangle should be filled in a
+<style color=#00ffffff size=1>.</style>                 stipple pattern\; bitmap specifies the stipple pattern
+<style color=#00ffffff size=1>.</style>                 to use. If the -fill option hasn't been specified then
+<style color=#00ffffff size=1>.</style>                 this option has no effect. If bitmap is an empty string
+<style color=#00ffffff size=1>.</style>                 (the default), then filling is done in a solid fashion.
+<style color=#00ffffff size=1>.</style>                 The results are undefined if bitmap is not a 1-bit
+<style color=#00ffffff size=1>.</style>                 image.
+
+<style color=#00ffffff size=1>.</style>            -tags tagList
+<style color=#00ffffff size=1>.</style>                 Specifies a set of tags to apply to the item. TagList
+<style color=#00ffffff size=1>.</style>                 consists of a list of tag names, which replace any
+<style color=#00ffffff size=1>.</style>                 existing tags for the item. TagList may be an empty
+<style color=#00ffffff size=1>.</style>                 list.
+
+<style color=#00ffffff size=1>.</style>            -width outlineWidth
+<style color=#00ffffff size=1>.</style>                 OutlineWidth specifies the width of the outline to be
+<style color=#00ffffff size=1>.</style>                 drawn around the rectangle, in any of the forms
+<style color=#00ffffff size=1>.</style>                 described in the COORDINATES section above. If the 
+<style color=#00ffffff size=1>.</style>                 -outline option hasn't been specified then this option
+<style color=#00ffffff size=1>.</style>                 has no effect. Wide outlines are drawn centered on the
+<style color=#00ffffff size=1>.</style>                 rectangular path defined by x1, y1, x2, and y2. This
+<style color=#00ffffff size=1>.</style>                 option defaults to 1.0.
+
+TEXT ITEMS
+<style color=#00ffffff size=1>.</style>            A text item displays a string of characters on the screen in
+<style color=#00ffffff size=1>.</style>            one or more lines. Text items support indexing and
+<style color=#00ffffff size=1>.</style>            selection, along with the following text-related canvas
+<style color=#00ffffff size=1>.</style>            widget commands:  dchars, focus, icursor, index, insert,
+<style color=#00ffffff size=1>.</style>            select. Text items are created with widget commands of the
+<style color=#00ffffff size=1>.</style>            following form:
+<style color=#00ffffff size=1>.</style>                 pathName create text x y ?option value option value ...?
+<style color=#00ffffff size=1>.</style>            The arguments x and y specify the coordinates of a point
+<style color=#00ffffff size=1>.</style>            used to position the text on the display (see the options
+<style color=#00ffffff size=1>.</style>            below for more information on how text is displayed). After
+<style color=#00ffffff size=1>.</style>            the coordinates there may be any number of option-value
+<style color=#00ffffff size=1>.</style>            pairs, each of which sets one of the configuration options
+<style color=#00ffffff size=1>.</style>            for the item.  These same option-value pairs may be used in 
+<style color=#00ffffff size=1>.</style>            itemconfigure widget commands to change the item's
+<style color=#00ffffff size=1>.</style>            configuration. The following options are supported for text
+<style color=#00ffffff size=1>.</style>            items:
+
+<style color=#00ffffff size=1>.</style>            -anchor anchorPos
+<style color=#00ffffff size=1>.</style>                 AnchorPos tells how to position the text relative to
+<style color=#00ffffff size=1>.</style>                 the positioning point for the text. For example, if 
+<style color=#00ffffff size=1>.</style>                 anchorPos is center then the text is centered on the
+<style color=#00ffffff size=1>.</style>                 point\;  if anchorPos is n then the text will be drawn
+<style color=#00ffffff size=1>.</style>                 such that the top center point of the rectangular
+<style color=#00ffffff size=1>.</style>                 region occupied by the text will be at the positioning
+<style color=#00ffffff size=1>.</style>                 point. This option defaults to center.
+
+<style color=#00ffffff size=1>.</style>            -fill colour
+<style color=#00ffffff size=1>.</style>                 Colour specifies a colour to use for filling the text
+<style color=#00ffffff size=1>.</style>                 characters. If this option isn't specified then it
+<style color=#00ffffff size=1>.</style>                 defaults to black.
+
+<style color=#00ffffff size=1>.</style>            -font font
+<style color=#00ffffff size=1>.</style>                 Specifies the font to use for the text item. If this
+<style color=#00ffffff size=1>.</style>                 option isn't specified, it defaults to a
+<style color=#00ffffff size=1>.</style>                 system-dependent font.
+
+<style color=#00ffffff size=1>.</style>            -justify how
+<style color=#00ffffff size=1>.</style>                 Specifies how to justify the text within its bounding
+<style color=#00ffffff size=1>.</style>                 region. How must be one of the values left, right, or 
+<style color=#00ffffff size=1>.</style>                 center. This option will only matter if the text is
+<style color=#00ffffff size=1>.</style>                 displayed as multiple lines. If the option is omitted,
+<style color=#00ffffff size=1>.</style>                 it defaults to left.
+
+<style color=#00ffffff size=1>.</style>            -stipple bitmap
+<style color=#00ffffff size=1>.</style>                 Indicates that the text should be drawn in a stippled
+<style color=#00ffffff size=1>.</style>                 pattern rather than solid\; bitmap specifies the stipple
+<style color=#00ffffff size=1>.</style>                 pattern to use. If bitmap is an empty string (the
+<style color=#00ffffff size=1>.</style>                 default) then the text is drawn in a solid fashion. The
+<style color=#00ffffff size=1>.</style>                 results are undefined if bitmap is not a 1-bit image.
+
+<style color=#00ffffff size=1>.</style>            -tags tagList
+<style color=#00ffffff size=1>.</style>                 Specifies a set of tags to apply to the item. TagList
+<style color=#00ffffff size=1>.</style>                 consists of a list of tag names, which replace any
+<style color=#00ffffff size=1>.</style>                 existing tags for the item. TagList may be an empty
+<style color=#00ffffff size=1>.</style>                 list.
+
+<style color=#00ffffff size=1>.</style>            -text string
+<style color=#00ffffff size=1>.</style>                 String specifies the characters to be displayed in the
+<style color=#00ffffff size=1>.</style>                 text item. Newline characters cause line breaks. The
+<style color=#00ffffff size=1>.</style>                 characters in the item may also be changed with the
+<style color=#00ffffff size=1>.</style>                 insert and delete widget commands. This option defaults
+<style color=#00ffffff size=1>.</style>                 to an empty string.
+
+<style color=#00ffffff size=1>.</style>            -width lineLength
+<style color=#00ffffff size=1>.</style>                 Specifies a maximum line length for the text, in any of
+<style color=#00ffffff size=1>.</style>                 the forms described in the COORDINATES section above.
+<style color=#00ffffff size=1>.</style>                 If this option is zero (the default) the text is broken
+<style color=#00ffffff size=1>.</style>                 into lines only at newline characters. However, if this
+<style color=#00ffffff size=1>.</style>                 option is non-zero then any line that would be longer
+<style color=#00ffffff size=1>.</style>                 than lineLength is broken just before a space character
+<style color=#00ffffff size=1>.</style>                 to make the line shorter than lineLength\;  the space
+<style color=#00ffffff size=1>.</style>                 character is treated as if it were a newline character.
+
+WINDOW ITEMS
+<style color=#00ffffff size=1>.</style>            Items of type window cause a particular window to be
+<style color=#00ffffff size=1>.</style>            displayed at a given position on the canvas. Window items
+<style color=#00ffffff size=1>.</style>            are created with widget commands of the following form:
+<style color=#00ffffff size=1>.</style>                 pathName create window x y ?option value option value ...?
+<style color=#00ffffff size=1>.</style>            The arguments x and y specify the coordinates of a point
+<style color=#00ffffff size=1>.</style>            used to position the window on the display (see the -anchor
+<style color=#00ffffff size=1>.</style>            option below for more information on how bitmaps are
+<style color=#00ffffff size=1>.</style>            displayed). After the coordinates there may be any number of
+<style color=#00ffffff size=1>.</style>            option-value pairs, each of which sets one of the
+<style color=#00ffffff size=1>.</style>            configuration options for the item.  These same option-value
+<style color=#00ffffff size=1>.</style>            pairs may be used in itemconfigure widget commands to change
+<style color=#00ffffff size=1>.</style>            the item's configuration. The following options are
+<style color=#00ffffff size=1>.</style>            supported for window items:
+
+<style color=#00ffffff size=1>.</style>            -anchor anchorPos
+<style color=#00ffffff size=1>.</style>                 AnchorPos tells how to position the window relative to
+<style color=#00ffffff size=1>.</style>                 the positioning point for the item.  For example, if 
+<style color=#00ffffff size=1>.</style>                 anchorPos is center then the window is centered on the
+<style color=#00ffffff size=1>.</style>                 point\;  if anchorPos is n then the window will be drawn
+<style color=#00ffffff size=1>.</style>                 so that its top center point is at the positioning
+<style color=#00ffffff size=1>.</style>                 point. This option defaults to center.
+
+<style color=#00ffffff size=1>.</style>            -height dist
+<style color=#00ffffff size=1>.</style>                 Specifies the height to assign to the item's window.
+<style color=#00ffffff size=1>.</style>                 Dist may have any of the forms described in the
+<style color=#00ffffff size=1>.</style>                 COORDINATES section above. If this option isn't
+<style color=#00ffffff size=1>.</style>                 specified, or if it is specified as an empty string,
+<style color=#00ffffff size=1>.</style>                 then the window is given whatever height it requests
+<style color=#00ffffff size=1>.</style>                 internally.
+
+<style color=#00ffffff size=1>.</style>            -tags tagList
+<style color=#00ffffff size=1>.</style>                 Specifies a set of tags to apply to the item. TagList
+<style color=#00ffffff size=1>.</style>                 consists of a list of tag names, which replace any
+<style color=#00ffffff size=1>.</style>                 existing tags for the item. TagList may be an empty
+<style color=#00ffffff size=1>.</style>                 list.
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies the width to assign to the item's window.
+<style color=#00ffffff size=1>.</style>                 Dist may have any of the forms described in the
+<style color=#00ffffff size=1>.</style>                 COORDINATES section above. If this option isn't
+<style color=#00ffffff size=1>.</style>                 specified, or if it is specified as an empty string,
+<style color=#00ffffff size=1>.</style>                 then the window is given whatever width it requests
+<style color=#00ffffff size=1>.</style>                 internally.
+
+<style color=#00ffffff size=1>.</style>            -window pathName
+<style color=#00ffffff size=1>.</style>                 Specifies the window to associate with this item. The
+<style color=#00ffffff size=1>.</style>                 window specified by pathName must either be a child of
+<style color=#00ffffff size=1>.</style>                 the canvas widget or a child of some ancestor of the
+<style color=#00ffffff size=1>.</style>                 canvas widget. PathName may not refer to a top-level
+<style color=#00ffffff size=1>.</style>                 window.
+
+BINDINGS
+<style color=#00ffffff size=1>.</style>            New canvases are not given any default behaviour. Use bind
+<style color=#00ffffff size=1>.</style>            (2) commands to give the canvas its behaviour.
+
+CREDITS
+<style color=#00ffffff size=1>.</style>            Tk's canvas widget is a blatant ripoff of ideas from Joel
+<style color=#00ffffff size=1>.</style>            Bartlett's ezd program.  Ezd provides structured graphics in
+<style color=#00ffffff size=1>.</style>            a Scheme environment and preceded canvases by a year or two.
+<style color=#00ffffff size=1>.</style>            Its simple mechanisms for placing and animating graphical
+<style color=#00ffffff size=1>.</style>            objects inspired the functions of canvases.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=options(9)>options(9)</action>, <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

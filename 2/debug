@@ -1,0 +1,241 @@
+<action name=DEBUG(2)>DEBUG(2)</action>                                                 <action name=DEBUG(2)>DEBUG(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            debug - process debugging
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "debug.m"\;
+<style color=#00ffffff size=1>.</style>            debug := load Debug Debug->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Pos: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                file:       string\;
+<style color=#00ffffff size=1>.</style>                line:       int\;
+<style color=#00ffffff size=1>.</style>                pos:        int\;
+<style color=#00ffffff size=1>.</style>            }\;
+<style color=#00ffffff size=1>.</style>            Src: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                start:      Pos\;        # range within source files
+<style color=#00ffffff size=1>.</style>                stop:       Pos\;
+<style color=#00ffffff size=1>.</style>            }\;
+<style color=#00ffffff size=1>.</style>            Sym: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                srctopc:    fn(s: self ref Sym, src: ref Src): int\;
+<style color=#00ffffff size=1>.</style>                pctosrc:    fn(s: self ref Sym, pc: int): ref Src\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Module: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                addsym: fn(m: self ref Module, sym: ref Sym)\;
+<style color=#00ffffff size=1>.</style>                stdsym: fn(m: self ref Module)\;
+<style color=#00ffffff size=1>.</style>                dis:    fn(m: self ref Module): string\;
+<style color=#00ffffff size=1>.</style>                sbl:    fn(m: self ref Module): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Prog: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                cont:   fn(p: self ref Prog): string\;
+<style color=#00ffffff size=1>.</style>                delbpt: fn(p: self ref Prog, dis: string, pc: int): string\;
+<style color=#00ffffff size=1>.</style>                event:  fn(p: self ref Prog): string\;
+<style color=#00ffffff size=1>.</style>                grab:   fn(p: self ref Prog): string\;
+<style color=#00ffffff size=1>.</style>                kill:   fn(p: self ref Prog): string\;
+<style color=#00ffffff size=1>.</style>                setbpt: fn(p: self ref Prog, dis: string, pc: int): string\;
+<style color=#00ffffff size=1>.</style>                stack:  fn(p: self ref Prog): (array of ref Exp, string)\;
+<style color=#00ffffff size=1>.</style>                start:  fn(p: self ref Prog): string\;
+<style color=#00ffffff size=1>.</style>                status: fn(p: self ref Prog): (int, string, string, string)\;
+<style color=#00ffffff size=1>.</style>                step:   fn(p: self ref Prog, how: int): string\;
+<style color=#00ffffff size=1>.</style>                stop:   fn(p: self ref Prog): string\;
+<style color=#00ffffff size=1>.</style>                unstop: fn(p: self ref Prog): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Exp: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                name:   string\;
+<style color=#00ffffff size=1>.</style>                m:      ref Module\;
+
+<style color=#00ffffff size=1>.</style>                expand: fn(e: self ref Exp): array of ref Exp\;
+<style color=#00ffffff size=1>.</style>                val:    fn(e: self ref Exp): (string, int)\;
+<style color=#00ffffff size=1>.</style>                src:    fn(e: self ref Exp): ref Src\;
+<style color=#00ffffff size=1>.</style>                findsym:fn(e: self ref Exp): string\;
+<style color=#00ffffff size=1>.</style>                srcstr: fn(e: self ref Exp): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:       fn(): int\;
+<style color=#00ffffff size=1>.</style>            startprog:  fn(dis, dir: string, ctxt: ref Draw->Context,
+<style color=#00ffffff size=1>.</style>                           argv: list of string): (ref Prog, string)\;
+<style color=#00ffffff size=1>.</style>            prog:       fn(pid: int): (ref Prog, string)\;
+<style color=#00ffffff size=1>.</style>            sym:        fn(sbl: string): (ref Sym, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Debug is the module interface to the debugging facilities
+<style color=#00ffffff size=1>.</style>            provided by <action name=prog(3)>prog(3)</action>. It allows facilities for inspection of
+<style color=#00ffffff size=1>.</style>            a program's data structures, as it is running, and to start
+<style color=#00ffffff size=1>.</style>            and stop a running program under program control. Init must
+<style color=#00ffffff size=1>.</style>            be called before any other function to initialise debug's
+<style color=#00ffffff size=1>.</style>            global state.
+
+<style color=#00ffffff size=1>.</style>            Startprog starts up a program under control of the debug
+<style color=#00ffffff size=1>.</style>            module. Dis is the full pathname of the Dis module to load
+<style color=#00ffffff size=1>.</style>            (which must be compatible with <action name=command(2)>command(2)</action>\; dir is the
+<style color=#00ffffff size=1>.</style>            current directory in which to put the new process\; ctxt and
+<style color=#00ffffff size=1>.</style>            argv are the arguments given to the new process. Startprog
+<style color=#00ffffff size=1>.</style>            returns a tuple (prog, err) where prog can be used to
+<style color=#00ffffff size=1>.</style>            interrogate and control the running process, as detailed
+<style color=#00ffffff size=1>.</style>            below, unless there is an error, in which case prog will be
+<style color=#00ffffff size=1>.</style>            nil, and err contains a description of the error. Prog is
+<style color=#00ffffff size=1>.</style>            similar to startprog, except that it attaches to an already
+<style color=#00ffffff size=1>.</style>            running process identified by pid.
+
+<style color=#00ffffff size=1>.</style>         Controlling a process
+<style color=#00ffffff size=1>.</style>            A Prog adt provides routines for controlling a running
+<style color=#00ffffff size=1>.</style>            process. It implements the following routines. Unless
+<style color=#00ffffff size=1>.</style>            otherwise stated, they return nil on success and a
+<style color=#00ffffff size=1>.</style>            diagnostic string on error.
+
+<style color=#00ffffff size=1>.</style>            prog.cont()
+<style color=#00ffffff size=1>.</style>                      Run the program until a break point is reached.
+
+<style color=#00ffffff size=1>.</style>            prog.delbpt(dis, pc)
+<style color=#00ffffff size=1>.</style>                      Delbpt deletes the breakpoint in the Dis module
+<style color=#00ffffff size=1>.</style>                      with filename dis at Dis instruction pc.
+
+<style color=#00ffffff size=1>.</style>            prog.event()
+<style color=#00ffffff size=1>.</style>                      Event waits for a state transition in the running
+<style color=#00ffffff size=1>.</style>                      prog and returns the new state, as returned by a
+<style color=#00ffffff size=1>.</style>                      read of the dbgctl file (see <action name=prog(3)>prog(3)</action>).
+
+<style color=#00ffffff size=1>.</style>            prog.grab()
+<style color=#00ffffff size=1>.</style>                      Grab stops the prog and puts it into a state where
+<style color=#00ffffff size=1>.</style>                      single stepping is possible.
+
+<style color=#00ffffff size=1>.</style>            prog.kill()
+<style color=#00ffffff size=1>.</style>                      Kill kills prog.
+
+<style color=#00ffffff size=1>.</style>            prog.setbpt(dis, pc)
+<style color=#00ffffff size=1>.</style>                      Setbpt sets a breakpoint in the Dis module with
+<style color=#00ffffff size=1>.</style>                      filename dis at Dis instruction pc.
+
+<style color=#00ffffff size=1>.</style>            prog.stack()
+<style color=#00ffffff size=1>.</style>                      Stack returns a tuple (exps, err) where exps is an
+<style color=#00ffffff size=1>.</style>                      array of Exp adts, each representing one frame of
+<style color=#00ffffff size=1>.</style>                      the current execution stack of prog. If an error
+<style color=#00ffffff size=1>.</style>                      occurs, exps will be nil, and err will contain a
+<style color=#00ffffff size=1>.</style>                      description of the error.
+
+<style color=#00ffffff size=1>.</style>            prog.start()
+<style color=#00ffffff size=1>.</style>                      Start runs prog until it hits a breakpoint or
+<style color=#00ffffff size=1>.</style>                      exits.
+
+<style color=#00ffffff size=1>.</style>            prog.status()
+<style color=#00ffffff size=1>.</style>                      Status returns a tuple (pgrp, user, state, module)
+<style color=#00ffffff size=1>.</style>                      where pgrp is the process group id of prog, user
+<style color=#00ffffff size=1>.</style>                      is the owner of the process, state is the current
+<style color=#00ffffff size=1>.</style>                      state of the process, and module is the module
+<style color=#00ffffff size=1>.</style>                      implementation name of the currently executing
+<style color=#00ffffff size=1>.</style>                      module.
+
+<style color=#00ffffff size=1>.</style>            prog.step(how)
+<style color=#00ffffff size=1>.</style>                      Step steps prog forward in a manner specified by
+<style color=#00ffffff size=1>.</style>                      how, which is one of the following constants:
+
+<style color=#00ffffff size=1>.</style>                      StepExp
+<style color=#00ffffff size=1>.</style>                           Step one expression evaluation.
+
+<style color=#00ffffff size=1>.</style>                      StepStmt
+<style color=#00ffffff size=1>.</style>                           Step one source statement.
+
+<style color=#00ffffff size=1>.</style>                      StepOver
+<style color=#00ffffff size=1>.</style>                           Step over one called function.
+
+<style color=#00ffffff size=1>.</style>                      StepOut
+<style color=#00ffffff size=1>.</style>                           Step until the current function has returned.
+
+<style color=#00ffffff size=1>.</style>            prog.stop()
+<style color=#00ffffff size=1>.</style>                      Stop prog from running.
+
+<style color=#00ffffff size=1>.</style>            prog.unstop()
+<style color=#00ffffff size=1>.</style>                      Release a program from its stopped state\;
+<style color=#00ffffff size=1>.</style>                      breakpoints will no longer be triggered.
+
+<style color=#00ffffff size=1>.</style>         Inspecting data
+<style color=#00ffffff size=1>.</style>            The Exp adt provides facilities for inspecting the data
+<style color=#00ffffff size=1>.</style>            structures of a running Dis process. A hierarchical data
+<style color=#00ffffff size=1>.</style>            structure can be expanded into an array of its component Exp
+<style color=#00ffffff size=1>.</style>            s, as long as the appropriate symbol information has been
+<style color=#00ffffff size=1>.</style>            located correctly using stdsym or addsym, and findsym.
+
+<style color=#00ffffff size=1>.</style>            A Pos represents a position in a Limbo source code file\; it
+<style color=#00ffffff size=1>.</style>            holds the source file name, the line number (origin 1) and
+<style color=#00ffffff size=1>.</style>            the character within the line (origin 0). The Src adt
+<style color=#00ffffff size=1>.</style>            represents a range in a Limbo source code file\; Src.start
+<style color=#00ffffff size=1>.</style>            and Src.stop represent the beginning and the end of the
+<style color=#00ffffff size=1>.</style>            range, respectively.
+
+<style color=#00ffffff size=1>.</style>            A Sym represents a .sbl symbol file, and is created by
+<style color=#00ffffff size=1>.</style>            calling sym(p) where p is the pathname of the symbol file\;
+<style color=#00ffffff size=1>.</style>            sym returns a tuple (sym, err), where if sym is nil, err
+<style color=#00ffffff size=1>.</style>            contains an error message. A Sym can map between a Dis PC
+<style color=#00ffffff size=1>.</style>            and a source file address, and vice versa. For a given Sym
+<style color=#00ffffff size=1>.</style>            sym, sym.srctopc(src) returns the PC associated with src (or
+<style color=#00ffffff size=1>.</style>            -1 on error)\; sym.pctosrc converts the other way (and
+<style color=#00ffffff size=1>.</style>            returns nil on error).
+
+<style color=#00ffffff size=1>.</style>            Each element e in the top level stack, as returned by
+<style color=#00ffffff size=1>.</style>            Prog.stack, has an associated Module e.m which needs to be
+<style color=#00ffffff size=1>.</style>            associated with a Sym so that debug can glean from it the
+<style color=#00ffffff size=1>.</style>            type information it needs. Given a module m, m.stdsym() will
+<style color=#00ffffff size=1>.</style>            try and find a symbol file in a standard place, but this
+<style color=#00ffffff size=1>.</style>            will fail if the symbol file or the Dis file is in a
+<style color=#00ffffff size=1>.</style>            non-standard place. M.addsym(s) sets the symbol file for m
+<style color=#00ffffff size=1>.</style>            to the Sym s. M.dis() and m.sbl() return the paths of the
+<style color=#00ffffff size=1>.</style>            Dis and symbol files associated with m respectively.
+
+<style color=#00ffffff size=1>.</style>            Each top level stack element expands into three elements,
+<style color=#00ffffff size=1>.</style>            ``args'', ``locals'', and ``module'', representing the
+<style color=#00ffffff size=1>.</style>            arguments to the function, the function's local variables,
+<style color=#00ffffff size=1>.</style>            and the module-global variables of the function's module
+<style color=#00ffffff size=1>.</style>            respectively. Before a top level stack element can be
+<style color=#00ffffff size=1>.</style>            expanded, it is necessary to call findsym on it to locate
+<style color=#00ffffff size=1>.</style>            the function's data.
+
+<style color=#00ffffff size=1>.</style>            exp.name  The name of the symbol.
+
+<style color=#00ffffff size=1>.</style>            exp.expand()
+<style color=#00ffffff size=1>.</style>                      Expand a hierarchical structure into an array of
+<style color=#00ffffff size=1>.</style>                      its component elements. A list element expands
+<style color=#00ffffff size=1>.</style>                      into two elements named ``hd'' and ``tl''\; a tuple
+<style color=#00ffffff size=1>.</style>                      into elements named ``t0'', ``t1'',..., an array
+<style color=#00ffffff size=1>.</style>                      into elements named ``0'', ``1'',..., etc.
+
+<style color=#00ffffff size=1>.</style>            exp.val() Val returns a tuple (s, flag) where s is a string
+<style color=#00ffffff size=1>.</style>                      representation of the value of exp, and if flag is
+<style color=#00ffffff size=1>.</style>                      zero, exp cannot be expanded.
+
+<style color=#00ffffff size=1>.</style>            exp.src() Src returns the file range associated with exp.
+
+<style color=#00ffffff size=1>.</style>            exp.findsym()
+<style color=#00ffffff size=1>.</style>                      If exp is a top level stack frame (i.e. one of the
+<style color=#00ffffff size=1>.</style>                      members of the array returned by Prog.stack) then
+<style color=#00ffffff size=1>.</style>                      findsym will attempt to locate its type and name.
+<style color=#00ffffff size=1>.</style>                      If it succeeds, it returns the null string,
+<style color=#00ffffff size=1>.</style>                      otherwise it returns an error indicating the
+<style color=#00ffffff size=1>.</style>                      problem.
+
+<style color=#00ffffff size=1>.</style>            exp.srcstr()
+<style color=#00ffffff size=1>.</style>                      Srcstr returns a string representing the position
+<style color=#00ffffff size=1>.</style>                      in the source file of exp.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /prog/pid/*
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/debug.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=wm-deb(1)>wm-deb(1)</action>, <action name=prog(3)>prog(3)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            There is no way of looking at the types of the data
+<style color=#00ffffff size=1>.</style>            extracted.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

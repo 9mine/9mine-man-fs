@@ -1,0 +1,17 @@
+<action name=INTRO(8)>INTRO(8)</action>                                                 <action name=INTRO(8)>INTRO(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            intro - introduction to system configuration and
+<style color=#00ffffff size=1>.</style>            administration, and system utilities
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This section of the manual describes commands that provide
+<style color=#00ffffff size=1>.</style>            system configuration and support system administration.
+<style color=#00ffffff size=1>.</style>            There are commands to start and shut down native and hosted
+<style color=#00ffffff size=1>.</style>            environments, administer authentication, build file system
+<style color=#00ffffff size=1>.</style>            images, initialise disks and flash memory, and configure
+<style color=#00ffffff size=1>.</style>            devices. It also documents the commands and interfaces to
+<style color=#00ffffff size=1>.</style>            service programs, including those providing services on the
+<style color=#00ffffff size=1>.</style>            network.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,67 @@
+<action name=KEYSRV(4)>KEYSRV(4)</action>                                               <action name=KEYSRV(4)>KEYSRV(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            keysrv - secret key server
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            auth/keysrv
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Keysrv is a file service run on a connection to an
+<style color=#00ffffff size=1>.</style>            authentication server. It allows a remote user to change a
+<style color=#00ffffff size=1>.</style>            secret stored on the server by <action name=keyfs(4)>keyfs(4)</action>, which must have
+<style color=#00ffffff size=1>.</style>            been started before keysrv, in a name space with the
+<style color=#00ffffff size=1>.</style>            authentication data available under /mnt/keys.
+
+<style color=#00ffffff size=1>.</style>            Keysrv serves a single file, secret, on a connection
+<style color=#00ffffff size=1>.</style>            accessed through file descriptor 0 (ie, the standard
+<style color=#00ffffff size=1>.</style>            `input'). When invoked, it first authenticates the
+<style color=#00ffffff size=1>.</style>            connection using <action name=security-auth(2)>security-auth(2)</action>, requiring the client to
+<style color=#00ffffff size=1>.</style>            use sha1 and rc4_256. If authentication succeeds, keysrv
+<style color=#00ffffff size=1>.</style>            exports a name space containing a file secret. The
+<style color=#00ffffff size=1>.</style>            authentication ensures that only a user that possesses a
+<style color=#00ffffff size=1>.</style>            valid certificate can connect to the service.
+
+<style color=#00ffffff size=1>.</style>            If the authenticated user (ie, the user name in the verified
+<style color=#00ffffff size=1>.</style>            certificate) has an entry in /mnt/keys, as served by keyfs
+<style color=#00ffffff size=1>.</style>            (4), and that user has a non-empty secret, then the file
+<style color=#00ffffff size=1>.</style>            secret will accept reads and writes. (Otherwise, every read
+<style color=#00ffffff size=1>.</style>            or write returns an appropriate error.) Every successful
+<style color=#00ffffff size=1>.</style>            read returns 0 bytes\; thus a read can be used to check that
+<style color=#00ffffff size=1>.</style>            the user is known and has a secret key. Each write contains
+<style color=#00ffffff size=1>.</style>            data of the following form:
+
+<style color=#00ffffff size=1>.</style>                 oldhash \[ newsecret \]
+
+<style color=#00ffffff size=1>.</style>            Oldhash is the SHA1 hash (see <action name=keyring-sha1(2)>keyring-sha1(2)</action>) of the user's
+<style color=#00ffffff size=1>.</style>            existing secret, as 20 hexadecimal digits. If the value of
+<style color=#00ffffff size=1>.</style>            oldhash does not match that of the stored secret, the write
+<style color=#00ffffff size=1>.</style>            returns an error and suitable diagnostic. Oldhash is
+<style color=#00ffffff size=1>.</style>            optionally followed by a newsecret, in clear text as a
+<style color=#00ffffff size=1>.</style>            sequence of bytes (typically the secret as <action name=utf(6)>utf(6)</action>),
+<style color=#00ffffff size=1>.</style>            separated from oldhash by a single space. If the oldhash
+<style color=#00ffffff size=1>.</style>            matches that of the secret currently stored, newsecret
+<style color=#00ffffff size=1>.</style>            replaces it. The write returns an error if oldhash does not
+<style color=#00ffffff size=1>.</style>            match the stored value, or if something else goes wrong.
+
+<style color=#00ffffff size=1>.</style>            Keysrv can be invoked via <action name=listen(1)>listen(1)</action>:
+
+<style color=#00ffffff size=1>.</style>                 listen -t -A 'tcp!*!infkey' {auth/keysrv}
+
+<style color=#00ffffff size=1>.</style>            Normally that is done automatically when starting an
+<style color=#00ffffff size=1>.</style>            authentication service using svc/auth (see <action name=svc(8)>svc(8)</action>).
+
+<style color=#00ffffff size=1>.</style>            <action name=Passwd(1)>Passwd(1)</action> dials the service, authenticates, and mounts the
+<style color=#00ffffff size=1>.</style>            resulting connection on /mnt/keysrv, where it accesses the
+<style color=#00ffffff size=1>.</style>            secret file to change the secret.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /mnt/keys    mount point for <action name=keyfs(4)>keyfs(4)</action>
+<style color=#00ffffff size=1>.</style>            /mnt/keysrv  exported mount point for keysrv
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auth/keysrv.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=listen(1)>listen(1)</action>, <action name=passwd(1)>passwd(1)</action>, <action name=keyfs(4)>keyfs(4)</action>, <action name=logind(8)>logind(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,120 @@
+<action name=MAN(6)>MAN(6)</action>                                                     <action name=MAN(6)>MAN(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            man - manual page format
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Inferno manual pages are stored as text files in a
+<style color=#00ffffff size=1>.</style>            format originally defined for use with the Unix and Plan 9
+<style color=#00ffffff size=1>.</style>            troff command, when used with the man macro package. Within
+<style color=#00ffffff size=1>.</style>            Inferno, the format is interpreted by the programs of man
+<style color=#00ffffff size=1>.</style>            (1).
+
+<style color=#00ffffff size=1>.</style>            Except in ``.LR'' and ``.RL'' requests, any text argument
+<style color=#00ffffff size=1>.</style>            denoted t in the request summary may be zero to six words.
+<style color=#00ffffff size=1>.</style>            Quotes " ... " may be used to include blanks in a `word'. If
+<style color=#00ffffff size=1>.</style>            t is empty, the special treatment is applied to the next
+<style color=#00ffffff size=1>.</style>            text input line (the next line that doesn't begin with dot).
+<style color=#00ffffff size=1>.</style>            In this way, for example, .I may be used to italicize a line
+<style color=#00ffffff size=1>.</style>            of more than 6 words, or .SM followed by .B to make small
+<style color=#00ffffff size=1>.</style>            letters in `bold' font.
+
+<style color=#00ffffff size=1>.</style>            A prevailing indent distance is remembered between
+<style color=#00ffffff size=1>.</style>            successive indented paragraphs, and is reset to default
+<style color=#00ffffff size=1>.</style>            value upon reaching a non-indented paragraph. Default units
+<style color=#00ffffff size=1>.</style>            for indents i are ens.
+
+<style color=#00ffffff size=1>.</style>            The fonts are
+
+<style color=#00ffffff size=1>.</style>            R    roman, the main font, preferred for diagnostics
+<style color=#00ffffff size=1>.</style>            I    italic, preferred for parameters, short names of
+<style color=#00ffffff size=1>.</style>                 commands, names of manual pages, and naked function
+<style color=#00ffffff size=1>.</style>                 names
+<style color=#00ffffff size=1>.</style>            B    `bold', actually the constant width font, preferred for
+<style color=#00ffffff size=1>.</style>                 examples, file names, declarations, keywords, names of
+<style color=#00ffffff size=1>.</style>                 struct members, and literals (numbers are rarely
+<style color=#00ffffff size=1>.</style>                 literals)
+<style color=#00ffffff size=1>.</style>            L    also the constant width font. For graphical display and
+<style color=#00ffffff size=1>.</style>                 printing, L=B\; when converted to plain text, the
+<style color=#00ffffff size=1>.</style>                 arguments of the macros .L, .LR, and .RL are printed in
+<style color=#00ffffff size=1>.</style>                 quotes\; preferred only where quotes really help (e.g.
+<style color=#00ffffff size=1>.</style>                 lower-case literals and punctuation).
+
+<style color=#00ffffff size=1>.</style>            Type font and size are reset to default values before each
+<style color=#00ffffff size=1>.</style>            paragraph, and after processing font- or size-setting
+<style color=#00ffffff size=1>.</style>            macros.
+
+<style color=#00ffffff size=1>.</style>            The man format admits equations and tables in the style of
+<style color=#00ffffff size=1>.</style>            Unix eqn (equation setting) and tbl (table layout)
+<style color=#00ffffff size=1>.</style>            preprocessors, but do not support arguments on .EQ and .TS
+<style color=#00ffffff size=1>.</style>            macros.
+
+<style color=#00ffffff size=1>.</style>            These strings are predefined by man:
+
+<style color=#00ffffff size=1>.</style>            \*R  Trademark symbol
+
+<style color=#00ffffff size=1>.</style>            \*S  Change to default type size.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /man/*/*      Source files of manual pages.
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=man(1)>man(1)</action>
+
+REQUESTS
+<style color=#00ffffff size=1>.</style>            Request	Cause	If no	Explanation
+<style color=#00ffffff size=1>.</style>            	Break	Argument
+<style color=#00ffffff size=1>.</style>            .B t	no	t=n.t.l.*	Text t is `bold'.
+<style color=#00ffffff size=1>.</style>            .BI t	no	t=n.t.l.	Join words of t alternating bold and
+<style color=#00ffffff size=1>.</style>            italic.
+<style color=#00ffffff size=1>.</style>            .BR t	no	t=n.t.l.	Join words of t alternating bold and
+<style color=#00ffffff size=1>.</style>            Roman.
+<style color=#00ffffff size=1>.</style>            .DT	no		Restore default tabs.
+<style color=#00ffffff size=1>.</style>            .EE	yes		End displayed example
+<style color=#00ffffff size=1>.</style>            .EX	yes		Begin displayed example
+<style color=#00ffffff size=1>.</style>            .HP i	yes	i=p.i.*	Set prevailing indent to i. Begin
+<style color=#00ffffff size=1>.</style>            paragraph with hanging indent.
+<style color=#00ffffff size=1>.</style>            .I t	no	t=n.t.l.	Text t is italic.
+<style color=#00ffffff size=1>.</style>            .IB t	no	t=n.t.l.	Join words of t alternating italic and
+<style color=#00ffffff size=1>.</style>            bold.
+<style color=#00ffffff size=1>.</style>            .IP x i	yes	x=""	Same as .TP with tag x.
+<style color=#00ffffff size=1>.</style>            .IR t	no	t=n.t.l.	Join words of t alternating italic and
+<style color=#00ffffff size=1>.</style>            Roman.
+<style color=#00ffffff size=1>.</style>            .L t	no	t=n.t.l.	Text t is literal.
+<style color=#00ffffff size=1>.</style>            .LP	yes		Same as .PP.
+<style color=#00ffffff size=1>.</style>            .LR t	no		Join 2 words of t alternating literal and Roman.
+<style color=#00ffffff size=1>.</style>            .PD d	no	d=.4v	Interparagraph distance is d.
+<style color=#00ffffff size=1>.</style>            .PP	yes		Begin paragraph. Set prevailing indent to default.
+<style color=#00ffffff size=1>.</style>            .RE	yes		End of relative indent. Set prevailing indent to
+<style color=#00ffffff size=1>.</style>            amount of starting .RS.
+<style color=#00ffffff size=1>.</style>            .RI t	no	t=n.t.l.	Join words of t alternating Roman and
+<style color=#00ffffff size=1>.</style>            italic.
+<style color=#00ffffff size=1>.</style>            .RL t	no		Join 2 or 3 words of t alternating Roman and
+<style color=#00ffffff size=1>.</style>            literal.
+<style color=#00ffffff size=1>.</style>            .RS i	yes	i=p.i.	Start relative indent, move left margin in
+<style color=#00ffffff size=1>.</style>            distance i. Set prevailing indent to default for nested
+<style color=#00ffffff size=1>.</style>            indents.
+<style color=#00ffffff size=1>.</style>            .SH t	yes	t=""	Subhead\; reset paragraph distance.
+<style color=#00ffffff size=1>.</style>            .SM t	no	t=n.t.l.	Text t is small.
+<style color=#00ffffff size=1>.</style>            .SS t	no	t=""	Secondary subhead.
+<style color=#00ffffff size=1>.</style>            .TF s	yes		Prevailing indent is wide as string s in font L\;
+<style color=#00ffffff size=1>.</style>            paragraph distance is 0.
+<style color=#00ffffff size=1>.</style>            .TH n c x	yes		Begin page named n of chapter c\; x is extra
+<style color=#00ffffff size=1>.</style>            commentary, e.g. `local', for page head. Set prevailing
+<style color=#00ffffff size=1>.</style>            indent and tabs to default.
+<style color=#00ffffff size=1>.</style>            .TP i	yes	i=p.i.	Set prevailing indent to i. Restore default
+<style color=#00ffffff size=1>.</style>            indent if i=0. Begin indented paragraph with hanging tag
+<style color=#00ffffff size=1>.</style>            given by next text line. If tag doesn't fit, place it on
+<style color=#00ffffff size=1>.</style>            separate line.
+<style color=#00ffffff size=1>.</style>            .1C	yes		Equalize columns and return to 1-column output
+<style color=#00ffffff size=1>.</style>            .2C	yes		Start 2-column nofill output
+
+<style color=#00ffffff size=1>.</style>            * n.t.l. = next text line\; p.i. = prevailing indent
+
+BUGS
+<style color=#00ffffff size=1>.</style>            There's no way to include literal double quote marks in
+<style color=#00ffffff size=1>.</style>            font-alternation macros, such as `.BI'.
+<style color=#00ffffff size=1>.</style>            There is no direct way to suppress column widows in 2-column
+<style color=#00ffffff size=1>.</style>            output\; the column lengths may be adjusted by inserting
+<style color=#00ffffff size=1>.</style>            ``.sp'' requests before the closing `.1C'.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

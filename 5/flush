@@ -1,0 +1,56 @@
+<action name=FLUSH(5)>FLUSH(5)</action>                                                 <action name=FLUSH(5)>FLUSH(5)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            flush - abort a message
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            size\[4\] Tflush tag\[2\] oldtag\[2\]
+<style color=#00ffffff size=1>.</style>            size\[4\] Rflush tag\[2\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            When the response to a request is no longer needed, such as
+<style color=#00ffffff size=1>.</style>            when a user interrupts a process doing a <action name=sys-read(2)>sys-read(2)</action>, a
+<style color=#00ffffff size=1>.</style>            Tflush request is sent to the server to purge the pending
+<style color=#00ffffff size=1>.</style>            response. The message being flushed is identified by oldtag.
+<style color=#00ffffff size=1>.</style>            The semantics of flush depends on messages arriving in
+<style color=#00ffffff size=1>.</style>            order.
+
+<style color=#00ffffff size=1>.</style>            The server should answer the flush message immediately. If
+<style color=#00ffffff size=1>.</style>            it recognizes oldtag as the tag of a pending transaction, it
+<style color=#00ffffff size=1>.</style>            should abort any pending response and discard that tag. In
+<style color=#00ffffff size=1>.</style>            either case, it should respond with an Rflush echoing the
+<style color=#00ffffff size=1>.</style>            tag (not oldtag) of the Tflush message. A Tflush can never
+<style color=#00ffffff size=1>.</style>            be responded to by an Rerror message.
+
+<style color=#00ffffff size=1>.</style>            The server may respond to the pending request before
+<style color=#00ffffff size=1>.</style>            responding to the Tflush. It is possible for a client to
+<style color=#00ffffff size=1>.</style>            send multiple Tflush messages for a particular pending
+<style color=#00ffffff size=1>.</style>            request.  Each subsequent Tflush must contain as oldtag the
+<style color=#00ffffff size=1>.</style>            tag of the pending request (not a previous Tflush). Should
+<style color=#00ffffff size=1>.</style>            multiple Tflushes be received for a pending request, they
+<style color=#00ffffff size=1>.</style>            must be answered in order.  An Rflush for any of the
+<style color=#00ffffff size=1>.</style>            multiple Tflushes implies an answer for all previous ones.
+<style color=#00ffffff size=1>.</style>            Therefore, should a server receive a request and then
+<style color=#00ffffff size=1>.</style>            multiple flushes for that request, it need respond only to
+<style color=#00ffffff size=1>.</style>            the last flush.
+
+<style color=#00ffffff size=1>.</style>            When the client sends a Tflush, it must wait to receive the
+<style color=#00ffffff size=1>.</style>            corresponding Rflush before reusing oldtag for subsequent
+<style color=#00ffffff size=1>.</style>            messages. If a response to the flushed request is received
+<style color=#00ffffff size=1>.</style>            before the Rflush, the client must honor the response as if
+<style color=#00ffffff size=1>.</style>            it had not been flushed, since the completed request may
+<style color=#00ffffff size=1>.</style>            signify a state change in the server. For instance, Tcreate
+<style color=#00ffffff size=1>.</style>            may have created a file and Twalk may have allocated a fid.
+<style color=#00ffffff size=1>.</style>            If no response is received before the Rflush, the flushed
+<style color=#00ffffff size=1>.</style>            transaction is considered to have been cancelled, and should
+<style color=#00ffffff size=1>.</style>            be treated as though it had never been sent.
+
+<style color=#00ffffff size=1>.</style>            Several exceptional conditions are handled correctly by the
+<style color=#00ffffff size=1>.</style>            above specification: sending multiple flushes for a single
+<style color=#00ffffff size=1>.</style>            tag, flushing after a transaction is completed, flushing a
+<style color=#00ffffff size=1>.</style>            Tflush, and flushing an invalid tag.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-read(2)>sys-read(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

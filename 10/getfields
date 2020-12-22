@@ -1,0 +1,41 @@
+GETFIELDS(10.2)                                   GETFIELDS(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            getfields, tokenize - break a string into fields
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            int	getfields(char *str, char **args, int maxargs, int
+<style color=#00ffffff size=1>.</style>            multiflag,
+<style color=#00ffffff size=1>.</style>            	    char *delims)
+
+<style color=#00ffffff size=1>.</style>            int	tokenize(char *str, char **args, int maxargs)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Getfields breaks the null-terminated UTF string str into at
+<style color=#00ffffff size=1>.</style>            most maxargs null-terminated fields and places pointers to
+<style color=#00ffffff size=1>.</style>            the start of these fields in the array args. Some of the
+<style color=#00ffffff size=1>.</style>            bytes in str are overwritten. If there are more than maxargs
+<style color=#00ffffff size=1>.</style>            fields, only the first maxargs fields will be set. Delims is
+<style color=#00ffffff size=1>.</style>            a UTF string defining a set of delimiters.
+
+<style color=#00ffffff size=1>.</style>            If multiflag is zero, adjacent fields are separated by
+<style color=#00ffffff size=1>.</style>            exactly one delimiter. A string containing n delimiter
+<style color=#00ffffff size=1>.</style>            characters contains n+1 fields. If the multiflag argument is
+<style color=#00ffffff size=1>.</style>            not zero, a field is a non-empty string of non-delimiters.
+
+<style color=#00ffffff size=1>.</style>            Getfields return the number of tokens processed.
+
+<style color=#00ffffff size=1>.</style>            Tokenize is the same as getfields with multiflag non-zero
+<style color=#00ffffff size=1>.</style>            and delims "\t\r\n ", except that fields may be quoted using
+<style color=#00ffffff size=1>.</style>            single quotes, in the manner of the command interpreter.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libkern/getfields.c
+<style color=#00ffffff size=1>.</style>            /libkern/tokenize.c
+<style color=#00ffffff size=1>.</style>            /lib9/getfields.c
+<style color=#00ffffff size=1>.</style>            /lib9/tokenize.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            strcat(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,85 @@
+STRCAT(10.2)                                         STRCAT(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            strcat, strcmp, strncmp, strcpy, strncpy, strlen, strchr,
+<style color=#00ffffff size=1>.</style>            strrchr, strdup, strstr - string operations
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            char*	strcat(char *s1, char *s2)
+
+<style color=#00ffffff size=1>.</style>            int	strcmp(char *s1, char *s2)
+
+<style color=#00ffffff size=1>.</style>            int	strncmp(char *s1, char *s2, long n)
+
+<style color=#00ffffff size=1>.</style>            char*	strcpy(char *s1, char *s2)
+
+<style color=#00ffffff size=1>.</style>            char*	strncpy(char *s1, char *s2, long n)
+
+<style color=#00ffffff size=1>.</style>            long	strlen(char *s)
+
+<style color=#00ffffff size=1>.</style>            char*	strchr(char *s, char c)
+
+<style color=#00ffffff size=1>.</style>            char*	strrchr(char *s, char c)
+
+<style color=#00ffffff size=1>.</style>            char*	strdup(char *s)
+
+<style color=#00ffffff size=1>.</style>            char*	strstr(char *s1, char *s2)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The arguments s1, s2 and s point to null-terminated strings.
+<style color=#00ffffff size=1>.</style>            The functions strcat, strcpy, and strncpy all alter s1.
+<style color=#00ffffff size=1>.</style>            These functions do not check for overflow of the array
+<style color=#00ffffff size=1>.</style>            pointed to by s1.
+
+<style color=#00ffffff size=1>.</style>            Strcat appends a copy of string s2 to the end of string s1,
+<style color=#00ffffff size=1>.</style>            and returns a pointer to the null-terminated result.
+
+<style color=#00ffffff size=1>.</style>            Strcmp compares its arguments and returns an integer less
+<style color=#00ffffff size=1>.</style>            than, equal to, or greater than 0, according as s1 is
+<style color=#00ffffff size=1>.</style>            lexicographically less than, equal to, or greater than s2.
+<style color=#00ffffff size=1>.</style>            Strncmp makes the same comparison but examines at most n
+<style color=#00ffffff size=1>.</style>            bytes. The comparisons are made with unsigned bytes.
+
+<style color=#00ffffff size=1>.</style>            Strcpy copies string s2 to s1, stopping after the null byte
+<style color=#00ffffff size=1>.</style>            has been copied. Strncpy copies exactly n bytes, truncating
+<style color=#00ffffff size=1>.</style>            s2 or adding null bytes to s1 if necessary. The result will
+<style color=#00ffffff size=1>.</style>            not be null-terminated if the length of s2 is n or more.
+<style color=#00ffffff size=1>.</style>            Each function returns s1.
+
+<style color=#00ffffff size=1>.</style>            Strlen returns the number of bytes in s, not including the
+<style color=#00ffffff size=1>.</style>            terminating null byte.
+
+<style color=#00ffffff size=1>.</style>            Strchr (strrchr) returns a pointer to the first (last)
+<style color=#00ffffff size=1>.</style>            occurrence of byte c in string s, or ``0'' if c does not
+<style color=#00ffffff size=1>.</style>            occur in the string. The null byte terminating a string is
+<style color=#00ffffff size=1>.</style>            considered to be part of the string.
+
+<style color=#00ffffff size=1>.</style>            Strdup returns a pointer to a distinct copy of the
+<style color=#00ffffff size=1>.</style>            null-terminated string s in space obtained from malloc(10.2)
+<style color=#00ffffff size=1>.</style>            or ``0'' if no space can be obtained.
+
+<style color=#00ffffff size=1>.</style>            Strstr returns a pointer to the first occurrence of s2 as a
+<style color=#00ffffff size=1>.</style>            substring of s1, or 0 if there is none. If s2 is the null
+<style color=#00ffffff size=1>.</style>            string, strstr returns s1.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libkern/str*.c
+<style color=#00ffffff size=1>.</style>            /libkern/str*- objtype .c
+<style color=#00ffffff size=1>.</style>            /lib9/strdup.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            memory(10.2), rune(10.2)
+
+BUGS
+<style color=#00ffffff size=1>.</style>            These routines know nothing about UTF. Use the routines in
+<style color=#00ffffff size=1>.</style>            rune(10.2) as appropriate. Note, however, that the
+<style color=#00ffffff size=1>.</style>            definition of UTF guarantees that strcmp compares UTF
+<style color=#00ffffff size=1>.</style>            strings correctly.
+
+<style color=#00ffffff size=1>.</style>            The outcome of overlapping moves varies among
+<style color=#00ffffff size=1>.</style>            implementations.
+
+<style color=#00ffffff size=1>.</style>            Note the absence of ANSI C's strncat, strpbrk, strspn,
+<style color=#00ffffff size=1>.</style>            strcspn and strtok, but the presence of strdup.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

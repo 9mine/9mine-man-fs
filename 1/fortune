@@ -1,0 +1,22 @@
+<action name=FORTUNE(1)>FORTUNE(1)</action>                                             <action name=FORTUNE(1)>FORTUNE(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            fortune - sample lines from a file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            fortune \[ file \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Fortune prints a one-line aphorism chosen at random. If a
+<style color=#00ffffff size=1>.</style>            file is specified, the saying is taken from that file\;
+<style color=#00ffffff size=1>.</style>            otherwise it is selected from /lib/games/fortunes.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/games/fortunes
+<style color=#00ffffff size=1>.</style>            /lib/games/fortunes.index   fast lookup table, maintained
+<style color=#00ffffff size=1>.</style>            automatically
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/fortune.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

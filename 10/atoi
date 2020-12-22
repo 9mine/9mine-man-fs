@@ -1,0 +1,71 @@
+ATOI(10.2)                                             ATOI(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            atoi, atol, charstod, strtod, strtol, strtoul, strtoll -
+<style color=#00ffffff size=1>.</style>            convert text to numbers
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            int	atoi(char *nptr)
+
+<style color=#00ffffff size=1>.</style>            long	atol(char *nptr)
+
+<style color=#00ffffff size=1>.</style>            double	charstod(int (*f)(void *), void *a)
+
+<style color=#00ffffff size=1>.</style>            double	strtod(char *nptr, char **rptr)
+
+<style color=#00ffffff size=1>.</style>            long	strtol(char *nptr, char **rptr, int base)
+
+<style color=#00ffffff size=1>.</style>            ulong	strtoul(char *nptr, char **rptr, int base)
+
+<style color=#00ffffff size=1>.</style>            vlong	strtoll(char *nptr, char **rptr, int base)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Atoi and atol convert a string pointed to by nptr to
+<style color=#00ffffff size=1>.</style>            integer, and long integer representation respectively. The
+<style color=#00ffffff size=1>.</style>            first unrecognized character ends the string. Leading C
+<style color=#00ffffff size=1>.</style>            escapes are understood, as in strtol with base zero.
+
+<style color=#00ffffff size=1>.</style>            Atoi and atol recognize an optional string of tabs and
+<style color=#00ffffff size=1>.</style>            spaces, then an optional sign, then a string of decimal
+<style color=#00ffffff size=1>.</style>            digits.
+
+<style color=#00ffffff size=1>.</style>            Strtod, strtol, strtoul, and strtoll behave similarly to 
+<style color=#00ffffff size=1>.</style>            atol and, if rptr is not zero, set *rptr to point to the
+<style color=#00ffffff size=1>.</style>            input character immediately after the string converted.
+
+<style color=#00ffffff size=1>.</style>            Strtod recognizes an optional string of tabs and spaces,
+<style color=#00ffffff size=1>.</style>            then an optional sign, then a string of digits optionally
+<style color=#00ffffff size=1>.</style>            containing a decimal point, then an optional ``e'' or ``E''
+<style color=#00ffffff size=1>.</style>            followed by an optionally signed integer.
+
+<style color=#00ffffff size=1>.</style>            Strtol, strtoul and strtoll interpret the digit string in
+<style color=#00ffffff size=1>.</style>            the specified base, from 2 to 36, each digit being less than
+<style color=#00ffffff size=1>.</style>            the base. Digits with value over 9 are represented by
+<style color=#00ffffff size=1>.</style>            letters, a-z or A-Z. If base is 0, the input is interpreted
+<style color=#00ffffff size=1>.</style>            as an integral constant in the style of C (with no suffixed
+<style color=#00ffffff size=1>.</style>            type indicators): numbers are octal if they begin with `0',
+<style color=#00ffffff size=1>.</style>            hexadecimal if they begin with ``0x'' or `0X', otherwise
+<style color=#00ffffff size=1>.</style>            decimal. Strtoul does not recognize signs.
+
+<style color=#00ffffff size=1>.</style>            Charstod interprets floating point numbers in the same
+<style color=#00ffffff size=1>.</style>            syntax as strtod, but it gets successive characters by
+<style color=#00ffffff size=1>.</style>            calling (*f)(a). The last call to f terminates the scan, so
+<style color=#00ffffff size=1>.</style>            it must have returned a character that is not a legal
+<style color=#00ffffff size=1>.</style>            continuation of a number. Therefore, it may be necessary to
+<style color=#00ffffff size=1>.</style>            back up the input stream one character after calling
+<style color=#00ffffff size=1>.</style>            charstod.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libkern/atol.c
+<style color=#00ffffff size=1>.</style>            /libkern/charstod.c
+<style color=#00ffffff size=1>.</style>            /libkern/strtod.c
+<style color=#00ffffff size=1>.</style>            /libkern/strtol.c
+<style color=#00ffffff size=1>.</style>            /libkern/strtoul.c
+<style color=#00ffffff size=1>.</style>            /libkern/utils.c
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Zero is returned if the beginning of the input string is not
+<style color=#00ffffff size=1>.</style>            interpretable as a number\; even in this case, rptr will be
+<style color=#00ffffff size=1>.</style>            updated.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

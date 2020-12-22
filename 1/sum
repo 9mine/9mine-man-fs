@@ -1,0 +1,35 @@
+<action name=SUM(1)>SUM(1)</action>                                                     <action name=SUM(1)>SUM(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            sum, md5sum, sha1sum - calculate file's checksum
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            sum file ...
+
+<style color=#00ffffff size=1>.</style>            md5sum \[ file  ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Sum prints the 32-bit checksum (actually a CRC), length in
+<style color=#00ffffff size=1>.</style>            bytes, and name of each file, one per line. It ignores
+<style color=#00ffffff size=1>.</style>            directories.
+
+<style color=#00ffffff size=1>.</style>            Md5sum prints the MD5 message digest (as 32 hexadecimal
+<style color=#00ffffff size=1>.</style>            digits) and the name of each file, separated by a tab, one
+<style color=#00ffffff size=1>.</style>            per line. If no files are given, the standard input is read.
+
+<style color=#00ffffff size=1>.</style>            Sha1sum is similar, but uses the US National Institute of
+<style color=#00ffffff size=1>.</style>            Standards and Technology's secure hash algorithm SHA1
+<style color=#00ffffff size=1>.</style>            instead of MD5. For each file, it prints its SHA1 secure
+<style color=#00ffffff size=1>.</style>            hash (as 40 hexadecimal digits) and the file's name,
+<style color=#00ffffff size=1>.</style>            separated by a tab, one per line. If no files are given,
+<style color=#00ffffff size=1>.</style>            sha1sum reads the standard input.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sum.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/md5sum.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sha1sum.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cmp(1)>cmp(1)</action>, <action name=wc(1)>wc(1)</action>, <action name=crc(2)>crc(2)</action>, <action name=keyring-sha(2)>keyring-sha(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

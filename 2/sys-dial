@@ -1,0 +1,131 @@
+<action name=SYS-DIAL(2)>SYS-DIAL(2)</action>                                           <action name=SYS-DIAL(2)>SYS-DIAL(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            announce, dial, listen - make network connections
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Connection: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                dfd:  ref FD\;  # data file
+<style color=#00ffffff size=1>.</style>                cfd:  ref FD\;  # control file
+<style color=#00ffffff size=1>.</style>                dir:  string\;  # pathname of line directory
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            announce: fn(addr: string):           (int, Connection)\;
+<style color=#00ffffff size=1>.</style>            dial:     fn(addr, local: string):    (int, Connection)\;
+<style color=#00ffffff size=1>.</style>            listen:   fn(c: Connection):          (int, Connection)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These routines in the Sys module are still used by some
+<style color=#00ffffff size=1>.</style>            existing code. They are deprecated, and new applications
+<style color=#00ffffff size=1>.</style>            should use the Dial module described in <action name=dial(2)>dial(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            These routines establish network connections. Their
+<style color=#00ffffff size=1>.</style>            description uses the following definitions:
+
+<style color=#00ffffff size=1>.</style>            addr     is a network address in one of the following forms:
+
+<style color=#00ffffff size=1>.</style>                 network!netaddr!service
+<style color=#00ffffff size=1>.</style>                 network!netaddr
+<style color=#00ffffff size=1>.</style>                 netaddr
+
+<style color=#00ffffff size=1>.</style>            network
+<style color=#00ffffff size=1>.</style>                 Any directory listed in /net (eg, tcp), or the special
+<style color=#00ffffff size=1>.</style>                 token, net. The name net acts as a free variable that
+<style color=#00ffffff size=1>.</style>                 stands for any network in common between the source and
+<style color=#00ffffff size=1>.</style>                 netaddr. A network name can be preceded by the full
+<style color=#00ffffff size=1>.</style>                 path name of a directory of networks, using the form
+<style color=#00ffffff size=1>.</style>                 /dir/network (eg, /net.alt/tcp).
+
+<style color=#00ffffff size=1>.</style>            netaddr
+<style color=#00ffffff size=1>.</style>                 A host name, a domain name, a network address, or a
+<style color=#00ffffff size=1>.</style>                 meta-name of the form $attribute, which is replaced by
+<style color=#00ffffff size=1>.</style>                 value from the corresponding attribute-value pair in
+<style color=#00ffffff size=1>.</style>                 the connection server data base (see <action name=db(6)>db(6)</action>).
+
+<style color=#00ffffff size=1>.</style>            The functions dial and announce translate a given addr to an
+<style color=#00ffffff size=1>.</style>            actual network address using the connection server <action name=cs(8)>cs(8)</action>. If
+<style color=#00ffffff size=1>.</style>            a logical name addr corresponds to several network
+<style color=#00ffffff size=1>.</style>            addresses, for instance if a destination machine has several
+<style color=#00ffffff size=1>.</style>            interfaces, cs will return them all. In particular, if addr
+<style color=#00ffffff size=1>.</style>            is net, cs will return addresses on all networks that are
+<style color=#00ffffff size=1>.</style>            common to source and destination. The translation procedure
+<style color=#00ffffff size=1>.</style>            accesses cs using its interface file cs, which is sought as
+<style color=#00ffffff size=1>.</style>            follows: first, in an explicit directory /dir if one was
+<style color=#00ffffff size=1>.</style>            given in network\; second, in the standard directory /net\;
+<style color=#00ffffff size=1>.</style>            and finally in the directory /net.alt (dial only). If the
+<style color=#00ffffff size=1>.</style>            connection server cannot be found, the addr is used as-is.
+
+<style color=#00ffffff size=1>.</style>            If a connection attempt is successful, the dir member of the
+<style color=#00ffffff size=1>.</style>            resulting Connection will be the path name of a line
+<style color=#00ffffff size=1>.</style>            directory that has files for accessing the connection. One
+<style color=#00ffffff size=1>.</style>            line directory exists for each possible connection. The data
+<style color=#00ffffff size=1>.</style>            file in the line directory is opened to make a connection,
+<style color=#00ffffff size=1>.</style>            and read and written to communicate with the destination.
+<style color=#00ffffff size=1>.</style>            The ctl file in the line directory can be used to send
+<style color=#00ffffff size=1>.</style>            commands to the line. See <action name=ip(3)>ip(3)</action> for messages that can be
+<style color=#00ffffff size=1>.</style>            written to the ctl file. The last close of the data or ctl
+<style color=#00ffffff size=1>.</style>            file will close the connection. The remote file in the line
+<style color=#00ffffff size=1>.</style>            directory contains the address called\; the file local
+<style color=#00ffffff size=1>.</style>            contains the local address assigned.
+
+<style color=#00ffffff size=1>.</style>            The dial routine makes a call to destination addr on a
+<style color=#00ffffff size=1>.</style>            multiplexed network. If the connection server returns
+<style color=#00ffffff size=1>.</style>            several addresses, dial tries each in turn, until a
+<style color=#00ffffff size=1>.</style>            connection is made or no addresses remain to be tried. It
+<style color=#00ffffff size=1>.</style>            returns a Connection containing a file descriptor dfd open
+<style color=#00ffffff size=1>.</style>            for reading and writing the data file in the line directory,
+<style color=#00ffffff size=1>.</style>            and a file descriptor cfd open for reading and writing the
+<style color=#00ffffff size=1>.</style>            ctl file. If local is non-empty, and the network allows the
+<style color=#00ffffff size=1>.</style>            local address to be set, as is the case with UDP and TCP
+<style color=#00ffffff size=1>.</style>            port numbers, the local address will be set to local.
+
+<style color=#00ffffff size=1>.</style>            Announce and listen are the complements of dial. Announce
+<style color=#00ffffff size=1>.</style>            establishes a network name to which incoming calls can be
+<style color=#00ffffff size=1>.</style>            made. In addr, netaddr gives the name or address of one of
+<style color=#00ffffff size=1>.</style>            the local host's interfaces on which to listen for calls to
+<style color=#00ffffff size=1>.</style>            the given service\; it can be * to listen for calls on any
+<style color=#00ffffff size=1>.</style>            interface on network. Announce returns a Connection
+<style color=#00ffffff size=1>.</style>            structure in which only the cfd descriptor is open, on the
+<style color=#00ffffff size=1>.</style>            control file representing the announcement. Listen takes as
+<style color=#00ffffff size=1>.</style>            its only argument the Connection structure of a successful
+<style color=#00ffffff size=1>.</style>            call to announce. When a call is received, listen returns an
+<style color=#00ffffff size=1>.</style>            open Connection structure as if from dial, except that only
+<style color=#00ffffff size=1>.</style>            the cfd descriptor is open, dfd is nil, and the caller must
+<style color=#00ffffff size=1>.</style>            open the data file for itself.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Make a call and return an open file descriptor to use for
+<style color=#00ffffff size=1>.</style>            communications:
+
+<style color=#00ffffff size=1>.</style>                 callkremvax(): (int, Connection)
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                 	return sys->dial("tcp!kremvax!80", nil)\;
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>            Call the local certificate signer:
+
+<style color=#00ffffff size=1>.</style>                 dialsigner(service: string): (int, Connection)
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                 	return sys->dial("net!$SIGNER!inflogin", nil)\;
+<style color=#00ffffff size=1>.</style>                 }
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/inferno.c
+<style color=#00ffffff size=1>.</style>            /emu/port/dial.c
+<style color=#00ffffff size=1>.</style>            /os/port/inferno.c
+<style color=#00ffffff size=1>.</style>            /os/port/dial.c
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            The integer valued functions return 0 on success and -1 on
+<style color=#00ffffff size=1>.</style>            error\; the system error string is set. The integer component
+<style color=#00ffffff size=1>.</style>            of the tuple returned by the other functions follows the
+<style color=#00ffffff size=1>.</style>            same convention.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Note that listen does not open the data file.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

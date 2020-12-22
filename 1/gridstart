@@ -1,0 +1,53 @@
+<action name=GRIDSTART(1)>GRIDSTART(1)</action>                                         <action name=GRIDSTART(1)>GRIDSTART(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            gridstart, engridden - connect to a public 9p service grid
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            gridstart
+
+<style color=#00ffffff size=1>.</style>            engridden
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            gridstart is a startup script which connects to a set of
+<style color=#00ffffff size=1>.</style>            public 9p services. By default it launches a subrio with
+<style color=#00ffffff size=1>.</style>            several applications running. It can also make all
+<style color=#00ffffff size=1>.</style>            connections via tls if desired.
+
+<style color=#00ffffff size=1>.</style>            The script begins by dialing and mounting an Inferno
+<style color=#00ffffff size=1>.</style>            registry which lists the publicly available services. It
+<style color=#00ffffff size=1>.</style>            then processes the index file to create a series of commands
+<style color=#00ffffff size=1>.</style>            to dial and mount the services listed. The services are an
+<style color=#00ffffff size=1>.</style>            irc-like chat provided by hubfs, an acme-editable wiki which
+<style color=#00ffffff size=1>.</style>            can also be viewed (but not edited) via browser at
+<style color=#00ffffff size=1>.</style>            http://wiki.9gridchan.org, a publicly writable ramdisk, a
+<style color=#00ffffff size=1>.</style>            read-only root fs, a shared plumber that can be used to send
+<style color=#00ffffff size=1>.</style>            messages between clients, and a separate publicly-writable
+<style color=#00ffffff size=1>.</style>            registry for users to share additional services. The wiki
+<style color=#00ffffff size=1>.</style>            has documentation on these services. The <action name=engridden(1)>engridden(1)</action> script
+<style color=#00ffffff size=1>.</style>            is used to mount all the services as per their respective
+<style color=#00ffffff size=1>.</style>            entries in the grid registry.
+
+<style color=#00ffffff size=1>.</style>            The script launches the <action name=hubchat(1)>hubchat(1)</action> client which connects to
+<style color=#00ffffff size=1>.</style>            the default chat channel. It also starts <action name=acme(1)>acme(1)</action> with the
+<style color=#00ffffff size=1>.</style>            wiki-editing command in a window, highlight the 'Wiki
+<style color=#00ffffff size=1>.</style>            /mnt/wiki' command and middle-click to start the acme wiki
+<style color=#00ffffff size=1>.</style>            viewing/editing program. 
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /dis/gridstart /dis/engridden
+
+BUGS
+<style color=#00ffffff size=1>.</style>            It took almost ten years to figure out how to make a useful
+<style color=#00ffffff size=1>.</style>            public 9p service grid.
+
+META
+<style color=#00ffffff size=1>.</style>            "A simple task, connecting using a script, but still to
+<style color=#00ffffff size=1>.</style>            many, untouchable. Climbing a mountain is simple, you find a
+<style color=#00ffffff size=1>.</style>            mountain and you walk forward until you reach the top,
+<style color=#00ffffff size=1>.</style>            stopping to rest and eat. Running a script is simple, you
+<style color=#00ffffff size=1>.</style>            download the tools required and run the script. Both require
+<style color=#00ffffff size=1>.</style>            one to truly want the end result when they are things that
+<style color=#00ffffff size=1>.</style>            the person is not accustomed to." - henesy
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

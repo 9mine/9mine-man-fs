@@ -1,0 +1,34 @@
+<action name=SYS-TOKENIZE(2)>SYS-TOKENIZE(2)</action>                                   <action name=SYS-TOKENIZE(2)>SYS-TOKENIZE(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tokenize - split string into words
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            tokenize: fn(s, delim: string): (int, list of string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Tokenize breaks s into words separated by characters in
+<style color=#00ffffff size=1>.</style>            delim. The returned tuple holds the number of words and an
+<style color=#00ffffff size=1>.</style>            ordered list of those words (whose hd gives the leftmost
+<style color=#00ffffff size=1>.</style>            word from s).
+
+<style color=#00ffffff size=1>.</style>            Words are delimited by the maximal sequences of any
+<style color=#00ffffff size=1>.</style>            character from the delim string. Tokenize skips delimiter
+<style color=#00ffffff size=1>.</style>            characters at the beginning and end of s, so each element in
+<style color=#00ffffff size=1>.</style>            the returned list has non-zero length.
+
+<style color=#00ffffff size=1>.</style>            If s is nil or contains no words, tokenize returns a count
+<style color=#00ffffff size=1>.</style>            of zero and a nil list.
+
+<style color=#00ffffff size=1>.</style>            Delim may be nil or the empty string, specifying no
+<style color=#00ffffff size=1>.</style>            delimiter characters. The resulting word list will be nil
+<style color=#00ffffff size=1>.</style>            (if s is nil or the empty string) or a single-item list with
+<style color=#00ffffff size=1>.</style>            a copy of s.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

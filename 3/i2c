@@ -1,0 +1,61 @@
+<action name=I2C(3)>I2C(3)</action>                                                     <action name=I2C(3)>I2C(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            i2c - basic I2C interface
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #Jn /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/i2c.n.ctl /dev/i2c.n.data
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            I2c serves a one-level directory with two files that give
+<style color=#00ffffff size=1>.</style>            access to the target device with address n (given in
+<style color=#00ffffff size=1>.</style>            hexadecimal) on the system's I2C bus. N is usually
+<style color=#00ffffff size=1>.</style>            determined by the I2C device manufacturer. I2C gives address
+<style color=#00ffffff size=1>.</style>            0 special meaning as the `general call' address. See an I2C
+<style color=#00ffffff size=1>.</style>            specification for details.
+
+<style color=#00ffffff size=1>.</style>            The control file i2c.n.ctl accepts commands to set the valid
+<style color=#00ffffff size=1>.</style>            address range and subaddressing mode for the corresponding
+<style color=#00ffffff size=1>.</style>            data file. The following control messages can be written to
+<style color=#00ffffff size=1>.</style>            it:
+
+<style color=#00ffffff size=1>.</style>            a10  Force 10-bit addressing instead of 7-bit addressing.
+<style color=#00ffffff size=1>.</style>                 Otherwise 10-bit addressing is used only if the device
+<style color=#00ffffff size=1>.</style>                 address n is bigger than 255.
+
+<style color=#00ffffff size=1>.</style>            size nbytes
+<style color=#00ffffff size=1>.</style>                 Set the logical size of the target device to nbytes.
+<style color=#00ffffff size=1>.</style>                 (By default when opened, it is 256 bytes, enough for
+<style color=#00ffffff size=1>.</style>                 most small I2C devices.) IO requests will be kept
+<style color=#00ffffff size=1>.</style>                 within this limit. This value is also returned by
+<style color=#00ffffff size=1>.</style>                 Sys->stat as the length of the data file.
+
+<style color=#00ffffff size=1>.</style>            subaddress \[ n \]
+<style color=#00ffffff size=1>.</style>                 Cause subsequent reads and writes on the data file to
+<style color=#00ffffff size=1>.</style>                 use I2C subaddressing with n byte subaddresses
+<style color=#00ffffff size=1>.</style>                 (default: 1 byte). N must be no larger than 4. The
+<style color=#00ffffff size=1>.</style>                 target device must support subaddressing. By default,
+<style color=#00ffffff size=1>.</style>                 the device is not subaddressed. Setting n to zero
+<style color=#00ffffff size=1>.</style>                 switches off subaddressing.
+
+<style color=#00ffffff size=1>.</style>            When read, the control file displays the current settings.
+
+<style color=#00ffffff size=1>.</style>            The data file i2c.n.data can be read or written to exchange
+<style color=#00ffffff size=1>.</style>            data with the slave device with address n (where n is given
+<style color=#00ffffff size=1>.</style>            in hexadecimal). Each write request transmits the given data
+<style color=#00ffffff size=1>.</style>            to the device. Each read request sends a receive request to
+<style color=#00ffffff size=1>.</style>            the device and returns the resulting data. If the I2C target
+<style color=#00ffffff size=1>.</style>            is subaddressed, the current file offset is used as the
+<style color=#00ffffff size=1>.</style>            subaddress\; otherwise the file offset is ignored, and the
+<style color=#00ffffff size=1>.</style>            device typically starts at 0 for each transfer request. Read
+<style color=#00ffffff size=1>.</style>            and write requests are trimmed to the declared size of the
+<style color=#00ffffff size=1>.</style>            device.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/devi2c.c
+<style color=#00ffffff size=1>.</style>            /os/*/i2c.c
+<style color=#00ffffff size=1>.</style>            /os/cerf405/iic.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

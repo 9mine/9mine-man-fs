@@ -1,0 +1,52 @@
+<action name=PLUMB(1)>PLUMB(1)</action>                                                 <action name=PLUMB(1)>PLUMB(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            plumb - send message to plumber
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            plumb \[ -s src \] \[ -d dest \] \[ -w wdir \] \[ -t type \] \[ -a
+<style color=#00ffffff size=1>.</style>            name value \] \[ -i \] data ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Plumb sends a message to the plumber, <action name=plumber(8)>plumber(8)</action>, which is
+<style color=#00ffffff size=1>.</style>            normally started by <action name=wm(1)>wm(1)</action>'s start up script.
+
+<style color=#00ffffff size=1>.</style>            The options and arguments are used as components of the
+<style color=#00ffffff size=1>.</style>            message. See <action name=plumbing(6)>plumbing(6)</action> for their interpretation. The
+<style color=#00ffffff size=1>.</style>            options are:
+
+<style color=#00ffffff size=1>.</style>            -s src
+<style color=#00ffffff size=1>.</style>                 Set the source to src (default: unspecified).
+
+<style color=#00ffffff size=1>.</style>            -d dest
+<style color=#00ffffff size=1>.</style>                 Set the destination to dest (default: unspecified).
+
+<style color=#00ffffff size=1>.</style>            -w wdir
+<style color=#00ffffff size=1>.</style>                 Set the working directory to wdir (default: current
+<style color=#00ffffff size=1>.</style>                 directory as reported by <action name=pwd(1)>pwd(1)</action> or <action name=workdir(2)>workdir(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            -t type
+<style color=#00ffffff size=1>.</style>                 Set the type of data to type (default: text)
+
+<style color=#00ffffff size=1>.</style>            -a name value
+<style color=#00ffffff size=1>.</style>                 Include an attribute `name=value'\; there can be more
+<style color=#00ffffff size=1>.</style>                 than one.
+
+<style color=#00ffffff size=1>.</style>            -i   Take the data from the standard input not from the
+<style color=#00ffffff size=1>.</style>                 argument strings. If an action attribute is not
+<style color=#00ffffff size=1>.</style>                 otherwise specified, plumb will add an action=showdata
+<style color=#00ffffff size=1>.</style>                 attribute to the message.
+
+<style color=#00ffffff size=1>.</style>            The remaining arguments are sent, separated by spaces, as
+<style color=#00ffffff size=1>.</style>            the data of the message. The plumber will apply its rules to
+<style color=#00ffffff size=1>.</style>            the resulting message to decide how to route it.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /chan/plumb.input  <action name=plumber(8)>plumber(8)</action> input channel
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/plumb.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=plumbmsg(2)>plumbmsg(2)</action>, <action name=plumbing(6)>plumbing(6)</action>, <action name=plumber(8)>plumber(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

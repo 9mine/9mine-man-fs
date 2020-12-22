@@ -1,0 +1,127 @@
+<action name=SETS(2)>SETS(2)</action>                                                   <action name=SETS(2)>SETS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Sets - sets of non-negative integers
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include    "sets.m"\;
+<style color=#00ffffff size=1>.</style>            OR include "sets32.m"\;
+<style color=#00ffffff size=1>.</style>            sets := load Sets Sets->PATH\;
+<style color=#00ffffff size=1>.</style>            A, B: import Sets\;
+
+<style color=#00ffffff size=1>.</style>            Sets: adt {
+<style color=#00ffffff size=1>.</style>                init:       fn()\;
+<style color=#00ffffff size=1>.</style>                set:        fn(): Set\;
+<style color=#00ffffff size=1>.</style>                str2set:    fn(str: string): Set\;
+<style color=#00ffffff size=1>.</style>                bytes2set:  fn(d: array of byte): Set\;
+<style color=#00ffffff size=1>.</style>                Set: adt {
+<style color=#00ffffff size=1>.</style>                    # opaque data
+
+<style color=#00ffffff size=1>.</style>                    X:          fn(s1: self Set, op: int, s2: Set): Set\;
+<style color=#00ffffff size=1>.</style>                    add:        fn(s: self Set, n: int): Set\;
+<style color=#00ffffff size=1>.</style>                    addlist:    fn(s: self Set, ns: list of int): Set\;
+<style color=#00ffffff size=1>.</style>                    del:        fn(s: self Set, n: int): Set\;
+<style color=#00ffffff size=1>.</style>                    invert:     fn(s: self Set): Set\;
+
+<style color=#00ffffff size=1>.</style>                    eq:         fn(s1: self Set, s2: Set): int\;
+<style color=#00ffffff size=1>.</style>                    holds:      fn(s: self Set, n: int): int\;
+<style color=#00ffffff size=1>.</style>                    isempty:      fn(s: self Set): int\;
+<style color=#00ffffff size=1>.</style>                    msb:        fn(s: self Set): int\;
+<style color=#00ffffff size=1>.</style>                    limit:      fn(s: self Set): int\;
+
+<style color=#00ffffff size=1>.</style>                    str:        fn(s: self Set): string\;
+<style color=#00ffffff size=1>.</style>                    bytes:      fn(s: self Set, n: int): array of byte\;
+<style color=#00ffffff size=1>.</style>                }\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Sets module provides routines for manipulating sets of
+<style color=#00ffffff size=1>.</style>            small non-negative integers. There are currently two
+<style color=#00ffffff size=1>.</style>            implementations available: the implementation declared in
+<style color=#00ffffff size=1>.</style>            sets32.m stores sets of numbers from 0 to 31 inclusive\; the
+<style color=#00ffffff size=1>.</style>            implementation in sets.m stores arbitrary sets of
+<style color=#00ffffff size=1>.</style>            non-negative integers. The description given is for the more
+<style color=#00ffffff size=1>.</style>            general implementation\; behaviour of the other is undefined
+<style color=#00ffffff size=1>.</style>            if an integer higher than 31 is used.
+
+<style color=#00ffffff size=1>.</style>            Init must be called first, to allow Sets to initialise its
+<style color=#00ffffff size=1>.</style>            internal state. Set returns a new set, containing nothing.
+<style color=#00ffffff size=1>.</style>            Str2set converts a string to a new set\; the string should
+<style color=#00ffffff size=1>.</style>            have been created with Set.str(). Bytes2set converts an
+<style color=#00ffffff size=1>.</style>            array of bytes, d, as returned by Set.bytes(), to a new set.
+
+<style color=#00ffffff size=1>.</style>            Note that all set operations are copy operations\; none
+<style color=#00ffffff size=1>.</style>            change an existing set.
+
+<style color=#00ffffff size=1>.</style>            s1.X(op, s2)
+<style color=#00ffffff size=1>.</style>                      Returns a new set, the result of combining s1 and
+<style color=#00ffffff size=1>.</style>                      s2 according to boolean operator op. Op can be any
+<style color=#00ffffff size=1>.</style>                      bitwise boolean combination of the two constants A
+<style color=#00ffffff size=1>.</style>                      and B, defined in the module. Notionally, each set
+<style color=#00ffffff size=1>.</style>                      is an infinitely long string of bits, each bit
+<style color=#00ffffff size=1>.</style>                      representing a non-negative integer: zero if the
+<style color=#00ffffff size=1>.</style>                      integer is present, and one if absent. For each
+<style color=#00ffffff size=1>.</style>                      corresponding bit in s1 and s2, X sets a
+<style color=#00ffffff size=1>.</style>                      corresponding bit in the returned set according to
+<style color=#00ffffff size=1>.</style>                      the calculation s1 op s2.
+
+<style color=#00ffffff size=1>.</style>            s.add(n)  Returns the set s with n added.
+
+<style color=#00ffffff size=1>.</style>            s.addlist(ns)
+<style color=#00ffffff size=1>.</style>                      Addlist is the same as calling add on each member
+<style color=#00ffffff size=1>.</style>                      of the list ns, but somewhat more efficient.
+
+<style color=#00ffffff size=1>.</style>            s.del(n)  Returns s with n removed.
+
+<style color=#00ffffff size=1>.</style>            s.invert()
+<style color=#00ffffff size=1>.</style>                      Invert returns a set holding all non-negative
+<style color=#00ffffff size=1>.</style>                      integers other than those already in s. Hence
+<style color=#00ffffff size=1>.</style>                      set().invert() holds all non-negative integers.
+
+<style color=#00ffffff size=1>.</style>            s1.eq(s2) Returns non-zero if s1 is identical to s2.
+
+<style color=#00ffffff size=1>.</style>            s.holds(n)
+<style color=#00ffffff size=1>.</style>                      Returns non-zero if s holds n as a member.
+
+<style color=#00ffffff size=1>.</style>            s.isempty()
+<style color=#00ffffff size=1>.</style>                      Returns non-zero if s holds no members.
+
+<style color=#00ffffff size=1>.</style>            s.msb()   Returns the "most significant bit": the membership
+<style color=#00ffffff size=1>.</style>                      status of all members that have not been
+<style color=#00ffffff size=1>.</style>                      explicitly set. For example, set().msb() is 0\;
+<style color=#00ffffff size=1>.</style>                      set().invert().msb() is 1.
+
+<style color=#00ffffff size=1>.</style>            s.limit() If s.msb() is zero, s.limit() returns one more
+<style color=#00ffffff size=1>.</style>                      than the largest member contained in s, otherwise
+<style color=#00ffffff size=1>.</style>                      it returns one more than the largest member not
+<style color=#00ffffff size=1>.</style>                      contained in s. Thus set().limit() yields 0, and
+<style color=#00ffffff size=1>.</style>                      set().invert().<action name=del(5)>del(5)</action>.limit() yields 6.
+
+<style color=#00ffffff size=1>.</style>            s.str()   Returns a string corresponding to s. The format is
+<style color=#00ffffff size=1>.</style>                      hexdigits:msb, where hexdigits give the least
+<style color=#00ffffff size=1>.</style>                      significant members of the set, most significant
+<style color=#00ffffff size=1>.</style>                      on the left, in hexadecimal format\; msb gives the
+<style color=#00ffffff size=1>.</style>                      padding bit that fills the rest of the set. Note
+<style color=#00ffffff size=1>.</style>                      that this format is compatible between the two
+<style color=#00ffffff size=1>.</style>                      implementations.
+
+<style color=#00ffffff size=1>.</style>            s.bytes(n)
+<style color=#00ffffff size=1>.</style>                      Returns a packed byte representaton of s . The
+<style color=#00ffffff size=1>.</style>                      array is held in little-endian order, with the
+<style color=#00ffffff size=1>.</style>                      topmost bit of the top byte holding the msb of the
+<style color=#00ffffff size=1>.</style>                      set. The array returned will contain at least n
+<style color=#00ffffff size=1>.</style>                      bytes.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Given two sets, s1 and s2, s1.X(A&B, s2) gives their
+<style color=#00ffffff size=1>.</style>            intersection\; s1.X(A|B, s2) their union\; s1.X(A&~B, s2)
+<style color=#00ffffff size=1>.</style>            gives the set of all members of s1 that aren't in s2\; s1
+<style color=#00ffffff size=1>.</style>            .X(~(A|B), s2) gives the set of all integers in neither s1
+<style color=#00ffffff size=1>.</style>            nor s2.
+
+<style color=#00ffffff size=1>.</style>            	sys->print("%s\n", set().addlist(1::2::5::nil)
+<style color=#00ffffff size=1>.</style>            		.invert().X(A|B, set().<action name=add(2)>add(2)</action>).str())\;
+<style color=#00ffffff size=1>.</style>            produces the string ``dd:1'', corresponding to the set of
+<style color=#00ffffff size=1>.</style>            all non-negative integers except 1 and 5.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

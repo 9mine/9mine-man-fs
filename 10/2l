@@ -1,0 +1,124 @@
+2L(10.1)                                                 2L(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            0l, 1l, 2l, 5l, 6l, 7l, 8l, kl, ql, vl - loaders
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            2l \[ option ... \] \[ file ... \]
+<style color=#00ffffff size=1>.</style>            etc.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These commands load the named files into executable files
+<style color=#00ffffff size=1>.</style>            for the corresponding architectures\; see 2c(10.1) for the
+<style color=#00ffffff size=1>.</style>            correspondence between an architecture and the character (1,
+<style color=#00ffffff size=1>.</style>            2, etc.) that specifies it. The files should be object files
+<style color=#00ffffff size=1>.</style>            or libraries (archives of object files) for the appropriate
+<style color=#00ffffff size=1>.</style>            architecture. Also, a name like -lext represents the library
+<style color=#00ffffff size=1>.</style>            libext.a in /$objtype/lib, where objtype is one of 68000,
+<style color=#00ffffff size=1>.</style>            etc. as listed in 2c(10.1). The libraries must have tables
+<style color=#00ffffff size=1>.</style>            of contents (see iar(10.1)).
+
+<style color=#00ffffff size=1>.</style>            In practice, -l options are rarely necessary as the header
+<style color=#00ffffff size=1>.</style>            files for the libraries cause their archives to be included
+<style color=#00ffffff size=1>.</style>            automatically in the load (see 2c(10.1)). For example, any
+<style color=#00ffffff size=1>.</style>            program that includes header file libc.h causes the loader
+<style color=#00ffffff size=1>.</style>            to search the C library /$objtype/lib/libc.a. Also, the
+<style color=#00ffffff size=1>.</style>            loader creates an undefined symbol _main (or _mainp if
+<style color=#00ffffff size=1>.</style>            profiling is enabled) to force loading of the startup
+<style color=#00ffffff size=1>.</style>            linkage from the C library.
+
+<style color=#00ffffff size=1>.</style>            The order of search to resolve undefined symbols is to load
+<style color=#00ffffff size=1>.</style>            all files and libraries mentioned explicitly on the command
+<style color=#00ffffff size=1>.</style>            line, and then to resolve remaining symbols by searching in
+<style color=#00ffffff size=1>.</style>            topological order libraries mentioned in header files
+<style color=#00ffffff size=1>.</style>            included by files already loaded. When scanning such
+<style color=#00ffffff size=1>.</style>            libraries, the algorithm is to scan each library repeatedly
+<style color=#00ffffff size=1>.</style>            until no new undefined symbols are picked up, then to start
+<style color=#00ffffff size=1>.</style>            on the next library.  Thus if library A needs B which needs
+<style color=#00ffffff size=1>.</style>            A again, it may be necessary to mention A explicitly so it
+<style color=#00ffffff size=1>.</style>            will be read a second time.
+
+<style color=#00ffffff size=1>.</style>            The loader options are:
+
+<style color=#00ffffff size=1>.</style>            -l
+<style color=#00ffffff size=1>.</style>             (As a bare option.) Suppress the default loading of the
+<style color=#00ffffff size=1>.</style>             startup linkage and libraries specified by header files.
+
+<style color=#00ffffff size=1>.</style>            -o out
+<style color=#00ffffff size=1>.</style>             Place output in file out. Default is O.out, where O is the
+<style color=#00ffffff size=1>.</style>             first letter of the loader name.
+
+<style color=#00ffffff size=1>.</style>            -p
+<style color=#00ffffff size=1>.</style>             Insert profiling code into the executable output\; no
+<style color=#00ffffff size=1>.</style>             special action is needed during compilation or assembly.
+
+<style color=#00ffffff size=1>.</style>            -s
+<style color=#00ffffff size=1>.</style>             Strip the symbol tables from the output file.
+
+<style color=#00ffffff size=1>.</style>            -a
+<style color=#00ffffff size=1>.</style>             Print the object code in assembly language, with addresses.
+
+<style color=#00ffffff size=1>.</style>            -v
+<style color=#00ffffff size=1>.</style>             Print debugging output that annotates the activities of the
+<style color=#00ffffff size=1>.</style>             load.
+
+<style color=#00ffffff size=1>.</style>            -M
+<style color=#00ffffff size=1>.</style>             (kl only) Generate instructions rather than calls to
+<style color=#00ffffff size=1>.</style>             emulation routines for multiply and divide.
+
+<style color=#00ffffff size=1>.</style>            -Esymbol
+<style color=#00ffffff size=1>.</style>             The entry point for the binary is symbol (default _main\;
+<style color=#00ffffff size=1>.</style>             _mainp under -p).
+
+<style color=#00ffffff size=1>.</style>            -x
+<style color=#00ffffff size=1>.</style>             \[ file \] Produce an export table in the executable. The
+<style color=#00ffffff size=1>.</style>             optional file restricts the exported symbols to those
+<style color=#00ffffff size=1>.</style>             listed in the file. See dynld(10.2).
+
+<style color=#00ffffff size=1>.</style>            -u
+<style color=#00ffffff size=1>.</style>             \[ file \] Produce an export table, import table and a
+<style color=#00ffffff size=1>.</style>             dynamic load section in the executable. The optional file
+<style color=#00ffffff size=1>.</style>             restricts the imported symbols to those listed in the file.
+<style color=#00ffffff size=1>.</style>             See dynld(10.2).
+
+<style color=#00ffffff size=1>.</style>            -Hn
+<style color=#00ffffff size=1>.</style>             Executable header is type n. The meaning of the types is
+<style color=#00ffffff size=1>.</style>             architecture-dependent\; typically type 1 is Plan 9 boot
+<style color=#00ffffff size=1>.</style>             format and type 2 is the regular Plan 9 format, the
+<style color=#00ffffff size=1>.</style>             default.  These are reversed on the MIPS. The Next boot
+<style color=#00ffffff size=1>.</style>             format is 3.  Type 4 in vl creates a MIPS executable for an
+<style color=#00ffffff size=1>.</style>             SGI Unix system.
+
+<style color=#00ffffff size=1>.</style>            -Tt
+<style color=#00ffffff size=1>.</style>             The text segment starts at address t.
+
+<style color=#00ffffff size=1>.</style>            -Dd
+<style color=#00ffffff size=1>.</style>             The data segment starts at address d.
+
+<style color=#00ffffff size=1>.</style>            -Rr
+<style color=#00ffffff size=1>.</style>             The text segment is rounded to a multiple of r (if r is
+<style color=#00ffffff size=1>.</style>             nonzero).
+
+<style color=#00ffffff size=1>.</style>            The numbers in the above options can begin with ``0x'' or
+<style color=#00ffffff size=1>.</style>            ``0'' to change the default base from decimal to hexadecimal
+<style color=#00ffffff size=1>.</style>            or octal. The defaults for the values depend on the compiler
+<style color=#00ffffff size=1>.</style>            and the header type.
+
+<style color=#00ffffff size=1>.</style>            The loaded image has several symbols inserted by the loader:
+<style color=#00ffffff size=1>.</style>            etext is the address of the end of the text segment\; bdata
+<style color=#00ffffff size=1>.</style>            is the address of the beginning of the data segment\; edata
+<style color=#00ffffff size=1>.</style>            is the address of the end of the data segment\; and end is
+<style color=#00ffffff size=1>.</style>            the address of the end of the bss segment, and of the
+<style color=#00ffffff size=1>.</style>            program.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /$objtype/lib  for -llib arguments.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /utils/2l etc.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            2c(10.1), 2a(10.1), iar(10.1), inm(10.1)
+
+<style color=#00ffffff size=1>.</style>            Rob Pike, ``How to Use the Plan 9 C Compiler''
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

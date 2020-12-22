@@ -1,0 +1,33 @@
+<action name=STYXMON(8)>STYXMON(8)</action>                                             <action name=STYXMON(8)>STYXMON(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            styxmon - monitor a 9P (Styx) conversation
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            styxmon \[ -r \] \[ -t \] cmd \[ arg... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Styxmon allows the monitoring of 9P messages sent and
+<style color=#00ffffff size=1>.</style>            received by cmd, which should serve 9P through its standard
+<style color=#00ffffff size=1>.</style>            input. Styxmon in its turn serves 9P through its standard
+<style color=#00ffffff size=1>.</style>            input, and writes information on the 9P messages that it
+<style color=#00ffffff size=1>.</style>            sees to the standard error. The -r and -t options restrict
+<style color=#00ffffff size=1>.</style>            the messages printed to R-messages and T-messages
+<style color=#00ffffff size=1>.</style>            respectively.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Mount an instance of <action name=export(4)>export(4)</action> of the current name space
+<style color=#00ffffff size=1>.</style>            through styxmon on /n/remote to monitor all access to it
+<style color=#00ffffff size=1>.</style>            through that name:
+
+<style color=#00ffffff size=1>.</style>                 mount {styxmon {export /}} /n/remote
+<style color=#00ffffff size=1>.</style>                 ls /n/remote
+<style color=#00ffffff size=1>.</style>                 cp /n/remote/lib/unicode /n/remote/dev/null
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/styxmon.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=styx(2)>styx(2)</action>, <action name=intro(5)>intro(5)</action>, <action name=styxchat(8)>styxchat(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

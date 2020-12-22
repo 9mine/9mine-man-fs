@@ -1,0 +1,191 @@
+<action name=UBFA(2)>UBFA(2)</action>                                                   <action name=UBFA(2)>UBFA(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ubfa: readubf, writeubf, UValue - read, write and represent
+<style color=#00ffffff size=1>.</style>            values in a UBF(A) data transport encoding
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "ubfa.m"\;
+<style color=#00ffffff size=1>.</style>            ubfa := load UBFa UBFa->PATH\;
+
+<style color=#00ffffff size=1>.</style>            UValue: adt {
+<style color=#00ffffff size=1>.</style>                pick{
+<style color=#00ffffff size=1>.</style>                Atom =>
+<style color=#00ffffff size=1>.</style>                    name:  string\;
+<style color=#00ffffff size=1>.</style>                Int =>
+<style color=#00ffffff size=1>.</style>                    value: int\;
+<style color=#00ffffff size=1>.</style>                String =>
+<style color=#00ffffff size=1>.</style>                    s:     string\;
+<style color=#00ffffff size=1>.</style>                Binary =>
+<style color=#00ffffff size=1>.</style>                    a:     array of byte\;
+<style color=#00ffffff size=1>.</style>                Tuple =>
+<style color=#00ffffff size=1>.</style>                    a:     cyclic array of ref UValue\;  # tree
+<style color=#00ffffff size=1>.</style>                List =>
+<style color=#00ffffff size=1>.</style>                    l:     cyclic list of ref UValue\;   # tree
+<style color=#00ffffff size=1>.</style>                Tag =>
+<style color=#00ffffff size=1>.</style>                    name:  string\;
+<style color=#00ffffff size=1>.</style>                    o:     cyclic ref UValue\;
+<style color=#00ffffff size=1>.</style>                }
+<style color=#00ffffff size=1>.</style>                isatom:    fn(o: self ref UValue): int\;
+<style color=#00ffffff size=1>.</style>                isstring:  fn(o: self ref UValue): int\;
+<style color=#00ffffff size=1>.</style>                isint:     fn(o: self ref UValue): int\;
+<style color=#00ffffff size=1>.</style>                istuple:   fn(o: self ref UValue): int\;
+<style color=#00ffffff size=1>.</style>                isop:      fn(o: self ref UValue, op: string, arity: int): int\;
+<style color=#00ffffff size=1>.</style>                islist:    fn(o: self ref UValue): int\;
+<style color=#00ffffff size=1>.</style>                isbinary:  fn(o: self ref UValue): int\;
+<style color=#00ffffff size=1>.</style>                istag:     fn(o: self ref UValue): int\;
+<style color=#00ffffff size=1>.</style>                eq:        fn(o: self ref UValue, v: ref UValue): int\;
+<style color=#00ffffff size=1>.</style>                op:        fn(o: self ref UValue, arity: int): string\;
+<style color=#00ffffff size=1>.</style>                args:      fn(o: self ref UValue, arity: int):
+<style color=#00ffffff size=1>.</style>                            array of ref UValue\;
+<style color=#00ffffff size=1>.</style>                els:       fn(o: self ref UValue): list of ref UValue\;
+<style color=#00ffffff size=1>.</style>                val:       fn(o: self ref UValue): int\;
+<style color=#00ffffff size=1>.</style>                binary:    fn(o: self ref UValue): array of byte\;
+<style color=#00ffffff size=1>.</style>                objtag:    fn(o: self ref UValue): string\;
+<style color=#00ffffff size=1>.</style>                obj:       fn(o: self ref UValue): ref UValue\;
+<style color=#00ffffff size=1>.</style>                text:      fn(o: self ref UValue): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:     fn(bufio: Bufio)\;
+<style color=#00ffffff size=1>.</style>            readubf:  fn(input: ref Iobuf): (ref UValue, string)\;
+<style color=#00ffffff size=1>.</style>            writeubf: fn(output: ref Iobuf, v: ref UValue): int\;
+<style color=#00ffffff size=1>.</style>            uniq:     fn(s: string): string\;
+
+<style color=#00ffffff size=1>.</style>            uvatom:   fn(s: string): ref UValue.Atom\;
+<style color=#00ffffff size=1>.</style>            uvint:    fn(i: int): ref UValue.Int\;
+<style color=#00ffffff size=1>.</style>            uvstring: fn(s: string): ref UValue.String\;
+<style color=#00ffffff size=1>.</style>            uvbinary: fn(a: array of byte): ref UValue.Binary\;
+<style color=#00ffffff size=1>.</style>            uvtuple:  fn(a: array of ref UValue): ref UValue.Tuple\;
+<style color=#00ffffff size=1>.</style>            uvlist:   fn(l: list of ref UValue): ref UValue.List\;
+<style color=#00ffffff size=1>.</style>            uvtag:    fn(name: string, o: ref UValue): ref UValue.Tag\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            UBFa provides value representations, and encoding and
+<style color=#00ffffff size=1>.</style>            decoding operations for Armstrong's UBF(A) data transport
+<style color=#00ffffff size=1>.</style>            format, defined by <action name=ubfa(6)>ubfa(6)</action>.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before invoking any other operation of
+<style color=#00ffffff size=1>.</style>            the module. The bufio parameter must refer to the instance
+<style color=#00ffffff size=1>.</style>            of <action name=bufio(2)>bufio(2)</action> that provides the Iobuf parameters used for
+<style color=#00ffffff size=1>.</style>            input and output.
+
+<style color=#00ffffff size=1>.</style>            UValue is the internal representation of values that can be
+<style color=#00ffffff size=1>.</style>            transmitted by the UBF(A) encoding. The various sorts of
+<style color=#00ffffff size=1>.</style>            values are distinguished in a pick adt:
+
+<style color=#00ffffff size=1>.</style>            UValue.Atom
+<style color=#00ffffff size=1>.</style>                 Represents an atom: a symbolic constant, for example
+<style color=#00ffffff size=1>.</style>                 the name of an operation or an enumeration literal. The
+<style color=#00ffffff size=1>.</style>                 string name gives the spelling of the constant's name.
+
+<style color=#00ffffff size=1>.</style>            UValue.Int
+<style color=#00ffffff size=1>.</style>                 Represents an integer value (eg, a Limbo int) with the
+<style color=#00ffffff size=1>.</style>                 given value.
+
+<style color=#00ffffff size=1>.</style>            UValue.String
+<style color=#00ffffff size=1>.</style>                 Represents a character string (eg, a Limbo string) with
+<style color=#00ffffff size=1>.</style>                 the value s.
+
+<style color=#00ffffff size=1>.</style>            UValue.Binary
+<style color=#00ffffff size=1>.</style>                 Represents binary data as a sequence of bytes in the
+<style color=#00ffffff size=1>.</style>                 array a.
+
+<style color=#00ffffff size=1>.</style>            UValue.Tuple
+<style color=#00ffffff size=1>.</style>                 Represents a compound value that contains a fixed
+<style color=#00ffffff size=1>.</style>                 number of component values, given by successive
+<style color=#00ffffff size=1>.</style>                 elements of the array a. UBF tuples correspond to
+<style color=#00ffffff size=1>.</style>                 tuples or non-pick adt values in Limbo.
+
+<style color=#00ffffff size=1>.</style>            UValue.List
+<style color=#00ffffff size=1>.</style>                 Represents a compound value containing a variable
+<style color=#00ffffff size=1>.</style>                 number of component values, given by successive
+<style color=#00ffffff size=1>.</style>                 elements of the list l.
+
+<style color=#00ffffff size=1>.</style>            UValue.Tag
+<style color=#00ffffff size=1>.</style>                 Associates an application-specific tag with another
+<style color=#00ffffff size=1>.</style>                 UValue referenced by o.
+
+<style color=#00ffffff size=1>.</style>            Readubf reads a single value in <action name=ubfa(6)>ubfa(6)</action> format from the
+<style color=#00ffffff size=1>.</style>            input stream and returns a tuple (val, err). On success, val
+<style color=#00ffffff size=1>.</style>            is a UValue that represents that value. If an error occurs,
+<style color=#00ffffff size=1>.</style>            val is nil and err contains a diagnostic.
+
+<style color=#00ffffff size=1>.</style>            Writeubf writes a <action name=ubfa(6)>ubfa(6)</action> representation of the value v to
+<style color=#00ffffff size=1>.</style>            the output stream. It returns 0 on success and -1 on error
+<style color=#00ffffff size=1>.</style>            (setting the system error string).
+
+<style color=#00ffffff size=1>.</style>            The easiest way to create a new UValue for subsequent output
+<style color=#00ffffff size=1>.</style>            is with one of the module-level functions uvatom, uvint,
+<style color=#00ffffff size=1>.</style>            uvstring, and so on. As values of a pick adt, a UValue can
+<style color=#00ffffff size=1>.</style>            be inspected using Limbo's tagof operator and the
+<style color=#00ffffff size=1>.</style>            appropriate variant accessed using a pick statement. UValue
+<style color=#00ffffff size=1>.</style>            also supports several groups of common operations, for
+<style color=#00ffffff size=1>.</style>            smaller, tidier code. First, the set of enquiry functions u
+<style color=#00ffffff size=1>.</style>            .isX() return true if the value u is an instance of the UBF
+<style color=#00ffffff size=1>.</style>            type X (atom, int, string, binary, tuple, etc). The other
+<style color=#00ffffff size=1>.</style>            operations are:
+
+<style color=#00ffffff size=1>.</style>            u.eq(v)
+<style color=#00ffffff size=1>.</style>                 Return true if the values of u and v are equal,
+<style color=#00ffffff size=1>.</style>                 including the values of corresponding subcomponents,
+<style color=#00ffffff size=1>.</style>                 recursively
+
+<style color=#00ffffff size=1>.</style>            u.isop(op, n)
+<style color=#00ffffff size=1>.</style>                 Return true if u is a tuple having n components, and
+<style color=#00ffffff size=1>.</style>                 its first component is an atom or string with the value
+<style color=#00ffffff size=1>.</style>                 op.
+
+<style color=#00ffffff size=1>.</style>            u.op(n)
+<style color=#00ffffff size=1>.</style>                 If u is a tuple with n components, and the first
+<style color=#00ffffff size=1>.</style>                 component is an atom or string, return its value.
+<style color=#00ffffff size=1>.</style>                 Otherwise, return nil.
+
+<style color=#00ffffff size=1>.</style>            u.args(n)
+<style color=#00ffffff size=1>.</style>                 If u is a tuple with n components, return an array
+<style color=#00ffffff size=1>.</style>                 containing the values of all but the first component.
+<style color=#00ffffff size=1>.</style>                 Otherwise, return  nil.
+
+<style color=#00ffffff size=1>.</style>            u.els()
+<style color=#00ffffff size=1>.</style>                 If u is a list, return a Limbo list of its elements
+<style color=#00ffffff size=1>.</style>                 (ie, u.l). Otherwise, return nil.
+
+<style color=#00ffffff size=1>.</style>            u.val()
+<style color=#00ffffff size=1>.</style>                 If u is an integer, return its value. Otherwise return
+<style color=#00ffffff size=1>.</style>                 zero.
+
+<style color=#00ffffff size=1>.</style>            u.binary()
+<style color=#00ffffff size=1>.</style>                 If u is a binary value, return the corresponding array
+<style color=#00ffffff size=1>.</style>                 of bytes\; if u is an atom or string, return an array of
+<style color=#00ffffff size=1>.</style>                 bytes containing its value\; otherwise, return nil.
+
+<style color=#00ffffff size=1>.</style>            u.objtag()
+<style color=#00ffffff size=1>.</style>                 If u is a tag, return the name of the tag. Otherwise,
+<style color=#00ffffff size=1>.</style>                 return nil.
+
+<style color=#00ffffff size=1>.</style>            u.obj()
+<style color=#00ffffff size=1>.</style>                 If u is a tag, return the tagged value. Otherwise,
+<style color=#00ffffff size=1>.</style>                 return u itself.
+
+<style color=#00ffffff size=1>.</style>            u.text()
+<style color=#00ffffff size=1>.</style>                 Return a printable representation of the value u,
+<style color=#00ffffff size=1>.</style>                 mainly intended for debugging and tracing.
+
+<style color=#00ffffff size=1>.</style>            One difference between atoms and strings is that all atoms
+<style color=#00ffffff size=1>.</style>            with identical spellings refer to the same string in the
+<style color=#00ffffff size=1>.</style>            implementation's storage. Given an atom name, uniq returns
+<style color=#00ffffff size=1>.</style>            the corresponding string, stored in an internal dictionary.
+<style color=#00ffffff size=1>.</style>            It is used by UBFa to create the strings UValue.Atom.s, and
+<style color=#00ffffff size=1>.</style>            can be put to similar use directly by applications. It
+<style color=#00ffffff size=1>.</style>            should only be applied to values that are small in number
+<style color=#00ffffff size=1>.</style>            (as with symbolic constants).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/ubfa.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sexprs(2)>sexprs(2)</action>, <action name=ubfa(6)>ubfa(6)</action>
+<style color=#00ffffff size=1>.</style>            J L Armstrong, ``Getting Erlang to talk to the outside
+<style color=#00ffffff size=1>.</style>            world'', ACM SIGPLAN Erlang workshop 2002 , Pittsburg, PA
+<style color=#00ffffff size=1>.</style>            USA
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

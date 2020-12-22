@@ -1,0 +1,170 @@
+<action name=FORMAT(2)>FORMAT(2)</action>                                               <action name=FORMAT(2)>FORMAT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            format - structured data interchange
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            include "bufio.m"\;
+<style color=#00ffffff size=1>.</style>            include "sexprs.m"\;
+<style color=#00ffffff size=1>.</style>            include "format.m"\;
+<style color=#00ffffff size=1>.</style>            format := load Format Format->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Fmtspec: adt {
+<style color=#00ffffff size=1>.</style>            	name:   string\;
+<style color=#00ffffff size=1>.</style>            	fields: cyclic array of Fmtspec\;
+<style color=#00ffffff size=1>.</style>            }\;
+<style color=#00ffffff size=1>.</style>            Fmt: adt {
+<style color=#00ffffff size=1>.</style>            	kind:   int\;
+<style color=#00ffffff size=1>.</style>            	fields: cyclic array of Fmt\;
+<style color=#00ffffff size=1>.</style>            }\;
+<style color=#00ffffff size=1>.</style>            Fmtval: adt {
+<style color=#00ffffff size=1>.</style>            	text:   fn(v: self Fmtval): string\;
+<style color=#00ffffff size=1>.</style>            	val:    ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>            	recs:   cyclic array of array of Fmtval\;
+<style color=#00ffffff size=1>.</style>            }\;
+<style color=#00ffffff size=1>.</style>            Fmtfile: adt {
+<style color=#00ffffff size=1>.</style>            	spec:   array of Fmtspec\;
+<style color=#00ffffff size=1>.</style>            	descr:  array of byte\;
+
+<style color=#00ffffff size=1>.</style>            	new:    fn(spec: array of Fmtspec): Fmtfile\;
+<style color=#00ffffff size=1>.</style>            	open:   fn(f: self Fmtfile, name: string):
+<style color=#00ffffff size=1>.</style>                           ref Bufio->Iobuf\;
+<style color=#00ffffff size=1>.</style>            	read:   fn(f: self Fmtfile, iob: ref Bufio->Iobuf):
+<style color=#00ffffff size=1>.</style>                           (array of Fmtval, string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+<style color=#00ffffff size=1>.</style>            init:     fn()\;
+<style color=#00ffffff size=1>.</style>            spec2se:  fn(spec: array of Fmtspec): list of ref Sexprs->Sexp\;
+<style color=#00ffffff size=1>.</style>            spec2fmt: fn(spec: array of Fmtspec): array of Fmt\;
+<style color=#00ffffff size=1>.</style>            se2fmt:   fn(spec: array of Fmtspec, se: ref Sexprs->Sexp):
+<style color=#00ffffff size=1>.</style>                         (array of Fmt, string)\;
+<style color=#00ffffff size=1>.</style>            rec2val:  fn(spec: array of Fmtspec, rec: ref Sexprs->Sexp):
+<style color=#00ffffff size=1>.</style>                         (array of Fmtval, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Format provides support for programs that wish to marshal
+<style color=#00ffffff size=1>.</style>            and unmarshal structured data. It is designed to enable a
+<style color=#00ffffff size=1>.</style>            client to request that the structure data is provided by the
+<style color=#00ffffff size=1>.</style>            server in a particular format, and for the server to be able
+<style color=#00ffffff size=1>.</style>            to check that it is capable of providing that format.
+
+<style color=#00ffffff size=1>.</style>            A record consists of a set of fields, each represented by
+<style color=#00ffffff size=1>.</style>            one element in an <action name=sexprs(2)>sexprs(2)</action> list. The content of a field can
+<style color=#00ffffff size=1>.</style>            be a simple value, or it can hold a list containing any
+<style color=#00ffffff size=1>.</style>            number of sub-records, each holding a set of fields,
+<style color=#00ffffff size=1>.</style>            recursively defined as above.
+
+<style color=#00ffffff size=1>.</style>            The Fmtspec type defines the format for a field in a record.
+<style color=#00ffffff size=1>.</style>            Name gives the name of the field, and fields gives the
+<style color=#00ffffff size=1>.</style>            structure of the fields in any sub-records it contains (for
+<style color=#00ffffff size=1>.</style>            a field with a simple value, this will be nil). Thus an
+<style color=#00ffffff size=1>.</style>            array of Fmtspec values can define the structure of all the
+<style color=#00ffffff size=1>.</style>            fields in a record. Here is an example structure
+<style color=#00ffffff size=1>.</style>            specification:
+
+<style color=#00ffffff size=1>.</style>                 Name, Address, Phone: con iota\;
+<style color=#00ffffff size=1>.</style>                 Number, Kind: con iota\;
+<style color=#00ffffff size=1>.</style>                 spec := array\[\] of {
+<style color=#00ffffff size=1>.</style>                 	Address => Fmtspec("address", nil),
+<style color=#00ffffff size=1>.</style>                 	Name => Fmtspec("name", nil),
+<style color=#00ffffff size=1>.</style>                 	Phone => Fmtspec("phone", array\[\] of {
+<style color=#00ffffff size=1>.</style>                 		Kind => Fmtspec("kind", nil),
+<style color=#00ffffff size=1>.</style>                 		Number => Fmtspec("number", nil),
+<style color=#00ffffff size=1>.</style>                 	}),
+<style color=#00ffffff size=1>.</style>                 }\;
+
+<style color=#00ffffff size=1>.</style>            By placing each field in the structure specification at a
+<style color=#00ffffff size=1>.</style>            known index, a link is made from the symbolic constants in
+<style color=#00ffffff size=1>.</style>            the program to the textual field names.
+
+<style color=#00ffffff size=1>.</style>            A structure specification may also be represented by a list
+<style color=#00ffffff size=1>.</style>            of S-expressions, where each member of the list names a
+<style color=#00ffffff size=1>.</style>            field in the structure. If a member is itself a list, it
+<style color=#00ffffff size=1>.</style>            specifies a field containing sub-records: its first member
+<style color=#00ffffff size=1>.</style>            gives the name of the field, and subsequent members specify
+<style color=#00ffffff size=1>.</style>            the fields in its sub-records. For example, the above
+<style color=#00ffffff size=1>.</style>            specification could be written as the S-expression:
+
+<style color=#00ffffff size=1>.</style>                 (name address (phone number kind))
+
+<style color=#00ffffff size=1>.</style>            The Fmt type also defines a record structure, but with
+<style color=#00ffffff size=1>.</style>            respect to an existing Fmtspec structure specification. An
+<style color=#00ffffff size=1>.</style>            Fmt value represents a field, and kind holds the index of
+<style color=#00ffffff size=1>.</style>            that field in the original structure specification.
+
+<style color=#00ffffff size=1>.</style>            Se2fmt converts from an S-expression list, se (a structure
+<style color=#00ffffff size=1>.</style>            specification), to a set of Fmt values. The specification
+<style color=#00ffffff size=1>.</style>            must be a subset of spec\; i.e. each field in se must exist
+<style color=#00ffffff size=1>.</style>            in spec. Se2fmt returns a tuple (f, err). If the
+<style color=#00ffffff size=1>.</style>            specification is bad, f will be nil, and err describes the
+<style color=#00ffffff size=1>.</style>            error. Otherwise, each member of f gives a field specified
+<style color=#00ffffff size=1>.</style>            by se. For example, given the above structure definition,
+<style color=#00ffffff size=1>.</style>            after executing:
+
+<style color=#00ffffff size=1>.</style>                 	se := Sexp.parse("(address (phone number))").t0\;
+<style color=#00ffffff size=1>.</style>                 	(f, err) := se2fmt(spec, se)\;
+
+<style color=#00ffffff size=1>.</style>            f\[0\].kind will hold the symbolic constant Address, and f
+<style color=#00ffffff size=1>.</style>            \[1\].fields\[0\].kind will hold Number.
+
+<style color=#00ffffff size=1>.</style>            Spec2se converts from a structure representation to its
+<style color=#00ffffff size=1>.</style>            S-expression equivalent. Spec2fmt converts it to an array of
+<style color=#00ffffff size=1>.</style>            Fmt structures mirroring it (equivalent to, but more
+<style color=#00ffffff size=1>.</style>            efficient than, se2fmt(spec2se(spec)).t0)
+
+<style color=#00ffffff size=1>.</style>         Data representation
+<style color=#00ffffff size=1>.</style>            The above specifications do not define a format for the
+<style color=#00ffffff size=1>.</style>            representation of the actual data. For convenience however,
+<style color=#00ffffff size=1>.</style>            Format defines its own S-expression-based data format. In
+<style color=#00ffffff size=1>.</style>            this form, the fields in a record are represented by items
+<style color=#00ffffff size=1>.</style>            in an S-expression list. A field containing sub-records is
+<style color=#00ffffff size=1>.</style>            represented as a (possibly empty) list containing the
+<style color=#00ffffff size=1>.</style>            sub-records\; otherwise the value of a field may be an
+<style color=#00ffffff size=1>.</style>            arbitrary S-expression.
+
+<style color=#00ffffff size=1>.</style>            For example, a record corresponding to the structure
+<style color=#00ffffff size=1>.</style>            specification
+
+<style color=#00ffffff size=1>.</style>                 (name address (phone kind number))
+
+<style color=#00ffffff size=1>.</style>            might look like:
+
+<style color=#00ffffff size=1>.</style>                 ("Jonny Dawes" "24 Crag Lane"
+<style color=#00ffffff size=1>.</style>                 	((home "+44 7924 43535") (office "034 433 645")))
+
+<style color=#00ffffff size=1>.</style>            Rec2val cracks such a record, rec, into its component
+<style color=#00ffffff size=1>.</style>            values, checking that it is structurally compatible with the
+<style color=#00ffffff size=1>.</style>            specification, spec, and returning a tuple (fields, err). If
+<style color=#00ffffff size=1>.</style>            it failed, fields will be nil, and err describes the error.
+<style color=#00ffffff size=1>.</style>            Otherwise each member of fields, say v, holds the value of
+<style color=#00ffffff size=1>.</style>            its equivalent field in spec. For fields without
+<style color=#00ffffff size=1>.</style>            sub-records, v.val holds the field's value\; otherwise v.recs
+<style color=#00ffffff size=1>.</style>            holds an array with one member for each sub-record, each
+<style color=#00ffffff size=1>.</style>            holding an array of fields defined recursively as above.
+
+<style color=#00ffffff size=1>.</style>            Some file servers provide files to which a format
+<style color=#00ffffff size=1>.</style>            specification may be written, and which provide a sequence
+<style color=#00ffffff size=1>.</style>            of records in that format when read. The Fmtfile type
+<style color=#00ffffff size=1>.</style>            provides support for such files. It provides the following
+<style color=#00ffffff size=1>.</style>            operations:
+
+<style color=#00ffffff size=1>.</style>            Fmtfile.new(spec)
+<style color=#00ffffff size=1>.</style>                 returns a new Fmtfile value that can be used to open
+<style color=#00ffffff size=1>.</style>                 files and read records conforming to the given spec.
+
+<style color=#00ffffff size=1>.</style>            f.open(name)
+<style color=#00ffffff size=1>.</style>                 opens such a file, writes the format specification to
+<style color=#00ffffff size=1>.</style>                 it, and returns an Iobuf (see <action name=bufio(2)>bufio(2)</action>) ready for
+<style color=#00ffffff size=1>.</style>                 reading the file.
+
+<style color=#00ffffff size=1>.</style>            f.read
+<style color=#00ffffff size=1>.</style>                 reads a record from the file\; its return is the same as
+<style color=#00ffffff size=1>.</style>                 that from rec2val.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/format.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sexprs(2)>sexprs(2)</action>, <action name=bufio(2)>bufio(2)</action>, <action name=sexprs(6)>sexprs(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

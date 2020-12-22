@@ -1,0 +1,147 @@
+<action name=TKCLIENT(2)>TKCLIENT(2)</action>                                           <action name=TKCLIENT(2)>TKCLIENT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tkclient: makedrawcontext, toplevel, onscreen, startinput,
+<style color=#00ffffff size=1>.</style>            wmctl, settitle, handler, snarfput, snarfget - window
+<style color=#00ffffff size=1>.</style>            manager interface for Tk applications.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "tkclient.m"\;
+<style color=#00ffffff size=1>.</style>            tkclient := load Tkclient Tkclient->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Resize,
+<style color=#00ffffff size=1>.</style>            Hide,
+<style color=#00ffffff size=1>.</style>            Help,
+<style color=#00ffffff size=1>.</style>            OK,
+<style color=#00ffffff size=1>.</style>            Plain:     con 1 << iota\;
+
+<style color=#00ffffff size=1>.</style>            Appl:   con Resize | Hide\;
+
+<style color=#00ffffff size=1>.</style>            init:       fn()\;
+<style color=#00ffffff size=1>.</style>            makedrawcontext: fn():  ref Draw->Context\;
+<style color=#00ffffff size=1>.</style>            toplevel:   fn(ctxt: ref Draw->Context, topconfig: string,
+<style color=#00ffffff size=1>.</style>                            title: string, buts: int): (ref Tk->Toplevel, chan of string)\;
+<style color=#00ffffff size=1>.</style>            onscreen:   fn(top: ref Tk->Toplevel, how: string)\;
+<style color=#00ffffff size=1>.</style>            startinput: fn(top: ref Tk->Toplevel, devs: list of string)\;
+<style color=#00ffffff size=1>.</style>            wmctl:      fn(top: ref Tk->Toplevel, request: string): string\;
+<style color=#00ffffff size=1>.</style>            settitle:   fn(top: ref Tk->Toplevel, name: string): string\;
+<style color=#00ffffff size=1>.</style>            handler:    fn(top: ref Tk->Toplevel, stop: chan of int)\;
+
+<style color=#00ffffff size=1>.</style>            snarfput:   fn(buf: string)\;
+<style color=#00ffffff size=1>.</style>            snarfget:   fn(): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Tkclient module provides routines for making windows
+<style color=#00ffffff size=1>.</style>            controlled by <action name=wm(1)>wm(1)</action> containing <action name=tk(2)>tk(2)</action> widgets.
+
+<style color=#00ffffff size=1>.</style>            Init should be called once to initialise the internal state
+<style color=#00ffffff size=1>.</style>            of tkclient.
+
+<style color=#00ffffff size=1>.</style>            Makedrawcontext establishes an initial connection with the
+<style color=#00ffffff size=1>.</style>            window manager, creating a new Draw context suitable for
+<style color=#00ffffff size=1>.</style>            creating new windows. It is only necessary to call this if
+<style color=#00ffffff size=1>.</style>            the application has not already been provided with a
+<style color=#00ffffff size=1>.</style>            context.
+
+<style color=#00ffffff size=1>.</style>            Toplevel creates a new window through ctxt. Topconfig gives
+<style color=#00ffffff size=1>.</style>            a list of <action name=frame(9)>frame(9)</action> options that are applied to the new tk
+<style color=#00ffffff size=1>.</style>            window, as described in <action name=tk(2)>tk(2)</action>. Title gives a label that will
+<style color=#00ffffff size=1>.</style>            be displayed in the title bar of the window\; buts determines
+<style color=#00ffffff size=1>.</style>            which buttons are created in the titlebar, a bitwise
+<style color=#00ffffff size=1>.</style>            combination of the constants Resize, Help, OK, and Hide. If
+<style color=#00ffffff size=1>.</style>            Plain is given, the window is given no decoration at all.
+<style color=#00ffffff size=1>.</style>            Toplevel returns a tuple, say (top, ctl), where top is the
+<style color=#00ffffff size=1>.</style>            newly created top level tk window, and ctl is a channel down
+<style color=#00ffffff size=1>.</style>            which requests from the title bar are sent. Messages
+<style color=#00ffffff size=1>.</style>            received on ctl should be processed by the application or
+<style color=#00ffffff size=1>.</style>            passed to the wmctl function. Requests are formatted as with
+<style color=#00ffffff size=1>.</style>            quoted in <action name=string(2)>string(2)</action>. The messages include:
+
+<style color=#00ffffff size=1>.</style>            exit The window should be closed. Wmctl will kill all
+<style color=#00ffffff size=1>.</style>                 processes in the current process group.
+
+<style color=#00ffffff size=1>.</style>            !move x y
+<style color=#00ffffff size=1>.</style>                 The user has started to try to drag the window. X and y
+<style color=#00ffffff size=1>.</style>                 give the location of the initial pointer click.
+
+<style color=#00ffffff size=1>.</style>            !size
+<style color=#00ffffff size=1>.</style>                 The user wishes to resize the window.
+
+<style color=#00ffffff size=1>.</style>            help The help button has been clicked.
+
+<style color=#00ffffff size=1>.</style>            ok   The OK  button has been clicked.
+
+<style color=#00ffffff size=1>.</style>            hide The Hide button has been clicked. The window will be
+<style color=#00ffffff size=1>.</style>                 deleted, and an entry shown on the toolbar.
+
+<style color=#00ffffff size=1>.</style>            In order to function correctly, an application should
+<style color=#00ffffff size=1>.</style>            process not only events from the title bar channel, but also
+<style color=#00ffffff size=1>.</style>            events from the Tk toplevel wreq channel, those received
+<style color=#00ffffff size=1>.</style>            from the window manager itself (via top.ctxt.ctl), and
+<style color=#00ffffff size=1>.</style>            pointer and keyboard events received from the window manager
+<style color=#00ffffff size=1>.</style>            (via top.ctxt.ptr and top.ctxt.kbd respectively). Control
+<style color=#00ffffff size=1>.</style>            events can be passed to wmctl\; pointer and keyboard events
+<style color=#00ffffff size=1>.</style>            should be passed to their respective functions in <action name=tk(2)>tk(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            When created, the window is not visible and will not receive
+<style color=#00ffffff size=1>.</style>            pointer or keyboard events. Onscreen makes it visible, and
+<style color=#00ffffff size=1>.</style>            possibly chooses a position and a size for it. How specifies
+<style color=#00ffffff size=1>.</style>            what sort of placement is required for the window\; it can be
+<style color=#00ffffff size=1>.</style>            one of
+
+<style color=#00ffffff size=1>.</style>            place
+<style color=#00ffffff size=1>.</style>                 tries to choose a suitable place on the screen with
+<style color=#00ffffff size=1>.</style>                 respect to other windows\; it may size the window as it
+<style color=#00ffffff size=1>.</style>                 feels appropriate. This the default (if how is nil).
+
+<style color=#00ffffff size=1>.</style>            onscreen
+<style color=#00ffffff size=1>.</style>                 tries to keep the position and size the same as
+<style color=#00ffffff size=1>.</style>                 specified on the window, adjusting them only to bring
+<style color=#00ffffff size=1>.</style>                 the window fully on screen, and making sure that the
+<style color=#00ffffff size=1>.</style>                 window is no bigger than the entire display.
+
+<style color=#00ffffff size=1>.</style>            exact
+<style color=#00ffffff size=1>.</style>                 does not change the specified size or position of the
+<style color=#00ffffff size=1>.</style>                 window unless absolutely necessary.
+
+<style color=#00ffffff size=1>.</style>            Startinput informs the window manager that the window is
+<style color=#00ffffff size=1>.</style>            ready to the event types specified in devs. Currently
+<style color=#00ffffff size=1>.</style>            understood are kbd for keyboard events, and ptr for pointer
+<style color=#00ffffff size=1>.</style>            events.
+
+<style color=#00ffffff size=1>.</style>            The simplest well-behaved wm (1) client will therefore
+<style color=#00ffffff size=1>.</style>            contain:
+
+<style color=#00ffffff size=1>.</style>            	(top, ctl) := tkclient->toplevel(ctxt, nil, "My Program", Tkclient->Appl)\;
+<style color=#00ffffff size=1>.</style>            	# ... populate the window with tk widgets
+<style color=#00ffffff size=1>.</style>            	tkclient->startinput(top, "ptr" :: "kbd" :: nil)\;
+<style color=#00ffffff size=1>.</style>            	tkclient->onscreen(top, nil)\;
+<style color=#00ffffff size=1>.</style>            	for(\;\;){
+<style color=#00ffffff size=1>.</style>            		alt{
+<style color=#00ffffff size=1>.</style>            		s := <-ctl or
+<style color=#00ffffff size=1>.</style>            		s = <-top.ctxt.ctl or
+<style color=#00ffffff size=1>.</style>            		s = <-top.wreq =>
+<style color=#00ffffff size=1>.</style>            			tkclient->wmctl(top, s)\;
+<style color=#00ffffff size=1>.</style>            		p := <-top.ctxt.ptr =>
+<style color=#00ffffff size=1>.</style>            			tk->pointer(top, *p)\;
+<style color=#00ffffff size=1>.</style>            		c := <-top.ctxt.kbd =>
+<style color=#00ffffff size=1>.</style>            			tk->keyboard(top, c)\;
+<style color=#00ffffff size=1>.</style>            		}
+<style color=#00ffffff size=1>.</style>            	}
+
+<style color=#00ffffff size=1>.</style>            Settitle changes the name displayed in the title bar and the
+<style color=#00ffffff size=1>.</style>            window's name when it is in the task bar.
+
+<style color=#00ffffff size=1>.</style>            Snarfget and snarfput retrieve and replace the contents of
+<style color=#00ffffff size=1>.</style>            the window manager's snarf buffer.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /chan/snarf  snarf buffer maintained by <action name=wm(1)>wm(1)</action>
+<style color=#00ffffff size=1>.</style>            /chan/wm     channel for interaction with <action name=wm(1)>wm(1)</action>
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/tkclient.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=wm(1)>wm(1)</action>, <action name=tk(2)>tk(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

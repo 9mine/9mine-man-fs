@@ -1,0 +1,162 @@
+<action name=INTRO(1)>INTRO(1)</action>                                                 <action name=INTRO(1)>INTRO(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            intro - introduction to Inferno
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Inferno is a virtualised operating system that can run
+<style color=#00ffffff size=1>.</style>            natively across a wide range of processor architectures or
+<style color=#00ffffff size=1>.</style>            hosted on a wide range of operating systems. The principal
+<style color=#00ffffff size=1>.</style>            components of the system are:
+
+<style color=#00ffffff size=1>.</style>            •    The Inferno kernel which can run both native and
+<style color=#00ffffff size=1>.</style>                 `hosted' on a range of platforms and which presents the
+<style color=#00ffffff size=1>.</style>                 same interface to programs in both cases.
+
+<style color=#00ffffff size=1>.</style>            •    The Dis virtual machine.
+
+<style color=#00ffffff size=1>.</style>            •    Styx - the tiny broad-spectrum file service protocol.
+
+<style color=#00ffffff size=1>.</style>            •    Limbo - a new simple, modular, concurrent programming
+<style color=#00ffffff size=1>.</style>                 language.
+
+<style color=#00ffffff size=1>.</style>            •    Tk and Prefab - graphical user interface (`GUI')
+<style color=#00ffffff size=1>.</style>                 primitives without a lot of goo.
+
+<style color=#00ffffff size=1>.</style>            •    The portable cross-development suites that allow any
+<style color=#00ffffff size=1>.</style>                 native Inferno platform to be cross-compiled on any
+<style color=#00ffffff size=1>.</style>                 hosted system.
+
+<style color=#00ffffff size=1>.</style>         Manual conventions
+<style color=#00ffffff size=1>.</style>            Throughout this volume, manual entries are cross referenced
+<style color=#00ffffff size=1>.</style>            by a notation of the form entry(n), where entry is the name
+<style color=#00ffffff size=1>.</style>            of the page (in italics) and n is the manual section holding
+<style color=#00ffffff size=1>.</style>            the page. The same name may be found in more than one
+<style color=#00ffffff size=1>.</style>            section. For example, the environment variable inspection
+<style color=#00ffffff size=1>.</style>            command documented in <action name=env(1)>env(1)</action>, is quite distinct from the
+<style color=#00ffffff size=1>.</style>            module interface to environment variables which is
+<style color=#00ffffff size=1>.</style>            documented in <action name=env(2)>env(2)</action>, which in turn is distinct from the
+<style color=#00ffffff size=1>.</style>            component documented by <action name=env(3)>env(3)</action>, which describes the
+<style color=#00ffffff size=1>.</style>            underlying device that implements environment variables.
+
+<style color=#00ffffff size=1>.</style>            Pathnames are understood to exist in the file system space
+<style color=#00ffffff size=1>.</style>            visible from Inferno. The root of this space when viewed
+<style color=#00ffffff size=1>.</style>            from the host operating system is the Inferno installation
+<style color=#00ffffff size=1>.</style>            directory, sometimes called the Inferno root directory.
+<style color=#00ffffff size=1>.</style>            Unless otherwise enabled, the result of changes made by
+<style color=#00ffffff size=1>.</style>            Inferno programs to files in the file system space is
+<style color=#00ffffff size=1>.</style>            generally restricted to this portion of the host file
+<style color=#00ffffff size=1>.</style>            system.
+
+<style color=#00ffffff size=1>.</style>         Name spaces
+<style color=#00ffffff size=1>.</style>            One of the great strengths of Inferno is the name space
+<style color=#00ffffff size=1>.</style>            interface to the resources available to a process, a
+<style color=#00ffffff size=1>.</style>            hierarchical structure which looks very similar to a
+<style color=#00ffffff size=1>.</style>            conventional file system. Resources look like files and
+<style color=#00ffffff size=1>.</style>            directories that can be read and written, created and
+<style color=#00ffffff size=1>.</style>            deleted in a way familiar to most programmers.
+
+<style color=#00ffffff size=1>.</style>            While this interface is used to provide programs with access
+<style color=#00ffffff size=1>.</style>            to conventional disk-based filestore, it is also used to
+<style color=#00ffffff size=1>.</style>            control devices and user level programs mounted in a
+<style color=#00ffffff size=1>.</style>            process's name space. Once a program or a device has been
+<style color=#00ffffff size=1>.</style>            attached to a process's name space, the program or device
+<style color=#00ffffff size=1>.</style>            interprets any access to the attachment point\; it can
+<style color=#00ffffff size=1>.</style>            synthesise on demand the names of new files or directories,
+<style color=#00ffffff size=1>.</style>            create their contents on the fly as the process reads from
+<style color=#00ffffff size=1>.</style>            them, and interpret written data as commands or data as
+<style color=#00ffffff size=1>.</style>            appropriate (See <action name=bind(1)>bind(1)</action> and <action name=sys-bind(2)>sys-bind(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            Each new Inferno process inherits its parent's name space,
+<style color=#00ffffff size=1>.</style>            but it can divorce its own name space from that of its
+<style color=#00ffffff size=1>.</style>            parent (see <action name=sys-pctl(2)>sys-pctl(2)</action>), giving programs the capability to
+<style color=#00ffffff size=1>.</style>            attach resources to their own name space without making them
+<style color=#00ffffff size=1>.</style>            globally visible. This per-process name space is potent but
+<style color=#00ffffff size=1>.</style>            potentially confusing, so, to help programs that might be
+<style color=#00ffffff size=1>.</style>            confused, <action name=namespace(4)>namespace(4)</action> gives some conventions that should be
+<style color=#00ffffff size=1>.</style>            adhered to if programs are to work properly. (That page also
+<style color=#00ffffff size=1>.</style>            gives a general overview of the Inferno source tree.)
+
+<style color=#00ffffff size=1>.</style>         Start up
+<style color=#00ffffff size=1>.</style>            See ``Installation of the Inferno Software'' in Volume 2 for
+<style color=#00ffffff size=1>.</style>            details of how to start up Inferno.
+
+<style color=#00ffffff size=1>.</style>         Window/development environment
+<style color=#00ffffff size=1>.</style>            Inferno provides a powerful development environment in which
+<style color=#00ffffff size=1>.</style>            to write, compile, execute and debug programs written in the
+<style color=#00ffffff size=1>.</style>            Limbo language. It gives the developer a clean platform from
+<style color=#00ffffff size=1>.</style>            which he can utilise an operating system which contains many
+<style color=#00ffffff size=1>.</style>            new and innovative ideas and some, carefully chosen, older
+<style color=#00ffffff size=1>.</style>            concepts that have survived the test of time and are likely
+<style color=#00ffffff size=1>.</style>            to be familiar to most Plan 9 or Unix users.
+
+<style color=#00ffffff size=1>.</style>            Superficially, the Inferno shell <action name=sh(1)>sh(1)</action> looks and behaves
+<style color=#00ffffff size=1>.</style>            much like its Plan 9 or Unix contemporaries but, at heart,
+<style color=#00ffffff size=1>.</style>            it is quite different. The shell takes advantage of the
+<style color=#00ffffff size=1>.</style>            dynamic module loading services that Inferno provides to
+<style color=#00ffffff size=1>.</style>            allow it to be dynamically extended in appropriate and
+<style color=#00ffffff size=1>.</style>            interesting ways. For example, by loading the <action name=sh-tk(1)>sh-tk(1)</action>
+<style color=#00ffffff size=1>.</style>            builtin module, a shell script can provide all the
+<style color=#00ffffff size=1>.</style>            programming logic required to manage a Tk window with full
+<style color=#00ffffff size=1>.</style>            Tk functionality in, surprisingly, few lines of code\; by
+<style color=#00ffffff size=1>.</style>            loading the <action name=sh-file2chan(1)>sh-file2chan(1)</action> builtin module, a shell script
+<style color=#00ffffff size=1>.</style>            can create a file in the name space whose properties are
+<style color=#00ffffff size=1>.</style>            completely under the control of the script.
+
+<style color=#00ffffff size=1>.</style>            The Inferno window manager <action name=wm(1)>wm(1)</action> allows the user to manage
+<style color=#00ffffff size=1>.</style>            the order and position of a dynamic collection of
+<style color=#00ffffff size=1>.</style>            application windows in which to perform various tasks. Acme
+<style color=#00ffffff size=1>.</style>            (1) is targeted at programmers. It is an editor, a shell and
+<style color=#00ffffff size=1>.</style>            window system all rolled into one, which through thoughtful
+<style color=#00ffffff size=1>.</style>            and consistent application of simple principles results in a
+<style color=#00ffffff size=1>.</style>            rich and productive programming environment with a user
+<style color=#00ffffff size=1>.</style>            interface that feels right. Acme requires a three-button
+<style color=#00ffffff size=1>.</style>            mouse and attaches distinct functions to the three mouse
+<style color=#00ffffff size=1>.</style>            buttons and, indeed, to chords of buttons to maximise the
+<style color=#00ffffff size=1>.</style>            productivity of the programmer's mouse. For more details of
+<style color=#00ffffff size=1>.</style>            the Acme user interface see the paper "Acme: A User
+<style color=#00ffffff size=1>.</style>            Interface for Programmers" in Volume 2.
+
+<style color=#00ffffff size=1>.</style>            Limbo programs are compiled with <action name=limbo(1)>limbo(1)</action>. This compiles
+<style color=#00ffffff size=1>.</style>            Limbo source into a machine-independent format (Dis) for
+<style color=#00ffffff size=1>.</style>            execution by the Inferno Dis virtual machine. The virtual
+<style color=#00ffffff size=1>.</style>            machine is designed to provide safe execution of programs
+<style color=#00ffffff size=1>.</style>            even on machines without memory protection. Debugging is
+<style color=#00ffffff size=1>.</style>            made straightforward by use of either <action name=stack(1)>stack(1)</action> , to display
+<style color=#00ffffff size=1>.</style>            the execution stack of a process or, if a finer inspection
+<style color=#00ffffff size=1>.</style>            is required, <action name=deb(1)>deb(1)</action>, a novel window based debugger that
+<style color=#00ffffff size=1>.</style>            allows the user to identify the exact location of problems,
+<style color=#00ffffff size=1>.</style>            set break points and walk the data structures of any module
+<style color=#00ffffff size=1>.</style>            loaded by the program. See "Program Development in Inferno"
+<style color=#00ffffff size=1>.</style>            in Volume 2 for details on how to use the development tools
+<style color=#00ffffff size=1>.</style>            that Inferno provides.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            Section (1) (this section) for the commonly-used commands.
+<style color=#00ffffff size=1>.</style>            Section (2) for Limbo modules, including Inferno's system calls.
+<style color=#00ffffff size=1>.</style>            Section (3) for kernel devices (accessed by `bind').
+<style color=#00ffffff size=1>.</style>            Section (4) for file services (accessed by `mount').
+<style color=#00ffffff size=1>.</style>            Section (5) for the Styx file service protocol.
+<style color=#00ffffff size=1>.</style>            Section (6) for file formats and system conventions.
+<style color=#00ffffff size=1>.</style>            Section (7) for databases and database access modules.
+<style color=#00ffffff size=1>.</style>            Section (8) for administrative modules and system services.
+<style color=#00ffffff size=1>.</style>            Section (9) for the reference for Inferno's Tk variant, Limbo/Tk.
+<style color=#00ffffff size=1>.</style>            Section (10) for the build environment and device driver implementation.
+
+<style color=#00ffffff size=1>.</style>            Volume 2 contains papers and other documentation about Inferno.
+
+<style color=#00ffffff size=1>.</style>            The back of this volume contains a permuted index.
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            On successful execution, a process can simply exit. Programs
+<style color=#00ffffff size=1>.</style>            (modules) that wish to return error status to the command
+<style color=#00ffffff size=1>.</style>            interpreters <action name=sh(1)>sh(1)</action> and ma<action name=sh(1)>sh(1)</action> do so by raising a special
+<style color=#00ffffff size=1>.</style>            exception (eg, using the raise statement in Limbo). The
+<style color=#00ffffff size=1>.</style>            exception's value is a string beginning with the text `fail:
+<style color=#00ffffff size=1>.</style>            '.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=intro(2)>intro(2)</action>, <action name=intro(3)>intro(3)</action>, <action name=intro(4)>intro(4)</action>, <action name=intro(5)>intro(5)</action>, <action name=intro(6)>intro(6)</action>, <action name=intro(7)>intro(7)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=intro(8)>intro(8)</action>, <action name=intro(9)>intro(9)</action>, intro(10)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,39 @@
+<action name=TFTP(2)>TFTP(2)</action>                                                   <action name=TFTP(2)>TFTP(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tftp - Trivial File Transfer Protocol
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            tftp := load Tftp Tftp->PATH\;
+<style color=#00ffffff size=1>.</style>            Tftp: module
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>               init:    fn(progress: int)\;
+<style color=#00ffffff size=1>.</style>               receive: fn(host: string, filename: string,
+<style color=#00ffffff size=1>.</style>                           fd: ref Sys->FD): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Tftp fetches files from an Internet TFTP server. It is
+<style color=#00ffffff size=1>.</style>            typically used only to fetch kernels or configuration files
+<style color=#00ffffff size=1>.</style>            when booting. Only one transfer can be active at any given
+<style color=#00ffffff size=1>.</style>            time.
+
+<style color=#00ffffff size=1>.</style>            Init must be called once before using any other function of
+<style color=#00ffffff size=1>.</style>            the module. If progress is non-zero, receive will
+<style color=#00ffffff size=1>.</style>            periodically print a character as blocks are received: `.'
+<style color=#00ffffff size=1>.</style>            for every 25 blocks, `S' for a sequence error, `T' for a
+<style color=#00ffffff size=1>.</style>            timeout.
+
+<style color=#00ffffff size=1>.</style>            Receive attempts to fetch the contents of filename from host
+<style color=#00ffffff size=1>.</style>            and writes the blocks of data to fd as they are received. It
+<style color=#00ffffff size=1>.</style>            returns when the file transfer has completed, returning a
+<style color=#00ffffff size=1>.</style>            nil string on success or a diagnostic string otherwise. When
+<style color=#00ffffff size=1>.</style>            booting, fd is typically open on the kexec file of <action name=boot(3)>boot(3)</action>.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/tftp.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ip(2)>ip(2)</action>, <action name=bootpd(8)>bootpd(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

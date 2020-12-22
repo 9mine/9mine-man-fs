@@ -1,0 +1,49 @@
+<action name=MPEG(2)>MPEG(2)</action>                                                   <action name=MPEG(2)>MPEG(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mpeg - interface to the mpeg device driver
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            include "mpeg.m"\;
+<style color=#00ffffff size=1>.</style>            mpeg:= load Mpeg Mpeg->PATH\;
+
+<style color=#00ffffff size=1>.</style>            play:     fn(d:       ref Display,
+<style color=#00ffffff size=1>.</style>                           w:       ref Image,
+<style color=#00ffffff size=1>.</style>                           dopaint: int,
+<style color=#00ffffff size=1>.</style>                           r:       Rect,
+<style color=#00ffffff size=1>.</style>                           file:    string,
+<style color=#00ffffff size=1>.</style>                           notify:  chan of string): string\;
+<style color=#00ffffff size=1>.</style>            ctl:      fn(msg: string): int\;
+<style color=#00ffffff size=1>.</style>            keycolor: fn(d: ref Display): ref Image\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Mpeg provides a primitive interface to the <action name=mpeg(3)>mpeg(3)</action> device.
+
+<style color=#00ffffff size=1>.</style>            Play plays the specified MPEG file in rectangle r within
+<style color=#00ffffff size=1>.</style>            window w on display d. The dopaint flag specifies whether,
+<style color=#00ffffff size=1>.</style>            before playing the movie, to paint the rectangle with the
+<style color=#00ffffff size=1>.</style>            chroma key colour of the device.
+
+<style color=#00ffffff size=1>.</style>            Notify is a channel upon which to receive errors and status.
+<style color=#00ffffff size=1>.</style>            If notify is nil, play runs synchronously, returning the
+<style color=#00ffffff size=1>.</style>            empty string ("") when the movie completes, or a description
+<style color=#00ffffff size=1>.</style>            of any error. If notify is not nil, play spawns an
+<style color=#00ffffff size=1>.</style>            asynchronous process to play the movie and returns the empty
+<style color=#00ffffff size=1>.</style>            string immediately\; the process returns the status on the
+<style color=#00ffffff size=1>.</style>            notify channel when the movie completes.
+
+<style color=#00ffffff size=1>.</style>            Ctl writes msg, the string given as an argument, to the MPEG
+<style color=#00ffffff size=1>.</style>            control interface /dev/mpegctl.
+
+<style color=#00ffffff size=1>.</style>            Keycolor uses the Display d to create a single-pixel,
+<style color=#00ffffff size=1>.</style>            replicated off screen Image of colour Chroma (16r05).
+
+FILES
+<style color=#00ffffff size=1>.</style>            /dev/mpeg
+<style color=#00ffffff size=1>.</style>            /dev/mpegctl
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/mpeg.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

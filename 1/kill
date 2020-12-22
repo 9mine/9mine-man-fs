@@ -1,0 +1,40 @@
+<action name=KILL(1)>KILL(1)</action>                                                   <action name=KILL(1)>KILL(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            kill, broke - terminate process(es)
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            kill \[ -g \] \[ pid ... \] \[ module ... \]
+
+<style color=#00ffffff size=1>.</style>            broke \[ user \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Kill terminates each process (for a numeric process ID pid)
+<style color=#00ffffff size=1>.</style>            or process running a given module (for a non-numeric module
+<style color=#00ffffff size=1>.</style>            name), by writing a ``kill'' message to the corresponding
+<style color=#00ffffff size=1>.</style>            process's control file in <action name=prog(3)>prog(3)</action>. The -g option causes kill
+<style color=#00ffffff size=1>.</style>            to write a ``killgrp'' message instead, killing all
+<style color=#00ffffff size=1>.</style>            processes in the given process's process group (see sys-pctl
+<style color=#00ffffff size=1>.</style>            (2)). Processes running a module are identified by their
+<style color=#00ffffff size=1>.</style>            ``status'' file, and the process ID of each such process is
+<style color=#00ffffff size=1>.</style>            printed on standard output.
+
+<style color=#00ffffff size=1>.</style>            A process that incurs an exception (eg, array bounds check)
+<style color=#00ffffff size=1>.</style>            is normally suspended in the `broken' state to allow
+<style color=#00ffffff size=1>.</style>            debugging. Broke finds all such processes owned by user
+<style color=#00ffffff size=1>.</style>            (default: the current user), and prints sh (1) commands to
+<style color=#00ffffff size=1>.</style>            kill them. The commands can be piped to the shell or
+<style color=#00ffffff size=1>.</style>            selectively run, releasing back to the system any resources
+<style color=#00ffffff size=1>.</style>            owned by those processes.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /prog/pid/ctl
+<style color=#00ffffff size=1>.</style>            /prog/pid/status
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/kill.b
+<style color=#00ffffff size=1>.</style>            /dis/broke
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ps(1)>ps(1)</action>, <action name=prog(3)>prog(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

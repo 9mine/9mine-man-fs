@@ -1,0 +1,66 @@
+<action name=UNITS(1)>UNITS(1)</action>                                                 <action name=UNITS(1)>UNITS(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            units - conversion program
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            units \[ -v \] \[ file \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Units converts quantities expressed in various standard
+<style color=#00ffffff size=1>.</style>            scales to their equivalents in other scales. It works
+<style color=#00ffffff size=1>.</style>            interactively in this fashion:
+
+<style color=#00ffffff size=1>.</style>                 you have: inch
+<style color=#00ffffff size=1>.</style>                 you want: cm
+<style color=#00ffffff size=1>.</style>                     * 2.54
+<style color=#00ffffff size=1>.</style>                 	/ 0.3937008
+
+<style color=#00ffffff size=1>.</style>            A quantity is specified as a multiplicative combination of
+<style color=#00ffffff size=1>.</style>            units and floating point numbers. Operators have the
+<style color=#00ffffff size=1>.</style>            following precedence:
+
+<style color=#00ffffff size=1>.</style>                 + -	add and subtract
+<style color=#00ffffff size=1>.</style>                 * / × ÷	multiply and divide
+<style color=#00ffffff size=1>.</style>                 catenation	multiply
+<style color=#00ffffff size=1>.</style>                 ² ³ ^	exponentiation
+<style color=#00ffffff size=1>.</style>                 |	divide
+<style color=#00ffffff size=1>.</style>                 ( ... )	grouping
+
+<style color=#00ffffff size=1>.</style>            Most familiar units, abbreviations, and metric prefixes are
+<style color=#00ffffff size=1>.</style>            recognized, together with a generous leavening of exotica
+<style color=#00ffffff size=1>.</style>            and a few constants of nature including:
+
+<style color=#00ffffff size=1>.</style>                 \$1\fP	\$2 \$3 \$4 \$5 \$6
+
+<style color=#00ffffff size=1>.</style>            The ``pound'' is a unit of mass. Compound names are run
+<style color=#00ffffff size=1>.</style>            together, e.g. `lightyear'. British units that differ from
+<style color=#00ffffff size=1>.</style>            their US counterparts are prefixed thus: `brgallon'.
+<style color=#00ffffff size=1>.</style>            Currency is denoted `belgiumfranc', `britainpound', etc.
+
+<style color=#00ffffff size=1>.</style>            The complete list of units can be found in /lib/units. A
+<style color=#00ffffff size=1>.</style>            file argument to units specifies a file to be used instead
+<style color=#00ffffff size=1>.</style>            of /lib/units. The -v flag causes units to print its entire
+<style color=#00ffffff size=1>.</style>            database.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            you have: 15 pounds force/in²
+<style color=#00ffffff size=1>.</style>            you want: atm
+<style color=#00ffffff size=1>.</style>            	* 1.020689
+<style color=#00ffffff size=1>.</style>            	/ 0.9797299
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/units
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/units.y
+<style color=#00ffffff size=1>.</style>            /appl/cmd/units.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Since units does only multiplicative scale changes, it can
+<style color=#00ffffff size=1>.</style>            convert Kelvin to Rankine but not Centigrade to Fahrenheit,
+<style color=#00ffffff size=1>.</style>            except that the latter is handled as a special case.
+<style color=#00ffffff size=1>.</style>            Currency conversions are only as accurate as the last time
+<style color=#00ffffff size=1>.</style>            someone updated /lib/units.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

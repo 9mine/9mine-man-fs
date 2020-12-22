@@ -1,0 +1,50 @@
+<action name=9SRVFS(4)>9SRVFS(4)</action>                                               <action name=9SRVFS(4)>9SRVFS(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            9srvfs - add Inferno service to Plan 9 service registry
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            9srvfs \[ -p perm \] srvname source
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            9srvfs is only usable (or indeed of interest) on Inferno
+<style color=#00ffffff size=1>.</style>            hosted under Plan 9. It uses <action name=srv9(3)>srv9(3)</action> to make an Inferno
+<style color=#00ffffff size=1>.</style>            service source available to Plan 9 applications via the Plan
+<style color=#00ffffff size=1>.</style>            9 service registry. Srv9 (3) must previously have been bound
+<style color=#00ffffff size=1>.</style>            to /srv in the current name space, with -c to allow file
+<style color=#00ffffff size=1>.</style>            creation (see <action name=bind(1)>bind(1)</action>).
+
+<style color=#00ffffff size=1>.</style>            Source may be either a command or the name of a directory.
+<style color=#00ffffff size=1>.</style>            If source is surrounded by braces ({ and }), it is invoked
+<style color=#00ffffff size=1>.</style>            as a <action name=sh(1)>sh(1)</action> command, and its standard input (sic) is posted
+<style color=#00ffffff size=1>.</style>            as Plan 9 service /srv/srvname with permissions perm
+<style color=#00ffffff size=1>.</style>            (default: mode 600). Otherwise, source is taken to be a
+<style color=#00ffffff size=1>.</style>            directory that is the root of a name space to export to Plan
+<style color=#00ffffff size=1>.</style>            9, an exporting file service is started (see <action name=sys-export(2)>sys-export(2)</action>),
+<style color=#00ffffff size=1>.</style>            and again posted as Plan 9 service /srv/srvname, and the
+<style color=#00ffffff size=1>.</style>            export terminates when the Plan 9 service file has been
+<style color=#00ffffff size=1>.</style>            removed and the last mounted instance goes away in Plan 9.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Make the current Inferno environment variables available to
+<style color=#00ffffff size=1>.</style>            Plan 9 applications:
+
+<style color=#00ffffff size=1>.</style>                 bind -c '#₪' /srv   # if not already done
+<style color=#00ffffff size=1>.</style>                 9srvfs infenv /env
+
+<style color=#00ffffff size=1>.</style>            The name space can then be mounted in Plan 9, allowing
+<style color=#00ffffff size=1>.</style>            variables to be read and written in that Inferno
+<style color=#00ffffff size=1>.</style>            environment:
+
+<style color=#00ffffff size=1>.</style>                 mount -c /srv/infenv /n/ftp
+<style color=#00ffffff size=1>.</style>                 ls /n/ftp
+<style color=#00ffffff size=1>.</style>                 cat /n/ftp/emuargs
+<style color=#00ffffff size=1>.</style>                 echo masked man >/n/ftp/zorro
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/9srvfs.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bind(1)>bind(1)</action>, <action name=srv9(3)>srv9(3)</action>, <action name=import(4)>import(4)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

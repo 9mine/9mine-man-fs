@@ -1,0 +1,26 @@
+<action name=UPDATE(9)>UPDATE(9)</action>                                               <action name=UPDATE(9)>UPDATE(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            update - flush graphics
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            update ?options?
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Changes made via Tk commands do not become visible until a
+<style color=#00ffffff size=1>.</style>            call to update. Update flushes any pending changes to the
+<style color=#00ffffff size=1>.</style>            screen. The following options are supported:
+
+<style color=#00ffffff size=1>.</style>            -disable
+<style color=#00ffffff size=1>.</style>                 If this option is given, all updates are disabled. This
+<style color=#00ffffff size=1>.</style>                 is useful to enable a program to stop mouse movement
+<style color=#00ffffff size=1>.</style>                 causing automatic updates while it is making changes to
+<style color=#00ffffff size=1>.</style>                 the window.
+
+<style color=#00ffffff size=1>.</style>            -enable
+<style color=#00ffffff size=1>.</style>                 This reverses a previous update -enable invocation.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Changes that affect window sizes are visible immediately.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,24 @@
+<action name=SYS-MILLISEC(2)>SYS-MILLISEC(2)</action>                                   <action name=SYS-MILLISEC(2)>SYS-MILLISEC(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            millisec - millisecond timer
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            millisec:	fn(): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Millisec returns the value of an internal system clock, in
+<style color=#00ffffff size=1>.</style>            milliseconds. The actual resolution of the clock is a
+<style color=#00ffffff size=1>.</style>            property of the underlying system and may be coarser than a
+<style color=#00ffffff size=1>.</style>            millisecond. The epoch is arbitrary, so millisec is useful
+<style color=#00ffffff size=1>.</style>            for measuring durations but not absolute time. If the system
+<style color=#00ffffff size=1>.</style>            operates continuously, the millisecond counter overflows
+<style color=#00ffffff size=1>.</style>            every few months\; a reboot resets the epoch.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-sleep(2)>sys-sleep(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

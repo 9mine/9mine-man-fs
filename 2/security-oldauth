@@ -1,0 +1,169 @@
+<action name=SECURITY-OLDAUTH(2)>SECURITY-OLDAUTH(2)</action>                           <action name=SECURITY-OLDAUTH(2)>SECURITY-OLDAUTH(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            oldauth: certtostr, pktostr, sktostr, strtocert, strtopk,
+<style color=#00ffffff size=1>.</style>            strtosk, sign, verify, readauthinfo, writeauthinfo -
+<style color=#00ffffff size=1>.</style>            encoding for original Inferno authentication protocol
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "ipints.m"\;
+<style color=#00ffffff size=1>.</style>            include "crypt.m"\;
+<style color=#00ffffff size=1>.</style>            include "oldauth.m"\;
+<style color=#00ffffff size=1>.</style>            oldauth := load Oldauth Oldauth->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Certificate: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                sa:     string\;
+<style color=#00ffffff size=1>.</style>                ha:     string\;
+<style color=#00ffffff size=1>.</style>                signer: string\;
+<style color=#00ffffff size=1>.</style>                exp:    int\;
+<style color=#00ffffff size=1>.</style>                sig:    ref Crypt->PKsig\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Authinfo: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                mysk:   ref Crypt->SK\;
+<style color=#00ffffff size=1>.</style>                mypk:   ref Crypt->PK\;
+<style color=#00ffffff size=1>.</style>                owner:  string\;
+<style color=#00ffffff size=1>.</style>                cert:   ref Certificate\;
+<style color=#00ffffff size=1>.</style>                spk:    ref Crypt->PK\;
+<style color=#00ffffff size=1>.</style>                alpha:  ref IPints->IPint\;
+<style color=#00ffffff size=1>.</style>                p:      ref IPints->IPint\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            sign:   fn (sk: ref Crypt->SK, signer: string, exp: int,
+<style color=#00ffffff size=1>.</style>                      state: ref Crypt->DigestState, ha: string): ref Certificate\;
+<style color=#00ffffff size=1>.</style>            verify: fn (pk: ref Crypt->PK, cert: ref Certificate,
+<style color=#00ffffff size=1>.</style>                      state: ref Crypt->DigestState): int\;
+
+<style color=#00ffffff size=1>.</style>            strtocert: fn(s: string): ref Certificate\;
+<style color=#00ffffff size=1>.</style>            certtostr: fn(c: ref Certificate): string\;
+<style color=#00ffffff size=1>.</style>            strtopk:   fn(s: string): (ref Crypt->PK, string)\;
+<style color=#00ffffff size=1>.</style>            pktostr:   fn(pk: ref Crypt->PK, owner: string): string\;
+<style color=#00ffffff size=1>.</style>            strtosk:   fn(s: string): (ref Crypt->SK, string)\;
+<style color=#00ffffff size=1>.</style>            sktostr:   fn(sk: ref Crypt->SK, owner: string): string\;
+
+<style color=#00ffffff size=1>.</style>            readauthinfo:   fn(filename: string): ref Authinfo\;
+<style color=#00ffffff size=1>.</style>            writeauthinfo:  fn(filename: string, info: ref Authinfo): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Certificates, public keys, and private keys are passed over
+<style color=#00ffffff size=1>.</style>            networks and between applications using a Unicode
+<style color=#00ffffff size=1>.</style>            representation. This collection of functions provide a means
+<style color=#00ffffff size=1>.</style>            to convert adts supplied by the system to and from their
+<style color=#00ffffff size=1>.</style>            portable textual representation. These routines are used by
+<style color=#00ffffff size=1>.</style>            <action name=login(2)>login(2)</action> and <action name=factotum(4)>factotum(4)</action> to implement the Inferno
+<style color=#00ffffff size=1>.</style>            authentication protocol.
+
+<style color=#00ffffff size=1>.</style>            Public and private keys are represented by Crypt->PK and
+<style color=#00ffffff size=1>.</style>            Crypt->SK (see <action name=keyring-intro(2)>keyring-intro(2)</action>). An authentication domain
+<style color=#00ffffff size=1>.</style>            is represented by the public key of the domain's signer,
+<style color=#00ffffff size=1>.</style>            typically in control of a <action name=keyfs(4)>keyfs(4)</action> and running a <action name=logind(8)>logind(8)</action>.
+<style color=#00ffffff size=1>.</style>            Two adts associate a public/private key pair with a user
+<style color=#00ffffff size=1>.</style>            name within a specific authentication domain:
+
+<style color=#00ffffff size=1>.</style>            Authinfo
+<style color=#00ffffff size=1>.</style>                 The Authinfo adt contains an individual user's private
+<style color=#00ffffff size=1>.</style>                 and public key, a human-readable name for the key (eg,
+<style color=#00ffffff size=1>.</style>                 a user name), the signer's certificate and the signer's
+<style color=#00ffffff size=1>.</style>                 public key, and the Diffie-Hellman parameters. The
+<style color=#00ffffff size=1>.</style>                 signer's certificate binds the user's public key to the
+<style color=#00ffffff size=1>.</style>                 given key name in the signer's domain.
+
+<style color=#00ffffff size=1>.</style>            Certificate
+<style color=#00ffffff size=1>.</style>                 The Certificate adt contains a digital signature with
+<style color=#00ffffff size=1>.</style>                 the certification of the trusted authority (CA). The
+<style color=#00ffffff size=1>.</style>                 signature covers not only the user's public key, but
+<style color=#00ffffff size=1>.</style>                 the key's name, the signer's name and the expiration
+<style color=#00ffffff size=1>.</style>                 time of the certificate. Both the key's name and the
+<style color=#00ffffff size=1>.</style>                 signer's name are local to the signer's domain.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before using any other operation in the
+<style color=#00ffffff size=1>.</style>            module.
+
+<style color=#00ffffff size=1>.</style>            Sign returns a Certificate containing the digital signature
+<style color=#00ffffff size=1>.</style>            using secret key sk of a digest's state, which is the output
+<style color=#00ffffff size=1>.</style>            of the hash algorithm named ha, combined with the hash of
+<style color=#00ffffff size=1>.</style>            the signer's name, and the certificate's expiration time (in
+<style color=#00ffffff size=1>.</style>            seconds from the Epoch). Valid hash algorithms are sha1 and
+<style color=#00ffffff size=1>.</style>            md5. The expiry time should be zero if the certificate does
+<style color=#00ffffff size=1>.</style>            not expire. Typically the state is the result of hashing
+
+<style color=#00ffffff size=1>.</style>                 array of byte pktostr(pk, username)
+
+<style color=#00ffffff size=1>.</style>            for a given public key pk that is associated with the given
+<style color=#00ffffff size=1>.</style>            username by the signer.
+
+<style color=#00ffffff size=1>.</style>            Verify checks that the given Certificate is the result of
+<style color=#00ffffff size=1>.</style>            signing the given state using the secret (private) key
+<style color=#00ffffff size=1>.</style>            corresponding to public key pk. It returns true (non-zero)
+<style color=#00ffffff size=1>.</style>            if the certificate is valid, including the signer's name,
+<style color=#00ffffff size=1>.</style>            and the expiration time\; the caller must enforce the
+<style color=#00ffffff size=1>.</style>            expiration time if desired. It returns false (zero) if the
+<style color=#00ffffff size=1>.</style>            certificate is invalid.
+
+<style color=#00ffffff size=1>.</style>            Sign creates a digital signature of a digest from the
+<style color=#00ffffff size=1>.</style>            concatenation of: a message, the name of the signer, and an
+<style color=#00ffffff size=1>.</style>            expiration time. State is the digest state after running
+<style color=#00ffffff size=1>.</style>            sha1, md4 or md5 over the message. Ha is a string specifying
+<style color=#00ffffff size=1>.</style>            the hash algorithm to use: "sha", "sha1", "md4" or "md5".
+<style color=#00ffffff size=1>.</style>            Sign extends the digest to cover the signer's name (taken
+<style color=#00ffffff size=1>.</style>            from the private key, sk) and the expiration time. It
+<style color=#00ffffff size=1>.</style>            returns a certificate containing the digital signature of
+<style color=#00ffffff size=1>.</style>            the digest, signer name, hash algorithm and signature
+<style color=#00ffffff size=1>.</style>            algorithm. If any parameter is invalid, sign returns nil.
+<style color=#00ffffff size=1>.</style>            The signature algorithm is implied by the type of the
+<style color=#00ffffff size=1>.</style>            private key.
+
+<style color=#00ffffff size=1>.</style>            Verify uses public key pk to verify a certificate. It
+<style color=#00ffffff size=1>.</style>            returns non-zero (true) if the certificate is valid\; zero
+<style color=#00ffffff size=1>.</style>            (false) otherwise. State is the digest state after running
+<style color=#00ffffff size=1>.</style>            the chosen digest algorithm over the message.
+
+<style color=#00ffffff size=1>.</style>            The remaining operations fetch and store those values and
+<style color=#00ffffff size=1>.</style>            convert to and from text representations for use in
+<style color=#00ffffff size=1>.</style>            protocols and for storage.
+
+<style color=#00ffffff size=1>.</style>            Strtocert takes a string argument containing a varying
+<style color=#00ffffff size=1>.</style>            number of newline-separated fields: a signature algorithm, a
+<style color=#00ffffff size=1>.</style>            hash algorithm, a signer's name, an expiration time, and
+<style color=#00ffffff size=1>.</style>            values representing a digital signature. It returns the
+<style color=#00ffffff size=1>.</style>            corresponding Certificate. If the string is of improper
+<style color=#00ffffff size=1>.</style>            format, the result is nil.
+
+<style color=#00ffffff size=1>.</style>            Certtostr performs the inverse operation: takes the
+<style color=#00ffffff size=1>.</style>            Certificate c and produces a text string suitable for
+<style color=#00ffffff size=1>.</style>            communication over a network. Note that the string will
+<style color=#00ffffff size=1>.</style>            contain newline characters.
+
+<style color=#00ffffff size=1>.</style>            Strtopk and strtosk take as their arguments a string s
+<style color=#00ffffff size=1>.</style>            representing the public and private keys respectively. S
+<style color=#00ffffff size=1>.</style>            contains an algorithm name, a user name and values
+<style color=#00ffffff size=1>.</style>            representing the key. Each returns a tuple (k, s), where k
+<style color=#00ffffff size=1>.</style>            is the resulting key value (ie, Crypt->PK or Crypt->SK) and
+<style color=#00ffffff size=1>.</style>            s is a string giving the name associated with the key,
+<style color=#00ffffff size=1>.</style>            typically a user name. If the format of s is invalid, k is
+<style color=#00ffffff size=1>.</style>            nil, and s contains a diagnostic.
+
+<style color=#00ffffff size=1>.</style>            Pktostr and sktostr perform the inverse operations: they
+<style color=#00ffffff size=1>.</style>            take a public key (secret key) pk or sk, the owner name to
+<style color=#00ffffff size=1>.</style>            be associated with that key, and produce a printable
+<style color=#00ffffff size=1>.</style>            representation as a string. The owner names the user that
+<style color=#00ffffff size=1>.</style>            owns the key\; in the case of a public key, the user is
+<style color=#00ffffff size=1>.</style>            expected to possess the corresponding private key.
+
+<style color=#00ffffff size=1>.</style>            Readauthinfo reads a representation of an Authinfo from a
+<style color=#00ffffff size=1>.</style>            file. It returns nil if there is a read error or a
+<style color=#00ffffff size=1>.</style>            conversion error\; it returns a reference to the Authinfo
+<style color=#00ffffff size=1>.</style>            otherwise.
+
+<style color=#00ffffff size=1>.</style>            Writeauthinfo writes a representation of info to a file. It
+<style color=#00ffffff size=1>.</style>            returns -1 if the write operation fails, 0 otherwise.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/oldauth.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=crypt-intro(2)>crypt-intro(2)</action>, <action name=ipints(2)>ipints(2)</action>, <action name=security-intro(2)>security-intro(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

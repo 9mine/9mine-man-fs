@@ -1,0 +1,227 @@
+<action name=CONVCS(2)>CONVCS(2)</action>                                               <action name=CONVCS(2)>CONVCS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Convcs,  Btos, Stob - character set conversion suite
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "convcs.m"\;
+<style color=#00ffffff size=1>.</style>            convcs := load Convcs Convcs->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Btos: module {
+<style color=#00ffffff size=1>.</style>            	init: fn(arg: string): string\;
+<style color=#00ffffff size=1>.</style>            	btos: fn(s: Convcs->State, b: array of byte, nchars: int)
+<style color=#00ffffff size=1>.</style>            			: (Convcs->State, string, int)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Stob: module {
+<style color=#00ffffff size=1>.</style>            	init: fn (arg: string): string\;
+<style color=#00ffffff size=1>.</style>            	stob: fn(s: Convcs->State, str: string)
+<style color=#00ffffff size=1>.</style>            			: (Convcs->State, array of byte)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Convcs: module {
+<style color=#00ffffff size=1>.</style>            	State: type string\;
+<style color=#00ffffff size=1>.</style>            	Startstate: con ""\;
+
+<style color=#00ffffff size=1>.</style>            	init: fn(csfile: string): string\;
+<style color=#00ffffff size=1>.</style>            	getbtos: fn(cs: string): (Btos, string)\;
+<style color=#00ffffff size=1>.</style>            	getstob: fn(cs: string): (Stob, string)\;
+<style color=#00ffffff size=1>.</style>            	enumcs: fn(): list of (string, string, int)\;
+<style color=#00ffffff size=1>.</style>            	aliases: fn(cs: string): (string, list of string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Convcs suite is a collection of modules for converting
+<style color=#00ffffff size=1>.</style>            various standard coded character sets and character encoding
+<style color=#00ffffff size=1>.</style>            schemes to and from the Limbo strings.
+
+<style color=#00ffffff size=1>.</style>            The Convcs module provides an entry point to the suite,
+<style color=#00ffffff size=1>.</style>            mapping character set names and aliases to their associated 
+<style color=#00ffffff size=1>.</style>            converter implementation.
+
+<style color=#00ffffff size=1>.</style>         The Convcs module
+<style color=#00ffffff size=1>.</style>            init(csfile)
+<style color=#00ffffff size=1>.</style>                 Init should be called once to initialise the internal
+<style color=#00ffffff size=1>.</style>                 state of Convcs. The csfile argument specifies the path
+<style color=#00ffffff size=1>.</style>                 of the converter mapping file. If this argument is nil,
+<style color=#00ffffff size=1>.</style>                 the default mapping file /lib/convcs/charsets is used.
+
+<style color=#00ffffff size=1>.</style>            getbtos(cs)
+<style color=#00ffffff size=1>.</style>                 Getbtos returns an initialised Btos module for
+<style color=#00ffffff size=1>.</style>                 converting from the requested encoding.
+
+<style color=#00ffffff size=1>.</style>                 The return value is a tuple, holding the module
+<style color=#00ffffff size=1>.</style>                 reference and an error string. If any errors were
+<style color=#00ffffff size=1>.</style>                 encountered in locating, loading or initialising the
+<style color=#00ffffff size=1>.</style>                 requested converter, the module reference will be nil
+<style color=#00ffffff size=1>.</style>                 and the string will contain an explanation.
+
+<style color=#00ffffff size=1>.</style>                 The character set name, cs, is normalised by mapping
+<style color=#00ffffff size=1>.</style>                 all upper-case latin1 characters to lower-case before
+<style color=#00ffffff size=1>.</style>                 comparison with character set names and aliases from
+<style color=#00ffffff size=1>.</style>                 the charsets file.
+
+<style color=#00ffffff size=1>.</style>            getstob(cs)
+<style color=#00ffffff size=1>.</style>                 Getstob returns an initialised Stob module for
+<style color=#00ffffff size=1>.</style>                 converting from strings to the requested encoding.
+<style color=#00ffffff size=1>.</style>                 Apart from the different module type, the return value
+<style color=#00ffffff size=1>.</style>                 and semantics are the same as for getbtos().
+
+<style color=#00ffffff size=1>.</style>            enumcs()
+<style color=#00ffffff size=1>.</style>                 Returns a list describing the set of available
+<style color=#00ffffff size=1>.</style>                 converters. The list is comprised of (name, desc, mode)
+<style color=#00ffffff size=1>.</style>                 tuples.
+
+<style color=#00ffffff size=1>.</style>                 Name is the standard name of the character set.
+
+<style color=#00ffffff size=1>.</style>                 Desc is a more friendly description taken directly from
+<style color=#00ffffff size=1>.</style>                 the desc attribute given in the charsets file. If the
+<style color=#00ffffff size=1>.</style>                 attribute is not given then desc is set to name.
+
+<style color=#00ffffff size=1>.</style>                 Mode is a bitmap that details the converters available
+<style color=#00ffffff size=1>.</style>                 for the given character set. Valid mode bits are
+<style color=#00ffffff size=1>.</style>                 Convcs->BTOS and Convcs->STOB. For convenience,
+<style color=#00ffffff size=1>.</style>                 Convcs->BOTH is also defined.
+
+<style color=#00ffffff size=1>.</style>            aliases(cs)
+<style color=#00ffffff size=1>.</style>                 Returns the aliases for the character set name cs. The
+<style color=#00ffffff size=1>.</style>                 return value is the tuple (desc, aliases).
+
+<style color=#00ffffff size=1>.</style>                 Desc is the descriptive text for the character set, as
+<style color=#00ffffff size=1>.</style>                 returned by enumcs().
+
+<style color=#00ffffff size=1>.</style>                 Aliases lists all the known aliases for cs. The first
+<style color=#00ffffff size=1>.</style>                 name in the list is the default character set name -
+<style color=#00ffffff size=1>.</style>                 the name that all the other aliases refer to. If the
+<style color=#00ffffff size=1>.</style>                 aliases list is nil then there was an error in looking
+<style color=#00ffffff size=1>.</style>                 up the character set name and desc will detail the
+<style color=#00ffffff size=1>.</style>                 error.
+
+<style color=#00ffffff size=1>.</style>         Using a Btos converter
+<style color=#00ffffff size=1>.</style>            The Btos module returned by getbtos() is already initialised
+<style color=#00ffffff size=1>.</style>            and is ready to start the conversion. Conversions can be
+<style color=#00ffffff size=1>.</style>            made on a individual basis, or in a `streamed' mode.
+
+<style color=#00ffffff size=1>.</style>            converter->btos(s, b, nchars)
+<style color=#00ffffff size=1>.</style>                 Converts raw byte codes of the character set encoding
+<style color=#00ffffff size=1>.</style>                 to a Limbo string.
+
+<style color=#00ffffff size=1>.</style>            The argument s is a converter state as returned from the
+<style color=#00ffffff size=1>.</style>            previous call to btos on the same input stream. The first
+<style color=#00ffffff size=1>.</style>            call to btos on a particular input stream should give
+<style color=#00ffffff size=1>.</style>            Convcs->Startstate (or nil) as the value for s. The argument
+<style color=#00ffffff size=1>.</style>            b is the bytes to be converted. The argument nchars is the
+<style color=#00ffffff size=1>.</style>            maximal length of the string to be returned. If this
+<style color=#00ffffff size=1>.</style>            argument is -1 then as much of b will be consumed as
+<style color=#00ffffff size=1>.</style>            possible. A value of 0 indicates to the converter that there
+<style color=#00ffffff size=1>.</style>            is no more data and that any pending state should be
+<style color=#00ffffff size=1>.</style>            flushed.
+
+<style color=#00ffffff size=1>.</style>            The return value of btos is the tuple (state, str, nbytes)
+<style color=#00ffffff size=1>.</style>            where state is the new state of the converter, str is the
+<style color=#00ffffff size=1>.</style>            converted string, and nbytes is the number of bytes from b
+<style color=#00ffffff size=1>.</style>            consumed by the conversion.
+
+<style color=#00ffffff size=1>.</style>            The same converter module can be used for multiple
+<style color=#00ffffff size=1>.</style>            conversion streams by maintaining a separate state variable
+<style color=#00ffffff size=1>.</style>            for each stream.
+
+<style color=#00ffffff size=1>.</style>         Using an Stob converter
+<style color=#00ffffff size=1>.</style>            The Stob module returned by getstob() is already initialised
+<style color=#00ffffff size=1>.</style>            and is ready to start the conversion.
+
+<style color=#00ffffff size=1>.</style>            converter->stob(s, str)
+<style color=#00ffffff size=1>.</style>                 Converts the limbo string str to the raw byte codes of
+<style color=#00ffffff size=1>.</style>                 the character set encoding. The argument s represents
+<style color=#00ffffff size=1>.</style>                 the converter state and is treated in the same way as
+<style color=#00ffffff size=1>.</style>                 for converter->btos() described above. To terminate a
+<style color=#00ffffff size=1>.</style>                 conversion stob should be called with an empty string
+<style color=#00ffffff size=1>.</style>                 in order to flush the converter state.
+
+<style color=#00ffffff size=1>.</style>            The return value of stob is the tuple (state, bytes) where
+<style color=#00ffffff size=1>.</style>            state is the new state of the converter and bytes is the
+<style color=#00ffffff size=1>.</style>            result of the conversion.
+
+<style color=#00ffffff size=1>.</style>         Conversion errors
+<style color=#00ffffff size=1>.</style>            When using converter->btos() to convert data to Limbo
+<style color=#00ffffff size=1>.</style>            strings, any byte sequences that are not valid for the
+<style color=#00ffffff size=1>.</style>            specific character encoding scheme will be converted to the
+<style color=#00ffffff size=1>.</style>            Unicode error character 16rFFFD. 
+
+<style color=#00ffffff size=1>.</style>            When using converter->stob() to convert Limbo strings, any
+<style color=#00ffffff size=1>.</style>            Unicode characters that can not be mapped into the character
+<style color=#00ffffff size=1>.</style>            set will normally be substituted by the US-ASCII code for
+<style color=#00ffffff size=1>.</style>            `?'. Note that this may be inappropriate for certain
+<style color=#00ffffff size=1>.</style>            conversions, such converters will use a suitable error
+<style color=#00ffffff size=1>.</style>            character for their particular character set and encoding
+<style color=#00ffffff size=1>.</style>            scheme.
+
+<style color=#00ffffff size=1>.</style>         Charset file format
+<style color=#00ffffff size=1>.</style>            The file /lib/convcs/charsets provides the mapping between
+<style color=#00ffffff size=1>.</style>            character set names and their implementation modules. The
+<style color=#00ffffff size=1>.</style>            file format conforms to that supported by <action name=cfg(2)>cfg(2)</action>. The
+<style color=#00ffffff size=1>.</style>            following description relies on terms defined in the <action name=cfg(2)>cfg(2)</action>
+<style color=#00ffffff size=1>.</style>            manual page.
+
+<style color=#00ffffff size=1>.</style>            Each record name defines a character set name. If the
+<style color=#00ffffff size=1>.</style>            primary value of the record is non-empty then the name is an
+<style color=#00ffffff size=1>.</style>            alias, the value being the real name. An alias record must
+<style color=#00ffffff size=1>.</style>            point to an actual converter record, not to another alias,
+<style color=#00ffffff size=1>.</style>            as Convcs only follows one level of aliasing.
+
+<style color=#00ffffff size=1>.</style>            Each converter record consists of a set of tuples with the
+<style color=#00ffffff size=1>.</style>            following primary attributes:
+
+<style color=#00ffffff size=1>.</style>            desc A more descriptive name for the character set encoding.
+<style color=#00ffffff size=1>.</style>                 This attribute is used for the description returned by
+<style color=#00ffffff size=1>.</style>                 enumcs().
+
+<style color=#00ffffff size=1>.</style>            btos The path to the Btos module implementation of this
+<style color=#00ffffff size=1>.</style>                 converter.
+
+<style color=#00ffffff size=1>.</style>            stob The path to the Stob module implementation of this
+<style color=#00ffffff size=1>.</style>                 converter.
+
+<style color=#00ffffff size=1>.</style>            Both the btos and stob tuples can have an optional arg
+<style color=#00ffffff size=1>.</style>            attribute which is passed to the init() function of the
+<style color=#00ffffff size=1>.</style>            converter when initialised by Convcs. If a converter record
+<style color=#00ffffff size=1>.</style>            has neither an stob nor a btos tuple, then it is ignored.
+
+<style color=#00ffffff size=1>.</style>            The following example is an extract from the standard
+<style color=#00ffffff size=1>.</style>            Inferno charsets file:
+
+<style color=#00ffffff size=1>.</style>            cp866=ibm866
+<style color=#00ffffff size=1>.</style>            866=ibm866
+<style color=#00ffffff size=1>.</style>            ibm866=
+<style color=#00ffffff size=1>.</style>                desc='Russian MS-DOS CP 866'
+<style color=#00ffffff size=1>.</style>                stob=/dis/lib/convcs/cp_stob.dis    arg=/lib/convcs/ibm866.cp
+<style color=#00ffffff size=1>.</style>                btos=/dis/lib/convcs/cp_btos.dis    arg=/lib/convcs/ibm866.cp
+
+<style color=#00ffffff size=1>.</style>            This entry defines Stob and Btos converters for the
+<style color=#00ffffff size=1>.</style>            character set called ibm866. The converters are actually the
+<style color=#00ffffff size=1>.</style>            generic codepage converters cp_stob and cp_btos
+<style color=#00ffffff size=1>.</style>            paramaterized with a codepage file. The entry also defines
+<style color=#00ffffff size=1>.</style>            the aliases cp866 and 866 for the name ibm866.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/convcs/charsets
+<style color=#00ffffff size=1>.</style>                 The default mapping between character set names and
+<style color=#00ffffff size=1>.</style>                 their implementation modules.
+
+<style color=#00ffffff size=1>.</style>            /lib/convcs/csname.cp
+<style color=#00ffffff size=1>.</style>                 Codepage files for use by the generic codepage
+<style color=#00ffffff size=1>.</style>                 converters cp_stob and cp_btos. Each file consists of
+<style color=#00ffffff size=1>.</style>                 256 unicode runes mapping codepage byte values to
+<style color=#00ffffff size=1>.</style>                 unicode by their index. The runes are stored in the
+<style color=#00ffffff size=1>.</style>                 utf-8 encoding.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/convcs/convcs.b  Implementation of the Convcs
+<style color=#00ffffff size=1>.</style>                                       module.
+<style color=#00ffffff size=1>.</style>            /appl/lib/convcs/cp_btos.b Generic Btos codepage converter.
+<style color=#00ffffff size=1>.</style>            /appl/lib/convcs/cp_stob.b Generic Stob codepage converter.
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=tcs(1)>tcs(1)</action>, <action name=cfg(2)>cfg(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

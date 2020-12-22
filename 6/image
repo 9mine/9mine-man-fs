@@ -1,0 +1,120 @@
+<action name=IMAGE(6)>IMAGE(6)</action>                                                 <action name=IMAGE(6)>IMAGE(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            image - external format for images
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Images are described in <action name=draw-image(2)>draw-image(2)</action>, and the definition of
+<style color=#00ffffff size=1>.</style>            pixel values is in <action name=colour(6)>colour(6)</action>. Fonts and images are stored in
+<style color=#00ffffff size=1>.</style>            external files in machine-independent formats.
+
+<style color=#00ffffff size=1>.</style>            Image files are read and written using Display.readimage and
+<style color=#00ffffff size=1>.</style>            Display.writeimage (see <action name=draw-display(2)>draw-display(2)</action>). An image is a
+<style color=#00ffffff size=1>.</style>            rectangular array of pixels, where each pixel is organised
+<style color=#00ffffff size=1>.</style>            as one or more channels, as determined by the image.
+
+<style color=#00ffffff size=1>.</style>            An uncompressed image file starts with 5 strings: chan,
+<style color=#00ffffff size=1>.</style>            r.min.x, r.min.y, r.max.x, and r.max.y. Each is
+<style color=#00ffffff size=1>.</style>            right-justified and blank padded in 11 characters, followed
+<style color=#00ffffff size=1>.</style>            by a blank. The chan value is a textual string describing
+<style color=#00ffffff size=1>.</style>            the pixel format (see below for a discussion of channel
+<style color=#00ffffff size=1>.</style>            descriptors), and the rectangle coordinates are decimal
+<style color=#00ffffff size=1>.</style>            strings. The rest of the file contains the r.max.y-r.min.y
+<style color=#00ffffff size=1>.</style>            rows of pixel data. A row consists of the byte containing
+<style color=#00ffffff size=1>.</style>            pixel r.min.x and all the bytes up to and including the byte
+<style color=#00ffffff size=1>.</style>            containing pixel r.max.x-1. For images with depth d less
+<style color=#00ffffff size=1>.</style>            than eight, a pixel with x-coordinate = x will appear as d
+<style color=#00ffffff size=1>.</style>            contiguous bits in a byte, with the pixel's high order bit
+<style color=#00ffffff size=1>.</style>            starting at the byte's bit number where bits within a byte
+<style color=#00ffffff size=1>.</style>            are numbered 0 to 7 from the high order to the low order
+<style color=#00ffffff size=1>.</style>            bit. Rows contain integral number of bytes, so there may be
+<style color=#00ffffff size=1>.</style>            some unused pixels at either end of a row. If d is greater
+<style color=#00ffffff size=1>.</style>            than 8, the definition of images requires that it be a
+<style color=#00ffffff size=1>.</style>            multiple of 8, so pixel values take up an integral number of
+<style color=#00ffffff size=1>.</style>            bytes.
+
+<style color=#00ffffff size=1>.</style>            The Image.readpixels and Image.writepixel operations
+<style color=#00ffffff size=1>.</style>            described in <action name=draw-image(2)>draw-image(2)</action> also deal with rows in this
+<style color=#00ffffff size=1>.</style>            format, stored in Limbo arrays of bytes.
+
+<style color=#00ffffff size=1>.</style>            The channel format string is a sequence of two-character
+<style color=#00ffffff size=1>.</style>            channel descriptions, each comprising a letter (r for red, g
+<style color=#00ffffff size=1>.</style>            for green, b for blue, a for alpha, m for colour-mapped, k
+<style color=#00ffffff size=1>.</style>            for greyscale, and x for ``don't care'') followed by a
+<style color=#00ffffff size=1>.</style>            number of bits per pixel. The sum of the channel bits per
+<style color=#00ffffff size=1>.</style>            pixel is the depth of the image, which must be either a
+<style color=#00ffffff size=1>.</style>            divisor or a multiple of eight. It is an error to have more
+<style color=#00ffffff size=1>.</style>            than one of any channel but x. An image must have either a
+<style color=#00ffffff size=1>.</style>            greyscale channel\; a colour-mapped channel\; or red, green,
+<style color=#00ffffff size=1>.</style>            and blue channels. If the alpha channel is present, it must
+<style color=#00ffffff size=1>.</style>            be at least as deep as any other channel.
+
+<style color=#00ffffff size=1>.</style>            The channel string defines the format of the pixels in the
+<style color=#00ffffff size=1>.</style>            file, and should not be confused with ordering of bytes in
+<style color=#00ffffff size=1>.</style>            the file, which is little-endian. In particular 'r8g8b8'
+<style color=#00ffffff size=1>.</style>            pixels have byte ordering blue, green, and red within the
+<style color=#00ffffff size=1>.</style>            file. See <action name=colour(6)>colour(6)</action> for more details of the pixel format.
+
+<style color=#00ffffff size=1>.</style>            A previous Inferno image format replaces the channel string
+<style color=#00ffffff size=1>.</style>            with a decimal ldepth, which is the base two logarithm of
+<style color=#00ffffff size=1>.</style>            the number of bits per pixel in the image. In this case,
+<style color=#00ffffff size=1>.</style>            ldepths 0, 1, 2, and 3 correspond to channel descriptors k1,
+<style color=#00ffffff size=1>.</style>            k2, k4, and m8, respectively. Furthermore, the pixel values
+<style color=#00ffffff size=1>.</style>            are inverted compared to the current colour maps\; in
+<style color=#00ffffff size=1>.</style>            particular, an all-zero pixel is white and all-ones is
+<style color=#00ffffff size=1>.</style>            black. That format is still readable but cannot be written\;
+<style color=#00ffffff size=1>.</style>            older files should be converted to the newer one. The image
+<style color=#00ffffff size=1>.</style>            file reading operations automatically invert the pixel
+<style color=#00ffffff size=1>.</style>            values to produce correct results.
+
+<style color=#00ffffff size=1>.</style>            A compressed image file begins with the 11 bytes
+<style color=#00ffffff size=1>.</style>            "compressed\n", immediately followed by a header as
+<style color=#00ffffff size=1>.</style>            described above, followed by the image data. (The pixel data
+<style color=#00ffffff size=1>.</style>            once uncompressed has the format described above.) The rest
+<style color=#00ffffff size=1>.</style>            of the file is a string of compression blocks, each encoding
+<style color=#00ffffff size=1>.</style>            a number of rows of the image's pixel data.  Compression
+<style color=#00ffffff size=1>.</style>            blocks are at most 6024 bytes long, so that they fit
+<style color=#00ffffff size=1>.</style>            comfortably in a single 9P message.  Since a compression
+<style color=#00ffffff size=1>.</style>            block must encode a whole number of rows, there is a limit
+<style color=#00ffffff size=1>.</style>            (about 5825 bytes) to the width of images that may be
+<style color=#00ffffff size=1>.</style>            encoded.  Most wide images are in subfonts, which, at 1 bit
+<style color=#00ffffff size=1>.</style>            per pixel (the usual case for fonts), can be 46600 pixels
+<style color=#00ffffff size=1>.</style>            wide.
+
+<style color=#00ffffff size=1>.</style>            A compression block begins with two decimal strings of
+<style color=#00ffffff size=1>.</style>            twelve bytes each. The first number is one more than the y
+<style color=#00ffffff size=1>.</style>            coordinate of the last row in the block.  The second is the
+<style color=#00ffffff size=1>.</style>            number of bytes of compressed data in the block, not
+<style color=#00ffffff size=1>.</style>            including the two decimal strings. This number must not be
+<style color=#00ffffff size=1>.</style>            larger than 6000.
+
+<style color=#00ffffff size=1>.</style>            Pixels are encoded using a version of Lempel & Ziv's sliding
+<style color=#00ffffff size=1>.</style>            window scheme LZ77, best described in J A Storer & T G
+<style color=#00ffffff size=1>.</style>            Szymanski `Data Compression via Textual Substitution', JACM
+<style color=#00ffffff size=1>.</style>            29#4, pp. 928-951.
+
+<style color=#00ffffff size=1>.</style>            The compression block is a string of variable-length code
+<style color=#00ffffff size=1>.</style>            words encoding substrings of the pixel data.  A code word
+<style color=#00ffffff size=1>.</style>            either gives the substring directly or indicates that it is
+<style color=#00ffffff size=1>.</style>            a copy of data occurring previously in the pixel stream.
+
+<style color=#00ffffff size=1>.</style>            In a code word whose first byte has the high-order bit set,
+<style color=#00ffffff size=1>.</style>            the rest of the byte indicates the length of a substring
+<style color=#00ffffff size=1>.</style>            encoded directly. Values from 0 to 127 encode lengths from 1
+<style color=#00ffffff size=1>.</style>            to 128 bytes. Subsequent bytes are the literal pixel data.
+
+<style color=#00ffffff size=1>.</style>            If the high-order bit is zero, the next 5 bits encode the
+<style color=#00ffffff size=1>.</style>            length of a substring copied from previous pixels.  Values
+<style color=#00ffffff size=1>.</style>            from 0 to 31 encode lengths from 3 to 34 bytes.  The bottom
+<style color=#00ffffff size=1>.</style>            two bits of the first byte and the 8 bits of the next byte
+<style color=#00ffffff size=1>.</style>            encode an offset backward from the current position in the
+<style color=#00ffffff size=1>.</style>            pixel data at which the copy is to be found.  Values from 0
+<style color=#00ffffff size=1>.</style>            to 1023 encode offsets from 1 to 1024.  The encoding may be
+<style color=#00ffffff size=1>.</style>            `prescient', with the length larger than the offset, which
+<style color=#00ffffff size=1>.</style>            works just fine: the new data is identical to the data at
+<style color=#00ffffff size=1>.</style>            the given offset, even though the two strings overlap.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=draw-intro(2)>draw-intro(2)</action>, <action name=draw-image(2)>draw-image(2)</action>, <action name=draw(3)>draw(3)</action>, <action name=colour(6)>colour(6)</action>, <action name=font(6)>font(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

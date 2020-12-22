@@ -1,0 +1,39 @@
+<action name=PREFAB-ENVIRON(2)>PREFAB-ENVIRON(2)</action>                               <action name=PREFAB-ENVIRON(2)>PREFAB-ENVIRON(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            prefab: Environ - environment for ITV toolkit to provide a
+<style color=#00ffffff size=1>.</style>            graphics framework for a collection of items
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            include "prefab.m"\;
+<style color=#00ffffff size=1>.</style>            prefab := load Prefab Prefab->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Environ: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                screen: ref Draw->Screen\;
+<style color=#00ffffff size=1>.</style>                style:  ref Style\;
+
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Environ type collects the Style and Screen types
+<style color=#00ffffff size=1>.</style>            necessary to specify how and where to draw Prefab items.
+
+<style color=#00ffffff size=1>.</style>            screen    Specifies the Screen upon which items will be
+<style color=#00ffffff size=1>.</style>                      displayed.
+
+<style color=#00ffffff size=1>.</style>            style     Specifies the Style for items in an environment.
+<style color=#00ffffff size=1>.</style>                      To draw various items in different fonts or
+<style color=#00ffffff size=1>.</style>                      colors, the application should associate different
+<style color=#00ffffff size=1>.</style>                      Environ objects with the various. (But see also
+<style color=#00ffffff size=1>.</style>                      the layout functions in <action name=prefab-element(2)>prefab-element(2)</action> and
+<style color=#00ffffff size=1>.</style>                      <action name=prefab-compound(2)>prefab-compound(2)</action>).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/prefab.c /libprefab/*.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=prefab-intro(2)>prefab-intro(2)</action>, <action name=draw-screen(2)>draw-screen(2)</action>, <action name=prefab-style(2)>prefab-style(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

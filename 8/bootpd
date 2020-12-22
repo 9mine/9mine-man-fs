@@ -1,0 +1,77 @@
+<action name=BOOTPD(8)>BOOTPD(8)</action>                                               <action name=BOOTPD(8)>BOOTPD(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            bootpd, tftpd - Internet booting
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ip/bootpd \[ -dsq \] \[ -f dbfile \] \[ -x network \]
+
+<style color=#00ffffff size=1>.</style>            ip/tftpd \[-dr\] \[ -p port \] \[ -h homedir \] \[ -x network \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Bootpd listens for Internet BOOTP requests and broadcasts a
+<style color=#00ffffff size=1>.</style>            suitable reply to each request that matches an entry in the
+<style color=#00ffffff size=1>.</style>            network database dbfile (default: /lib/ndb/local). The BOOTP
+<style color=#00ffffff size=1>.</style>            protocol is typically used by a remote system as it boots,
+<style color=#00ffffff size=1>.</style>            to obtain its Internet address and other configuration data
+<style color=#00ffffff size=1>.</style>            such as the addresses of servers (see for instance the bootp
+<style color=#00ffffff size=1>.</style>            file in <action name=ip(3)>ip(3)</action>).
+
+<style color=#00ffffff size=1>.</style>            Dbfile is in <action name=ndb(6)>ndb(6)</action> format, as interpreted by <action name=attrdb(2)>attrdb(2)</action>.
+<style color=#00ffffff size=1>.</style>            Bootpd uses the following attributes:
+<style color=#00ffffff size=1>.</style>            auth    authentication server name or address
+<style color=#00ffffff size=1>.</style>            bootf   name of the client's boot file
+<style color=#00ffffff size=1>.</style>            dom     fully-qualified domain name
+<style color=#00ffffff size=1>.</style>            ether   hardware (MAC) address\; only Ethernet is supported
+<style color=#00ffffff size=1>.</style>            fs      file server name or address
+<style color=#00ffffff size=1>.</style>            ip      client's Internet address
+<style color=#00ffffff size=1>.</style>            ipgw    gateway from client's subnet (IP address)
+<style color=#00ffffff size=1>.</style>            ipmask  subnet mask
+<style color=#00ffffff size=1>.</style>            ipnet   network name
+<style color=#00ffffff size=1>.</style>            sys     system name (client identifier)
+
+<style color=#00ffffff size=1>.</style>            Bootpd replies to an incoming request only if its hardware
+<style color=#00ffffff size=1>.</style>            address matches the value of the ether attribute of an entry
+<style color=#00ffffff size=1>.</style>            in dbfile . If found, the reply contains all the other
+<style color=#00ffffff size=1>.</style>            requested data that is contained in the entry\; if an item is
+<style color=#00ffffff size=1>.</style>            missing, it is sought in the entries for successively higher
+<style color=#00ffffff size=1>.</style>            networks (described by ipnet entries) that contain the
+<style color=#00ffffff size=1>.</style>            requesting system's address. The `vendor specific' part of
+<style color=#00ffffff size=1>.</style>            the reply conveys the file server and authentication server
+<style color=#00ffffff size=1>.</style>            addresses to Inferno clients. Before answering a request,
+<style color=#00ffffff size=1>.</style>            bootpd rereads dbfile if it has changed since last read.
+
+<style color=#00ffffff size=1>.</style>            The -s option causes bootpd to sniff the network for BOOTP
+<style color=#00ffffff size=1>.</style>            traffic and print it, but not reply. The -d option prints
+<style color=#00ffffff size=1>.</style>            debugging information\; giving it twice prints even more. The
+<style color=#00ffffff size=1>.</style>            -x option tells bootpd to use a network other than /net.
+<style color=#00ffffff size=1>.</style>            Currently bootpd prints a message to standard output each
+<style color=#00ffffff size=1>.</style>            time it replies\; the -q option keeps it quiet.
+
+<style color=#00ffffff size=1>.</style>            Tftpd is mainly used to send kernels and configuration files
+<style color=#00ffffff size=1>.</style>            to machines booting from the network. It listens for
+<style color=#00ffffff size=1>.</style>            incoming TFTP file transfer requests on the given UDP port
+<style color=#00ffffff size=1>.</style>            (default: 69) and responds by sending or receiving a file as
+<style color=#00ffffff size=1>.</style>            requested. Homedir is the current directory for transfers,
+<style color=#00ffffff size=1>.</style>            /services/tftpd by default, and requests that use a relative
+<style color=#00ffffff size=1>.</style>            path name refer to files in or below that directory. If the
+<style color=#00ffffff size=1>.</style>            -r option is given, absolute path names are also restricted
+<style color=#00ffffff size=1>.</style>            to homedir. Tftpd runs as none (the least privileged user)
+<style color=#00ffffff size=1>.</style>            and can send only files with general read permission, or
+<style color=#00ffffff size=1>.</style>            write files that are generally writable. Normally tftpd uses
+<style color=#00ffffff size=1>.</style>            the network directory /net, but another can be specified
+<style color=#00ffffff size=1>.</style>            with the -x option. The -d option prints a debugging trace
+<style color=#00ffffff size=1>.</style>            on standard output.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/ndb/local         network configuration file
+<style color=#00ffffff size=1>.</style>            /services/tftpd        default directory for relative
+<style color=#00ffffff size=1>.</style>                                   pathnames
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ip/bootpd.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ip/tftpd.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=attrdb(2)>attrdb(2)</action>, <action name=ip(3)>ip(3)</action>, <action name=ndb(6)>ndb(6)</action>, <action name=cs(8)>cs(8)</action>, <action name=dns(8)>dns(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

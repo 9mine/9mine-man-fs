@@ -1,0 +1,44 @@
+<action name=SH-MLOAD(1)>SH-MLOAD(1)</action>                                           <action name=SH-MLOAD(1)>SH-MLOAD(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mload, munload - namespace separation for shell modules
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load mload
+
+<style color=#00ffffff size=1>.</style>            mload name \[ path... \]
+<style color=#00ffffff size=1>.</style>            munload name \[ path... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Mload is a loadable module for <action name=sh(1)>sh(1)</action> that allows the
+<style color=#00ffffff size=1>.</style>            simultaneous use of shell modules with potentially clashing
+<style color=#00ffffff size=1>.</style>            command name spaces. Mload creates a new namespace name and
+<style color=#00ffffff size=1>.</style>            loads each path as a builtin module in the same way as load
+<style color=#00ffffff size=1>.</style>            (see <action name=sh(1)>sh(1)</action>). Any commands or substitution builtins defined
+<style color=#00ffffff size=1>.</style>            by the modules are accessible by giving the command and its
+<style color=#00ffffff size=1>.</style>            arguments as arguments to the name command.
+
+<style color=#00ffffff size=1>.</style>            Munload unloads a module from the namespace name. If no
+<style color=#00ffffff size=1>.</style>            modules remain in the namespace, name is undefined as a
+<style color=#00ffffff size=1>.</style>            command.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Load mpexpr in a different namespace from expr (see sh-expr
+<style color=#00ffffff size=1>.</style>            (1)):
+<style color=#00ffffff size=1>.</style>            load expr
+<style color=#00ffffff size=1>.</style>            mload mp mpexpr
+<style color=#00ffffff size=1>.</style>            echo ${expr 1 2 +}
+<style color=#00ffffff size=1>.</style>            echo ${mp expr 2 300 xx}
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sh/mload.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>,
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Because of the way shell modules are implemented, the
+<style color=#00ffffff size=1>.</style>            namespaces are global across all processes that share an
+<style color=#00ffffff size=1>.</style>            instance of mload.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

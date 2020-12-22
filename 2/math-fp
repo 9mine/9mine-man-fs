@@ -1,0 +1,106 @@
+<action name=MATH-FP(2)>MATH-FP(2)</action>                                             <action name=MATH-FP(2)>MATH-FP(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            math-fp - floating point
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include	"math.m"\;
+<style color=#00ffffff size=1>.</style>            math := load Math Math->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Infinity, NaN, MachEps, Pi, Degree: real\;
+<style color=#00ffffff size=1>.</style>            INVAL, ZDIV, OVFL, UNFL, INEX: int\;
+<style color=#00ffffff size=1>.</style>            RND_NR, RND_NINF, RND_PINF, RND_Z, RND_MASK: int\;
+
+<style color=#00ffffff size=1>.</style>            getFPcontrol, getFPstatus: fn():  int\;
+<style color=#00ffffff size=1>.</style>            FPcontrol, FPstatus: fn(r, mask: int): int\;
+<style color=#00ffffff size=1>.</style>            ilogb: fn(x: real): int\;
+<style color=#00ffffff size=1>.</style>            scalbn: fn(x: real, n: int): real\;
+<style color=#00ffffff size=1>.</style>            copysign: fn(x, s: real): real\;
+<style color=#00ffffff size=1>.</style>            finite, isnan: fn(x: real): int\;
+<style color=#00ffffff size=1>.</style>            nextafter: fn(x, y: real): real\;
+
+<style color=#00ffffff size=1>.</style>            fdim, fmin, fmax: fn(x, y: real): real\;
+<style color=#00ffffff size=1>.</style>            fabs: fn(x: real): real\;
+<style color=#00ffffff size=1>.</style>            ceil, floor: fn(x: real): real\;
+<style color=#00ffffff size=1>.</style>            remainder: fn(x, p: real): real\;
+<style color=#00ffffff size=1>.</style>            fmod: fn(x, y: real): real\;
+<style color=#00ffffff size=1>.</style>            modf: fn(x: real): (int,real)\;
+<style color=#00ffffff size=1>.</style>            rint: fn(x: real): real\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These constants and functions provide control over rounding
+<style color=#00ffffff size=1>.</style>            modes, exceptions, and other properties of floating point
+<style color=#00ffffff size=1>.</style>            arithmetic.
+
+<style color=#00ffffff size=1>.</style>            Infinity and NaN are constants containing the positive
+<style color=#00ffffff size=1>.</style>            infinity and quiet not-a-number values of the IEEE binary
+<style color=#00ffffff size=1>.</style>            floating point standard, double precision. MachEps is
+<style color=#00ffffff size=1>.</style>            2\u\s-2-52\s0\d, the smallest e such that 1+e is not equal
+<style color=#00ffffff size=1>.</style>            to 1. Pi is the nearest machine number to the infinitely
+<style color=#00ffffff size=1>.</style>            precise value. Degree is Pi/180.
+
+<style color=#00ffffff size=1>.</style>            Each thread has a floating point control word (governing
+<style color=#00ffffff size=1>.</style>            rounding mode and whether a particular floating point
+<style color=#00ffffff size=1>.</style>            exception causes a trap) and a floating point status word
+<style color=#00ffffff size=1>.</style>            (storing accumulated exception flags). The functions
+<style color=#00ffffff size=1>.</style>            FPcontrol and FPstatus copy bits to the control or status
+<style color=#00ffffff size=1>.</style>            word, in positions specified by a mask, returning the
+<style color=#00ffffff size=1>.</style>            previous values of the bits specified in the mask. The
+<style color=#00ffffff size=1>.</style>            functions getFPcontrol and getFPstatus return the words
+<style color=#00ffffff size=1>.</style>            unchanged.
+
+<style color=#00ffffff size=1>.</style>            INVAL, ZDIV, OVFL, UNFL, and INEX are non-overlapping
+<style color=#00ffffff size=1>.</style>            single-bit masks used to compose arguments or return values.
+<style color=#00ffffff size=1>.</style>            They stand for the five IEEE exceptions: `invalid operation'
+<style color=#00ffffff size=1>.</style>            (0/0,0+NaN,Infinity-Infinity,sqrt(-1)), `division by zero'
+<style color=#00ffffff size=1>.</style>            (1/0), `overflow' (1.8e308), `underflow' (1.1e-308), and
+<style color=#00ffffff size=1>.</style>            `inexact' (.3*.3).
+
+<style color=#00ffffff size=1>.</style>            RND_NR, RND_NINF, RND_PINF, and RND_Z are distinct bit
+<style color=#00ffffff size=1>.</style>            patterns for `round to nearest even', `round toward negative
+<style color=#00ffffff size=1>.</style>            infinity', `round toward infinity', and `round toward 0',
+<style color=#00ffffff size=1>.</style>            any of which can be set or extracted from the floating point
+<style color=#00ffffff size=1>.</style>            control word using RND_MASK. For example, FPcontrol(0, UNFL)
+<style color=#00ffffff size=1>.</style>            makes underflow silent\; FPstatus(0, INEX) checks and clears
+<style color=#00ffffff size=1>.</style>            the inexact flag\; and FPcontrol(RND_PINF, RND_MASK) sets
+<style color=#00ffffff size=1>.</style>            directed rounding.
+
+<style color=#00ffffff size=1>.</style>            By default, INEX is quiet, OVFL, UNFL, and ZDIV are fatal,
+<style color=#00ffffff size=1>.</style>            and rounding is to nearest even. Limbo modules are entitled
+<style color=#00ffffff size=1>.</style>            to assume this, and if they wish to use quiet underflow,
+<style color=#00ffffff size=1>.</style>            overflow, or zero-divide, they must either set and restore
+<style color=#00ffffff size=1>.</style>            the control register or clearly document that their caller
+<style color=#00ffffff size=1>.</style>            must do so.
+
+<style color=#00ffffff size=1>.</style>            The ilogb function returns the nearest integral logarithm
+<style color=#00ffffff size=1>.</style>            base 2 of the absolute value of x: for positive finite x, 1
+<style color=#00ffffff size=1>.</style>            ≤ x*2\u-\s-2ilogb(x)\s0\d < 2, and ilogb(-x) = ilogb(x).
+<style color=#00ffffff size=1>.</style>            Scalbn(x,n) is a scaled power of two: x*2\u\s-2n\s0\d.
+<style color=#00ffffff size=1>.</style>            Copysign(x,s) has the magnitude of x and the sign bit of s.
+<style color=#00ffffff size=1>.</style>            Nextafter(x,y) is the machine number nearest x closer to y.
+<style color=#00ffffff size=1>.</style>            Finally, finite(x) is 0 if x is Nan or Infinity, 1
+<style color=#00ffffff size=1>.</style>            otherwise, and isnan(x) is 1 if x is Nan and 0 otherwise.
+
+<style color=#00ffffff size=1>.</style>            The function fdim(x,y) = x-y if x is greater than y,
+<style color=#00ffffff size=1>.</style>            otherwise it is 0. The functions fmin, fmax, fabs, ceil, and
+<style color=#00ffffff size=1>.</style>            floor are the customary minimum, maximum, absolute value,
+<style color=#00ffffff size=1>.</style>            and integer rounding routines.
+
+<style color=#00ffffff size=1>.</style>            There are two functions for computing the modulus: fmod(x,y)
+<style color=#00ffffff size=1>.</style>            is the function defined by the C standard which gives the
+<style color=#00ffffff size=1>.</style>            value x-i*y for some i such that the remainder has the sign
+<style color=#00ffffff size=1>.</style>            of x and magnitude less than the magnitude of y, while
+<style color=#00ffffff size=1>.</style>            remainder(x,y) is the function defined by the IEEE standard
+<style color=#00ffffff size=1>.</style>            which gives a remainder of magnitude no more than half the
+<style color=#00ffffff size=1>.</style>            magnitude of y. The function modf(x) breaks x into integer
+<style color=#00ffffff size=1>.</style>            and fractional parts returned in a tuple, and rint rounds to
+<style color=#00ffffff size=1>.</style>            an integer, following the rounding mode specified in the
+<style color=#00ffffff size=1>.</style>            floating point control word.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/math.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=math-intro(2)>math-intro(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

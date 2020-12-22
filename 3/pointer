@@ -1,0 +1,54 @@
+<action name=POINTER(3)>POINTER(3)</action>                                             <action name=POINTER(3)>POINTER(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            pointer - mouse and stylus interface
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #m /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/cursor
+<style color=#00ffffff size=1>.</style>            /dev/pointer
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The pointer device is the interface to input from a mouse,
+<style color=#00ffffff size=1>.</style>            stylus, or some other device for pointing at positions on a
+<style color=#00ffffff size=1>.</style>            display. On some platforms, the pointer is associated with a
+<style color=#00ffffff size=1>.</style>            cursor on the display, that is displayed at the current
+<style color=#00ffffff size=1>.</style>            pointer position. There often are buttons associated with
+<style color=#00ffffff size=1>.</style>            the pointer, whether on the pointing device or elsewhere.
+<style color=#00ffffff size=1>.</style>            For instance, some of the buttons on a PDA might be
+<style color=#00ffffff size=1>.</style>            associated with the stylus not a keypad, to allow
+<style color=#00ffffff size=1>.</style>            modification of stylus actions when there are are no buttons
+<style color=#00ffffff size=1>.</style>            on the stylus itself. In the hosted environment of <action name=emu(1)>emu(1)</action>,
+<style color=#00ffffff size=1>.</style>            the pointer is associated with the host system's own
+<style color=#00ffffff size=1>.</style>            pointing device.
+
+<style color=#00ffffff size=1>.</style>            Reading the pointer file returns the current pointer
+<style color=#00ffffff size=1>.</style>            position and the state of any buttons associated with the
+<style color=#00ffffff size=1>.</style>            pointer. The read blocks until the state has changed since
+<style color=#00ffffff size=1>.</style>            the last read. Each read returns a 49 byte record:
+
+<style color=#00ffffff size=1>.</style>                 mx y buttons msec
+
+<style color=#00ffffff size=1>.</style>            Each record has the letter m immedlately followed by four
+<style color=#00ffffff size=1>.</style>            11-character decimal numbers, each number ended by a blank.
+<style color=#00ffffff size=1>.</style>            X and y give the coordinates of the pointer in display
+<style color=#00ffffff size=1>.</style>            coordinates\; the value buttons has bit (1<<b) set when
+<style color=#00ffffff size=1>.</style>            button b is down\; and msec is a time stamp in milliseconds.
+
+<style color=#00ffffff size=1>.</style>            Writing a record of the above form to pointer moves the
+<style color=#00ffffff size=1>.</style>            displayed cursor to the given x and y position\; buttons and
+<style color=#00ffffff size=1>.</style>            msec are ignored.
+
+<style color=#00ffffff size=1>.</style>            Writing an <action name=image(6)>image(6)</action> file to the cursor file sets the image
+<style color=#00ffffff size=1>.</style>            of the cursor on the display. Reading cursor returns the
+<style color=#00ffffff size=1>.</style>            current cursor image, again in <action name=image(6)>image(6)</action> format.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/devpointer.c
+<style color=#00ffffff size=1>.</style>            /os/port/devpointer.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=wm(1)>wm(1)</action>, <action name=draw-intro(2)>draw-intro(2)</action>, <action name=image(6)>image(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

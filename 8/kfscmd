@@ -1,0 +1,56 @@
+<action name=KFSCMD(8)>KFSCMD(8)</action>                                               <action name=KFSCMD(8)>KFSCMD(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            kfscmd - kfs administration
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            disk/kfscmd \[-n name\] cmd ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Kfscmd issues commands to a <action name=kfs(4)>kfs(4)</action> server that was started
+<style color=#00ffffff size=1>.</style>            with the -n option to create a control file. Kfscmd's own -n
+<style color=#00ffffff size=1>.</style>            option names the file system to which the cmd applies\; it is
+<style color=#00ffffff size=1>.</style>            main by default.
+
+<style color=#00ffffff size=1>.</style>            The known commands are described below. Note that some
+<style color=#00ffffff size=1>.</style>            commands are multiple words (eg, check and its flags) and
+<style color=#00ffffff size=1>.</style>            should be quoted to appear as a single argument to <action name=sh(1)>sh(1)</action>.
+
+<style color=#00ffffff size=1>.</style>            allow
+<style color=#00ffffff size=1>.</style>                 Turn permission checking off (to simplify
+<style color=#00ffffff size=1>.</style>                 administration). Equivalent to the -P and -W options to
+<style color=#00ffffff size=1>.</style>                 <action name=kfs(4)>kfs(4)</action>.
+
+<style color=#00ffffff size=1>.</style>            allowoff
+<style color=#00ffffff size=1>.</style>            disallow
+<style color=#00ffffff size=1>.</style>                 Turn permission checking on (again).
+
+<style color=#00ffffff size=1>.</style>            sync write to disk all of the dirty blocks in the memory
+<style color=#00ffffff size=1>.</style>                 cache.
+
+<style color=#00ffffff size=1>.</style>            users
+<style color=#00ffffff size=1>.</style>                 Reinitialise authentication information by reading
+<style color=#00ffffff size=1>.</style>                 /adm/users.
+
+<style color=#00ffffff size=1>.</style>            check \[cdfpPqrtw\]
+<style color=#00ffffff size=1>.</style>                 Check the file system and print summary information.
+<style color=#00ffffff size=1>.</style>                 The options are
+<style color=#00ffffff size=1>.</style>                 c    fix bad tags and clear the contents of the block.
+<style color=#00ffffff size=1>.</style>                 d    delete redundant references to a block.
+<style color=#00ffffff size=1>.</style>                 f    rebuild the list of free blocks.
+<style color=#00ffffff size=1>.</style>                 p    print the names of directories as they are
+<style color=#00ffffff size=1>.</style>                      checked.
+<style color=#00ffffff size=1>.</style>                 P    print the names of all files as they are checked.
+<style color=#00ffffff size=1>.</style>                 q    quiet mode: report errors, but suppress summary
+<style color=#00ffffff size=1>.</style>                      information.
+<style color=#00ffffff size=1>.</style>                 r    read all of the data blocks and check the tags.
+<style color=#00ffffff size=1>.</style>                 t    fix bad tags.
+<style color=#00ffffff size=1>.</style>                 w    write all of the blocks that are touched.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/disk/kfscmd.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sd(3)>sd(3)</action>, <action name=kfs(4)>kfs(4)</action>, <action name=mkfs(8)>mkfs(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

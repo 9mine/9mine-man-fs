@@ -1,0 +1,64 @@
+<action name=OS(1)>OS(1)</action>                                                       <action name=OS(1)>OS(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            os - interface to host OS commands (hosted Inferno only)
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a '#C' /
+<style color=#00ffffff size=1>.</style>            os \[ -DrcCbn \] \[ -m mountpoint \] \[ -d dir \] \[ -N level \] cmd
+<style color=#00ffffff size=1>.</style>            \[ arg... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Os uses a <action name=cmd(3)>cmd(3)</action> device to execute a command, cmd, on a host
+<style color=#00ffffff size=1>.</style>            system. By default, the current working directory of the
+<style color=#00ffffff size=1>.</style>            calling process inside Inferno is used as the cmd working
+<style color=#00ffffff size=1>.</style>            directory and $emuroot is prepended to cmd arguments
+<style color=#00ffffff size=1>.</style>            beginning with the / character. 
+
+<style color=#00ffffff size=1>.</style>            If the -m option is given, os uses the device at mountpoint,
+<style color=#00ffffff size=1>.</style>            otherwise it is asssumed to be at /cmd, and is bound into
+<style color=#00ffffff size=1>.</style>            the local namespace if necessary.
+
+<style color=#00ffffff size=1>.</style>            The -d option causes the command to run in directory dir\; an
+<style color=#00ffffff size=1>.</style>            error results and the command will not run if dir does not
+<style color=#00ffffff size=1>.</style>            exist or is inaccessible. If the -r option is specified, 
+<style color=#00ffffff size=1>.</style>            $emuroot will not be prepended to the working directory. If
+<style color=#00ffffff size=1>.</style>            the -c option is specified, the current working directory
+<style color=#00ffffff size=1>.</style>            will not be used for execution. If the -r and -d options are
+<style color=#00ffffff size=1>.</style>            not set, then the Inferno root directory will be used as the
+<style color=#00ffffff size=1>.</style>            working directory. Note that the -d option overrides the -r
+<style color=#00ffffff size=1>.</style>            and -c options. The -C option disables the prepending of
+<style color=#00ffffff size=1>.</style>            $emuroot to arguments to cmd beginning with the / character.
+
+<style color=#00ffffff size=1>.</style>            The standard output and standard error of the command appear
+<style color=#00ffffff size=1>.</style>            on the standard output and standard error streams of the os
+<style color=#00ffffff size=1>.</style>            command itself. Os copies the standard input to the remote
+<style color=#00ffffff size=1>.</style>            command's standard input\; redirect os's input to /dev/null
+<style color=#00ffffff size=1>.</style>            if there is no input to the command. Os terminates when cmd
+<style color=#00ffffff size=1>.</style>            does, and its exit status reflects the status of cmd (if
+<style color=#00ffffff size=1>.</style>            available).
+
+<style color=#00ffffff size=1>.</style>            If the os command is killed or exits (eg, for lack of input
+<style color=#00ffffff size=1>.</style>            and output), the host's own process control operations are
+<style color=#00ffffff size=1>.</style>            used to (attempt to) kill cmd, if it is still running. The
+<style color=#00ffffff size=1>.</style>            -b (background) option suppresses that behaviour.
+
+<style color=#00ffffff size=1>.</style>            The -n option causes cmd to run with less than normal
+<style color=#00ffffff size=1>.</style>            priority (`nice'). The -N option sets low priority to a
+<style color=#00ffffff size=1>.</style>            particular level from 1 to 3.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /cmd/clone
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/os.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cpu(1)>cpu(1)</action>, <action name=rcmd(1)>rcmd(1)</action>, <action name=cmd(3)>cmd(3)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            The exit status of os reflects any error that occurs when
+<style color=#00ffffff size=1>.</style>            starting cmd and, if it starts successfully, the status of
+<style color=#00ffffff size=1>.</style>            os is the exit status of cmd.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

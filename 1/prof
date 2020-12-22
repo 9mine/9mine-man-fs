@@ -1,0 +1,89 @@
+<action name=PROF(1)>PROF(1)</action>                                                   <action name=PROF(1)>PROF(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            prof, wm/prof - profiling limbo programs
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            prof \[ -bflnve \] \[ -m modname \] ... \[ -s rate \] \[ cmd arg
+<style color=#00ffffff size=1>.</style>            ... \]
+
+<style color=#00ffffff size=1>.</style>            wm/prof \[ -e \] \[ -m modname \] ... \[ -s rate \] \[ cmd arg ...
+<style color=#00ffffff size=1>.</style>            \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Prof is a simple profiling tool which calculates the
+<style color=#00ffffff size=1>.</style>            percentage of time spent on a particular line of limbo
+<style color=#00ffffff size=1>.</style>            source or spent in a particular limbo function. It can 
+<style color=#00ffffff size=1>.</style>            determine where a module or set of modules is spending its
+<style color=#00ffffff size=1>.</style>            time. The source in question should be compiled with the -g
+<style color=#00ffffff size=1>.</style>            flag so that the relevant symbol table files exist.
+
+<style color=#00ffffff size=1>.</style>            The tk version of the profiler wm/prof shows this
+<style color=#00ffffff size=1>.</style>            information in a text widget and colours the lines of source
+<style color=#00ffffff size=1>.</style>            according to the amount of time spent on each line. The
+<style color=#00ffffff size=1>.</style>            darker the colour, the longer spent.
+
+<style color=#00ffffff size=1>.</style>            The -b option starts profiling.
+
+<style color=#00ffffff size=1>.</style>            The -f option shows the function profile.
+
+<style color=#00ffffff size=1>.</style>            The -l option shows the line profile. If neither this option
+<style color=#00ffffff size=1>.</style>            nor the -f option are given, -l is assumed.
+
+<style color=#00ffffff size=1>.</style>            The -n option lists the name of the file along with the line
+<style color=#00ffffff size=1>.</style>            number.
+
+<style color=#00ffffff size=1>.</style>            The -v option outputs all functions and/or lines even when
+<style color=#00ffffff size=1>.</style>            the percentage of time spent in them is zero.
+
+<style color=#00ffffff size=1>.</style>            The -m option lists the module names which are to be
+<style color=#00ffffff size=1>.</style>            profiled. If none are given, all the modules loaded by the
+<style color=#00ffffff size=1>.</style>            kernel will be profiled. The name may be the actual name of
+<style color=#00ffffff size=1>.</style>            the module or its path name.
+
+<style color=#00ffffff size=1>.</style>            The -e option profiles the module that is loaded first in
+<style color=#00ffffff size=1>.</style>            any following command. In this case there is no need to give
+<style color=#00ffffff size=1>.</style>            a -m option as this is added automatically.
+
+<style color=#00ffffff size=1>.</style>            The -s option sets the sample interval rate and is expressed
+<style color=#00ffffff size=1>.</style>            in ms. The default is 100 ms.
+
+<style color=#00ffffff size=1>.</style>            Any remaining arguments are assumed to specify a command and
+<style color=#00ffffff size=1>.</style>            set of arguments to the command. If this is the case, prof
+<style color=#00ffffff size=1>.</style>            will automatically start profiling, run the command to
+<style color=#00ffffff size=1>.</style>            completion and then stop profiling before showing the
+<style color=#00ffffff size=1>.</style>            profile statistics.
+
+<style color=#00ffffff size=1>.</style>            Prof displays the profile statistics (unless the -b option
+<style color=#00ffffff size=1>.</style>            is being used) according to the output format required.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            To profile a particular command
+<style color=#00ffffff size=1>.</style>            	prof /dis/math/parts 10000
+<style color=#00ffffff size=1>.</style>            	wm/prof /dis/math/parts 10000
+<style color=#00ffffff size=1>.</style>            To profile the same command but restrict attention to its own module (Partitions).
+<style color=#00ffffff size=1>.</style>            	prof -m Partitions /dis/math/parts 10000
+<style color=#00ffffff size=1>.</style>            	wm/prof -m Partitions /dis/math/parts 10000
+<style color=#00ffffff size=1>.</style>            A shorter version of the above
+<style color=#00ffffff size=1>.</style>            	prof -e /dis/math/parts 10000
+<style color=#00ffffff size=1>.</style>            	wm/prof -e /dis/math/parts 10000
+<style color=#00ffffff size=1>.</style>            To profile interactively
+<style color=#00ffffff size=1>.</style>            	prof -b -m Partitions -s 10
+<style color=#00ffffff size=1>.</style>            	/dis/math/parts 10000
+<style color=#00ffffff size=1>.</style>            	prof -f -l -n 
+
+<style color=#00ffffff size=1>.</style>            Note that the output format options ( -f , -l , -n , -v )
+<style color=#00ffffff size=1>.</style>            are ignored when -b is present.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/prof.b
+
+<style color=#00ffffff size=1>.</style>            /appl/wm/prof.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cprof(1)>cprof(1)</action>, <action name=mprof(1)>mprof(1)</action>, <action name=prof(2)>prof(2)</action>, <action name=prof(3)>prof(3)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Prof cannot profile compiled limbo programs.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

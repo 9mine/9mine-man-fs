@@ -1,0 +1,166 @@
+<action name=TLS(3)>TLS(3)</action>                                                     <action name=TLS(3)>TLS(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tls - TLS1 and SSL3 record layer
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #a /net
+
+<style color=#00ffffff size=1>.</style>            /net/tls/clone
+<style color=#00ffffff size=1>.</style>            /net/tls/encalgs
+<style color=#00ffffff size=1>.</style>            /net/tls/hashalgs
+<style color=#00ffffff size=1>.</style>            /net/tls/n
+<style color=#00ffffff size=1>.</style>            /net/tls/n/ctl
+<style color=#00ffffff size=1>.</style>            /net/tls/n/data
+<style color=#00ffffff size=1>.</style>            /net/tls/n/hand
+<style color=#00ffffff size=1>.</style>            /net/tls/n/stats
+<style color=#00ffffff size=1>.</style>            /net/tls/n/status
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The TLS device implements the record layer protocols of
+<style color=#00ffffff size=1>.</style>            Transport Layer Security version 1.0 and Secure Sockets
+<style color=#00ffffff size=1>.</style>            Layer version 3.0. It does not implement the handshake
+<style color=#00ffffff size=1>.</style>            protocols, which are responsible for mutual authentication
+<style color=#00ffffff size=1>.</style>            and key exchange. The tls device can be thought of as
+<style color=#00ffffff size=1>.</style>            filters providing optional encryption and anti-tampering.
+
+<style color=#00ffffff size=1>.</style>            The top level directory contains a clone file and
+<style color=#00ffffff size=1>.</style>            subdirectories numbered from zero through at least the last
+<style color=#00ffffff size=1>.</style>            active filter. Opening the clone file reserves a filter. The
+<style color=#00ffffff size=1>.</style>            file descriptor returned from the <action name=sys-open(2)>sys-open(2)</action> will point to
+<style color=#00ffffff size=1>.</style>            the control file, ctl, of the newly allocated filter.
+<style color=#00ffffff size=1>.</style>            Reading the ctl file returns a text string containing the
+<style color=#00ffffff size=1>.</style>            number of the filter directory.
+
+<style color=#00ffffff size=1>.</style>            The filter initially cannot be used to pass messages and
+<style color=#00ffffff size=1>.</style>            will not encrypt or digest messages. It is configured and
+<style color=#00ffffff size=1>.</style>            controlled by writing commands to ctl.
+
+<style color=#00ffffff size=1>.</style>            The following commands are supported:
+
+<style color=#00ffffff size=1>.</style>            fd open-fd vers
+<style color=#00ffffff size=1>.</style>                 Pass record messages over the communications channel
+<style color=#00ffffff size=1>.</style>                 open-fd. Initially, outgoing messages use version vers
+<style color=#00ffffff size=1>.</style>                 format records, but incoming messages of either version
+<style color=#00ffffff size=1>.</style>                 are accepted. Valid versions are 0x300 for SSLv3.0 and
+<style color=#00ffffff size=1>.</style>                 0x301 for TLSv1.0 (which could be known as SSLv3.01.)
+<style color=#00ffffff size=1>.</style>                 This command must be issued before any other command
+<style color=#00ffffff size=1>.</style>                 and before reading or writing any messages\; it may only
+<style color=#00ffffff size=1>.</style>                 be executed once.
+
+<style color=#00ffffff size=1>.</style>            version vers
+<style color=#00ffffff size=1>.</style>                 Use vers format records for all future records, both
+<style color=#00ffffff size=1>.</style>                 outgoing and incoming. This command may only be
+<style color=#00ffffff size=1>.</style>                 executed once.
+
+<style color=#00ffffff size=1>.</style>            secret hashalg encalg isclient secretdata
+<style color=#00ffffff size=1>.</style>                 Set up the digesting and encryption algorithms and
+<style color=#00ffffff size=1>.</style>                 secrets. Hashalg and encalg must be algorithm names
+<style color=#00ffffff size=1>.</style>                 returned by the corresponding files. Secretdata is the
+<style color=#00ffffff size=1>.</style>                 base-64 encoded (see <action name=encode(2)>encode(2)</action>) secret data used for
+<style color=#00ffffff size=1>.</style>                 the algorithms. It must contain at least enough data to
+<style color=#00ffffff size=1>.</style>                 populate the secrets for digesting and encrypting.
+<style color=#00ffffff size=1>.</style>                 These secrets are divided into three categories: digest
+<style color=#00ffffff size=1>.</style>                 secrets, keys, and initialization vectors. The secrets
+<style color=#00ffffff size=1>.</style>                 are packed in this order, with no extra padding. Within
+<style color=#00ffffff size=1>.</style>                 each category, the secret for data traveling from the
+<style color=#00ffffff size=1>.</style>                 client to the server comes first. The incoming and
+<style color=#00ffffff size=1>.</style>                 outgoing secrets are automatically selected by devtls
+<style color=#00ffffff size=1>.</style>                 based on the isclient argument, which must be non-zero
+<style color=#00ffffff size=1>.</style>                 for the client of the TLS handshake, and zero for the
+<style color=#00ffffff size=1>.</style>                 server.
+<style color=#00ffffff size=1>.</style>                 This command must be issued after version, and may be
+<style color=#00ffffff size=1>.</style>                 issued more than once. At least one new secret command
+<style color=#00ffffff size=1>.</style>                 must be issued before each changecipher command\;
+<style color=#00ffffff size=1>.</style>                 similarly, at least one new secret command must precede
+<style color=#00ffffff size=1>.</style>                 each incoming changecipher message.
+
+<style color=#00ffffff size=1>.</style>            changecipher
+<style color=#00ffffff size=1>.</style>                 Enable outgoing encryption and digesting as configured
+<style color=#00ffffff size=1>.</style>                 by the previous secret command. This command sends a
+<style color=#00ffffff size=1>.</style>                 changecipher message.
+
+<style color=#00ffffff size=1>.</style>            opened
+<style color=#00ffffff size=1>.</style>                 Enable data messages. This command may be issued any
+<style color=#00ffffff size=1>.</style>                 number of times, although only the first is
+<style color=#00ffffff size=1>.</style>                 significant. It must follow at least one successful
+<style color=#00ffffff size=1>.</style>                 changecipher command.
+
+<style color=#00ffffff size=1>.</style>            alert alertno
+<style color=#00ffffff size=1>.</style>                 Send an alert message. Alertno may be a valid alert
+<style color=#00ffffff size=1>.</style>                 code for either SSLv3.0 or TLSv1.0, and is mapped to an
+<style color=#00ffffff size=1>.</style>                 appropriate code for the protocol in use. If it is a
+<style color=#00ffffff size=1>.</style>                 fatal alert, the filter is set into an error state.
+
+<style color=#00ffffff size=1>.</style>            Application messages and handshake messages are communicated
+<style color=#00ffffff size=1>.</style>            using data and hand, respectively. Only one <action name=sys-open(2)>sys-open(2)</action> of
+<style color=#00ffffff size=1>.</style>            hand is allowed at a time.
+
+<style color=#00ffffff size=1>.</style>            Any record layer headers and trailers are inserted and
+<style color=#00ffffff size=1>.</style>            stripped automatically, and are not visible from the
+<style color=#00ffffff size=1>.</style>            outside. The device tries to synchronize record boundaries
+<style color=#00ffffff size=1>.</style>            with reads and writes. Each read will return data from
+<style color=#00ffffff size=1>.</style>            exactly one record, and will return all of the data from the
+<style color=#00ffffff size=1>.</style>            record as long as the buffer is big enough. Each write will
+<style color=#00ffffff size=1>.</style>            be converted into an integral number of records, with all
+<style color=#00ffffff size=1>.</style>            but potentially the last being maximal size. The maximum
+<style color=#00ffffff size=1>.</style>            record length supported is 16384 bytes. This behavior is not
+<style color=#00ffffff size=1>.</style>            specified in the protocols, and may not be followed by other
+<style color=#00ffffff size=1>.</style>            implementations.
+
+<style color=#00ffffff size=1>.</style>            If a fatal alert message is received, or a fatal alert
+<style color=#00ffffff size=1>.</style>            command issued, the filter is set into an error state. All
+<style color=#00ffffff size=1>.</style>            further correspondence is halted, although some pending
+<style color=#00ffffff size=1>.</style>            operations may not be terminated. Operations on data will
+<style color=#00ffffff size=1>.</style>            fail with a 'tls error', and operations on hand will fail
+<style color=#00ffffff size=1>.</style>            with a textual decoding of the alert. The current non-fatal
+<style color=#00ffffff size=1>.</style>            alert messages are 'close notify', 'no renegotiation', and
+<style color=#00ffffff size=1>.</style>            'handshake canceled by user'. Receipt of one of these alerts
+<style color=#00ffffff size=1>.</style>            cause the next read on hand to terminate with an error. If
+<style color=#00ffffff size=1>.</style>            the alert is 'close notify', all future reads will terminate
+<style color=#00ffffff size=1>.</style>            with a tls hungup error. A 'close notify' alert command will
+<style color=#00ffffff size=1>.</style>            terminate all future writes or reads from data with a 'tls
+<style color=#00ffffff size=1>.</style>            hungup' error.
+
+<style color=#00ffffff size=1>.</style>            If an error is encountered while reading or writing the
+<style color=#00ffffff size=1>.</style>            underlying communications channel, the error is returned to
+<style color=#00ffffff size=1>.</style>            the offending operation. If the error is not 'interrupted',
+<style color=#00ffffff size=1>.</style>            the filter is set into the error state. In this case, all
+<style color=#00ffffff size=1>.</style>            future operations on hand will fail with a 'channel error'.
+
+<style color=#00ffffff size=1>.</style>            When all file descriptors for a filter have been closed, the
+<style color=#00ffffff size=1>.</style>            session is terminated and the filter reclaimed for future
+<style color=#00ffffff size=1>.</style>            use. A 'close notify' alert will be sent on the underlying
+<style color=#00ffffff size=1>.</style>            communications channel unless one has already been sent or
+<style color=#00ffffff size=1>.</style>            the filter is in the error state.
+
+<style color=#00ffffff size=1>.</style>            Reading stats or status returns information about the
+<style color=#00ffffff size=1>.</style>            filter. Each datum is returned on a single line of the form
+<style color=#00ffffff size=1>.</style>            tag: data. Stats returns the number of bytes communicated by
+<style color=#00ffffff size=1>.</style>            the data and hand channels. The four lines returned are
+<style color=#00ffffff size=1>.</style>            tagged by, in order, DataIn, DataOut, HandIn, and HandOut.
+<style color=#00ffffff size=1>.</style>            Status returns lines following tags: State, Version, EncIn,
+<style color=#00ffffff size=1>.</style>            HashIn, NewEncIn, NewHashIn, EncOut, HashOut, NewEncOut, and
+<style color=#00ffffff size=1>.</style>            NewHashOut. State's value is a string describing the status
+<style color=#00ffffff size=1>.</style>            of the connection, and is one of the following:
+<style color=#00ffffff size=1>.</style>            'Handshaking', 'Established', 'RemoteClosed', 'LocalClosed',
+<style color=#00ffffff size=1>.</style>            'Alerting', 'Errored', or 'Closed'. Version's give the
+<style color=#00ffffff size=1>.</style>            hexadecimal record layer version in use. The Enc and Hash
+<style color=#00ffffff size=1>.</style>            fields return name of the current algorithms in use or ready
+<style color=#00ffffff size=1>.</style>            to be used, if any.
+
+<style color=#00ffffff size=1>.</style>            Reading encalgs and hashalgs will give the space-separated
+<style color=#00ffffff size=1>.</style>            list of algorithms implemented. This will always include
+<style color=#00ffffff size=1>.</style>            clear, meaning no encryption or digesting. Currently
+<style color=#00ffffff size=1>.</style>            implemented encryption algorithms are 'rc4_128' and
+<style color=#00ffffff size=1>.</style>            '3des_ede_cbc'. Currently implemented hashing algorithms are
+<style color=#00ffffff size=1>.</style>            'md5' and 'sha1'.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=listen(1)>listen(1)</action>, <action name=dial(2)>dial(2)</action>, <action name=ssl(3)>ssl(3)</action> \".IR pushtls (2)
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/devtls.c
+<style color=#00ffffff size=1>.</style>            /os/port/devtls.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,43 @@
+<action name=VIRGIL(2)>VIRGIL(2)</action>                                               <action name=VIRGIL(2)>VIRGIL(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            virgil - pose question to name resolver
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "security.m"\;
+<style color=#00ffffff size=1>.</style>            virgil := load Virgil Virgil->PATH\;
+
+<style color=#00ffffff size=1>.</style>            virgil:	fn(args: list of string): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Virgil provides a client side interface for interactions
+<style color=#00ffffff size=1>.</style>            with the name resolution service <action name=virgild(8)>virgild(8)</action>.
+
+<style color=#00ffffff size=1>.</style>            Args is a command line of the form:
+
+<style color=#00ffffff size=1>.</style>                 virgil \[-v address\] \[name\]
+
+<style color=#00ffffff size=1>.</style>            Name is the host name to be resolved to a network address.
+<style color=#00ffffff size=1>.</style>            Normally the request is broadcast to any and all virgild
+<style color=#00ffffff size=1>.</style>            servers on the network, which virgil expects to find on
+<style color=#00ffffff size=1>.</style>            UDP/IP port 2202. The -v option instead directs the request
+<style color=#00ffffff size=1>.</style>            to the given numeric IP address.
+
+<style color=#00ffffff size=1>.</style>            Virgil waits up to 5 seconds for a reply, retransmitting the
+<style color=#00ffffff size=1>.</style>            request once a second. It accepts and returns the first
+<style color=#00ffffff size=1>.</style>            answer it receives.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/virgil.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=dial(2)>dial(2)</action>, <action name=cs(8)>cs(8)</action>, <action name=register(8)>register(8)</action>, <action name=virgild(8)>virgild(8)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Virgil returns ``nil'' for invalid arguments and if the name
+<style color=#00ffffff size=1>.</style>            was not resolved.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The virgild port is hard coded.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

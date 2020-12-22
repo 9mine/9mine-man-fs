@@ -1,0 +1,46 @@
+NTSRV(10.1)                                           NTSRV(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            ntsrv - start hosted Inferno as Windows service
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ntsrv add svcname rootdir cmd \[arg ... \]
+
+<style color=#00ffffff size=1>.</style>            ntsrv del svcname
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ntsrv is a command (for Windows only) that allows hosted
+<style color=#00ffffff size=1>.</style>            Inferno to run automatically as a Windows service, under
+<style color=#00ffffff size=1>.</style>            Windows 2000 and XP. For Windows NT, use the command ntsrv4,
+<style color=#00ffffff size=1>.</style>            which otherwise has identical interface. Svcname is the
+<style color=#00ffffff size=1>.</style>            (proposed) Windows service name\; rootdir is the root of the
+<style color=#00ffffff size=1>.</style>            Inferno directory tree, including the drive letter. Once
+<style color=#00ffffff size=1>.</style>            added, a service can be controlled using the Windows service
+<style color=#00ffffff size=1>.</style>            manager: it may be stopped, started, or have its attributes
+<style color=#00ffffff size=1>.</style>            changed. Svcname is set to start automatically when Windows
+<style color=#00ffffff size=1>.</style>            starts up. Services run by default under the local Windows
+<style color=#00ffffff size=1>.</style>            `System' identity. All Windows processes and threads the
+<style color=#00ffffff size=1>.</style>            service creates (eg, using <action name=cmd(3)>cmd(3)</action>) are destroyed when the
+<style color=#00ffffff size=1>.</style>            service is stopped. There may be many different services,
+<style color=#00ffffff size=1>.</style>            each with a distinct svcname.
+
+<style color=#00ffffff size=1>.</style>            Ntsrv 's first parameter tells it what to do:
+
+<style color=#00ffffff size=1>.</style>            add  Add a new service svcname that when started will invoke
+<style color=#00ffffff size=1>.</style>                 <action name=emu(1)>emu(1)</action> to run the Inferno command cmd with any
+<style color=#00ffffff size=1>.</style>                 additional arguments.
+
+<style color=#00ffffff size=1>.</style>            del  Delete an existing service svcname.
+
+<style color=#00ffffff size=1>.</style>            Ntsrv requires the directory rootdir/Nt/386/bin to contain
+<style color=#00ffffff size=1>.</style>            both emu.exe (ie, <action name=emu(1)>emu(1)</action>) and ntsrv.exe itself.
+
+FILES
+<style color=#00ffffff size=1>.</style>            rootdir/Nt/386/bin     Windows host executables
+SOURCE
+<style color=#00ffffff size=1>.</style>            /utils/ntsrv
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=emu(1)>emu(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

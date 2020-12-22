@@ -1,0 +1,30 @@
+DELAY(10.2)                                           DELAY(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            delay, microdelay, addclock0link - small delays, clock
+<style color=#00ffffff size=1>.</style>            interrupts
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            void	delay(int n)
+
+<style color=#00ffffff size=1>.</style>            void	microdelay(int n)
+
+<style color=#00ffffff size=1>.</style>            void	addclock0link(void(*clockf)(void))
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Delay busy waits for n milliseconds, forced to be at least
+<style color=#00ffffff size=1>.</style>            one millisecond.
+
+<style color=#00ffffff size=1>.</style>            Microdelay is similar, but busy waits for n microseconds.
+
+<style color=#00ffffff size=1>.</style>            For delays on the order of clock ticks, tsleep (see sleep
+<style color=#00ffffff size=1>.</style>            (10.2)) provides a better alternative to the busy waiting of
+<style color=#00ffffff size=1>.</style>            these routines.
+
+<style color=#00ffffff size=1>.</style>            Addclock0link adds clockf to a list of functions to be
+<style color=#00ffffff size=1>.</style>            executed at each clock interrupt.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            sleep(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

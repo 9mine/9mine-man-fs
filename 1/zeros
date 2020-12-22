@@ -1,0 +1,32 @@
+<action name=ZEROS(1)>ZEROS(1)</action>                                                 <action name=ZEROS(1)>ZEROS(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            zeros - write sequence of bytes
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            zeros \[ -r \] \[ -vvalue \] \[ \[ blocksize... \[ numblocks \] \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Zeros writes a sequence of bytes to standard output. The
+<style color=#00ffffff size=1>.</style>            arguments specify the nature of the bytes, block size in
+<style color=#00ffffff size=1>.</style>            bytes, and the number of blocks to output. The -r option
+<style color=#00ffffff size=1>.</style>            requests that each block be the same, but randomly
+<style color=#00ffffff size=1>.</style>            generated. The -vvalue option sets the value of each byte
+<style color=#00ffffff size=1>.</style>            (default 0). Typically zeros has a specialised use: ensuring
+<style color=#00ffffff size=1>.</style>            a file has the desired number of blocks in it to hold a file
+<style color=#00ffffff size=1>.</style>            system image, before reaming it.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            To create and initialize a file system containing 2048 1024
+<style color=#00ffffff size=1>.</style>            byte blocks 
+
+<style color=#00ffffff size=1>.</style>                 zeros 1024 2048 >kfs.file
+<style color=#00ffffff size=1>.</style>                 mount -c {disk/kfs -r kfs.file} /n/local
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/zeros.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=kfs(4)>kfs(4)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,31 @@
+<action name=DRAW-POINTER(2)>DRAW-POINTER(2)</action>                                   <action name=DRAW-POINTER(2)>DRAW-POINTER(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Pointer - state of a pointer device such as a mouse
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include	"draw.m"\;
+<style color=#00ffffff size=1>.</style>            draw := load Draw Draw->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Pointer: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                buttons:  int\;
+<style color=#00ffffff size=1>.</style>                xy:       Point\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            buttons   Each button on the device corresponds to a bit in
+<style color=#00ffffff size=1>.</style>                      buttons\; zero bits indicate released (or
+<style color=#00ffffff size=1>.</style>                      non-existent), and one bits indicate pressed. The
+<style color=#00ffffff size=1>.</style>                      bits, from least to most significant positions,
+<style color=#00ffffff size=1>.</style>                      represent the buttons from left to right.
+
+<style color=#00ffffff size=1>.</style>            xy        The pointer's screen coordinates.
+
+<style color=#00ffffff size=1>.</style>            <action name=Mux(1)>Mux(1)</action> uses the cptr member of the Draw->Context adt to pass
+<style color=#00ffffff size=1>.</style>            pointer events through to applications.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=devpointer(2)>devpointer(2)</action>, mouse in <action name=tk(2)>tk(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

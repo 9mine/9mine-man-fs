@@ -1,0 +1,58 @@
+INB(10.2)                                               INB(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            inb, ins, inl, outb, outs, outl, insb, inss, insl, outsb,
+<style color=#00ffffff size=1>.</style>            outss, outsl - programmed I/O
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            int	inb(int port)
+
+<style color=#00ffffff size=1>.</style>            ushort	ins(int port)
+
+<style color=#00ffffff size=1>.</style>            ulong	inl(int port)
+
+<style color=#00ffffff size=1>.</style>            void	outb(int port, int value)
+
+<style color=#00ffffff size=1>.</style>            void	outs(int port, ushort value)
+
+<style color=#00ffffff size=1>.</style>            void	outl(int port, ulong value)
+
+<style color=#00ffffff size=1>.</style>            void	insb(int port, void *address, int count)
+
+<style color=#00ffffff size=1>.</style>            void	inss(int port, void *address, int count)
+
+<style color=#00ffffff size=1>.</style>            void	insl(int port, void *address, int count)
+
+<style color=#00ffffff size=1>.</style>            void	outsb(int port, void *address, int count)
+
+<style color=#00ffffff size=1>.</style>            void	outss(int port, void *address, int count)
+
+<style color=#00ffffff size=1>.</style>            void	outsl(int port, void *address, int count)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The x86 implementation provides functions to allow kernel
+<style color=#00ffffff size=1>.</style>            code written in C to access the I/O address space. On
+<style color=#00ffffff size=1>.</style>            several other architectures such as the PowerPC and
+<style color=#00ffffff size=1>.</style>            Strongarm, the platform-dependent code provides similar
+<style color=#00ffffff size=1>.</style>            functions to access devices with an I/O space interface,
+<style color=#00ffffff size=1>.</style>            even when that is memory mapped, to encourage portability of
+<style color=#00ffffff size=1>.</style>            device drivers.
+
+<style color=#00ffffff size=1>.</style>            Inb, ins and inl apply the corresponding hardware
+<style color=#00ffffff size=1>.</style>            instruction to fetch the next byte, short or long from the
+<style color=#00ffffff size=1>.</style>            I/O port. Outb, outs and outl output a value to the I/O port
+<style color=#00ffffff size=1>.</style>            .
+
+<style color=#00ffffff size=1>.</style>            The remaining functions transfer count bytes, shorts, or
+<style color=#00ffffff size=1>.</style>            longs using programmed I/O between a memory address and port
+<style color=#00ffffff size=1>.</style>            . Functions insx copy values into memory\; functions outsx
+<style color=#00ffffff size=1>.</style>            copy values from memory. The count is in elements, not
+<style color=#00ffffff size=1>.</style>            bytes.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/pc/l.s
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            dma(10.2), isaconfig(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

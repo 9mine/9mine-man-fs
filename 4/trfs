@@ -1,0 +1,25 @@
+<action name=TRFS(4)>TRFS(4)</action>                                                   <action name=TRFS(4)>TRFS(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            trfs - translate spaces and other runes in names in a file
+<style color=#00ffffff size=1>.</style>            system
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            trfs olddir mountdir
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Trfs makes the contents of directory olddir appear on the
+<style color=#00ffffff size=1>.</style>            directory mountdir, but every space character in file and
+<style color=#00ffffff size=1>.</style>            directory names viewed through mountdir is made visible as a
+<style color=#00ffffff size=1>.</style>            special `no-break space' character (U+00A0). Other Inferno
+<style color=#00ffffff size=1>.</style>            applications will not mistake it for the end of a file name,
+<style color=#00ffffff size=1>.</style>            and it has some visible representation in most fonts.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/trfs.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            There can be error or ambiguity if the existing tree also
+<style color=#00ffffff size=1>.</style>            uses no-break space in its names.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

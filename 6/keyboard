@@ -1,0 +1,99 @@
+<action name=KEYBOARD(6)>KEYBOARD(6)</action>                                           <action name=KEYBOARD(6)>KEYBOARD(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            keyboard - how to type characters
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Keyboards are idiosyncratic. The differing conventions of
+<style color=#00ffffff size=1>.</style>            host operating systems make them more so for Inferno. In all
+<style color=#00ffffff size=1>.</style>            implementations, it should be obvious how to type ordinary
+<style color=#00ffffff size=1>.</style>            ASCII characters, backspace, tab, escape, and newline. When
+<style color=#00ffffff size=1>.</style>            typing into the Inferno environment, the key labelled Return
+<style color=#00ffffff size=1>.</style>            or Enter generates a newline (0x0A)\; if there is a key
+<style color=#00ffffff size=1>.</style>            labelled Line Feed, it generates a carriage return (0x0D)\;
+<style color=#00ffffff size=1>.</style>            Inferno eschews CRLFs. All control characters are typed in
+<style color=#00ffffff size=1>.</style>            the usual way\; in particular, control-J is a line feed and
+<style color=#00ffffff size=1>.</style>            control-M a carriage return.
+
+<style color=#00ffffff size=1>.</style>            In native mode, on the PC and some other machines, the
+<style color=#00ffffff size=1>.</style>            following extra conventions might also be used. The key
+<style color=#00ffffff size=1>.</style>            labelled Caps Lock acts as an additional control key. The
+<style color=#00ffffff size=1>.</style>            character erase key generates backspace. The key labelled
+<style color=#00ffffff size=1>.</style>            Del or Delete generates the delete character (0x7F). The
+<style color=#00ffffff size=1>.</style>            plethora of function keys generate values in the Unicode
+<style color=#00ffffff size=1>.</style>            user-defined space, as defined by /include/keyboard.h and
+<style color=#00ffffff size=1>.</style>            /module/keyboard.m. They are fitfully supported by
+<style color=#00ffffff size=1>.</style>            applications, but Page Up and Page Down are often understood
+<style color=#00ffffff size=1>.</style>            by Tk applications.
+
+<style color=#00ffffff size=1>.</style>            Characters in Inferno are runes (see <action name=utf(6)>utf(6)</action>). Any rune can
+<style color=#00ffffff size=1>.</style>            be typed using a compose key followed by several other keys.
+<style color=#00ffffff size=1>.</style>            The compose key is implementation-dependent, and is also
+<style color=#00ffffff size=1>.</style>            generally near the lower right of the main key area: either
+<style color=#00ffffff size=1>.</style>            Alt key on the PC, and in X11 implementations, whatever X11
+<style color=#00ffffff size=1>.</style>            regards as Alt or Meta. After typing the compose key, type a
+<style color=#00ffffff size=1>.</style>            capital ``X'' and exactly four hexadecimal characters
+<style color=#00ffffff size=1>.</style>            (digits and ``a'' to `f') to type a single rune with the
+<style color=#00ffffff size=1>.</style>            value represented by the typed number. There are shorthands
+<style color=#00ffffff size=1>.</style>            for many characters, comprising the compose key followed by
+<style color=#00ffffff size=1>.</style>            a two- or three-character sequence. There are several rules
+<style color=#00ffffff size=1>.</style>            guiding the design of the sequences, as illustrated by the
+<style color=#00ffffff size=1>.</style>            following examples. The full list is too long to repeat
+<style color=#00ffffff size=1>.</style>            here, but is contained in the file ``/lib/keyboard'' in a
+<style color=#00ffffff size=1>.</style>            format suitable for <action name=grep(1)>grep(1)</action>.
+
+<style color=#00ffffff size=1>.</style>                 A repeated symbol gives a variant of that symbol, e.g.,
+<style color=#00ffffff size=1>.</style>                 ?? yields ¿.
+
+<style color=#00ffffff size=1>.</style>                 ASCII digraphs for mathematical operators give the
+<style color=#00ffffff size=1>.</style>                 corresponding operator, e.g., <= yields ≤.
+
+<style color=#00ffffff size=1>.</style>                 Two letters give the corresponding ligature, e.g., AE
+<style color=#00ffffff size=1>.</style>                 yields Æ.
+
+<style color=#00ffffff size=1>.</style>                 Mathematical and other symbols are given by
+<style color=#00ffffff size=1>.</style>                 abbreviations for their names, e.g., pg yields ¶.
+
+<style color=#00ffffff size=1>.</style>                 Chess pieces are given by a w or b followed by a letter
+<style color=#00ffffff size=1>.</style>                 for the piece (k for king, q for queen, r for rook, n
+<style color=#00ffffff size=1>.</style>                 for knight, b for bishop, or p for pawn), e.g., wk for
+<style color=#00ffffff size=1>.</style>                 a white king.
+
+<style color=#00ffffff size=1>.</style>                 Greek letters are given by an asterisk followed by a
+<style color=#00ffffff size=1>.</style>                 corresponding latin letter, e.g., *d yields δ.
+
+<style color=#00ffffff size=1>.</style>                 Cyrillic letters are given by an at sign followed by a
+<style color=#00ffffff size=1>.</style>                 corresponding latin letter or letters, e.g., @ya yields
+<style color=#00ffffff size=1>.</style>                 я.
+
+<style color=#00ffffff size=1>.</style>                 Script letters are given by a dollar sign followed by
+<style color=#00ffffff size=1>.</style>                 the corresponding regular letter, e.g., $F yields ℱ.
+
+<style color=#00ffffff size=1>.</style>                 A digraph of a symbol followed by a letter gives the
+<style color=#00ffffff size=1>.</style>                 letter with an accent that looks like the symbol, e.g.,
+<style color=#00ffffff size=1>.</style>                 ,c yields ç.
+
+<style color=#00ffffff size=1>.</style>                 Two digits give the fraction with that numerator and
+<style color=#00ffffff size=1>.</style>                 denominator, e.g., 12 yields ½.
+
+<style color=#00ffffff size=1>.</style>                 The letter s followed by a character gives that
+<style color=#00ffffff size=1>.</style>                 character as a superscript, e.g., s1 yields ¹.
+
+<style color=#00ffffff size=1>.</style>                 Sometimes a pair of characters give a symbol related to
+<style color=#00ffffff size=1>.</style>                 the superimposition of the characters, e.g., cO yields
+<style color=#00ffffff size=1>.</style>                 ©.
+
+<style color=#00ffffff size=1>.</style>                 A mnemonic letter followed by $ gives a currency
+<style color=#00ffffff size=1>.</style>                 symbol, e.g., l$ yields £.
+
+<style color=#00ffffff size=1>.</style>            Note the difference between ß (ss) and µ (micron) and the
+<style color=#00ffffff size=1>.</style>            Greek β and μ.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/keyboard   sorted table of characters and keyboard
+<style color=#00ffffff size=1>.</style>                            sequences
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=acme(1)>acme(1)</action>, <action name=wm-brutus(1)>wm-brutus(1)</action>, <action name=intro(1)>intro(1)</action>, <action name=unicode(1)>unicode(1)</action>, <action name=cons(3)>cons(3)</action>, utf
+<style color=#00ffffff size=1>.</style>            (6), kbdputc(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

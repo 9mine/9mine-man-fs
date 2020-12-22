@@ -1,0 +1,47 @@
+<action name=SYS-BYTE2CHAR(2)>SYS-BYTE2CHAR(2)</action>                                 <action name=SYS-BYTE2CHAR(2)>SYS-BYTE2CHAR(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            byte2char, char2byte - convert between bytes and characters
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            byte2char: fn(buf: array of byte, n: int): (int, int, int)\;
+<style color=#00ffffff size=1>.</style>            char2byte: fn(c: int, buf: array of byte, n: int): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Byte2char converts a byte sequence to one Unicode character.
+<style color=#00ffffff size=1>.</style>            Buf is an array of bytes and n is the index of the first
+<style color=#00ffffff size=1>.</style>            byte to examine in the array. The returned tuple, say (c,
+<style color=#00ffffff size=1>.</style>            length, status), specifies the result of the translation: c
+<style color=#00ffffff size=1>.</style>            is the resulting Unicode character, status is non-zero if
+<style color=#00ffffff size=1>.</style>            the bytes are a valid UTF sequence and zero otherwise, and
+<style color=#00ffffff size=1>.</style>            length is set to the number of bytes consumed by the
+<style color=#00ffffff size=1>.</style>            translation. If the input sequence is not long enough to
+<style color=#00ffffff size=1>.</style>            determine its validity, byte2char consumes zero bytes\; if
+<style color=#00ffffff size=1>.</style>            the input sequence is otherwise invalid, byte2char consumes
+<style color=#00ffffff size=1>.</style>            one input byte and generates an error character (
+<style color=#00ffffff size=1>.</style>            Sys->UTFerror, 16r80), which prints in most fonts as a boxed
+<style color=#00ffffff size=1>.</style>            question mark.
+
+<style color=#00ffffff size=1>.</style>            Char2byte performs the inverse of byte2char. It translates a
+<style color=#00ffffff size=1>.</style>            Unicode character, c, to a UTF byte sequence, which is
+<style color=#00ffffff size=1>.</style>            placed in successive bytes starting at buf\[\c n\]. The
+<style color=#00ffffff size=1>.</style>            longest UTF sequence for a single Unicode character is
+<style color=#00ffffff size=1>.</style>            Sys->UTFmax (4) bytes. If the translation succeeds,
+<style color=#00ffffff size=1>.</style>            char2byte returns the number of bytes placed in the buffer.
+<style color=#00ffffff size=1>.</style>            If the buffer is too small to hold the result, char2byte
+<style color=#00ffffff size=1>.</style>            returns zero and leaves the array unchanged.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/runt.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-utfbytes(2)>sys-utfbytes(2)</action>, <action name=utf(6)>utf(6)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            A run-time error occurs if n exceeds the bounds of the
+<style color=#00ffffff size=1>.</style>            array.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

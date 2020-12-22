@@ -1,0 +1,46 @@
+<action name=BOOT(3)>BOOT(3)</action>                                                   <action name=BOOT(3)>BOOT(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            boot - reboot under program control
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #B /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/boot
+<style color=#00ffffff size=1>.</style>            /dev/kexec
+<style color=#00ffffff size=1>.</style>            /dev/mem
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Boot serves a directory containing three files that control
+<style color=#00ffffff size=1>.</style>            a reboot of the system. The files can only be opened by the
+<style color=#00ffffff size=1>.</style>            host owner (see eve(10.2)).
+
+<style color=#00ffffff size=1>.</style>            Boot is a write-only file that accepts 4 bytes representing
+<style color=#00ffffff size=1>.</style>            a kernel address, high-order byte first. The system will
+<style color=#00ffffff size=1>.</style>            transfer control to that address, which is assumed to be the
+<style color=#00ffffff size=1>.</style>            start of low-level reboot code. There is no return from the
+<style color=#00ffffff size=1>.</style>            write on success or failure.
+
+<style color=#00ffffff size=1>.</style>            Kexec is a write-only file to which an uncompressed kernel
+<style color=#00ffffff size=1>.</style>            image can be written, a chunk at a time. When the file is
+<style color=#00ffffff size=1>.</style>            closed, the system will transfer control to the start of the
+<style color=#00ffffff size=1>.</style>            image, which again is assumed to be low-level reboot code.
+
+<style color=#00ffffff size=1>.</style>            Mem copies data to and from kernel memory, taking the
+<style color=#00ffffff size=1>.</style>            current file offset as an address therein.
+
+<style color=#00ffffff size=1>.</style>            Boot flushes caches as necessary to ensure that writes to
+<style color=#00ffffff size=1>.</style>            kernel memory through any of these files will be visible
+<style color=#00ffffff size=1>.</style>            when subsequently executed as instructions.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/devboot.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=tftp(2)>tftp(2)</action>, <action name=cons(3)>cons(3)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Invalid addresses are diagnosed, but otherwise there is no
+<style color=#00ffffff size=1>.</style>            error return.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

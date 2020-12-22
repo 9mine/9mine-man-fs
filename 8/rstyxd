@@ -1,0 +1,47 @@
+<action name=RSTYXD(8)>RSTYXD(8)</action>                                               <action name=RSTYXD(8)>RSTYXD(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            rstyxd - Styx-based remote execution and file service
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            auxi/rstyxd alg ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Rstyxd provides a remote-execution service. Having
+<style color=#00ffffff size=1>.</style>            authorised the client and optionally established ssl, as
+<style color=#00ffffff size=1>.</style>            described above, it reads a single line from its standard
+<style color=#00ffffff size=1>.</style>            input. The line contains a decimal value that is the count
+<style color=#00ffffff size=1>.</style>            of the number of bytes that follow, which rstyxd reads as a
+<style color=#00ffffff size=1>.</style>            <action name=utf(6)>utf(6)</action>-encoded string. The string contains a command, which
+<style color=#00ffffff size=1>.</style>            is parsed into arguments, following the quoting conventions
+<style color=#00ffffff size=1>.</style>            of <action name=sh(1)>sh(1)</action>. The first argument is the command name. Rstyxd
+<style color=#00ffffff size=1>.</style>            prepares a modified name space in which to run the command.
+<style color=#00ffffff size=1>.</style>            It mounts the connection (standard input) on /n/client,
+<style color=#00ffffff size=1>.</style>            binds /n/client/dev onto /dev, and opens the new /dev/cons
+<style color=#00ffffff size=1>.</style>            (ie, the remote client's /dev/cons) on file descriptors 0, 1
+<style color=#00ffffff size=1>.</style>            and 2. Finally, it executes the command.
+
+<style color=#00ffffff size=1>.</style>            Rstyxd is normally started by <action name=svc(8)>svc(8)</action> in response to incoming
+<style color=#00ffffff size=1>.</style>            network calls. It expects the standard input to be connected
+<style color=#00ffffff size=1>.</style>            to the client\; unusually, it is both read and written. It
+<style color=#00ffffff size=1>.</style>            first authenticates the incoming call using <action name=keyring-auth(2)>keyring-auth(2)</action>
+<style color=#00ffffff size=1>.</style>            via <action name=security-auth(2)>security-auth(2)</action>. On successful authorisation, the
+<style color=#00ffffff size=1>.</style>            server sets its user identity to that of the caller, and the
+<style color=#00ffffff size=1>.</style>            client can request that a digest and/or encryption algorithm
+<style color=#00ffffff size=1>.</style>            be applied using <action name=ssl(3)>ssl(3)</action> to protect the data exchanged with
+<style color=#00ffffff size=1>.</style>            the server. Each alg names a digest or encryption algorithm
+<style color=#00ffffff size=1>.</style>            that the server will allow the client to use, in any form
+<style color=#00ffffff size=1>.</style>            accepted by ssl\; the special name none is usually listed, to
+<style color=#00ffffff size=1>.</style>            allow the client to choose not to use ssl.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /n/client                  mount point used by rstyxd
+<style color=#00ffffff size=1>.</style>            /usr/user/keyring/default  server's authentication data when
+<style color=#00ffffff size=1>.</style>                                       <action name=svc(8)>svc(8)</action> run as given user
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auxi/rstyxd.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=keyring-auth(2)>keyring-auth(2)</action>, <action name=security-auth(2)>security-auth(2)</action>, <action name=getauthinfo(8)>getauthinfo(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

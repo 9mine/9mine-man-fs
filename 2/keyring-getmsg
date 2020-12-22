@@ -1,0 +1,51 @@
+<action name=KEYRING-GETMSG(2)>KEYRING-GETMSG(2)</action>                               <action name=KEYRING-GETMSG(2)>KEYRING-GETMSG(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            keyring: getmsg, sendmsg, senderrmsg - send and receive
+<style color=#00ffffff size=1>.</style>            messages on undelimited streams
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "keyring.m"\;
+<style color=#00ffffff size=1>.</style>            keyring := load Keyring Keyring->PATH\;
+
+<style color=#00ffffff size=1>.</style>            getmsg:  fn(fd: ref Sys->FD): array of byte\;
+<style color=#00ffffff size=1>.</style>            sendmsg: fn(fd: ref Sys->FD, buf: array of byte, n: int): int\;
+<style color=#00ffffff size=1>.</style>            senderrmsg: fn(fd: ref Sys->FD, s: string): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These functions allow arbitrary data, packed into arrays of
+<style color=#00ffffff size=1>.</style>            bytes, to be exchanged on network connections using
+<style color=#00ffffff size=1>.</style>            connection-oriented transport protocols that do not preserve
+<style color=#00ffffff size=1>.</style>            record boundaries (eg, TCP/IP without <action name=ssl(3)>ssl(3)</action>). They are used
+<style color=#00ffffff size=1>.</style>            to implement various authentication protocols, including
+<style color=#00ffffff size=1>.</style>            <action name=auth(6)>auth(6)</action>, as implemented by <action name=keyring-auth(2)>keyring-auth(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            Each data message is transmitted with a five-byte header
+<style color=#00ffffff size=1>.</style>            containing a four-character zero-padded decimal count n
+<style color=#00ffffff size=1>.</style>            terminated by a newline, followed by n bytes of message
+<style color=#00ffffff size=1>.</style>            data. An error message has a similar structure, except that
+<style color=#00ffffff size=1>.</style>            the first character of the count is replaced by an
+<style color=#00ffffff size=1>.</style>            exclamation mark (!)\; the message data following contains
+<style color=#00ffffff size=1>.</style>            the diagnostic string in its UTF-8 encoding (see <action name=utf(6)>utf(6)</action>).
+
+<style color=#00ffffff size=1>.</style>            Getmsg reads the next message from fd and returns its data
+<style color=#00ffffff size=1>.</style>            content.
+
+<style color=#00ffffff size=1>.</style>            Sendmsg sends the first n bytes of buf as a message on fd,
+<style color=#00ffffff size=1>.</style>            and returns n.
+
+<style color=#00ffffff size=1>.</style>            Senderrmsg sends the error message s.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/keyring.c
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Sendmsg and senderrmsg return -1 if there was an error
+<style color=#00ffffff size=1>.</style>            writing to fd\; they set the system error string. Getmsg
+<style color=#00ffffff size=1>.</style>            returns nil if there was an error reading from fd\; it sets
+<style color=#00ffffff size=1>.</style>            the system error string to reflect the cause. It also
+<style color=#00ffffff size=1>.</style>            returns nil if an error message was received instead of a
+<style color=#00ffffff size=1>.</style>            data message\; the system error string will contain the error
+<style color=#00ffffff size=1>.</style>            message's diagnostic.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

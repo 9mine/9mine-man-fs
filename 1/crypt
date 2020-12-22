@@ -1,0 +1,58 @@
+<action name=CRYPT(1)>CRYPT(1)</action>                                                 <action name=CRYPT(1)>CRYPT(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            crypt, aescbc - data encryption
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            crypt \[ -d \] \[ -a alg\[/alg\] \] \[ -f keyfile \] \[ -k key \] \[ -?
+<style color=#00ffffff size=1>.</style>            \]
+
+<style color=#00ffffff size=1>.</style>            auth/aescbc \[ -d \] \[ -e \] \[ -f keyfile \] \[ -k key \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Crypt reads a data stream from its standard input and writes
+<style color=#00ffffff size=1>.</style>            it encrypted to standard output, preceded by a header that
+<style color=#00ffffff size=1>.</style>            gives details of the algorithm used. If the -d option is
+<style color=#00ffffff size=1>.</style>            given, crypt decrypts the standard input instead, writing
+<style color=#00ffffff size=1>.</style>            the clear text on standard output. The options are:
+
+<style color=#00ffffff size=1>.</style>            -a alg...
+<style color=#00ffffff size=1>.</style>                 Specifies one or two algorithms, for encryption and/or
+<style color=#00ffffff size=1>.</style>                 digests. The algorithms are those supported by <action name=ssl(3)>ssl(3)</action>.
+<style color=#00ffffff size=1>.</style>                 If two algorithms are given, they should be separated
+<style color=#00ffffff size=1>.</style>                 by a slash (/) or space, following the conventions of
+<style color=#00ffffff size=1>.</style>                 <action name=ssl(3)>ssl(3)</action>.
+
+<style color=#00ffffff size=1>.</style>            -f keyfile
+<style color=#00ffffff size=1>.</style>                 Read the encryption key from the given file, which
+<style color=#00ffffff size=1>.</style>                 obviously should be carefully protected. Trailing
+<style color=#00ffffff size=1>.</style>                 newlines are ignored.
+
+<style color=#00ffffff size=1>.</style>            -k key
+<style color=#00ffffff size=1>.</style>                 Use key as the encryption key.
+
+<style color=#00ffffff size=1>.</style>            -?   Print a list of the available encryption and digest
+<style color=#00ffffff size=1>.</style>                 algorithms.
+
+<style color=#00ffffff size=1>.</style>            If the secret key is not otherwise supplied, crypt prompts
+<style color=#00ffffff size=1>.</style>            for it on /dev/cons. There is no need to give algorithms
+<style color=#00ffffff size=1>.</style>            when decrypting, because they are taken from the header. The
+<style color=#00ffffff size=1>.</style>            default algorithm is md5/ideacbc. It might be necessary to
+<style color=#00ffffff size=1>.</style>            change that when using crypt for commercial purposes, as
+<style color=#00ffffff size=1>.</style>            noted in <action name=keyring-crypt(2)>keyring-crypt(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            Aescbc encrypts and decrypts using AES (Rijndael) in cypher
+<style color=#00ffffff size=1>.</style>            block chaining (CBC) mode. It uses input and output formats
+<style color=#00ffffff size=1>.</style>            compatible with Plan 9's aescbc command\; it also accepts
+<style color=#00ffffff size=1>.</style>            input in the format used by <action name=keyfs(4)>keyfs(4)</action> and Plan 9's secstore.
+<style color=#00ffffff size=1>.</style>            The -e option causes it to encrypt\; the -d option to
+<style color=#00ffffff size=1>.</style>            decrypt. The other options are just as for crypt.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/crypt.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auth/aescbc.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ssl(3)>ssl(3)</action>, <action name=keyfs(4)>keyfs(4)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

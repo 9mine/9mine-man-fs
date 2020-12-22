@@ -1,0 +1,94 @@
+<action name=PROF(3)>PROF(3)</action>                                                   <action name=PROF(3)>PROF(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            prof - profiling device
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind #P /prof
+
+<style color=#00ffffff size=1>.</style>            /prof/ctl
+<style color=#00ffffff size=1>.</style>            /prof/n/name
+<style color=#00ffffff size=1>.</style>            /prof/n/path
+<style color=#00ffffff size=1>.</style>            /prof/n/histogram
+<style color=#00ffffff size=1>.</style>            /prof/n/pctl
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The prof device serves a two-level directory structure. The
+<style color=#00ffffff size=1>.</style>            first level contains a control file ctl and zero or more
+<style color=#00ffffff size=1>.</style>            numbered directories each corresponding to a module being
+<style color=#00ffffff size=1>.</style>            profiled. Inside each of these numbered directories are
+<style color=#00ffffff size=1>.</style>            further files which describe the particular module being
+<style color=#00ffffff size=1>.</style>            profiled.
+
+<style color=#00ffffff size=1>.</style>            The write-only control file ctl provides the facilities to
+<style color=#00ffffff size=1>.</style>            profile a module. Messages written to this file initiate and
+<style color=#00ffffff size=1>.</style>            control the profiling.
+
+<style color=#00ffffff size=1>.</style>            module name
+<style color=#00ffffff size=1>.</style>                      Add the module or the module whose path is name to
+<style color=#00ffffff size=1>.</style>                      the list of modules to be profiled.
+
+<style color=#00ffffff size=1>.</style>            start     Start profiling all modules in the above list or,
+<style color=#00ffffff size=1>.</style>                      if the list is empty, start profiling all modules
+<style color=#00ffffff size=1>.</style>                      loaded by the kernel. The profiling is done by
+<style color=#00ffffff size=1>.</style>                      sampling.
+
+<style color=#00ffffff size=1>.</style>            startcp   As above but do coverage profiling. All
+<style color=#00ffffff size=1>.</style>                      instructions executed in the wanted modules are
+<style color=#00ffffff size=1>.</style>                      counted.
+
+<style color=#00ffffff size=1>.</style>            startmp   As above but do memory profiling. All heap memory
+<style color=#00ffffff size=1>.</style>                      allocations are associated with a line of limbo
+<style color=#00ffffff size=1>.</style>                      source and all deallocations with the line that
+<style color=#00ffffff size=1>.</style>                      did the allocation.
+
+<style color=#00ffffff size=1>.</style>            stop      Stop all profiling.
+
+<style color=#00ffffff size=1>.</style>            end       Stop all profiling and free all memory associated
+<style color=#00ffffff size=1>.</style>                      with the modules being profiled. The profiler
+<style color=#00ffffff size=1>.</style>                      returns to it's initial state with no modules
+<style color=#00ffffff size=1>.</style>                      under profile.
+
+<style color=#00ffffff size=1>.</style>            interval i
+<style color=#00ffffff size=1>.</style>                      Change the sampling interval to i ms. The default
+<style color=#00ffffff size=1>.</style>                      sampling rate is 100 ms.
+
+<style color=#00ffffff size=1>.</style>            The second level directories contain information about each
+<style color=#00ffffff size=1>.</style>            module under profile.
+
+<style color=#00ffffff size=1>.</style>            The read-only file name contains the name of the module in
+<style color=#00ffffff size=1>.</style>            the form it appears in it's module source file.
+
+<style color=#00ffffff size=1>.</style>            The read-only file path contains the path of the dis file
+<style color=#00ffffff size=1>.</style>            that implements the module.
+
+<style color=#00ffffff size=1>.</style>            The write-only control file pctl allows finer control of the
+<style color=#00ffffff size=1>.</style>            profiling of a module. It is not used at present.
+
+<style color=#00ffffff size=1>.</style>            The read-only file histogram contains statistics about the
+<style color=#00ffffff size=1>.</style>            profiled module. The file contains a list of pairs of
+<style color=#00ffffff size=1>.</style>            integers seperated by a space. The first number of the pair
+<style color=#00ffffff size=1>.</style>            is a program counter value representing the address of a dis
+<style color=#00ffffff size=1>.</style>            instruction. Addresses start from 0 and the list is in order
+<style color=#00ffffff size=1>.</style>            of increasing address. The second number is the frequency
+<style color=#00ffffff size=1>.</style>            with which this address was sampled. Each read of this file
+<style color=#00ffffff size=1>.</style>            returns the next pair in the list. The frequency is
+<style color=#00ffffff size=1>.</style>            guaranteed to be non-zero.
+
+<style color=#00ffffff size=1>.</style>            When coverage profiling the second number of each pair is
+<style color=#00ffffff size=1>.</style>            the number of times that dis instruction was executed, when
+<style color=#00ffffff size=1>.</style>            memory profiling it's the amount of memory in bytes.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/devprof.c
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The device profiles on a global basis and therefore does not
+<style color=#00ffffff size=1>.</style>            distinguish between multiple profilers running at once. 
+
+<style color=#00ffffff size=1>.</style>            The coverage profiling can only be done on dis instructions.
+
+<style color=#00ffffff size=1>.</style>            The device can do only one of time, coverage or memory
+<style color=#00ffffff size=1>.</style>            profiling at once.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,330 @@
+<action name=DIS(2)>DIS(2)</action>                                                     <action name=DIS(2)>DIS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dis - read Dis object files
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "dis.m"\;
+<style color=#00ffffff size=1>.</style>            dis := load Dis Dis->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Inst: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	op:		int\;
+<style color=#00ffffff size=1>.</style>            	addr:	int\;
+<style color=#00ffffff size=1>.</style>            	mid:		int\;
+<style color=#00ffffff size=1>.</style>            	src:		int\;
+<style color=#00ffffff size=1>.</style>            	dst:		int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Type: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	size:	int\;
+<style color=#00ffffff size=1>.</style>            	map:		array of byte\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Data: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	op:	int\;		# encoded op
+<style color=#00ffffff size=1>.</style>            	n:	int\;		# number of elements
+<style color=#00ffffff size=1>.</style>            	off:	int\;		# byte offset in data space
+<style color=#00ffffff size=1>.</style>            	pick {
+<style color=#00ffffff size=1>.</style>            	Zero =>		# DEFZ
+<style color=#00ffffff size=1>.</style>            	Bytes =>		# DEFB
+<style color=#00ffffff size=1>.</style>            		bytes:	array of byte\;
+<style color=#00ffffff size=1>.</style>            	Words =>		# DEFW
+<style color=#00ffffff size=1>.</style>            		words:	array of int\;
+<style color=#00ffffff size=1>.</style>            	String =>		# DEFS
+<style color=#00ffffff size=1>.</style>            		str:	string\;
+<style color=#00ffffff size=1>.</style>            	Reals =>		# DEFF
+<style color=#00ffffff size=1>.</style>            		reals:	array of real\;
+<style color=#00ffffff size=1>.</style>            	Array =>		# DEFA
+<style color=#00ffffff size=1>.</style>            		typex:	int\;
+<style color=#00ffffff size=1>.</style>            		length:	int\;
+<style color=#00ffffff size=1>.</style>            	Aindex =>		# DIND
+<style color=#00ffffff size=1>.</style>            		index:	int\;
+<style color=#00ffffff size=1>.</style>            	Arestore =>	# DAPOP
+<style color=#00ffffff size=1>.</style>            	Bigs =>		# DEFL
+<style color=#00ffffff size=1>.</style>            		bigs:		array of big\;
+<style color=#00ffffff size=1>.</style>            	}
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Link: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	pc:		int\;
+<style color=#00ffffff size=1>.</style>            	desc:	int\;
+<style color=#00ffffff size=1>.</style>            	sig:		int\;
+<style color=#00ffffff size=1>.</style>            	name:	string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Import: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	sig:	int\;
+<style color=#00ffffff size=1>.</style>            	name:	string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Except: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	s:	string\;
+<style color=#00ffffff size=1>.</style>            	pc:	int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Handler: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	pc1:	int\;
+<style color=#00ffffff size=1>.</style>            	pc2:	int\;
+<style color=#00ffffff size=1>.</style>            	eoff:	int\;
+<style color=#00ffffff size=1>.</style>            	ne:	int\;
+<style color=#00ffffff size=1>.</style>            	t:	ref Type\;
+<style color=#00ffffff size=1>.</style>            	etab:	array of ref Except\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Mod: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	name:	string\;
+<style color=#00ffffff size=1>.</style>            	srcpath:	string\;
+
+<style color=#00ffffff size=1>.</style>            	magic:	int\;
+<style color=#00ffffff size=1>.</style>            	rt:		int\;
+<style color=#00ffffff size=1>.</style>            	ssize:	int\;
+<style color=#00ffffff size=1>.</style>            	isize:	int\;
+<style color=#00ffffff size=1>.</style>            	dsize:	int\;
+<style color=#00ffffff size=1>.</style>            	tsize:	int\;
+<style color=#00ffffff size=1>.</style>            	lsize:	int\;
+<style color=#00ffffff size=1>.</style>            	entry:	int\;
+<style color=#00ffffff size=1>.</style>            	entryt:	int\;
+
+<style color=#00ffffff size=1>.</style>            	inst:	array of ref Inst\;
+<style color=#00ffffff size=1>.</style>            	types:	array of ref Type\;
+<style color=#00ffffff size=1>.</style>            	data:	list of ref Data\;
+<style color=#00ffffff size=1>.</style>            	links:	array of ref Link\;
+<style color=#00ffffff size=1>.</style>            	imports:	array of array of ref Import\;
+<style color=#00ffffff size=1>.</style>            	handlers:	array of ref Handler\;
+
+<style color=#00ffffff size=1>.</style>            	sign:	array of byte\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:	fn()\;
+<style color=#00ffffff size=1>.</style>            loadobj:	fn(file: string): (ref Mod, string)\;
+<style color=#00ffffff size=1>.</style>            op2s:	fn(op: int): string\;
+<style color=#00ffffff size=1>.</style>            inst2s:	fn(i: ref Inst): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Dis module decodes the contents of a Dis object file
+<style color=#00ffffff size=1>.</style>            containing a single module, of the format defined by <action name=dis(6)>dis(6)</action>.
+<style color=#00ffffff size=1>.</style>            The module defines many constants, giving symbolic names to
+<style color=#00ffffff size=1>.</style>            Dis instruction codes, addressing mode masks, magic numbers,
+<style color=#00ffffff size=1>.</style>            and other bits of the object code.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other function, to initialise
+<style color=#00ffffff size=1>.</style>            the module.
+
+<style color=#00ffffff size=1>.</style>            Loadobj reads a Dis object file from file, and returns a
+<style color=#00ffffff size=1>.</style>            reference to a Mod adt that represents the module's
+<style color=#00ffffff size=1>.</style>            contents, as the first element of the tuple\; the string
+<style color=#00ffffff size=1>.</style>            element of the tuple is nil. On error, the string element
+<style color=#00ffffff size=1>.</style>            contains a diagnostic, and the reference is nil.
+
+<style color=#00ffffff size=1>.</style>            Op2s returns the assembly-language representation, as used
+<style color=#00ffffff size=1>.</style>            by <action name=asm(1)>asm(1)</action>, of the Dis operation code op. It returns the
+<style color=#00ffffff size=1>.</style>            string `OPop' if op does not correspond to a known operation
+<style color=#00ffffff size=1>.</style>            code.
+
+<style color=#00ffffff size=1>.</style>            Inst2s returns a string corresponding to a disassembly of
+<style color=#00ffffff size=1>.</style>            Dis instruction i, including addressing modes.
+
+<style color=#00ffffff size=1>.</style>            The module defines integer constants giving symbolic names
+<style color=#00ffffff size=1>.</style>            to the Dis instruction codes, all of the form Iname where
+<style color=#00ffffff size=1>.</style>            name is the name of the instruction, all in upper case:
+
+<style color=#00ffffff size=1>.</style>                 INOP, IALT, INBALT, ... INEWZ, INEWAZ, IRAISE
+
+<style color=#00ffffff size=1>.</style>            The name MAXDIS is also defined\; it has the value of the
+<style color=#00ffffff size=1>.</style>            first unassigned Dis operation code.
+
+<style color=#00ffffff size=1>.</style>            Most of the members of the adt types have an obvious
+<style color=#00ffffff size=1>.</style>            interpretation on reference to <action name=dis(6)>dis(6)</action>.
+
+<style color=#00ffffff size=1>.</style>            The adt Mod represents a single module. It contains values
+<style color=#00ffffff size=1>.</style>            extracted from the module's header, and references to
+<style color=#00ffffff size=1>.</style>            structures representing the contents of the Dis file's code,
+<style color=#00ffffff size=1>.</style>            data, type and external linkage sections:
+
+<style color=#00ffffff size=1>.</style>            magic   The constant XMAGIC (unsigned Dis module) or the
+<style color=#00ffffff size=1>.</style>                    constant SMAGIC (signed Dis module).
+
+<style color=#00ffffff size=1>.</style>            sign    If magic is SMAGIC, the sign field contains the
+<style color=#00ffffff size=1>.</style>                    bytes in the signature section of the module header.
+<style color=#00ffffff size=1>.</style>                    Otherwise, there is no signature and sign is nil.
+
+<style color=#00ffffff size=1>.</style>            name    The name of the implementation module.
+
+<style color=#00ffffff size=1>.</style>            srcpath The source of the dis file relative to the inferno
+<style color=#00ffffff size=1>.</style>                    root.
+
+<style color=#00ffffff size=1>.</style>            rt      Run-time options: a bit mask of the constants
+<style color=#00ffffff size=1>.</style>                    MUSTCOMPILE, DONTCOMPILE and SHAREMP.
+
+<style color=#00ffffff size=1>.</style>            ssize   Stack extent
+
+<style color=#00ffffff size=1>.</style>            isize   Number of instructions
+
+<style color=#00ffffff size=1>.</style>            dsize   Size in bytes of the module's global data area
+
+<style color=#00ffffff size=1>.</style>            tsize   Number of type descriptors
+
+<style color=#00ffffff size=1>.</style>            lsize   Number of external linkage descriptors
+
+<style color=#00ffffff size=1>.</style>            entry   PC (instruction offset) of the default entry point
+<style color=#00ffffff size=1>.</style>                    for the module
+
+<style color=#00ffffff size=1>.</style>            entryt  Index of the type descriptor for the module's entry
+<style color=#00ffffff size=1>.</style>                    point
+
+<style color=#00ffffff size=1>.</style>            inst    Array representing the contents of the code segment\;
+<style color=#00ffffff size=1>.</style>                    length m.isize
+
+<style color=#00ffffff size=1>.</style>            types   Array of the module's type descriptors\; length m
+<style color=#00ffffff size=1>.</style>                    .tsize
+
+<style color=#00ffffff size=1>.</style>            data    list of data descriptors representing instructions
+<style color=#00ffffff size=1>.</style>                    for creating the module's data segment
+
+<style color=#00ffffff size=1>.</style>            links   array of the module's external linkage descriptors
+<style color=#00ffffff size=1>.</style>                    (for exported functions)\; length m.lsize
+
+<style color=#00ffffff size=1>.</style>            imports an array of import descriptor tables, one table for
+<style color=#00ffffff size=1>.</style>                    each module imported by this module. Each table is
+<style color=#00ffffff size=1>.</style>                    an array of pairs giving the signature and name of
+<style color=#00ffffff size=1>.</style>                    each function imported.
+
+<style color=#00ffffff size=1>.</style>            handlers
+<style color=#00ffffff size=1>.</style>                    an array of exception handlers used in this module.
+<style color=#00ffffff size=1>.</style>                    Each handler consists of the range of pc's it
+<style color=#00ffffff size=1>.</style>                    covers, the exception structure offset within the
+<style color=#00ffffff size=1>.</style>                    frame, the number of declared exceptions (as opposed
+<style color=#00ffffff size=1>.</style>                    to strings) in the handler, the type (if any) of any
+<style color=#00ffffff size=1>.</style>                    memory to clear when the exception occurs and a
+<style color=#00ffffff size=1>.</style>                    table of exceptions. The latter is an array
+<style color=#00ffffff size=1>.</style>                    containing pairs of exceptions and pc values. The
+<style color=#00ffffff size=1>.</style>                    final entry gives the pc to jump to in the '*' case
+<style color=#00ffffff size=1>.</style>                    or -1 if not applicable.
+
+<style color=#00ffffff size=1>.</style>            The Type adt represents the value of a type descriptor:
+
+<style color=#00ffffff size=1>.</style>            size    Size in bytes of the object represented by this
+<style color=#00ffffff size=1>.</style>                    descriptor
+
+<style color=#00ffffff size=1>.</style>            map     Bitmap describing the location of pointers in the
+<style color=#00ffffff size=1>.</style>                    object (see <action name=dis(6)>dis(6)</action>)
+
+<style color=#00ffffff size=1>.</style>            The Link adt represents the value of a link descriptor:
+
+<style color=#00ffffff size=1>.</style>            name    Name of the exported function
+
+<style color=#00ffffff size=1>.</style>            pc      Instruction index in Mod.code of the function's
+<style color=#00ffffff size=1>.</style>                    entry point
+
+<style color=#00ffffff size=1>.</style>            desc    Index in Mod.types of the type describing the
+<style color=#00ffffff size=1>.</style>                    function's stack frame
+
+<style color=#00ffffff size=1>.</style>            sig     Integer hash of the function's type signature
+
+<style color=#00ffffff size=1>.</style>            The Inst adt represents a single Dis instruction in the
+<style color=#00ffffff size=1>.</style>            instruction stream. The member op is the Dis instruction
+<style color=#00ffffff size=1>.</style>            code. The member addr contains the addressing mode flags for
+<style color=#00ffffff size=1>.</style>            middle, source and destination operands. Constants are
+<style color=#00ffffff size=1>.</style>            defined to help unpack it.
+
+<style color=#00ffffff size=1>.</style>            The middle operand description is selected by the constant
+<style color=#00ffffff size=1>.</style>            mask ARM:
+
+<style color=#00ffffff size=1>.</style>                 i.addr & ARM
+
+<style color=#00ffffff size=1>.</style>            The valid results and interpretation are as follows:
+
+<style color=#00ffffff size=1>.</style>                 AXNON  No middle operand.
+<style color=#00ffffff size=1>.</style>                 AXIMM  $n
+<style color=#00ffffff size=1>.</style>                 AXINF  n(fp)
+<style color=#00ffffff size=1>.</style>                 AXINM  n(mp)
+
+<style color=#00ffffff size=1>.</style>            The source operand's addressing mode is extracted as
+<style color=#00ffffff size=1>.</style>            follows:
+
+<style color=#00ffffff size=1>.</style>                 (i.addr>>3)&AMASK
+
+<style color=#00ffffff size=1>.</style>            The following combinations are valid, where n is the value
+<style color=#00ffffff size=1>.</style>            in i.src:
+
+<style color=#00ffffff size=1>.</style>                 AXXX      No operand
+<style color=#00ffffff size=1>.</style>                 AFP       The operand is n(fp)
+<style color=#00ffffff size=1>.</style>                 AMP       The operand is n(mp)
+<style color=#00ffffff size=1>.</style>                 AIMM      The operand is $n (ie, immediate literal n)
+<style color=#00ffffff size=1>.</style>                 AIND|AFP  The operand is si(fi(fp))
+<style color=#00ffffff size=1>.</style>                 AIND|AMP  The operand is si(fi(mp))
+
+<style color=#00ffffff size=1>.</style>            where fi is the offset for the first indirection, extracted
+<style color=#00ffffff size=1>.</style>            from n:
+
+<style color=#00ffffff size=1>.</style>                 (n>>16)&16rFFFF),
+
+<style color=#00ffffff size=1>.</style>            and si is the offset for the second indirection, also
+<style color=#00ffffff size=1>.</style>            extracted from n:
+
+<style color=#00ffffff size=1>.</style>                 (n&16rFFFF).
+
+<style color=#00ffffff size=1>.</style>            The destination addressing mode is interpreted in a similar
+<style color=#00ffffff size=1>.</style>            way, except that the addressing mode is extracted as
+<style color=#00ffffff size=1>.</style>            follows:
+
+<style color=#00ffffff size=1>.</style>                 (i.addr&AMASK)
+
+<style color=#00ffffff size=1>.</style>            and the value of the offset n is found in i.dst. Fi and si
+<style color=#00ffffff size=1>.</style>            are extracted from n as before.
+
+<style color=#00ffffff size=1>.</style>            Finally, Data adt represents a data item, which tells the
+<style color=#00ffffff size=1>.</style>            system's module loader how to initialise part of the
+<style color=#00ffffff size=1>.</style>            module's global data segment. It has the following members:
+
+<style color=#00ffffff size=1>.</style>            op   the encoded type and length\; usually ignored: the pick
+<style color=#00ffffff size=1>.</style>                 tag and n, below, usually suffice
+
+<style color=#00ffffff size=1>.</style>            n    the number of data values
+
+<style color=#00ffffff size=1>.</style>            off  the byte offset of the first data value to initialise,
+<style color=#00ffffff size=1>.</style>                 relative to the current loading base
+
+<style color=#00ffffff size=1>.</style>            The alternatives of the pick select the correct variant to
+<style color=#00ffffff size=1>.</style>            see the data values encoded in the object file as Limbo
+<style color=#00ffffff size=1>.</style>            values of the correct type. The interpretation is
+<style color=#00ffffff size=1>.</style>            straightforward for the tags Bytes, Words, Bigs and Reals:
+<style color=#00ffffff size=1>.</style>            the corresponding array members are arrays of n elements of
+<style color=#00ffffff size=1>.</style>            the appropriate type. The remaining cases are as follows:
+
+<style color=#00ffffff size=1>.</style>            String    The member str has the decoded representation of
+<style color=#00ffffff size=1>.</style>                      the corresponding n data bytes from the object
+<style color=#00ffffff size=1>.</style>                      file.
+
+<style color=#00ffffff size=1>.</style>            Array     The member typex is the index in Mod.types of the
+<style color=#00ffffff size=1>.</style>                      array's type, and member length is its length.
+
+<style color=#00ffffff size=1>.</style>            Aindex    This alternative can appear only following a value
+<style color=#00ffffff size=1>.</style>                      of Data.Array. The member index is an index into
+<style color=#00ffffff size=1>.</style>                      the corresponding array as represented in the
+<style color=#00ffffff size=1>.</style>                      global data space, which determines a new loading
+<style color=#00ffffff size=1>.</style>                      base address for subsequent Data items. The
+<style color=#00ffffff size=1>.</style>                      previous base address is stacked on an internal
+<style color=#00ffffff size=1>.</style>                      stack.
+
+<style color=#00ffffff size=1>.</style>            Arestore  Pop the address from the internal address stack
+<style color=#00ffffff size=1>.</style>                      and make that the current loading address. The
+<style color=#00ffffff size=1>.</style>                      request marks the end of a sequence of Data items
+<style color=#00ffffff size=1>.</style>                      initialising an array.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/dis.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=disdep(1)>disdep(1)</action>, wm/rt in <action name=wm-misc(1)>wm-misc(1)</action>, <action name=dis(6)>dis(6)</action>
+<style color=#00ffffff size=1>.</style>            "The Dis Virtual Machine", in Volume 2.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

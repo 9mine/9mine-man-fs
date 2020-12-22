@@ -1,0 +1,68 @@
+<action name=PREFAB-STYLE(2)>PREFAB-STYLE(2)</action>                                   <action name=PREFAB-STYLE(2)>PREFAB-STYLE(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            prefab: Style - fonts and colours for ITV toolkit
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            include "prefab.m"\;
+<style color=#00ffffff size=1>.</style>            prefab := load Prefab Prefab->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Style: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                titlefont:      ref Draw->Font\;
+<style color=#00ffffff size=1>.</style>                textfont:       ref Draw->Font\;
+<style color=#00ffffff size=1>.</style>                elemcolor:      ref Draw->Image\;
+<style color=#00ffffff size=1>.</style>                edgecolor:      ref Draw->Image\;
+<style color=#00ffffff size=1>.</style>                titlecolor:     ref Draw->Image\;
+<style color=#00ffffff size=1>.</style>                textcolor:      ref Draw->Image\;
+<style color=#00ffffff size=1>.</style>                highlightcolor: ref Draw->Image\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Style type collects the font and colour information for
+<style color=#00ffffff size=1>.</style>            an application or a set of items within an application.
+<style color=#00ffffff size=1>.</style>            Except when using the layout routines (see prefab-compound
+<style color=#00ffffff size=1>.</style>            (2) and <action name=prefab-element(2)>prefab-element(2)</action>), the members of a Style are the
+<style color=#00ffffff size=1>.</style>            only way to control the appearance of Prefab items. Note
+<style color=#00ffffff size=1>.</style>            that although the `...color' members of Style in practice
+<style color=#00ffffff size=1>.</style>            often refer to a literal colour (a single replicated pixel
+<style color=#00ffffff size=1>.</style>            of colour), they can be any image.
+
+<style color=#00ffffff size=1>.</style>            Styles are allocated by regular Limbo definitions\; there is
+<style color=#00ffffff size=1>.</style>            no allocation function. All the members of a Style must be
+<style color=#00ffffff size=1>.</style>            defined. Although it will not cause errors to modify the
+<style color=#00ffffff size=1>.</style>            members of a Style after it has been created and passed to a
+<style color=#00ffffff size=1>.</style>            Prefab routine, the results may be unpredictable.
+
+<style color=#00ffffff size=1>.</style>            edgecolor This Image specifies how to draw the edges, or
+<style color=#00ffffff size=1>.</style>                      borders, of compounds.
+
+<style color=#00ffffff size=1>.</style>            elemcolor This Image specifies how to draw the base, or
+<style color=#00ffffff size=1>.</style>                      background, of elements and compounds.
+
+<style color=#00ffffff size=1>.</style>            highlightcolor
+<style color=#00ffffff size=1>.</style>                      This Image specifies the colour to use to
+<style color=#00ffffff size=1>.</style>                      highlight a selected element.
+
+<style color=#00ffffff size=1>.</style>            textcolor This Image specifies the colour in which to draw
+<style color=#00ffffff size=1>.</style>                      an item's regular text.
+
+<style color=#00ffffff size=1>.</style>            textfont  This Font specifies the font in which to draw an
+<style color=#00ffffff size=1>.</style>                      item's regular text.
+
+<style color=#00ffffff size=1>.</style>            titlecolor
+<style color=#00ffffff size=1>.</style>                      This Image specifies the colour in which to draw
+<style color=#00ffffff size=1>.</style>                      an item's title text.
+
+<style color=#00ffffff size=1>.</style>            titlefont This Font specifies the font in which to draw an
+<style color=#00ffffff size=1>.</style>                      item's title text.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/prefab.c
+<style color=#00ffffff size=1>.</style>            /libprefab/*.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=prefab-intro(2)>prefab-intro(2)</action>, <action name=prefab-environ(2)>prefab-environ(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

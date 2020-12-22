@@ -1,0 +1,35 @@
+<action name=CAT(1)>CAT(1)</action>                                                     <action name=CAT(1)>CAT(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            cat - concatenate files
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            cat \[ - \] \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Cat reads each file in turn and writes it on the standard
+<style color=#00ffffff size=1>.</style>            output. Thus
+
+<style color=#00ffffff size=1>.</style>                 cat file
+
+<style color=#00ffffff size=1>.</style>            prints the file to standard output, and the following
+
+<style color=#00ffffff size=1>.</style>                 cat file1 file2 >file3
+
+<style color=#00ffffff size=1>.</style>            concatenates two files onto a third.
+
+<style color=#00ffffff size=1>.</style>            If no file is given, or where - is given as an argument, cat
+<style color=#00ffffff size=1>.</style>            reads from the standard input. Output is buffered in blocks
+<style color=#00ffffff size=1>.</style>            matching the input.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/cat.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cp(1)>cp(1)</action>, <action name=stream(1)>stream(1)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Beware of cat a b >a and cat a b >b which destroy input
+<style color=#00ffffff size=1>.</style>            files before reading them.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,93 @@
+<action name=SH-REGEX(1)>SH-REGEX(1)</action>                                           <action name=SH-REGEX(1)>SH-REGEX(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            re, match - shell script regular expression handling
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load regex
+
+<style color=#00ffffff size=1>.</style>            match regex \[ arg... \]
+<style color=#00ffffff size=1>.</style>            ${re op arg... }
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Regex is a loadable module for <action name=sh(1)>sh(1)</action> that provides access to
+<style color=#00ffffff size=1>.</style>            regular-expression pattern matching and substitution. For
+<style color=#00ffffff size=1>.</style>            details of regular expression syntax in Inferno, see regexp
+<style color=#00ffffff size=1>.</style>            (6). Regex defines one builtin command, match, and one
+<style color=#00ffffff size=1>.</style>            builtin substitution operator, re. Match gives a false exit
+<style color=#00ffffff size=1>.</style>            status if its argument regex fails to match any arg. Re
+<style color=#00ffffff size=1>.</style>            provides several operations, detailed below:
+
+<style color=#00ffffff size=1>.</style>            ${re g regexp \[ arg...\]}
+<style color=#00ffffff size=1>.</style>                      Yields a list of each arg that matches regexp.
+
+<style color=#00ffffff size=1>.</style>            ${re v regexp \[ arg...\]}
+<style color=#00ffffff size=1>.</style>                      Yields a list of each arg that does not match
+<style color=#00ffffff size=1>.</style>                      regexp.
+
+<style color=#00ffffff size=1>.</style>            ${re m regexp arg}
+<style color=#00ffffff size=1>.</style>                      Yields the portion of arg that matches regexp, or
+<style color=#00ffffff size=1>.</style>                      an empty list if there was no match.
+
+<style color=#00ffffff size=1>.</style>            ${re M regexp arg}
+<style color=#00ffffff size=1>.</style>                      Yields a list consisting of the portion of arg
+<style color=#00ffffff size=1>.</style>                      that matches regexp, followed by list elements
+<style color=#00ffffff size=1>.</style>                      giving the portion of arg that matched each
+<style color=#00ffffff size=1>.</style>                      parenthesized subexpression in turn.
+
+<style color=#00ffffff size=1>.</style>            ${re mg regexp arg}
+<style color=#00ffffff size=1>.</style>                      Similar to re m except that it applies the match
+<style color=#00ffffff size=1>.</style>                      consecutively through arg, yielding a list of all
+<style color=#00ffffff size=1>.</style>                      the portions of arg that match regexp. If a match
+<style color=#00ffffff size=1>.</style>                      is made to the null string, no subsequent
+<style color=#00ffffff size=1>.</style>                      substitutions will take place.
+
+<style color=#00ffffff size=1>.</style>            ${re s regexp subs \[ arg... \]}
+<style color=#00ffffff size=1>.</style>                      For each arg, re s substitutes the first
+<style color=#00ffffff size=1>.</style>                      occurrence of regexp (if any) by subs. If subs
+<style color=#00ffffff size=1>.</style>                      contains a sequence of the form \d where d is a
+<style color=#00ffffff size=1>.</style>                      single decimal digit, the dth parenthesised
+<style color=#00ffffff size=1>.</style>                      subexpression in regexp will be substituted in its
+<style color=#00ffffff size=1>.</style>                      place. \0 is substituted by the entire match. If
+<style color=#00ffffff size=1>.</style>                      any other character follows a backslash (\), that
+<style color=#00ffffff size=1>.</style>                      character will be substituted. Arguments which
+<style color=#00ffffff size=1>.</style>                      contain no match to regexp will be left unchanged.
+
+<style color=#00ffffff size=1>.</style>            ${re sg regexp subs \[ arg... \]}
+<style color=#00ffffff size=1>.</style>                      Similar to re s except that all matches of regexp
+<style color=#00ffffff size=1>.</style>                      within each arg will be substituted for, rather
+<style color=#00ffffff size=1>.</style>                      than just the first match. Only one occurrence of
+<style color=#00ffffff size=1>.</style>                      the null string is substituted.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            List all files in the current directory that end in .dis or
+<style color=#00ffffff size=1>.</style>            .sbl:
+<style color=#00ffffff size=1>.</style>            	ls -l ${re g '\.(sbl|dis)$' *}
+
+<style color=#00ffffff size=1>.</style>            Break string up into its constituent characters, putting the
+<style color=#00ffffff size=1>.</style>            result in shell variable x:
+<style color=#00ffffff size=1>.</style>            	x = ${re mg '.|\n' string}
+
+<style color=#00ffffff size=1>.</style>            Quote a string s so that it can be used as a literal regular
+<style color=#00ffffff size=1>.</style>            expression without worrying about metacharacters:
+<style color=#00ffffff size=1>.</style>            	s = ${re sg '\[*|\[\\+.^$()?\]' '\\\0' $s}
+
+<style color=#00ffffff size=1>.</style>            Define a substitution function pat2regexp to convert
+<style color=#00ffffff size=1>.</style>            shell-style patterns into equivalent regular expressions
+<style color=#00ffffff size=1>.</style>            (e.g. ``?.sbl*'' would become ``^.\.sbl.*$''):
+<style color=#00ffffff size=1>.</style>            	load std
+<style color=#00ffffff size=1>.</style>            	subfn pat2regexp {
+<style color=#00ffffff size=1>.</style>            		result = '^' ^ ${re sg '\*' '.*'
+<style color=#00ffffff size=1>.</style>            			${re sg '\?' '.'
+<style color=#00ffffff size=1>.</style>            				${re sg '\[()+\\.^$|\]' '\\\0' $*}
+<style color=#00ffffff size=1>.</style>            			}
+<style color=#00ffffff size=1>.</style>            		} ^ '$'
+<style color=#00ffffff size=1>.</style>            	}
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sh/regex.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=regexp(6)>regexp(6)</action>, <action name=regex(2)>regex(2)</action>, <action name=sh(1)>sh(1)</action>, <action name=string(2)>string(2)</action>, <action name=sh-std(1)>sh-std(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

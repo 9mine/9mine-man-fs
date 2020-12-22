@@ -1,0 +1,54 @@
+<action name=COLLAB(1)>COLLAB(1)</action>                                               <action name=COLLAB(1)>COLLAB(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            collab: connect - connect to collaborative files and
+<style color=#00ffffff size=1>.</style>            services
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            collab/connect \[ -C alg \] \[ -k keyfile \] \[ -v \] \[ netaddress
+<style color=#00ffffff size=1>.</style>            \[ localdir \] \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Connect dials network address netaddr (default:
+<style color=#00ffffff size=1>.</style>            net!$collab!9999), which should be served by an instance of
+<style color=#00ffffff size=1>.</style>            <action name=collabsrv(8)>collabsrv(8)</action>, and mounts the resulting connection on
+<style color=#00ffffff size=1>.</style>            /n/remote\; it then binds /n/remote/collab on localdir
+<style color=#00ffffff size=1>.</style>            (default: /n/ftree/collab).
+
+<style color=#00ffffff size=1>.</style>            The resulting hierarchy under /n/remote is determined by the
+<style color=#00ffffff size=1>.</style>            site configuration, but usually includes the directory
+<style color=#00ffffff size=1>.</style>            /n/remote/services, which gives access to the server side of
+<style color=#00ffffff size=1>.</style>            collaborative activities, as described in <action name=collabsrv(8)>collabsrv(8)</action>, and
+<style color=#00ffffff size=1>.</style>            the directory /n/remote/collab, which contains the file
+<style color=#00ffffff size=1>.</style>            hierarchy that contains all collaborative resources offered
+<style color=#00ffffff size=1>.</style>            to a client device.
+
+<style color=#00ffffff size=1>.</style>            If an instance of <action name=wm-ftree(1)>wm-ftree(1)</action> is running in the same name
+<style color=#00ffffff size=1>.</style>            space, then after mounting the connection and adjusting the
+<style color=#00ffffff size=1>.</style>            name space, connect tells it that the name space has
+<style color=#00ffffff size=1>.</style>            changed, so any displayed view of it can be updated.
+
+<style color=#00ffffff size=1>.</style>            Connect accepts the following options:
+
+<style color=#00ffffff size=1>.</style>            -C alg
+<style color=#00ffffff size=1>.</style>                 Specify the algorithm, alg, to be used following
+<style color=#00ffffff size=1>.</style>                 authentication for digesting or encryption. See <action name=ssl(3)>ssl(3)</action>
+<style color=#00ffffff size=1>.</style>                 for the supported algorithms. The default is none: ssl
+<style color=#00ffffff size=1>.</style>                 (3) is not used after authentication.
+
+<style color=#00ffffff size=1>.</style>            -k kfile 
+<style color=#00ffffff size=1>.</style>                 Specify the keyfile to be used when authenticating. The
+<style color=#00ffffff size=1>.</style>                 default is /usr/user/keyring/netaddr, if that exists,
+<style color=#00ffffff size=1>.</style>                 and otherwise /usr/user/keyring/default. See 
+<style color=#00ffffff size=1>.</style>                 <action name=keyring-auth(2)>keyring-auth(2)</action> for more details.
+
+<style color=#00ffffff size=1>.</style>            -v   Causes connect to chat about its actions on standard
+<style color=#00ffffff size=1>.</style>                 output.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/collab/connect.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=collabsrv(8)>collabsrv(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,65 @@
+<action name=GRID-MONITOR(1)>GRID-MONITOR(1)</action>                                   <action name=GRID-MONITOR(1)>GRID-MONITOR(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            monitor - graphical display for viewing resource use.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            command | grid/srv/monitor interface \[ wintitle \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Monitor is designed to work with resources that deal with
+<style color=#00ffffff size=1>.</style>            incoming connections (such as <action name=grid-register(1)>grid-register(1)</action>) to visually
+<style color=#00ffffff size=1>.</style>            display the connections to a specific resource. Interface
+<style color=#00ffffff size=1>.</style>            sets the style of interface, this can be 1 or 2. Interface 1
+<style color=#00ffffff size=1>.</style>            is the simplest, displaying only a list of connections to
+<style color=#00ffffff size=1>.</style>            the resource. Interface 2 is slightly more complex, allowing
+<style color=#00ffffff size=1>.</style>            extra data to be displayed for each connection. While
+<style color=#00ffffff size=1>.</style>            interface 1 shows all the connections at any one time,
+<style color=#00ffffff size=1>.</style>            interface 2 displays a selection of 'slots' which have
+<style color=#00ffffff size=1>.</style>            buttons that light up to signify a connection. Clicking on a
+<style color=#00ffffff size=1>.</style>            lit button will display any data given about that connection
+<style color=#00ffffff size=1>.</style>            in the main window. Wintitle optionally sets the title of
+<style color=#00ffffff size=1>.</style>            the monitor window. Command must write status messages to
+<style color=#00ffffff size=1>.</style>            stdout which are then read and displayed (if appropriate) by
+<style color=#00ffffff size=1>.</style>            monitor. Monitor reads on stdin and accepts the following
+<style color=#00ffffff size=1>.</style>            input:
+
+<style color=#00ffffff size=1>.</style>         Interface 1
+<style color=#00ffffff size=1>.</style>            add addr                      display a connection from
+<style color=#00ffffff size=1>.</style>                                          address addr
+
+<style color=#00ffffff size=1>.</style>            del addr                      remove a connection from
+<style color=#00ffffff size=1>.</style>                                          address addr
+
+<style color=#00ffffff size=1>.</style>         Interface 2
+<style color=#00ffffff size=1>.</style>            data set id { data }          set and display the string
+<style color=#00ffffff size=1>.</style>                                          data in slot id.
+
+<style color=#00ffffff size=1>.</style>            data set id finished          clear slot id
+
+<style color=#00ffffff size=1>.</style>         Common
+<style color=#00ffffff size=1>.</style>            setup maxusers n              set display to fit a maximum
+<style color=#00ffffff size=1>.</style>                                          of n connections. -1 signifies
+<style color=#00ffffff size=1>.</style>                                          unlimited connections.
+
+<style color=#00ffffff size=1>.</style>            starting pid                  add pid to a list of pids
+<style color=#00ffffff size=1>.</style>                                          whose process group is to be
+<style color=#00ffffff size=1>.</style>                                          killed if the user closes
+<style color=#00ffffff size=1>.</style>                                          monitor.
+
+<style color=#00ffffff size=1>.</style>            error errstr                  print out the error string 
+<style color=#00ffffff size=1>.</style>                                          errstr to the console.
+
+<style color=#00ffffff size=1>.</style>            exit                          close down monitor and kill
+<style color=#00ffffff size=1>.</style>                                          all processes in the current
+<style color=#00ffffff size=1>.</style>                                          group.
+
+<style color=#00ffffff size=1>.</style>            Input messages of any other form will simply be ignored.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/grid/srv/monitor.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=grid-register(1)>grid-register(1)</action>, <action name=ns(1)>ns(1)</action>, <action name=cpu(4)>cpu(4)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

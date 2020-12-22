@@ -1,0 +1,82 @@
+<action name=SIGNER(8)>SIGNER(8)</action>                                               <action name=SIGNER(8)>SIGNER(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            signer, verify, countersigner - set-top box authentication
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            auth/signer
+
+<style color=#00ffffff size=1>.</style>            auth/verify set-top-box-id
+
+<style color=#00ffffff size=1>.</style>            auth/countersigner
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Signer and countersigner listen for requests on the service
+<style color=#00ffffff size=1>.</style>            ports infsigner and infcsigner, respectively. They are
+<style color=#00ffffff size=1>.</style>            typically run via <action name=svc(8)>svc(8)</action> on a machine acting as
+<style color=#00ffffff size=1>.</style>            authentication server for a network. Verify is invoked on
+<style color=#00ffffff size=1>.</style>            the same server, after signer but before countersigner,
+<style color=#00ffffff size=1>.</style>            following an independent check of a caller's credentials.
+
+<style color=#00ffffff size=1>.</style>            Signer constructs an authentication certificate from the
+<style color=#00ffffff size=1>.</style>            signer's key (in /keydb/signerkey) and information from the
+<style color=#00ffffff size=1>.</style>            requesting client, including the set top box ID. The
+<style color=#00ffffff size=1>.</style>            signer's key can be created using <action name=createsignerkey(8)>createsignerkey(8)</action>, but if
+<style color=#00ffffff size=1>.</style>            the key does not yet exist, signer creates and initialises
+<style color=#00ffffff size=1>.</style>            /keydb/signerkey itself, with an owner name of `*'.
+
+<style color=#00ffffff size=1>.</style>            Signer `blinds' the certificate by XOR-ing it with a random
+<style color=#00ffffff size=1>.</style>            bit mask, then sends the result to the requesting client.
+<style color=#00ffffff size=1>.</style>            The client machine's user uses that information to establish
+<style color=#00ffffff size=1>.</style>            identity with a human agent on the signing machine. Signer
+<style color=#00ffffff size=1>.</style>            also saves the both the `blinded' and `unblinded' result
+<style color=#00ffffff size=1>.</style>            from the input in /keydb/signed/set-top-box-id for verify
+<style color=#00ffffff size=1>.</style>            (see below).
+
+<style color=#00ffffff size=1>.</style>            Verify is run on the signing server by the agency running
+<style color=#00ffffff size=1>.</style>            the authentication server, in response to a call from a
+<style color=#00ffffff size=1>.</style>            remote user who has invoked <action name=register(8)>register(8)</action> or an equivalent.
+<style color=#00ffffff size=1>.</style>            Verify checks a caller's identity using information from the
+<style color=#00ffffff size=1>.</style>            file /keydb/signed/set-top-box-id created by signer. The
+<style color=#00ffffff size=1>.</style>            file contains the previously crafted authentication
+<style color=#00ffffff size=1>.</style>            certificate and the `blinded' version of the certificate
+<style color=#00ffffff size=1>.</style>            that was sent to the requesting client.
+
+<style color=#00ffffff size=1>.</style>            Verify displays the `blinded' version textually or
+<style color=#00ffffff size=1>.</style>            graphically, as appropriate, so that it can be compared to
+<style color=#00ffffff size=1>.</style>            that reported by the set-top-box owner over a secure
+<style color=#00ffffff size=1>.</style>            independent mechanism (for example, telephone). If the
+<style color=#00ffffff size=1>.</style>            operator of verify is convinced of the identity of the
+<style color=#00ffffff size=1>.</style>            caller, the operator should accept when prompted by verify.
+<style color=#00ffffff size=1>.</style>            Verify then writes the authentication certificate to
+<style color=#00ffffff size=1>.</style>            /keydb/countersigned/set-top-box-id, as input for
+<style color=#00ffffff size=1>.</style>            countersigner (see <action name=signer(8)>signer(8)</action>).
+
+<style color=#00ffffff size=1>.</style>            Note: if the operator of verify accepts the identity, the
+<style color=#00ffffff size=1>.</style>            set-top-box owner should be requested to answer `yes' to the
+<style color=#00ffffff size=1>.</style>            prompt displayed by <action name=register(8)>register(8)</action>. The order of
+<style color=#00ffffff size=1>.</style>            acceptance-first on the signer, then on the client-is
+<style color=#00ffffff size=1>.</style>            essential, to produce the countersigned certificate before
+<style color=#00ffffff size=1>.</style>            invoking countersigner to read it.
+
+<style color=#00ffffff size=1>.</style>            Countersigner sends the blinding data in
+<style color=#00ffffff size=1>.</style>            /keydb/countersigned/set-top-box-id to the requesting
+<style color=#00ffffff size=1>.</style>            client.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /keydb/signerkey                     Secret key of the
+<style color=#00ffffff size=1>.</style>                                                 `signer' host.
+<style color=#00ffffff size=1>.</style>            /keydb/signed/set-top-box-id         Repository of `blinded'
+<style color=#00ffffff size=1>.</style>                                                 and clear certificates.
+<style color=#00ffffff size=1>.</style>            /keydb/countersigned/set-top-box-id  Repository of
+<style color=#00ffffff size=1>.</style>                                                 `unblinded'
+<style color=#00ffffff size=1>.</style>                                                 certificates.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auth/signer.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auth/verify.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auth/countersigner.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=createsignerkey(8)>createsignerkey(8)</action>, <action name=register(8)>register(8)</action>, <action name=svc(8)>svc(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,41 @@
+5COFF(10.1)                                           5COFF(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            5coff - converter to coff format
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            5coff \[ -T t \] \[ -D d \] \[ -R r \] \[ -E e \] \[ -d \] ifile ofile
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            5coff converts an executable file ifile in a.out(10.6)
+<style color=#00ffffff size=1>.</style>            format as produced by 5l (see 2l(10.1)) to one in COFF
+<style color=#00ffffff size=1>.</style>            format, which it writes to ofile. The options to 5coff are
+<style color=#00ffffff size=1>.</style>            as follows:
+
+<style color=#00ffffff size=1>.</style>            -Tt  The text segment starts at address t.
+
+<style color=#00ffffff size=1>.</style>            -Dd  The data segment starts at address d.
+
+<style color=#00ffffff size=1>.</style>            -Rr  The text segment is rounded up to a multiple of r if
+<style color=#00ffffff size=1>.</style>                 non-zero.
+
+<style color=#00ffffff size=1>.</style>            -Ee  The entry point is at address e.
+
+<style color=#00ffffff size=1>.</style>            -d   Print debugging information.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            An executable built with the command
+
+<style color=#00ffffff size=1>.</style>                 5l -T0x04010000 -R4 -o abc ...
+
+<style color=#00ffffff size=1>.</style>            can be converted to coff format by
+
+<style color=#00ffffff size=1>.</style>                 5coff -T0x04010000 -R4 abc abc.coff
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /utils/5coff
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            2l(10.1), 5cv(10.1), a.out(10.6)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

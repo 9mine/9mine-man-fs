@@ -1,0 +1,222 @@
+<action name=PACK(9)>PACK(9)</action>                                                   <action name=PACK(9)>PACK(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            pack - Geometry manager that packs around edges of cavity
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            pack option arg ?arg ...?
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The pack command is used to communicate with the packer, a
+<style color=#00ffffff size=1>.</style>            geometry manager that arranges the children of a parent by
+<style color=#00ffffff size=1>.</style>            packing them in order around the edges of the parent. The 
+<style color=#00ffffff size=1>.</style>            pack command can have any of several forms, depending on the
+<style color=#00ffffff size=1>.</style>            option argument:
+
+<style color=#00ffffff size=1>.</style>            pack slave ?slave ...? ?options?
+<style color=#00ffffff size=1>.</style>                 If the first argument to pack is a window name (any
+<style color=#00ffffff size=1>.</style>                 value starting with ``.''), then the command is
+<style color=#00ffffff size=1>.</style>                 processed in the same way as pack configure.
+
+<style color=#00ffffff size=1>.</style>            pack configure slave ?slave ...? ?options?
+<style color=#00ffffff size=1>.</style>                 The arguments consist of the names of one or more slave
+<style color=#00ffffff size=1>.</style>                 windows followed by pairs of arguments that specify how
+<style color=#00ffffff size=1>.</style>                 to manage the slaves. See ``THE PACKER ALGORITHM''
+<style color=#00ffffff size=1>.</style>                 below for details on how the options are used by the
+<style color=#00ffffff size=1>.</style>                 packer. The following options are supported:
+
+<style color=#00ffffff size=1>.</style>                 -after other
+<style color=#00ffffff size=1>.</style>                      Other must be the name of another window. Use its
+<style color=#00ffffff size=1>.</style>                      master as the master for the slaves, and insert
+<style color=#00ffffff size=1>.</style>                      the slaves just after other in the packing order.
+
+<style color=#00ffffff size=1>.</style>                 -anchor anchor
+<style color=#00ffffff size=1>.</style>                      Anchor must be a valid anchor position such as n
+<style color=#00ffffff size=1>.</style>                      or sw\; it specifies where to position each slave
+<style color=#00ffffff size=1>.</style>                      in its parcel. Defaults to center.
+
+<style color=#00ffffff size=1>.</style>                 -before other
+<style color=#00ffffff size=1>.</style>                      Other must be the name of another window. Use its
+<style color=#00ffffff size=1>.</style>                      master as the master for the slaves, and insert
+<style color=#00ffffff size=1>.</style>                      the slaves just before other in the packing order.
+
+<style color=#00ffffff size=1>.</style>                 -expand boolean
+<style color=#00ffffff size=1>.</style>                      Specifies whether the slaves should be expanded to
+<style color=#00ffffff size=1>.</style>                      consume extra space in their master. Boolean may
+<style color=#00ffffff size=1>.</style>                      have any proper boolean value, such as 1 or no.
+<style color=#00ffffff size=1>.</style>                      Defaults to 0.
+
+<style color=#00ffffff size=1>.</style>                 -fill style
+<style color=#00ffffff size=1>.</style>                      If a slave's parcel is larger than its requested
+<style color=#00ffffff size=1>.</style>                      dimensions, this option may be used to stretch the
+<style color=#00ffffff size=1>.</style>                      slave. Style must have one of the following
+<style color=#00ffffff size=1>.</style>                      values:
+
+<style color=#00ffffff size=1>.</style>                      none Give the slave its requested dimensions plus
+<style color=#00ffffff size=1>.</style>                           any internal padding requested with -ipadx or
+<style color=#00ffffff size=1>.</style>                           -ipady.  This is the default.
+
+<style color=#00ffffff size=1>.</style>                      x    Stretch the slave horizontally to fill the
+<style color=#00ffffff size=1>.</style>                           entire width of its parcel (except leave
+<style color=#00ffffff size=1>.</style>                           external padding as specified by -padx).
+
+<style color=#00ffffff size=1>.</style>                      y    Stretch the slave vertically to fill the
+<style color=#00ffffff size=1>.</style>                           entire height of its parcel (except leave
+<style color=#00ffffff size=1>.</style>                           external padding as specified by -pady).
+
+<style color=#00ffffff size=1>.</style>                      both Stretch the slave both horizontally and
+<style color=#00ffffff size=1>.</style>                           vertically.
+
+<style color=#00ffffff size=1>.</style>                 -in other
+<style color=#00ffffff size=1>.</style>                      Insert the slave(s) at the end of the packing
+<style color=#00ffffff size=1>.</style>                      order for the master window given by other.
+
+<style color=#00ffffff size=1>.</style>                 -ipadx dist
+<style color=#00ffffff size=1>.</style>                      Dist specifies how much horizontal internal
+<style color=#00ffffff size=1>.</style>                      padding to leave on each side of the slave(s).
+<style color=#00ffffff size=1>.</style>                      Dist must be a valid screen distance, such as 2 or
+<style color=#00ffffff size=1>.</style>                      .5c. It defaults to 0.
+
+<style color=#00ffffff size=1>.</style>                 -ipady dist
+<style color=#00ffffff size=1>.</style>                      Dist specifies how much vertical internal padding
+<style color=#00ffffff size=1>.</style>                      to leave on each side of the slave(s). Dist
+<style color=#00ffffff size=1>.</style>                      defaults to 0.
+
+<style color=#00ffffff size=1>.</style>                 -padx dist
+<style color=#00ffffff size=1>.</style>                      Dist specifies how much horizontal external
+<style color=#00ffffff size=1>.</style>                      padding to leave on each side of the slave(s).
+<style color=#00ffffff size=1>.</style>                      Dist defaults to 0.
+
+<style color=#00ffffff size=1>.</style>                 -pady dist
+<style color=#00ffffff size=1>.</style>                      Dist specifies how much vertical external padding
+<style color=#00ffffff size=1>.</style>                      to leave on each side of the slave(s). Dist
+<style color=#00ffffff size=1>.</style>                      defaults to 0.
+
+<style color=#00ffffff size=1>.</style>                 -side side
+<style color=#00ffffff size=1>.</style>                      Specifies which side of the master the slave(s)
+<style color=#00ffffff size=1>.</style>                      will be packed against. Must be left, right, top,
+<style color=#00ffffff size=1>.</style>                      or bottom. Defaults to top.
+
+<style color=#00ffffff size=1>.</style>                 If no -in, -after or -before option is specified then
+<style color=#00ffffff size=1>.</style>                 each of the slaves will be inserted at the end of the
+<style color=#00ffffff size=1>.</style>                 packing list for its parent unless it is already
+<style color=#00ffffff size=1>.</style>                 managed by the packer (in which case it will be left
+<style color=#00ffffff size=1>.</style>                 where it is). If one of these options is specified then
+<style color=#00ffffff size=1>.</style>                 all the slaves will be inserted at the specified point.
+<style color=#00ffffff size=1>.</style>                 If any of the slaves are already managed by the
+<style color=#00ffffff size=1>.</style>                 geometry manager then any unspecified options for them
+<style color=#00ffffff size=1>.</style>                 retain their previous values rather than receiving
+<style color=#00ffffff size=1>.</style>                 default values.
+
+<style color=#00ffffff size=1>.</style>            pack forget slave ?slave ...?
+<style color=#00ffffff size=1>.</style>                 Removes each of the slaves from the packing order for
+<style color=#00ffffff size=1>.</style>                 its master and unmaps their windows. The slaves will no
+<style color=#00ffffff size=1>.</style>                 longer be managed by the packer.
+
+<style color=#00ffffff size=1>.</style>            pack propagate master ?boolean?
+<style color=#00ffffff size=1>.</style>                 If boolean has a true boolean value such as 1 or on
+<style color=#00ffffff size=1>.</style>                 then propagation is enabled for master, which must be a
+<style color=#00ffffff size=1>.</style>                 window name (see ``GEOMETRY PROPAGATION'' below). If 
+<style color=#00ffffff size=1>.</style>                 boolean has a false boolean value then propagation is
+<style color=#00ffffff size=1>.</style>                 disabled for master. In either of these cases an empty
+<style color=#00ffffff size=1>.</style>                 string is returned. If boolean is omitted then the
+<style color=#00ffffff size=1>.</style>                 command returns 0 or 1 to indicate whether propagation
+<style color=#00ffffff size=1>.</style>                 is currently enabled for master. Propagation is enabled
+<style color=#00ffffff size=1>.</style>                 by default.
+
+<style color=#00ffffff size=1>.</style>            pack slaves master
+<style color=#00ffffff size=1>.</style>                 Returns a list of all of the slaves in the packing
+<style color=#00ffffff size=1>.</style>                 order for master. The order of the slaves in the list
+<style color=#00ffffff size=1>.</style>                 is the same as their order in the packing order. If 
+<style color=#00ffffff size=1>.</style>                 master has no slaves then an empty string is returned.
+
+THE PACKER ALGORITHM
+<style color=#00ffffff size=1>.</style>            For each master the packer maintains an ordered list of
+<style color=#00ffffff size=1>.</style>            slaves called the packing list. The -in, -after, and -before
+<style color=#00ffffff size=1>.</style>            configuration options are used to specify the master for
+<style color=#00ffffff size=1>.</style>            each slave and the slave's position in the packing list. If
+<style color=#00ffffff size=1>.</style>            none of these options is given for a slave then the slave is
+<style color=#00ffffff size=1>.</style>            added to the end of the packing list for its parent.
+
+<style color=#00ffffff size=1>.</style>            The packer arranges the slaves for a master by scanning the
+<style color=#00ffffff size=1>.</style>            packing list in order. At the time it processes each slave,
+<style color=#00ffffff size=1>.</style>            a rectangular area within the master is still unallocated.
+<style color=#00ffffff size=1>.</style>            This area is called the cavity\;  for the first slave it is
+<style color=#00ffffff size=1>.</style>            the entire area of the master.
+
+<style color=#00ffffff size=1>.</style>            For each slave the packer carries out the following steps:
+
+<style color=#00ffffff size=1>.</style>            \[1\]  The packer allocates a rectangular parcel for the slave
+<style color=#00ffffff size=1>.</style>                 along the side of the cavity given by the slave's -side
+<style color=#00ffffff size=1>.</style>                 option. If the side is top or bottom then the width of
+<style color=#00ffffff size=1>.</style>                 the parcel is the width of the cavity and its height is
+<style color=#00ffffff size=1>.</style>                 the requested height of the slave plus the -ipady and 
+<style color=#00ffffff size=1>.</style>                 -pady options. For the left or right side the height of
+<style color=#00ffffff size=1>.</style>                 the parcel is the height of the cavity and the width is
+<style color=#00ffffff size=1>.</style>                 the requested width of the slave plus the -ipadx and 
+<style color=#00ffffff size=1>.</style>                 -padx options. The parcel may be enlarged further
+<style color=#00ffffff size=1>.</style>                 because of the -expand option (see ``EXPANSION'' below)
+
+<style color=#00ffffff size=1>.</style>            \[2\]  The packer chooses the dimensions of the slave. The
+<style color=#00ffffff size=1>.</style>                 width will normally be the slave's requested width plus
+<style color=#00ffffff size=1>.</style>                 twice its -ipadx option and the height will normally be
+<style color=#00ffffff size=1>.</style>                 the slave's requested height plus twice its -ipady
+<style color=#00ffffff size=1>.</style>                 option. However, if the -fill option is x or both then
+<style color=#00ffffff size=1>.</style>                 the width of the slave is expanded to fill the width of
+<style color=#00ffffff size=1>.</style>                 the parcel, minus twice the -padx option. If the -fill
+<style color=#00ffffff size=1>.</style>                 option is y or both then the height of the slave is
+<style color=#00ffffff size=1>.</style>                 expanded to fill the width of the parcel, minus twice
+<style color=#00ffffff size=1>.</style>                 the -pady option.
+
+<style color=#00ffffff size=1>.</style>            \[3\]  The packer positions the slave over its parcel. If the
+<style color=#00ffffff size=1>.</style>                 slave is smaller than the parcel then the -anchor
+<style color=#00ffffff size=1>.</style>                 option determines where in the parcel the slave will be
+<style color=#00ffffff size=1>.</style>                 placed. If -padx or -pady is non-zero, then the given
+<style color=#00ffffff size=1>.</style>                 amount of external padding will always be left between
+<style color=#00ffffff size=1>.</style>                 the slave and the edges of the parcel.
+
+<style color=#00ffffff size=1>.</style>            Once a given slave has been packed, the area of its parcel
+<style color=#00ffffff size=1>.</style>            is subtracted from the cavity, leaving a smaller rectangular
+<style color=#00ffffff size=1>.</style>            cavity for the next slave. If a slave doesn't use all of its
+<style color=#00ffffff size=1>.</style>            parcel, the unused space in the parcel will not be used by
+<style color=#00ffffff size=1>.</style>            subsequent slaves. If the cavity should become too small to
+<style color=#00ffffff size=1>.</style>            meet the needs of a slave then the slave will be given
+<style color=#00ffffff size=1>.</style>            whatever space is left in the cavity. If the cavity shrinks
+<style color=#00ffffff size=1>.</style>            to zero size, then all remaining slaves on the packing list
+<style color=#00ffffff size=1>.</style>            will be unmapped from the screen until the master window
+<style color=#00ffffff size=1>.</style>            becomes large enough to hold them again.
+
+EXPANSION
+<style color=#00ffffff size=1>.</style>            If a master window is so large that there will be extra
+<style color=#00ffffff size=1>.</style>            space left over after all of its slaves have been packed,
+<style color=#00ffffff size=1>.</style>            then the extra space is distributed uniformly among all of
+<style color=#00ffffff size=1>.</style>            the slaves for which the -expand option is set. Extra
+<style color=#00ffffff size=1>.</style>            horizontal space is distributed among the expandable slaves
+<style color=#00ffffff size=1>.</style>            whose -side is left or right, and extra vertical space is
+<style color=#00ffffff size=1>.</style>            distributed among the expandable slaves whose -side is top
+<style color=#00ffffff size=1>.</style>            or bottom.
+
+GEOMETRY PROPAGATION
+<style color=#00ffffff size=1>.</style>            The packer normally computes how large a master must be to
+<style color=#00ffffff size=1>.</style>            just exactly meet the needs of its slaves, and it sets the
+<style color=#00ffffff size=1>.</style>            requested width and height of the master to these
+<style color=#00ffffff size=1>.</style>            dimensions. This causes geometry information to propagate up
+<style color=#00ffffff size=1>.</style>            through a window hierarchy to a top-level window so that the
+<style color=#00ffffff size=1>.</style>            entire sub-tree sizes itself to fit the needs of the leaf
+<style color=#00ffffff size=1>.</style>            windows. However, the pack propagate command may be used to
+<style color=#00ffffff size=1>.</style>            turn off propagation for one or more masters. If propagation
+<style color=#00ffffff size=1>.</style>            is disabled then the packer will not set the requested width
+<style color=#00ffffff size=1>.</style>            and height of the packer. This may be useful if, for
+<style color=#00ffffff size=1>.</style>            example, you wish for a master window to have a fixed size
+<style color=#00ffffff size=1>.</style>            that you specify.
+
+RESTRICTIONS ON MASTER WINDOWS
+<style color=#00ffffff size=1>.</style>            The master for each slave must be a frame widget or the
+<style color=#00ffffff size=1>.</style>            top-level window (``.''). Widgets of other types can be
+<style color=#00ffffff size=1>.</style>            specifed as the master window but will give rise to
+<style color=#00ffffff size=1>.</style>            unpredictable results.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

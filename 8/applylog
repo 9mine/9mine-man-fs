@@ -1,0 +1,142 @@
+<action name=APPLYLOG(8)>APPLYLOG(8)</action>                                           <action name=APPLYLOG(8)>APPLYLOG(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            applylog, updatelog - log-based updates
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            install/applylog \[ -c \] \[ -e \] \[ -n \] \[ -s \] \[ -u \] \[ -g \] \[
+<style color=#00ffffff size=1>.</style>            -v \] \[ -T timefile \] clientlog clientroot serverroot \[ path
+<style color=#00ffffff size=1>.</style>            ... \]
+
+<style color=#00ffffff size=1>.</style>            install/updatelog \[ -p proto \] \[ -r root \] \[ -t now gen \] \[
+<style color=#00ffffff size=1>.</style>            -c \] \[ -x path \] log \[ path ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These two commands allow distribution of updates (eg, to the
+<style color=#00ffffff size=1>.</style>            Inferno tree) based on a log of changes since a previous
+<style color=#00ffffff size=1>.</style>            update. Notionally, one server system is the primary for a
+<style color=#00ffffff size=1>.</style>            set of files, and one or more client systems maintain
+<style color=#00ffffff size=1>.</style>            replicas of that set, although in some applications server
+<style color=#00ffffff size=1>.</style>            and client might be the same machine.
+
+<style color=#00ffffff size=1>.</style>            Applylog is run on a client, to update the file tree rooted
+<style color=#00ffffff size=1>.</style>            at clientroot. The server's version of the tree is rooted at
+<style color=#00ffffff size=1>.</style>            serverroot on the client, typically by being mounted there
+<style color=#00ffffff size=1>.</style>            (see <action name=bind(1)>bind(1)</action>). Applylog takes the current state of the
+<style color=#00ffffff size=1>.</style>            replica from the entries in clientlog, and applies a set of
+<style color=#00ffffff size=1>.</style>            changes represented by log entries read from its standard
+<style color=#00ffffff size=1>.</style>            input. Those entries are provided by the server. Each change
+<style color=#00ffffff size=1>.</style>            is examined to see whether the file to which it applies is
+<style color=#00ffffff size=1>.</style>            in the expected state. If so, the change is applied without
+<style color=#00ffffff size=1>.</style>            comment\; otherwise, there is a conflict caused by a local
+<style color=#00ffffff size=1>.</style>            change to the replica tree independently from the primary.
+<style color=#00ffffff size=1>.</style>            By default, applylog diagnoses the conflict and does not
+<style color=#00ffffff size=1>.</style>            apply the change. It accepts the following options:
+
+<style color=#00ffffff size=1>.</style>            -c   Resolve inconsistencies in favour of the client: leave
+<style color=#00ffffff size=1>.</style>                 the replica as is.
+
+<style color=#00ffffff size=1>.</style>            -e   Exit with an error status on any error, including
+<style color=#00ffffff size=1>.</style>                 inconsistency between client and server.
+
+<style color=#00ffffff size=1>.</style>            -n   Print on standard output a list of changes that would
+<style color=#00ffffff size=1>.</style>                 be made, and list any conflicts, but do not change the
+<style color=#00ffffff size=1>.</style>                 tree or update the log.
+
+<style color=#00ffffff size=1>.</style>            -s   Resolve inconsistencies in favour of the server: make
+<style color=#00ffffff size=1>.</style>                 the replica match the server's state.
+
+<style color=#00ffffff size=1>.</style>            -u   Make file ownership in the replica match that on the
+<style color=#00ffffff size=1>.</style>                 server.
+
+<style color=#00ffffff size=1>.</style>            -g   Make group ownership in the replica match that on the
+<style color=#00ffffff size=1>.</style>                 server.
+
+<style color=#00ffffff size=1>.</style>            -v   Print a summary of each log entry as it is examined.
+
+<style color=#00ffffff size=1>.</style>            -T timefile
+<style color=#00ffffff size=1>.</style>                 Read a time and sequence number from timefile and apply
+<style color=#00ffffff size=1>.</style>                 only log entries with stamps greater than that. On
+<style color=#00ffffff size=1>.</style>                 successful completion, if the -n option is not given,
+<style color=#00ffffff size=1>.</style>                 update the timefile with the stamp of the last log
+<style color=#00ffffff size=1>.</style>                 entry processed successfully.
+
+<style color=#00ffffff size=1>.</style>            The scope of an update in a tree can be restricted to a
+<style color=#00ffffff size=1>.</style>            particular set of paths listed on the command line. They
+<style color=#00ffffff size=1>.</style>            should all be relative path names.
+
+<style color=#00ffffff size=1>.</style>            Updatelog is run on a server to produce a sequence of log
+<style color=#00ffffff size=1>.</style>            entries representing changes to the primary tree since a
+<style color=#00ffffff size=1>.</style>            previous log was produced. It can also be run on a client to
+<style color=#00ffffff size=1>.</style>            see how its replica state differs from that recorded in a
+<style color=#00ffffff size=1>.</style>            log. It accepts the following options:
+
+<style color=#00ffffff size=1>.</style>            -p proto
+<style color=#00ffffff size=1>.</style>                 Use proto as the prototype for the file system, as
+<style color=#00ffffff size=1>.</style>                 described by <action name=proto(6)>proto(6)</action> (default: /lib/proto/all).
+
+<style color=#00ffffff size=1>.</style>            -r root
+<style color=#00ffffff size=1>.</style>                 The replica is rooted at root (default: the current
+<style color=#00ffffff size=1>.</style>                 directory, .).
+
+<style color=#00ffffff size=1>.</style>            -t now gen
+<style color=#00ffffff size=1>.</style>                 Make log entries use time now and initial sequence
+<style color=#00ffffff size=1>.</style>                 number gen. The defaults are the current time and 0.
+
+<style color=#00ffffff size=1>.</style>            -c   Produce output only for content and metadata changes,
+<style color=#00ffffff size=1>.</style>                 not additions or deletions.
+
+<style color=#00ffffff size=1>.</style>            -x path
+<style color=#00ffffff size=1>.</style>                 Exclude path and its subtrees from consideration.
+
+<style color=#00ffffff size=1>.</style>            By default, updatelog produces log entries describing
+<style color=#00ffffff size=1>.</style>            changes, additions and deletions to all files in root but
+<style color=#00ffffff size=1>.</style>            the scope can be limited by giving a different proto,
+<style color=#00ffffff size=1>.</style>            explicitly listing trees to consider as paths on the command
+<style color=#00ffffff size=1>.</style>            line, and by giving one or more -x options to exclude
+<style color=#00ffffff size=1>.</style>            particular paths, in any desired combination.
+
+<style color=#00ffffff size=1>.</style>         Log file format
+<style color=#00ffffff size=1>.</style>            A log file is a text file with one line representing each
+<style color=#00ffffff size=1>.</style>            change to the tree. Each line has the form:
+
+<style color=#00ffffff size=1>.</style>                 time gen verb path serverpath mode uid gid mtime length
+<style color=#00ffffff size=1>.</style>                 \[ sum ... \]
+
+<style color=#00ffffff size=1>.</style>            where:
+
+<style color=#00ffffff size=1>.</style>            time, gen
+<style color=#00ffffff size=1>.</style>                 are decimal numbers that order the sequence of
+<style color=#00ffffff size=1>.</style>                 requests: time is typically the time in seconds of the
+<style color=#00ffffff size=1>.</style>                 epoch at which the entry was made\; gen is a
+<style color=#00ffffff size=1>.</style>                 monotonically increasing sequence number
+
+<style color=#00ffffff size=1>.</style>            verb is an action:
+<style color=#00ffffff size=1>.</style>                 a    add file path
+<style color=#00ffffff size=1>.</style>                 c    change the contents of file path
+<style color=#00ffffff size=1>.</style>                 d    delete path
+<style color=#00ffffff size=1>.</style>                 m    change the metadata (permissions, ownership) for
+<style color=#00ffffff size=1>.</style>                      path
+
+<style color=#00ffffff size=1>.</style>            path the name of the file on the client
+
+<style color=#00ffffff size=1>.</style>            serverpath
+<style color=#00ffffff size=1>.</style>                 the name of the file on the server with the contents
+<style color=#00ffffff size=1>.</style>                 for path, or simply ``-'' when the server and client
+<style color=#00ffffff size=1>.</style>                 file names are the same
+
+<style color=#00ffffff size=1>.</style>            mode, uid, gid, length, mtime
+<style color=#00ffffff size=1>.</style>                 the resulting metadata (except for d where the metadata
+<style color=#00ffffff size=1>.</style>                 is that for the file to be deleted)
+
+<style color=#00ffffff size=1>.</style>            sum  is the MD5 checksum of the file's contents
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/install/applylog.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/install/logs.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/install/updatelog.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=fs(1)>fs(1)</action>, <action name=kfs(4)>kfs(4)</action>, <action name=proto(6)>proto(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,108 @@
+<action name=COLLAB-CLIENTS(1)>COLLAB-CLIENTS(1)</action>                               <action name=COLLAB-CLIENTS(1)>COLLAB-CLIENTS(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            collab: chat, poll, poller, whiteboard - collaborative
+<style color=#00ffffff size=1>.</style>            activities
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            collab/clients/chat \[ servicedir \] chatroom
+
+<style color=#00ffffff size=1>.</style>            collab/clients/poll \[ -d \] \[ servicedir \] station
+
+<style color=#00ffffff size=1>.</style>            collab/clients/poller \[ -d \] \[ servicedir \] station
+
+<style color=#00ffffff size=1>.</style>            collab/clients/whiteboard \[ servicedir \] id
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These commands are <action name=wm(1)>wm(1)</action> programs that are clients of the
+<style color=#00ffffff size=1>.</style>            services of <action name=collabsrv(8)>collabsrv(8)</action>. It must therefore be running in
+<style color=#00ffffff size=1>.</style>            the network for any of them to be usable. Furthermore,
+<style color=#00ffffff size=1>.</style>            collabsrv's service directory must appear somewhere in the
+<style color=#00ffffff size=1>.</style>            client's name space, for instance by using <action name=connect(1)>connect(1)</action>,
+<style color=#00ffffff size=1>.</style>            although plain mount (see <action name=bind(1)>bind(1)</action>) can also be used. In all
+<style color=#00ffffff size=1>.</style>            cases, the optional parameter servicedir names the service
+<style color=#00ffffff size=1>.</style>            directory (default: /n/remote/services). Finally, collabsrv
+<style color=#00ffffff size=1>.</style>            must be configured to provide the service.
+
+<style color=#00ffffff size=1>.</style>            Chat is a simple multi-user chat program. Each user that
+<style color=#00ffffff size=1>.</style>            wishes to chat starts chat naming the desired chatroom,
+<style color=#00ffffff size=1>.</style>            which is an identifying string agreed amongst the clients.
+<style color=#00ffffff size=1>.</style>            (It is often convenient to use the path name of a shared
+<style color=#00ffffff size=1>.</style>            file.) Chat attempts to enter the given chatroom. It
+<style color=#00ffffff size=1>.</style>            announces the results of the connection, and if successful,
+<style color=#00ffffff size=1>.</style>            displays subsequent chat room messages. Its window provides
+<style color=#00ffffff size=1>.</style>            a scrollable text area that forms a transcript of the
+<style color=#00ffffff size=1>.</style>            current conversation, and a single line of editable text at
+<style color=#00ffffff size=1>.</style>            the bottom of the window for sending messages. Messages sent
+<style color=#00ffffff size=1>.</style>            by others appear in the transcript tagged with the sender's
+<style color=#00ffffff size=1>.</style>            name. When the user types a new line (return, enter) in the
+<style color=#00ffffff size=1>.</style>            text entry area, chat sends the text to all the members of
+<style color=#00ffffff size=1>.</style>            the chat room, and it subsequently appears in the user's own
+<style color=#00ffffff size=1>.</style>            transcript, tagged with <you> in place of the user's name.
+<style color=#00ffffff size=1>.</style>            Chat also notes in the transcript the arrival and departure
+<style color=#00ffffff size=1>.</style>            of other users.
+
+<style color=#00ffffff size=1>.</style>            Poll and poller together enable simple real-time polls. One
+<style color=#00ffffff size=1>.</style>            user runs poller, which activates the given polling station.
+<style color=#00ffffff size=1>.</style>            The other users can subsequently join using poll, naming the
+<style color=#00ffffff size=1>.</style>            same station, and can come and go as they please as long as
+<style color=#00ffffff size=1>.</style>            the poller remains. The polling station closes when the
+<style color=#00ffffff size=1>.</style>            poller leaves.
+
+<style color=#00ffffff size=1>.</style>            Poller drives the interaction for a sequence of one or more
+<style color=#00ffffff size=1>.</style>            real-time polls. It is assumed that the poller is in the
+<style color=#00ffffff size=1>.</style>            same room as those polled, allowing the questions and
+<style color=#00ffffff size=1>.</style>            answers to be read out each time, as in quiz shows and exit
+<style color=#00ffffff size=1>.</style>            polls. Alternatively, something like chat could be used to
+<style color=#00ffffff size=1>.</style>            pose questions to a distant audience. For each poll, the
+<style color=#00ffffff size=1>.</style>            polling user selects, in poller's window, the number of
+<style color=#00ffffff size=1>.</style>            possible answers (2, 3, or 4) using radio buttons, and hits
+<style color=#00ffffff size=1>.</style>            the Start button. A bar chart shows results as they come in:
+<style color=#00ffffff size=1>.</style>            each bar shows the percentage of those polled (thus far)
+<style color=#00ffffff size=1>.</style>            that have selected the corresponding alternative. Once the
+<style color=#00ffffff size=1>.</style>            polling user hits Stop, no further results are accepted, and
+<style color=#00ffffff size=1>.</style>            the bar chart represents the final result. The -d option
+<style color=#00ffffff size=1>.</style>            causes poller to display a debugging transcript of the
+<style color=#00ffffff size=1>.</style>            messages it receives.
+
+<style color=#00ffffff size=1>.</style>            Each user being polled runs poll, and initially sees an
+<style color=#00ffffff size=1>.</style>            array of radio buttons with labels A, B, C and D. They
+<style color=#00ffffff size=1>.</style>            remain disabled until the poller hits Start, at which point
+<style color=#00ffffff size=1>.</style>            poll enables as many radio buttons as allowed by the poller
+<style color=#00ffffff size=1>.</style>            for this round. If the user selects a button, poll
+<style color=#00ffffff size=1>.</style>            immediately send the selection to the polling station (and
+<style color=#00ffffff size=1>.</style>            thus to the poller), and disables all the buttons, although
+<style color=#00ffffff size=1>.</style>            the user's selection remains marked. All buttons are also
+<style color=#00ffffff size=1>.</style>            disabled when the poller says to stop, whether or not a
+<style color=#00ffffff size=1>.</style>            choice has been made. Buttons are enabled again at the start
+<style color=#00ffffff size=1>.</style>            of the next question. The -d option causes poll to display a
+<style color=#00ffffff size=1>.</style>            debugging transcript.
+
+<style color=#00ffffff size=1>.</style>            Whiteboard allows several users to draw on the shared canvas
+<style color=#00ffffff size=1>.</style>            with the given id, which is an identifying string agreed
+<style color=#00ffffff size=1>.</style>            amongst the clients. The whiteboard window contains a canvas
+<style color=#00ffffff size=1>.</style>            to be drawn on with stylus, or mouse button 1. Strokes drawn
+<style color=#00ffffff size=1>.</style>            in a given whiteboard appear in all others with the same
+<style color=#00ffffff size=1>.</style>            board id. There are two controls at the bottom of the
+<style color=#00ffffff size=1>.</style>            window: the lower left-hand corner has a small pop-up menu
+<style color=#00ffffff size=1>.</style>            of brush shapes, including one for erasing\; and a long
+<style color=#00ffffff size=1>.</style>            coloured button showing the current drawing colour that pops
+<style color=#00ffffff size=1>.</style>            up a choice of drawing colour from a palette. Artists can
+<style color=#00ffffff size=1>.</style>            come and go as they please, but the drawing vanishes for
+<style color=#00ffffff size=1>.</style>            ever when the last artist leaves the whiteboard.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /n/remote           default mount point of collaborative
+<style color=#00ffffff size=1>.</style>                                resources
+<style color=#00ffffff size=1>.</style>            /n/remote/services  <action name=collabsrv(8)>collabsrv(8)</action> collaborative activity
+<style color=#00ffffff size=1>.</style>                                services directory
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/collab/clients/chat.b
+<style color=#00ffffff size=1>.</style>            /appl/collab/clients/poll.b
+<style color=#00ffffff size=1>.</style>            /appl/collab/clients/poller.b
+<style color=#00ffffff size=1>.</style>            /appl/collab/clients/whiteboard.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=connect(1)>connect(1)</action>, <action name=collabsrv(8)>collabsrv(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

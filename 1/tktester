@@ -1,0 +1,224 @@
+<action name=TKTESTER(1)>TKTESTER(1)</action>                                           <action name=TKTESTER(1)>TKTESTER(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tktester - test Tk widgets and help design Tk layouts
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wm/tktester \[ -import \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Tktester not only tests the <action name=tk(2)>tk(2)</action> widget implementation but
+<style color=#00ffffff size=1>.</style>            can help when designing Tk application layouts. Its main
+<style color=#00ffffff size=1>.</style>            window contains the design area where widgets are placed and
+<style color=#00ffffff size=1>.</style>            edited. Most of the commands for creating and moving widgets
+<style color=#00ffffff size=1>.</style>            are located on the control bar just below the design area
+<style color=#00ffffff size=1>.</style>            although a few commands may be found in the menus at the top
+<style color=#00ffffff size=1>.</style>            of the window. Output is sent to the text box below the
+<style color=#00ffffff size=1>.</style>            control bar.  
+
+<style color=#00ffffff size=1>.</style>            Widget properties may be modified using the config window
+<style color=#00ffffff size=1>.</style>            and widget commands called from the command window.
+
+Main Window
+<style color=#00ffffff size=1>.</style>            This is split into four areas:
+
+<style color=#00ffffff size=1>.</style>         Menu Bar
+<style color=#00ffffff size=1>.</style>            This contains various file operations as well as a few
+<style color=#00ffffff size=1>.</style>            commands
+
+<style color=#00ffffff size=1>.</style>            File      New:	Starts a new file
+<style color=#00ffffff size=1>.</style>                      Open:		Opens a saved file
+<style color=#00ffffff size=1>.</style>                      Snarf:		Sends the current file to snarf
+<style color=#00ffffff size=1>.</style>                      Save:		Saves the current file
+<style color=#00ffffff size=1>.</style>                      Save as:	Asks for a new filename and then saves
+<style color=#00ffffff size=1>.</style>                      the file
+<style color=#00ffffff size=1>.</style>                      Exit:		Close tktester
+
+<style color=#00ffffff size=1>.</style>            Files are saved in the form of a list of tk commands. This
+<style color=#00ffffff size=1>.</style>            means that they can easily be imported into programs as part
+<style color=#00ffffff size=1>.</style>            of an array. Files to be loaded must have .f as the top
+<style color=#00ffffff size=1>.</style>            frame with no widgets outside it.
+
+<style color=#00ffffff size=1>.</style>            Row/Column
+<style color=#00ffffff size=1>.</style>                      The current row/column is the one in which the
+<style color=#00ffffff size=1>.</style>                      currently selected widget/empty cell is located
+<style color=#00ffffff size=1>.</style>                      Insert - inserts a new row/column either before or
+<style color=#00ffffff size=1>.</style>                      after the currently selected row/column Delete -
+<style color=#00ffffff size=1>.</style>                      deletes currently selected row/column Format -
+<style color=#00ffffff size=1>.</style>                      sets the properties for the current row/column
+
+<style color=#00ffffff size=1>.</style>            Hidden    Forget - removes the current widget from the
+<style color=#00ffffff size=1>.</style>                      display area but does not delete it. The widget
+<style color=#00ffffff size=1>.</style>                      name is then added to the 'Hidden' menu and can
+<style color=#00ffffff size=1>.</style>                      still be selected by clicking on its name there.
+<style color=#00ffffff size=1>.</style>                      This can be useful for operations which require
+<style color=#00ffffff size=1>.</style>                      widgets that are not currently packed e.g. placing
+<style color=#00ffffff size=1>.</style>                      a frame as a window within a canvas. Forgotten
+<style color=#00ffffff size=1>.</style>                      items will still be saved.
+
+<style color=#00ffffff size=1>.</style>            Disabled  This menu only appears when a widget has been
+<style color=#00ffffff size=1>.</style>                      disabled. In this state, button bindings are
+<style color=#00ffffff size=1>.</style>                      ignored so it becomes impossible to select the
+<style color=#00ffffff size=1>.</style>                      widget. When a widget is disabled, its name is
+<style color=#00ffffff size=1>.</style>                      automatically added to the 'Disabled' menu and can
+<style color=#00ffffff size=1>.</style>                      be selected from there.
+
+<style color=#00ffffff size=1>.</style>         Design Area
+<style color=#00ffffff size=1>.</style>            This is the main area of the main window where the widgets
+<style color=#00ffffff size=1>.</style>            are displayed. To select a widget, click on it with mouse
+<style color=#00ffffff size=1>.</style>            button 3, the control bar shows the name and other
+<style color=#00ffffff size=1>.</style>            information about the currently selected widget. Frames
+<style color=#00ffffff size=1>.</style>            themselves can only be selected by clicking on their label,
+<style color=#00ffffff size=1>.</style>            clicking elsewhere on the frame (if there is no widget
+<style color=#00ffffff size=1>.</style>            there) will select the empty cell, any new widget created
+<style color=#00ffffff size=1>.</style>            will be placed here. Once a widget has been selected, you
+<style color=#00ffffff size=1>.</style>            can move it by clicking on the empty destination cell with
+<style color=#00ffffff size=1>.</style>            mouse button 2. Individual widgets can be moved from one
+<style color=#00ffffff size=1>.</style>            frame to another but frames themselves can currently only be
+<style color=#00ffffff size=1>.</style>            moved within the same parent frame. Clicking mouse button 2
+<style color=#00ffffff size=1>.</style>            on a widget will delete that widget if the Free Delete
+<style color=#00ffffff size=1>.</style>            button on the control bar is on.
+
+<style color=#00ffffff size=1>.</style>         Control Bar
+<style color=#00ffffff size=1>.</style>            This is split into three different menus. To select the
+<style color=#00ffffff size=1>.</style>            different submenus, click on the >> at the end of the menu
+<style color=#00ffffff size=1>.</style>            title.
+
+<style color=#00ffffff size=1>.</style>            Data Menu
+
+<style color=#00ffffff size=1>.</style>            Widget    shows information about the current widget
+<style color=#00ffffff size=1>.</style>                      clicking on the Destroy button will delete the
+<style color=#00ffffff size=1>.</style>                      currently selected widget. The Free Delete button
+<style color=#00ffffff size=1>.</style>                      to the right of the Destroy button can be toggled
+<style color=#00ffffff size=1>.</style>                      on and off by clicking on it. When turned on (red
+<style color=#00ffffff size=1>.</style>                      background) , clicking mouse button 2 on a widget
+<style color=#00ffffff size=1>.</style>                      in the design area will delete it.
+
+<style color=#00ffffff size=1>.</style>            Grid      shows information about the current grid
+<style color=#00ffffff size=1>.</style>                      Clicking the Hide Labels button will hide the
+<style color=#00ffffff size=1>.</style>                      frame labels so that you can see what the screen
+<style color=#00ffffff size=1>.</style>                      will look like normally.
+
+<style color=#00ffffff size=1>.</style>            Position and Formatting Menu
+
+<style color=#00ffffff size=1>.</style>            Move      Move the widget within its current frame
+
+<style color=#00ffffff size=1>.</style>            Spanning  Change row and column spanning properties
+
+<style color=#00ffffff size=1>.</style>            Padding   Set cell padding, checkbox selects internal or
+<style color=#00ffffff size=1>.</style>                      external padding
+
+<style color=#00ffffff size=1>.</style>            Position  Adjust widget position, widget can be stretched if
+<style color=#00ffffff size=1>.</style>                      opposite positions are selected e.g. to flill
+<style color=#00ffffff size=1>.</style>                      horizontaly, select < and >
+
+<style color=#00ffffff size=1>.</style>            New Menu
+
+<style color=#00ffffff size=1>.</style>            Clicking on 'New' will bring up the pack menu, here you can
+<style color=#00ffffff size=1>.</style>            set packing to down or right. This is used when a new widget
+<style color=#00ffffff size=1>.</style>            is created. If the user has not selected an empty cell, the
+<style color=#00ffffff size=1>.</style>            new widget will be placed either below or to the right of
+<style color=#00ffffff size=1>.</style>            the currently selected widget. Clicking on '>>' will scroll
+<style color=#00ffffff size=1>.</style>            the buttons within the menu to the left to allow access to
+<style color=#00ffffff size=1>.</style>            those that might be off screen.
+
+<style color=#00ffffff size=1>.</style>         Output Box
+<style color=#00ffffff size=1>.</style>            Output and errors are reported here. This box may be hidden
+<style color=#00ffffff size=1>.</style>            by clicking on the grey button located at the bottom of the
+<style color=#00ffffff size=1>.</style>            main window.
+
+POPUP WINDOWS
+<style color=#00ffffff size=1>.</style>         Config Window
+<style color=#00ffffff size=1>.</style>            This window is opened by clicking on the red button located
+<style color=#00ffffff size=1>.</style>            at the bottom of the main window. To configure a widget's
+<style color=#00ffffff size=1>.</style>            options, the widget must be selected. To modify an option,
+<style color=#00ffffff size=1>.</style>            type the new value required into the relevant entry box and
+<style color=#00ffffff size=1>.</style>            click the 'set' button. Any output (including error
+<style color=#00ffffff size=1>.</style>            messages) returned will be sent to the output box.
+
+<style color=#00ffffff size=1>.</style>            There are two template buttons at the bottom of the config
+<style color=#00ffffff size=1>.</style>            window, set as default and save as default. Set will cause
+<style color=#00ffffff size=1>.</style>            each new widget of the same type to be created with the same
+<style color=#00ffffff size=1>.</style>            options as the currently selected widget. This default will
+<style color=#00ffffff size=1>.</style>            not be remembered once tktester has been closed. Save does
+<style color=#00ffffff size=1>.</style>            the same as set except the default is saved so it will be
+<style color=#00ffffff size=1>.</style>            not be lost if tktester is closed.
+
+<style color=#00ffffff size=1>.</style>            Default Template Options
+
+<style color=#00ffffff size=1>.</style>            %n   the name of the widget e.g. .f.f1.b2
+
+<style color=#00ffffff size=1>.</style>            %t   the widget type e.g. button
+
+<style color=#00ffffff size=1>.</style>            %i   the number of the widget
+
+<style color=#00ffffff size=1>.</style>            By default, each widget with a -text option is set to {%t
+<style color=#00ffffff size=1>.</style>            %i} e.g. button 2. Note: These options only work with
+<style color=#00ffffff size=1>.</style>            default templates, setting the -text option of a specific
+<style color=#00ffffff size=1>.</style>            button to {%t %i} will just cause '%t %i' to be displayed.
+
+<style color=#00ffffff size=1>.</style>         Command Window
+<style color=#00ffffff size=1>.</style>            This window is opened by clicking on the green button
+<style color=#00ffffff size=1>.</style>            located at the bottom of the main window. To call the
+<style color=#00ffffff size=1>.</style>            commands for a particular widget, the widget must be
+<style color=#00ffffff size=1>.</style>            selected. 
+
+<style color=#00ffffff size=1>.</style>            The command window is split into two listboxes and one entry
+<style color=#00ffffff size=1>.</style>            box. The first listbox contains all the main commands
+<style color=#00ffffff size=1>.</style>            available for the current widget type. Selecting a command
+<style color=#00ffffff size=1>.</style>            will bring up a list of subcommands (if they exist) in the
+<style color=#00ffffff size=1>.</style>            second listbox as well as displaying any arguments required
+<style color=#00ffffff size=1>.</style>            above the entrybox. To run a command, first select the
+<style color=#00ffffff size=1>.</style>            command (and any subcommand), then enter the required
+<style color=#00ffffff size=1>.</style>            arguments into the entry box and click run. The command, as
+<style color=#00ffffff size=1>.</style>            well as any output, is sent to the output box on the main
+<style color=#00ffffff size=1>.</style>            window. If no output is returned, the output box will
+<style color=#00ffffff size=1>.</style>            display 'ok'.
+
+OPTIONS
+<style color=#00ffffff size=1>.</style>            -import   Tells tktester to import valid widget commands
+<style color=#00ffffff size=1>.</style>                      from the man pages. This data is saved in the
+<style color=#00ffffff size=1>.</style>                      tkwargs/ directory, which must already exist.
+
+FILES
+<style color=#00ffffff size=1>.</style>            The file tkwargs/widgets must contain a list of widgets, one
+<style color=#00ffffff size=1>.</style>            per line as follows:
+
+<style color=#00ffffff size=1>.</style>                 \[name\] \[abv\]
+
+<style color=#00ffffff size=1>.</style>            with the fields separated by tabs or spaces. For example:
+
+<style color=#00ffffff size=1>.</style>                 menubutton mb
+<style color=#00ffffff size=1>.</style>                 listbox lb
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/tktester
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The command window sometimes lists a command more than once.
+<style color=#00ffffff size=1>.</style>            It does not matter which one is used.
+
+<style color=#00ffffff size=1>.</style>            In a saved file, any grid commands must put -row and -column
+<style color=#00ffffff size=1>.</style>            options before -rowspan or -columnspan.
+
+<style color=#00ffffff size=1>.</style>            Tktester can crash when loading a file if it is not in the
+<style color=#00ffffff size=1>.</style>            correct format.
+
+PROPOSED ADDITIONS
+<style color=#00ffffff size=1>.</style>         Allow renaming of widgets
+<style color=#00ffffff size=1>.</style>            At the moment, tktester can only load, save and use tk
+<style color=#00ffffff size=1>.</style>            commands where the widget names adhere to the format .abv\[n\]
+<style color=#00ffffff size=1>.</style>            where abv is the abreviation for the widget type e.g. b for
+<style color=#00ffffff size=1>.</style>            buttons, sb for scrollbars etc and n is an optional number.
+<style color=#00ffffff size=1>.</style>            It would be better to allow users to have more meaningful
+<style color=#00ffffff size=1>.</style>            names such as .f.fmenu. Implementing this would also make it
+<style color=#00ffffff size=1>.</style>            possible to load in commands written outside of tktester for
+<style color=#00ffffff size=1>.</style>            testing or modification purposes.
+
+<style color=#00ffffff size=1>.</style>         Column and Row indicators
+<style color=#00ffffff size=1>.</style>            This would more clearly show which rows and columns widgets
+<style color=#00ffffff size=1>.</style>            were in (especially when widgets are spanning more than
+<style color=#00ffffff size=1>.</style>            one). Also could be used to select individual rows and
+<style color=#00ffffff size=1>.</style>            columns more explicity and maybe for multiple selections.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

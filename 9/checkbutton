@@ -1,0 +1,191 @@
+<action name=CHECKBUTTON(9)>CHECKBUTTON(9)</action>                                     <action name=CHECKBUTTON(9)>CHECKBUTTON(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            checkbutton - Create and manipulate checkbutton widgets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            checkbutton pathname ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -activebackground -disabledcolor      -justify
+<style color=#00ffffff size=1>.</style>            -activeforeground -font               -relief
+<style color=#00ffffff size=1>.</style>            -anchor           -foreground         -takefocus
+<style color=#00ffffff size=1>.</style>            -background       -highlightcolor     -text
+<style color=#00ffffff size=1>.</style>            -bitmap           -highlightthickness -underline
+<style color=#00ffffff size=1>.</style>            -borderwidth      -image
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -command command
+<style color=#00ffffff size=1>.</style>                 Specifies a Tk command to associate with the button.
+<style color=#00ffffff size=1>.</style>                 This command is typically invoked when mouse button 1
+<style color=#00ffffff size=1>.</style>                 is released over the button window.  The button's
+<style color=#00ffffff size=1>.</style>                 global variable (-variable option) will be updated
+<style color=#00ffffff size=1>.</style>                 before the command is invoked.
+
+<style color=#00ffffff size=1>.</style>            -height dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired height for the button. If this
+<style color=#00ffffff size=1>.</style>                 option isn't specified, the button's desired height is
+<style color=#00ffffff size=1>.</style>                 computed from the size of the image or bitmap or text
+<style color=#00ffffff size=1>.</style>                 being displayed in it.
+
+<style color=#00ffffff size=1>.</style>            -indicatoron boolean
+<style color=#00ffffff size=1>.</style>                 Specifies whether or not the indicator should be drawn.
+<style color=#00ffffff size=1>.</style>                 If false, the relief option is ignored and the widget's
+<style color=#00ffffff size=1>.</style>                 relief is always sunken if the widget is selected and 
+<style color=#00ffffff size=1>.</style>                 raised otherwise.
+
+<style color=#00ffffff size=1>.</style>            -offvalue string
+<style color=#00ffffff size=1>.</style>                 Specifies value to store in the button's associated
+<style color=#00ffffff size=1>.</style>                 variable whenever this button is deselected.  Defaults
+<style color=#00ffffff size=1>.</style>                 to ``0''.
+
+<style color=#00ffffff size=1>.</style>            -onvalue string
+<style color=#00ffffff size=1>.</style>                 Specifies value to store in the button's associated
+<style color=#00ffffff size=1>.</style>                 variable whenever this button is selected.  Defaults to
+<style color=#00ffffff size=1>.</style>                 ``1''.
+
+<style color=#00ffffff size=1>.</style>            -selectcolor colour
+<style color=#00ffffff size=1>.</style>                 Specifies a background colour to use when the button is
+<style color=#00ffffff size=1>.</style>                 selected. If indicatoron is true then the colour
+<style color=#00ffffff size=1>.</style>                 applies to the indicator. If indicatoron is false, this
+<style color=#00ffffff size=1>.</style>                 colour is used as the background for the entire widget,
+<style color=#00ffffff size=1>.</style>                 in place of background or activebackground, whenever
+<style color=#00ffffff size=1>.</style>                 the widget is selected. If specified as an empty string
+<style color=#00ffffff size=1>.</style>                 then no special colour is used for displaying when the
+<style color=#00ffffff size=1>.</style>                 widget is selected.
+
+<style color=#00ffffff size=1>.</style>            -state state
+<style color=#00ffffff size=1>.</style>                 Specifies one of three states for the checkbutton:  
+<style color=#00ffffff size=1>.</style>                 normal, active, or disabled.  In normal state the
+<style color=#00ffffff size=1>.</style>                 checkbutton is displayed using the foreground and 
+<style color=#00ffffff size=1>.</style>                 background options.  The active state is typically used
+<style color=#00ffffff size=1>.</style>                 when the pointer is over the checkbutton.  In active
+<style color=#00ffffff size=1>.</style>                 state the checkbutton is displayed using the 
+<style color=#00ffffff size=1>.</style>                 activeforeground and activebackground options.
+<style color=#00ffffff size=1>.</style>                 Disabled state means that the checkbutton should be
+<style color=#00ffffff size=1>.</style>                 insensitive:  the default bindings will refuse to
+<style color=#00ffffff size=1>.</style>                 activate the widget and will ignore mouse button
+<style color=#00ffffff size=1>.</style>                 presses. In this state the disabledcolor and background
+<style color=#00ffffff size=1>.</style>                 options determine how the checkbutton is displayed.
+
+<style color=#00ffffff size=1>.</style>            -variable string
+<style color=#00ffffff size=1>.</style>                 Specifies name of global variable to set whenever this
+<style color=#00ffffff size=1>.</style>                 button is selected.  Changes in this variable also
+<style color=#00ffffff size=1>.</style>                 cause the button to select or deselect itself.
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired width for the button. If this
+<style color=#00ffffff size=1>.</style>                 option isn't specified, the button's desired width is
+<style color=#00ffffff size=1>.</style>                 computed from the size of the image or bitmap or text
+<style color=#00ffffff size=1>.</style>                 being displayed in it.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The checkbutton command creates a new window (given by the
+<style color=#00ffffff size=1>.</style>            pathname argument) and makes it into a checkbutton widget.
+<style color=#00ffffff size=1>.</style>            Additional options, described above, may be specified on the
+<style color=#00ffffff size=1>.</style>            command line to configure aspects of the checkbutton such as
+<style color=#00ffffff size=1>.</style>            its colours, font, text, and initial relief.  The 
+<style color=#00ffffff size=1>.</style>            checkbutton command returns its pathname argument.  At the
+<style color=#00ffffff size=1>.</style>            time this command is invoked, there must not exist a window
+<style color=#00ffffff size=1>.</style>            named pathname.
+
+<style color=#00ffffff size=1>.</style>            A checkbutton is a widget that displays a textual string,
+<style color=#00ffffff size=1>.</style>            bitmap or image and a square called an indicator. If text is
+<style color=#00ffffff size=1>.</style>            displayed, it must all be in a single font, but it can
+<style color=#00ffffff size=1>.</style>            occupy multiple lines on the screen (if it contains
+<style color=#00ffffff size=1>.</style>            newlines) and one of the characters may optionally be
+<style color=#00ffffff size=1>.</style>            underlined using the underline option. A checkbutton has all
+<style color=#00ffffff size=1>.</style>            of the behaviour of a simple button, including the
+<style color=#00ffffff size=1>.</style>            following: it can display itself in either of three
+<style color=#00ffffff size=1>.</style>            different ways, according to the state option\; it can be
+<style color=#00ffffff size=1>.</style>            made to appear raised, sunken, or flat\; and it invokes a Tk
+<style color=#00ffffff size=1>.</style>            command whenever mouse button 1 is clicked over the
+<style color=#00ffffff size=1>.</style>            checkbutton.
+
+<style color=#00ffffff size=1>.</style>            In addition, checkbuttons can be selected. If a checkbutton
+<style color=#00ffffff size=1>.</style>            is selected then the indicator is normally drawn with a
+<style color=#00ffffff size=1>.</style>            sunken relief and a tick (check) mark, and a Tk variable
+<style color=#00ffffff size=1>.</style>            associated with the checkbutton is set to the onvalue
+<style color=#00ffffff size=1>.</style>            (normally 1). If the checkbutton is not selected, then the
+<style color=#00ffffff size=1>.</style>            indicator is drawn as an empty box with raised relief, and
+<style color=#00ffffff size=1>.</style>            the associated variable is set to the offvalue (normally 0).
+<style color=#00ffffff size=1>.</style>            The variable name may be modified with options on the
+<style color=#00ffffff size=1>.</style>            command line (-variable option). Configuration options may
+<style color=#00ffffff size=1>.</style>            also be used to modify the way the indicator is displayed
+<style color=#00ffffff size=1>.</style>            (or whether it is displayed at all). By default a
+<style color=#00ffffff size=1>.</style>            checkbutton is configured to select and deselect itself on
+<style color=#00ffffff size=1>.</style>            alternate button clicks.
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The checkbutton command creates a new Tk command whose name
+<style color=#00ffffff size=1>.</style>            is pathname.  This command may be used to invoke various
+<style color=#00ffffff size=1>.</style>            operations on the widget.  It has the following general
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathname option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            Option and the args determine the exact behaviour of the
+<style color=#00ffffff size=1>.</style>            command.  The following commands are possible for
+<style color=#00ffffff size=1>.</style>            checkbutton widgets:
+
+<style color=#00ffffff size=1>.</style>            pathname cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the checkbutton command.
+
+<style color=#00ffffff size=1>.</style>            pathname configure ?option? ?value option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathname.  If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, then the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the checkbutton command.
+
+<style color=#00ffffff size=1>.</style>            pathname deselect
+<style color=#00ffffff size=1>.</style>                 Deselects the checkbutton and sets the associated
+<style color=#00ffffff size=1>.</style>                 variable to its ``off'' value.
+
+<style color=#00ffffff size=1>.</style>            pathname invoke
+<style color=#00ffffff size=1>.</style>                 Does just what would have happened if the user invoked
+<style color=#00ffffff size=1>.</style>                 the checkbutton with the mouse: toggle the selection
+<style color=#00ffffff size=1>.</style>                 state of the button and invoke the Tk command
+<style color=#00ffffff size=1>.</style>                 associated with the checkbutton, if there is one. The
+<style color=#00ffffff size=1>.</style>                 return value is the return value from the Tk command,
+<style color=#00ffffff size=1>.</style>                 or an empty string if there is no command associated
+<style color=#00ffffff size=1>.</style>                 with the checkbutton. This command is ignored if the
+<style color=#00ffffff size=1>.</style>                 checkbutton's state is disabled.
+
+<style color=#00ffffff size=1>.</style>            pathname select
+<style color=#00ffffff size=1>.</style>                 Selects the checkbutton and sets the associated
+<style color=#00ffffff size=1>.</style>                 variable to 1.
+
+<style color=#00ffffff size=1>.</style>            pathname toggle
+<style color=#00ffffff size=1>.</style>                 Toggles the selection state of the button, redisplaying
+<style color=#00ffffff size=1>.</style>                 it and modifying its associated variable to reflect the
+<style color=#00ffffff size=1>.</style>                 new state.
+
+BINDINGS
+<style color=#00ffffff size=1>.</style>            Tk automatically creates bindings for checkbuttons that give
+<style color=#00ffffff size=1>.</style>            them the following default behaviour:
+
+<style color=#00ffffff size=1>.</style>            \[1\]  A checkbutton activates whenever the mouse passes over
+<style color=#00ffffff size=1>.</style>                 it and deactivates whenever the mouse leaves the
+<style color=#00ffffff size=1>.</style>                 checkbutton.
+
+<style color=#00ffffff size=1>.</style>            \[2\]  When mouse button 1 is pressed over a checkbutton it is
+<style color=#00ffffff size=1>.</style>                 invoked (its selection state toggles and the command
+<style color=#00ffffff size=1>.</style>                 associated with the button is invoked, if there is
+<style color=#00ffffff size=1>.</style>                 one).
+
+<style color=#00ffffff size=1>.</style>            If the checkbutton's state is disabled then none of the
+<style color=#00ffffff size=1>.</style>            above actions occur:  the checkbutton is completely
+<style color=#00ffffff size=1>.</style>            non-responsive.
+
+<style color=#00ffffff size=1>.</style>            The behaviour of checkbuttons can be changed by defining new
+<style color=#00ffffff size=1>.</style>            bindings for individual widgets.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=button(9)>button(9)</action>, choice<action name=button(9)>button(9)</action>, <action name=options(9)>options(9)</action>, <action name=radio<action name=button(9)>button(9)</action>>radio<action name=button(9)>button(9)</action></action>,
+<style color=#00ffffff size=1>.</style>            <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

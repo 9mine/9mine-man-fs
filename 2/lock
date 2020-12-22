@@ -1,0 +1,36 @@
+<action name=LOCK(2)>LOCK(2)</action>                                                   <action name=LOCK(2)>LOCK(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            lock - thread locking.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "lock.m"\;
+<style color=#00ffffff size=1>.</style>            lock := load Lock Lock->PATH\;
+<style color=#00ffffff size=1>.</style>            Semaphore: adt {
+<style color=#00ffffff size=1>.</style>            	c: chan of int\;
+<style color=#00ffffff size=1>.</style>            	obtain: fn(s: self ref Semaphore)\;
+<style color=#00ffffff size=1>.</style>            	release: fn(s: self ref Semaphore)\;
+<style color=#00ffffff size=1>.</style>            	new: fn(): ref Semaphore\;
+<style color=#00ffffff size=1>.</style>            }\;
+<style color=#00ffffff size=1>.</style>            init: fn()\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Lock provides semaphore-based mutual exclusion. Init must be
+<style color=#00ffffff size=1>.</style>            called before creating any locks.
+
+<style color=#00ffffff size=1>.</style>            Semaphore.new()
+<style color=#00ffffff size=1>.</style>                 Creates and returns a reference to a new Semaphore
+<style color=#00ffffff size=1>.</style>                 (lock).
+
+<style color=#00ffffff size=1>.</style>            s.obtain()
+<style color=#00ffffff size=1>.</style>                 Obtains exclusive access to the lock s. It will block
+<style color=#00ffffff size=1>.</style>                 until it can do so.
+
+<style color=#00ffffff size=1>.</style>            s.release()
+<style color=#00ffffff size=1>.</style>                 Releases access to the lock s and allows processes
+<style color=#00ffffff size=1>.</style>                 waiting on it to proceed.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/lock.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

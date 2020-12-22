@@ -1,0 +1,54 @@
+<action name=EBOOK(1)>EBOOK(1)</action>                                                 <action name=EBOOK(1)>EBOOK(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ebook - Open Ebook browser
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ebook/ebook \[ -m \] file
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ebook provides a graphical browser for a set of files in
+<style color=#00ffffff size=1>.</style>            Open eBook (OEB) version 1.0.1 format. It takes some care to
+<style color=#00ffffff size=1>.</style>            try to ensure that memory usage does not grow proportionally
+<style color=#00ffffff size=1>.</style>            to the size of the book that is being viewed. File names
+<style color=#00ffffff size=1>.</style>            either an OEB package file (conventional suffix .opf) or an
+<style color=#00ffffff size=1>.</style>            OEB document (conventional suffix .html or .xml). The -m
+<style color=#00ffffff size=1>.</style>            option causes the window to be created in ``mini'' size as
+<style color=#00ffffff size=1>.</style>            suitable for display on a 240x320 pixel device.
+
+<style color=#00ffffff size=1>.</style>         GUI controls
+<style color=#00ffffff size=1>.</style>            Controls at the top of the window enable the user to move
+<style color=#00ffffff size=1>.</style>            forward and backwards by pages through the document. A
+<style color=#00ffffff size=1>.</style>            ``Guide'' menu provides access to the guide as found in the
+<style color=#00ffffff size=1>.</style>            ebook package (if there is one). If the links in this are
+<style color=#00ffffff size=1>.</style>            followed, or if the reader follows links embedded within the
+<style color=#00ffffff size=1>.</style>            document, the up and down arrows enable moving backwards and
+<style color=#00ffffff size=1>.</style>            forwards in the ``link history''. Arrows on the keyboard
+<style color=#00ffffff size=1>.</style>            mimic the actions of the buttons at the top of the window.
+
+<style color=#00ffffff size=1>.</style>            Clicking in the text allows an annotation to made on the
+<style color=#00ffffff size=1>.</style>            text\; a text window is popped up and any text typed in it
+<style color=#00ffffff size=1>.</style>            will appear in a label attached to that text. Annotations
+<style color=#00ffffff size=1>.</style>            are stored in persistent storage and will last from view to
+<style color=#00ffffff size=1>.</style>            view of the document.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/ebook/default.css  Initial stylesheet settings.
+<style color=#00ffffff size=1>.</style>            document .index         Index file for the OEB document, one
+<style color=#00ffffff size=1>.</style>                                    display size only.
+<style color=#00ffffff size=1>.</style>            document .annot         Annotations for the OEB document.
+<style color=#00ffffff size=1>.</style>            /lib/ebooks             Standard place to keep ebooks.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/ebook
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=xml(2)>xml(2)</action>, ``The Open eBook Publication Structure 1.0.1''
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Does not do floats.
+<style color=#00ffffff size=1>.</style>            Does not do borders & backgrounds properly.
+<style color=#00ffffff size=1>.</style>            Large top-level constructs are not bounded in memory usage.
+<style color=#00ffffff size=1>.</style>            Does not do links to external documents.
+<style color=#00ffffff size=1>.</style>            Does not do fallbacks.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

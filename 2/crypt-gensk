@@ -1,0 +1,124 @@
+<action name=CRYPT-GENSK(2)>CRYPT-GENSK(2)</action>                                     <action name=CRYPT-GENSK(2)>CRYPT-GENSK(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            crypt: genSK, genSKfromPK, sktopk, dhparams, sign, verify -
+<style color=#00ffffff size=1>.</style>            generate keys and digital signatures
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "ipints.m"\;
+<style color=#00ffffff size=1>.</style>            ipints := load IPints IPints->PATH\;
+<style color=#00ffffff size=1>.</style>            IPint: import ipints\;
+
+<style color=#00ffffff size=1>.</style>            include "crypt.m"\;
+<style color=#00ffffff size=1>.</style>            crypt := load Crypt Crypt->PATH\;
+
+<style color=#00ffffff size=1>.</style>            PK: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                pick {
+<style color=#00ffffff size=1>.</style>                RSA =>
+<style color=#00ffffff size=1>.</style>                    n:     ref IPint\;   # modulus
+<style color=#00ffffff size=1>.</style>                    ek:    ref IPint\;   # exp (encryption key)
+<style color=#00ffffff size=1>.</style>                Elgamal =>
+<style color=#00ffffff size=1>.</style>                    p:     ref IPint\;   # modulus
+<style color=#00ffffff size=1>.</style>                    alpha: ref IPint\;   # generator
+<style color=#00ffffff size=1>.</style>                    key:   ref IPint\;   # encryption key (alpha**secret mod p)
+<style color=#00ffffff size=1>.</style>                DSA =>
+<style color=#00ffffff size=1>.</style>                    p:     ref IPint\;   # modulus
+<style color=#00ffffff size=1>.</style>                    q:     ref IPint\;   # group order, q divides p-1
+<style color=#00ffffff size=1>.</style>                    alpha: ref IPint\;   # group generator
+<style color=#00ffffff size=1>.</style>                    key:   ref IPint\;   # encryption key (alpha**secret mod p)
+<style color=#00ffffff size=1>.</style>                }
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            SK: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                pick {
+<style color=#00ffffff size=1>.</style>                RSA =>
+<style color=#00ffffff size=1>.</style>                    pk:     ref PK.RSA\;
+<style color=#00ffffff size=1>.</style>                    dk:     ref IPint\;   # exp (decryption key)
+<style color=#00ffffff size=1>.</style>                    p:      ref IPint\;   # q in pkcs
+<style color=#00ffffff size=1>.</style>                    q:      ref IPint\;   # p in pkcs
+<style color=#00ffffff size=1>.</style>                    # precomputed crt values
+<style color=#00ffffff size=1>.</style>                    kp:     ref IPint\;   # k mod p-1
+<style color=#00ffffff size=1>.</style>                    kq:     ref IPint\;   # k mod q-1
+<style color=#00ffffff size=1>.</style>                    c2:     ref IPint\;   # for converting residues to number
+<style color=#00ffffff size=1>.</style>                Elgamal =>
+<style color=#00ffffff size=1>.</style>                    pk:     ref PK.Elgamal\;
+<style color=#00ffffff size=1>.</style>                    secret: ref IPint\;   # decryption key
+<style color=#00ffffff size=1>.</style>                DSA =>
+<style color=#00ffffff size=1>.</style>                    pk:     ref PK.DSA\;
+<style color=#00ffffff size=1>.</style>                    secret: ref IPint\;   # decryption key
+<style color=#00ffffff size=1>.</style>                }
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            PKsig: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                pick {
+<style color=#00ffffff size=1>.</style>                RSA =>
+<style color=#00ffffff size=1>.</style>                    n:  ref IPint\;
+<style color=#00ffffff size=1>.</style>                Elgamal =>
+<style color=#00ffffff size=1>.</style>                    r:  ref IPint\;
+<style color=#00ffffff size=1>.</style>                    s:  ref IPint\;
+<style color=#00ffffff size=1>.</style>                DSA =>
+<style color=#00ffffff size=1>.</style>                    r:  ref IPint\;
+<style color=#00ffffff size=1>.</style>                    s:  ref IPint\;
+<style color=#00ffffff size=1>.</style>                }
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            genSK:       fn(algname: string, length: int): ref SK\;
+<style color=#00ffffff size=1>.</style>            genSKfromPK: fn(pk: ref PK): ref SK\;
+<style color=#00ffffff size=1>.</style>            sktopk:      fn(sk: ref SK): ref PK\;
+
+<style color=#00ffffff size=1>.</style>            sign:        fn(sk: ref SK, m: ref IPint): ref PKsig\;
+<style color=#00ffffff size=1>.</style>            verify:      fn(pk: ref PK, sig: ref PKsig, m: ref IPint): int\;
+
+<style color=#00ffffff size=1>.</style>            dhparams:    fn(nbits: int): (ref IPint, ref IPint)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Crypt implements a set of public-key signature algorithms.
+<style color=#00ffffff size=1>.</style>            The public/private key pairs are represented by values of
+<style color=#00ffffff size=1>.</style>            the adt SK, containing both the private (secret) and public
+<style color=#00ffffff size=1>.</style>            parts of the pair, and PK, containing only the public part.
+<style color=#00ffffff size=1>.</style>            The several algorithms are represented by different pick
+<style color=#00ffffff size=1>.</style>            variants.
+
+<style color=#00ffffff size=1>.</style>            GenSK generates a new public/private key pair, represented
+<style color=#00ffffff size=1>.</style>            by SK. Algname is the name of the algorithm to use\; in the
+<style color=#00ffffff size=1>.</style>            current implementation, dsa, elgamal and rsa are possible.
+<style color=#00ffffff size=1>.</style>            Length gives the length of the key modulus in bits. GenSK
+<style color=#00ffffff size=1>.</style>            returns nil if an unknown algorithm has been specified.
+
+<style color=#00ffffff size=1>.</style>            GenSKfromPK generates a private key that has the system
+<style color=#00ffffff size=1>.</style>            parameters as the public key pk. It is used to generate new
+<style color=#00ffffff size=1>.</style>            keys that are of the same complexity as old keys.
+
+<style color=#00ffffff size=1>.</style>            Sktopk returns a reference to the public part of private key
+<style color=#00ffffff size=1>.</style>            sk.
+
+<style color=#00ffffff size=1>.</style>            Sign creates a digital signature of a message m, represented
+<style color=#00ffffff size=1>.</style>            by an IPint, using the private key sk. Typically m
+<style color=#00ffffff size=1>.</style>            represents a secure hash (eg, using <action name=crypt-sha1(2)>crypt-sha1(2)</action>) of a much
+<style color=#00ffffff size=1>.</style>            larger message.
+
+<style color=#00ffffff size=1>.</style>            Verify uses public key pk to verify that the value sig is a
+<style color=#00ffffff size=1>.</style>            digital signature of the message m using the private key
+<style color=#00ffffff size=1>.</style>            corresponding to pk. It returns non-zero (true) if the
+<style color=#00ffffff size=1>.</style>            signature is valid\; zero (false) otherwise.
+
+<style color=#00ffffff size=1>.</style>            Most applications use generic operations on public and
+<style color=#00ffffff size=1>.</style>            private keys, referring to PK and SK, but specific variants
+<style color=#00ffffff size=1>.</style>            can be named, such as PK.RSA for RSA keys, allowing use of
+<style color=#00ffffff size=1>.</style>            RSA-specific operations. <action name=Crypt-dsagen(2)>Crypt-dsagen(2)</action> describes functions
+<style color=#00ffffff size=1>.</style>            for key generation that are specific to various algorithms,
+<style color=#00ffffff size=1>.</style>            using algorithm-specific parameters.
+
+<style color=#00ffffff size=1>.</style>            Dhparams creates Diffie-Hellman parameters. It returns a
+<style color=#00ffffff size=1>.</style>            tuple of IPints (alpha,p). P is an nbits long prime number
+<style color=#00ffffff size=1>.</style>            that serves as the modulus. Alpha is a primitive root in the
+<style color=#00ffffff size=1>.</style>            integer field defined by that modulus.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=crypt-dsagen(2)>crypt-dsagen(2)</action>, <action name=crypt-sha1(2)>crypt-sha1(2)</action>, <action name=security-auth(2)>security-auth(2)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=security-oldauth(2)>security-oldauth(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

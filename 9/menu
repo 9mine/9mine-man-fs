@@ -1,0 +1,463 @@
+<action name=MENU(9)>MENU(9)</action>                                                   <action name=MENU(9)>MENU(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            menu - Create and manipulate menu widgets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            menu pathName ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -activebackground -borderwidth   -foreground
+<style color=#00ffffff size=1>.</style>            -activeforeground -disabledcolor -relief
+<style color=#00ffffff size=1>.</style>            -background       -font
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -postcommand command
+<style color=#00ffffff size=1>.</style>                 If this option is specified then it provides a Tk
+<style color=#00ffffff size=1>.</style>                 command to execute each time the menu is posted.  The
+<style color=#00ffffff size=1>.</style>                 command is invoked by the post widget command before
+<style color=#00ffffff size=1>.</style>                 posting the menu.
+
+<style color=#00ffffff size=1>.</style>            -selectcolor colour
+<style color=#00ffffff size=1>.</style>                 For menu entries that are check buttons or radio
+<style color=#00ffffff size=1>.</style>                 buttons, this option specifies the colour to display in
+<style color=#00ffffff size=1>.</style>                 the indicator when the check button or radio button is
+<style color=#00ffffff size=1>.</style>                 selected.
+
+INTRODUCTION
+<style color=#00ffffff size=1>.</style>            The menu command creates a new top-level window (given by
+<style color=#00ffffff size=1>.</style>            the pathName argument) and makes it into a menu widget.
+<style color=#00ffffff size=1>.</style>            Additional options, described above, may be specified on the
+<style color=#00ffffff size=1>.</style>            command line to configure aspects of the menu such as its
+<style color=#00ffffff size=1>.</style>            colours and font. The menu command returns its pathName
+<style color=#00ffffff size=1>.</style>            argument.  At the time this command is invoked, there must
+<style color=#00ffffff size=1>.</style>            not exist a window named pathName.
+
+<style color=#00ffffff size=1>.</style>            A menu is a widget that displays a collection of one-line
+<style color=#00ffffff size=1>.</style>            entries arranged in a column.  There exist several different
+<style color=#00ffffff size=1>.</style>            types of entries, each with different properties.  Entries
+<style color=#00ffffff size=1>.</style>            of different types may be combined in a single menu.  Menu
+<style color=#00ffffff size=1>.</style>            entries are not the same as entry widgets.  In fact, menu
+<style color=#00ffffff size=1>.</style>            entries are not even distinct widgets\; the entire menu is
+<style color=#00ffffff size=1>.</style>            one widget.
+
+<style color=#00ffffff size=1>.</style>            Menu entries are displayed with up to three separate fields.
+<style color=#00ffffff size=1>.</style>            The main field is a label in the form of a text string, a
+<style color=#00ffffff size=1>.</style>            bitmap, or an image, controlled by the -label, -bitmap, and 
+<style color=#00ffffff size=1>.</style>            -image options for the entry. The second field is a marker
+<style color=#00ffffff size=1>.</style>            for cascade entries, showing that the entry will post a
+<style color=#00ffffff size=1>.</style>            cascade menu. It is displayed at the right-hand edge of the
+<style color=#00ffffff size=1>.</style>            entry. The third field is an indicator.  The indicator is
+<style color=#00ffffff size=1>.</style>            present only for checkbutton or radiobutton entries.  It
+<style color=#00ffffff size=1>.</style>            indicates whether the entry is selected or not, and is
+<style color=#00ffffff size=1>.</style>            displayed to the left of the entry's string.
+
+<style color=#00ffffff size=1>.</style>            In normal use, an entry becomes active (displays itself
+<style color=#00ffffff size=1>.</style>            differently) whenever the mouse pointer is over the entry.
+<style color=#00ffffff size=1>.</style>            If a mouse button is released over the entry then the entry
+<style color=#00ffffff size=1>.</style>            is invoked. The effect of invocation is different for each
+<style color=#00ffffff size=1>.</style>            type of entry\; these effects are described below in the
+<style color=#00ffffff size=1>.</style>            sections on individual entries.
+
+<style color=#00ffffff size=1>.</style>            Entries may be disabled, which causes their labels and
+<style color=#00ffffff size=1>.</style>            accelerators to be displayed with dimmer colours. The
+<style color=#00ffffff size=1>.</style>            default menu bindings will not allow a disabled entry to be
+<style color=#00ffffff size=1>.</style>            activated or invoked. Disabled entries may be re-enabled, at
+<style color=#00ffffff size=1>.</style>            which point it becomes possible to activate and invoke them
+<style color=#00ffffff size=1>.</style>            again.
+
+COMMAND ENTRIES
+<style color=#00ffffff size=1>.</style>            The most common kind of menu entry is a command entry, which
+<style color=#00ffffff size=1>.</style>            behaves much like a button widget.  When a command entry is
+<style color=#00ffffff size=1>.</style>            invoked, a Tk command is executed.  The Tk command is
+<style color=#00ffffff size=1>.</style>            specified with the -command option.
+
+SEPARATOR ENTRIES
+<style color=#00ffffff size=1>.</style>            A separator is an entry that is displayed as a horizontal
+<style color=#00ffffff size=1>.</style>            dividing line.  A separator may not be activated or invoked,
+<style color=#00ffffff size=1>.</style>            and it has no behaviour other than its display appearance.
+
+CHECKBUTTON ENTRIES
+<style color=#00ffffff size=1>.</style>            A checkbutton menu entry behaves much like a checkbutton
+<style color=#00ffffff size=1>.</style>            widget. When it is invoked it toggles back and forth between
+<style color=#00ffffff size=1>.</style>            the selected and deselected states.  When the entry is
+<style color=#00ffffff size=1>.</style>            selected, the value ``1'' is stored in a particular global
+<style color=#00ffffff size=1>.</style>            variable (as determined by -variable option for the entry)\;
+<style color=#00ffffff size=1>.</style>            when the entry is deselected the value ``0'' is stored in
+<style color=#00ffffff size=1>.</style>            the global variable. An indicator box is displayed to the
+<style color=#00ffffff size=1>.</style>            left of the label in a checkbutton entry.  If the entry is
+<style color=#00ffffff size=1>.</style>            selected then the indicator's center is displayed in the
+<style color=#00ffffff size=1>.</style>            colour given by the -selectcolor option for the entry\;
+<style color=#00ffffff size=1>.</style>            otherwise the indicator's center is displayed in the
+<style color=#00ffffff size=1>.</style>            background colour for the menu.  If a -command option is
+<style color=#00ffffff size=1>.</style>            specified for a checkbutton entry, then its value is
+<style color=#00ffffff size=1>.</style>            evaluated as a Tk command each time the entry is invoked\;
+<style color=#00ffffff size=1>.</style>            this happens after toggling the entry's selected state.
+
+RADIOBUTTON ENTRIES
+<style color=#00ffffff size=1>.</style>            A radiobutton menu entry behaves much like a radiobutton
+<style color=#00ffffff size=1>.</style>            widget. Radiobutton entries are organized in groups of which
+<style color=#00ffffff size=1>.</style>            only one entry may be selected at a time.  Whenever a
+<style color=#00ffffff size=1>.</style>            particular entry becomes selected it stores a particular
+<style color=#00ffffff size=1>.</style>            value into a particular global variable (as determined by
+<style color=#00ffffff size=1>.</style>            the -value and -variable options for the entry).  This
+<style color=#00ffffff size=1>.</style>            action causes any previously-selected entry in the same
+<style color=#00ffffff size=1>.</style>            group to deselect itself. Once an entry has become selected,
+<style color=#00ffffff size=1>.</style>            any change to the entry's associated variable will cause the
+<style color=#00ffffff size=1>.</style>            entry to deselect itself. Grouping of radiobutton entries is
+<style color=#00ffffff size=1>.</style>            determined by their associated variables:  if two entries
+<style color=#00ffffff size=1>.</style>            have the same associated variable then they are in the same
+<style color=#00ffffff size=1>.</style>            group. An indicator diamond is displayed to the left of the
+<style color=#00ffffff size=1>.</style>            label in each radiobutton entry.  If the entry is selected
+<style color=#00ffffff size=1>.</style>            then the indicator's center is displayed in the colour given
+<style color=#00ffffff size=1>.</style>            by the -selectcolor option for the entry\; otherwise the
+<style color=#00ffffff size=1>.</style>            indicator's center is displayed in the background colour for
+<style color=#00ffffff size=1>.</style>            the menu.  If a -command option is specified for a
+<style color=#00ffffff size=1>.</style>            radiobutton entry, then its value is evaluated as a Tk
+<style color=#00ffffff size=1>.</style>            command each time the entry is invoked\;  this happens after
+<style color=#00ffffff size=1>.</style>            selecting the entry.
+
+CASCADE ENTRIES
+<style color=#00ffffff size=1>.</style>            A cascade entry is one with an associated menu (determined
+<style color=#00ffffff size=1>.</style>            by the -menu option).  Cascade entries allow the
+<style color=#00ffffff size=1>.</style>            construction of cascading menus. The postcascade widget
+<style color=#00ffffff size=1>.</style>            command can be used to post and unpost the associated menu
+<style color=#00ffffff size=1>.</style>            just to the right of the cascade entry. The associated menu
+<style color=#00ffffff size=1>.</style>            must be a child of the menu containing the cascade entry
+<style color=#00ffffff size=1>.</style>            (this is needed in order for menu traversal to work
+<style color=#00ffffff size=1>.</style>            correctly).
+
+<style color=#00ffffff size=1>.</style>            A cascade entry posts its associated menu by invoking a Tk
+<style color=#00ffffff size=1>.</style>            command of the form
+<style color=#00ffffff size=1>.</style>                 menu post x y
+<style color=#00ffffff size=1>.</style>            where menu is the path name of the associated menu, and x
+<style color=#00ffffff size=1>.</style>            and y are the screen coordinates of the upper-right corner
+<style color=#00ffffff size=1>.</style>            of the cascade entry. The lower-level menu is unposted by
+<style color=#00ffffff size=1>.</style>            executing a Tk command with the form
+<style color=#00ffffff size=1>.</style>                 menu unpost
+<style color=#00ffffff size=1>.</style>            where menu is the name of the associated menu.
+
+<style color=#00ffffff size=1>.</style>            If a -command option is specified for a cascade entry then
+<style color=#00ffffff size=1>.</style>            it is evaluated as a Tk command whenever the entry is
+<style color=#00ffffff size=1>.</style>            invoked.
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The menu command creates a new Tk command whose name is 
+<style color=#00ffffff size=1>.</style>            pathName.  This command may be used to invoke various
+<style color=#00ffffff size=1>.</style>            operations on the widget.  It has the following general
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathName option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            Option and the args determine the exact behaviour of the
+<style color=#00ffffff size=1>.</style>            command.
+
+<style color=#00ffffff size=1>.</style>            Many of the widget commands for a menu take as one argument
+<style color=#00ffffff size=1>.</style>            an indicator of which entry of the menu to operate on.
+<style color=#00ffffff size=1>.</style>            These indicators are called indexes and may be specified in
+<style color=#00ffffff size=1>.</style>            any of the following forms:
+
+<style color=#00ffffff size=1>.</style>            number      Specifies the entry numerically, where 0
+<style color=#00ffffff size=1>.</style>                        corresponds to the top-most entry of the menu, 1
+<style color=#00ffffff size=1>.</style>                        to the entry below it, and so on.
+
+<style color=#00ffffff size=1>.</style>            active      Indicates the entry that is currently active.
+<style color=#00ffffff size=1>.</style>                        If no entry is active then this form is
+<style color=#00ffffff size=1>.</style>                        equivalent to none.  This form may not be
+<style color=#00ffffff size=1>.</style>                        abbreviated.
+
+<style color=#00ffffff size=1>.</style>            end         Indicates the bottommost entry in the menu.  If
+<style color=#00ffffff size=1>.</style>                        there are no entries in the menu then this form
+<style color=#00ffffff size=1>.</style>                        is equivalent to none. This form may not be
+<style color=#00ffffff size=1>.</style>                        abbreviated.
+
+<style color=#00ffffff size=1>.</style>            none        Indicates ``no entry at all''\;  this is used
+<style color=#00ffffff size=1>.</style>                        most commonly with the activate option to
+<style color=#00ffffff size=1>.</style>                        deactivate all the entries in the menu.  In most
+<style color=#00ffffff size=1>.</style>                        cases the specification of none causes nothing
+<style color=#00ffffff size=1>.</style>                        to happen in the widget command. This form may
+<style color=#00ffffff size=1>.</style>                        not be abbreviated.
+
+<style color=#00ffffff size=1>.</style>            @number     In this form, number is treated as a
+<style color=#00ffffff size=1>.</style>                        y-coordinate in the menu's window\;  the entry
+<style color=#00ffffff size=1>.</style>                        closest to that y-coordinate is used. For
+<style color=#00ffffff size=1>.</style>                        example, ``@0'' indicates the top-most entry in
+<style color=#00ffffff size=1>.</style>                        the window.
+
+<style color=#00ffffff size=1>.</style>            The following widget commands are possible for menu widgets:
+
+<style color=#00ffffff size=1>.</style>            pathName activate index
+<style color=#00ffffff size=1>.</style>                 Change the state of the entry indicated by index to 
+<style color=#00ffffff size=1>.</style>                 active and redisplay it using its active colours. Any
+<style color=#00ffffff size=1>.</style>                 previously-active entry is deactivated.  If index is
+<style color=#00ffffff size=1>.</style>                 specified as none, or if the specified entry is
+<style color=#00ffffff size=1>.</style>                 disabled, then the menu ends up with no active entry.
+<style color=#00ffffff size=1>.</style>                 Returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName add type ?option value option value ...?
+<style color=#00ffffff size=1>.</style>                 Add a new entry to the bottom of the menu.  The new
+<style color=#00ffffff size=1>.</style>                 entry's type is given by type and must be one of 
+<style color=#00ffffff size=1>.</style>                 cascade, checkbutton, command, radiobutton, or 
+<style color=#00ffffff size=1>.</style>                 separator. If additional arguments are present, they
+<style color=#00ffffff size=1>.</style>                 specify any of the following options:
+
+<style color=#00ffffff size=1>.</style>                 -activebackground value
+<style color=#00ffffff size=1>.</style>                      Specifies a background colour to use for
+<style color=#00ffffff size=1>.</style>                      displaying this entry when it is active. If this
+<style color=#00ffffff size=1>.</style>                      option is not specified then the activebackground
+<style color=#00ffffff size=1>.</style>                      option for the overall menu is used. This option
+<style color=#00ffffff size=1>.</style>                      is not available for separator entries.
+
+<style color=#00ffffff size=1>.</style>                 -activeforeground value
+<style color=#00ffffff size=1>.</style>                      Specifies a foreground colour to use for
+<style color=#00ffffff size=1>.</style>                      displaying this entry when it is active. If this
+<style color=#00ffffff size=1>.</style>                      option is not specified then the activeforeground
+<style color=#00ffffff size=1>.</style>                      option for the overall menu is used. This option
+<style color=#00ffffff size=1>.</style>                      is not available for separator entries.
+
+<style color=#00ffffff size=1>.</style>                 -background value
+<style color=#00ffffff size=1>.</style>                      Specifies a background colour to use for
+<style color=#00ffffff size=1>.</style>                      displaying this entry when it is in the normal
+<style color=#00ffffff size=1>.</style>                      state (neither active nor disabled). If this
+<style color=#00ffffff size=1>.</style>                      option is not specified then the background option
+<style color=#00ffffff size=1>.</style>                      for the overall menu is used. This option is not
+<style color=#00ffffff size=1>.</style>                      available for separator entries.
+
+<style color=#00ffffff size=1>.</style>                 -bitmap bitmap
+<style color=#00ffffff size=1>.</style>                      Specifies a bitmap to display in the menu instead
+<style color=#00ffffff size=1>.</style>                      of a textual label. This option overrides the 
+<style color=#00ffffff size=1>.</style>                      -label option but may be reset to an empty string
+<style color=#00ffffff size=1>.</style>                      to enable a textual label to be displayed. If a 
+<style color=#00ffffff size=1>.</style>                      -image option has been specified, it overrides
+<style color=#00ffffff size=1>.</style>                      -bitmap. This option is not available for
+<style color=#00ffffff size=1>.</style>                      separator entries.
+
+<style color=#00ffffff size=1>.</style>                 -command value
+<style color=#00ffffff size=1>.</style>                      Specifies a Tk command to execute when the menu
+<style color=#00ffffff size=1>.</style>                      entry is invoked. Not available for separator
+<style color=#00ffffff size=1>.</style>                      entries.
+
+<style color=#00ffffff size=1>.</style>                 -font value
+<style color=#00ffffff size=1>.</style>                      Specifies the font to use when drawing the label
+<style color=#00ffffff size=1>.</style>                      or accelerator string in this entry. If this
+<style color=#00ffffff size=1>.</style>                      option is not specified then the font option for
+<style color=#00ffffff size=1>.</style>                      the overall menu is used. This option is not
+<style color=#00ffffff size=1>.</style>                      available for separator entries.
+
+<style color=#00ffffff size=1>.</style>                 -foreground value
+<style color=#00ffffff size=1>.</style>                      Specifies a foreground colour to use for
+<style color=#00ffffff size=1>.</style>                      displaying this entry when it is in the normal
+<style color=#00ffffff size=1>.</style>                      state (neither active nor disabled). If this
+<style color=#00ffffff size=1>.</style>                      option is not specified then the foreground option
+<style color=#00ffffff size=1>.</style>                      for the overall menu is used. This option is not
+<style color=#00ffffff size=1>.</style>                      available for separator entries.
+
+<style color=#00ffffff size=1>.</style>                 -image value
+<style color=#00ffffff size=1>.</style>                      Specifies an image to display in the menu instead
+<style color=#00ffffff size=1>.</style>                      of a text string or bitmap The image must have
+<style color=#00ffffff size=1>.</style>                      been created by some previous invocation of image
+<style color=#00ffffff size=1>.</style>                      create. This option overrides the -label and 
+<style color=#00ffffff size=1>.</style>                      -bitmap options but may be reset to an empty
+<style color=#00ffffff size=1>.</style>                      string to enable a textual or bitmap label to be
+<style color=#00ffffff size=1>.</style>                      displayed. This option is not available for
+<style color=#00ffffff size=1>.</style>                      separator entries.
+
+<style color=#00ffffff size=1>.</style>                 -label value
+<style color=#00ffffff size=1>.</style>                      Specifies a string to display as an identifying
+<style color=#00ffffff size=1>.</style>                      label in the menu entry.  Not available for
+<style color=#00ffffff size=1>.</style>                      separator entries.
+
+<style color=#00ffffff size=1>.</style>                 -menu value
+<style color=#00ffffff size=1>.</style>                      Available only for cascade entries.  Specifies the
+<style color=#00ffffff size=1>.</style>                      path name of the submenu associated with this
+<style color=#00ffffff size=1>.</style>                      entry. The submenu must be a child of the menu.
+
+<style color=#00ffffff size=1>.</style>                 -selectcolor value
+<style color=#00ffffff size=1>.</style>                      Available only for checkbutton and radiobutton
+<style color=#00ffffff size=1>.</style>                      entries. Specifies the colour to display in the
+<style color=#00ffffff size=1>.</style>                      indicator when the entry is selected. If this
+<style color=#00ffffff size=1>.</style>                      option is not specified then the selectcolor
+<style color=#00ffffff size=1>.</style>                      option for the menu determines the indicator
+<style color=#00ffffff size=1>.</style>                      colour.
+
+<style color=#00ffffff size=1>.</style>                 -selectimage value
+<style color=#00ffffff size=1>.</style>                      Available only for checkbutton and radiobutton
+<style color=#00ffffff size=1>.</style>                      entries. Specifies an image to display in the
+<style color=#00ffffff size=1>.</style>                      entry (in place of the -image option) when it is
+<style color=#00ffffff size=1>.</style>                      selected. Value is the name of an image, which
+<style color=#00ffffff size=1>.</style>                      must have been created by some previous invocation
+<style color=#00ffffff size=1>.</style>                      of image create. This option is ignored unless the
+<style color=#00ffffff size=1>.</style>                      -image option has been specified.
+
+<style color=#00ffffff size=1>.</style>                 -state value
+<style color=#00ffffff size=1>.</style>                      Specifies one of three states for the entry:  
+<style color=#00ffffff size=1>.</style>                      normal, active, or disabled.  In normal state the
+<style color=#00ffffff size=1>.</style>                      entry is displayed using the foreground and 
+<style color=#00ffffff size=1>.</style>                      background colours. The active state is typically
+<style color=#00ffffff size=1>.</style>                      used when the pointer is over the entry. In active
+<style color=#00ffffff size=1>.</style>                      state the entry is displayed using the 
+<style color=#00ffffff size=1>.</style>                      activeforeground and activebackground colours.
+<style color=#00ffffff size=1>.</style>                      Disabled state means that the entry should be
+<style color=#00ffffff size=1>.</style>                      insensitive:  the default bindings will refuse to
+<style color=#00ffffff size=1>.</style>                      activate or invoke the entry. In this state the
+<style color=#00ffffff size=1>.</style>                      entry is displayed according to the disabledcolor
+<style color=#00ffffff size=1>.</style>                      and background colours. This option is not
+<style color=#00ffffff size=1>.</style>                      available for separator entries.
+
+<style color=#00ffffff size=1>.</style>                 -underline value
+<style color=#00ffffff size=1>.</style>                      Specifies the integer index of a character to
+<style color=#00ffffff size=1>.</style>                      underline in the entry. This option is also
+<style color=#00ffffff size=1>.</style>                      queried by the default bindings and used to
+<style color=#00ffffff size=1>.</style>                      implement keyboard traversal. 0 corresponds to the
+<style color=#00ffffff size=1>.</style>                      first character of the text displayed in the
+<style color=#00ffffff size=1>.</style>                      entry, 1 to the next character, and so on. If a
+<style color=#00ffffff size=1>.</style>                      bitmap or image is displayed in the entry then
+<style color=#00ffffff size=1>.</style>                      this option is ignored. This option is not
+<style color=#00ffffff size=1>.</style>                      available for separator entries.
+
+<style color=#00ffffff size=1>.</style>                 -value value
+<style color=#00ffffff size=1>.</style>                      Available only for radiobutton entries.  Specifies
+<style color=#00ffffff size=1>.</style>                      the value to store in the entry's associated
+<style color=#00ffffff size=1>.</style>                      variable when the entry is selected. If an empty
+<style color=#00ffffff size=1>.</style>                      string is specified, then the -label option for
+<style color=#00ffffff size=1>.</style>                      the entry as the value to store in the variable.
+
+<style color=#00ffffff size=1>.</style>                 -variable value
+<style color=#00ffffff size=1>.</style>                      Available only for checkbutton and radiobutton
+<style color=#00ffffff size=1>.</style>                      entries.  Specifies the name of a global value to
+<style color=#00ffffff size=1>.</style>                      set when the entry is selected. For checkbutton
+<style color=#00ffffff size=1>.</style>                      entries the variable is also set when the entry is
+<style color=#00ffffff size=1>.</style>                      deselected.  For radiobutton entries, changing the
+<style color=#00ffffff size=1>.</style>                      variable causes the currently-selected entry to
+<style color=#00ffffff size=1>.</style>                      deselect itself.
+
+<style color=#00ffffff size=1>.</style>                 The add widget command returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the menu command.
+
+<style color=#00ffffff size=1>.</style>            pathName configure ?option? ?value option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathName.  If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, then the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the menu command.
+
+<style color=#00ffffff size=1>.</style>            pathName delete index1 ?index2?
+<style color=#00ffffff size=1>.</style>                 Delete all of the menu entries between index1 and
+<style color=#00ffffff size=1>.</style>                 index2 inclusive. If index2 is omitted then it defaults
+<style color=#00ffffff size=1>.</style>                 to index1.
+
+<style color=#00ffffff size=1>.</style>            pathName entrycget index option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of a configuration option for
+<style color=#00ffffff size=1>.</style>                 the entry given by index. Option may have any of the
+<style color=#00ffffff size=1>.</style>                 values accepted by the add widget command.
+
+<style color=#00ffffff size=1>.</style>            pathName entryconfigure index ?options?
+<style color=#00ffffff size=1>.</style>                 This command is similar to the configure command,
+<style color=#00ffffff size=1>.</style>                 except that it applies to the options for an individual
+<style color=#00ffffff size=1>.</style>                 entry, whereas configure applies to the options for the
+<style color=#00ffffff size=1>.</style>                 menu as a whole. Options may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the add widget command.  If options are
+<style color=#00ffffff size=1>.</style>                 specified, options are modified as indicated in the
+<style color=#00ffffff size=1>.</style>                 command and the command returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName index index
+<style color=#00ffffff size=1>.</style>                 Returns the numerical index corresponding to index, or
+<style color=#00ffffff size=1>.</style>                 none if index was specified as none.
+
+<style color=#00ffffff size=1>.</style>            pathName insert index type ?option value option value ...?
+<style color=#00ffffff size=1>.</style>                 Same as the add widget command except that it inserts
+<style color=#00ffffff size=1>.</style>                 the new entry just before the entry given by index,
+<style color=#00ffffff size=1>.</style>                 instead of appending to the end of the menu.  The type,
+<style color=#00ffffff size=1>.</style>                 option, and value arguments have the same
+<style color=#00ffffff size=1>.</style>                 interpretation as for the add widget command.
+
+<style color=#00ffffff size=1>.</style>            pathName invoke index
+<style color=#00ffffff size=1>.</style>                 Invoke the action of the menu entry.  See the sections
+<style color=#00ffffff size=1>.</style>                 on the individual entries above for details on what
+<style color=#00ffffff size=1>.</style>                 happens.  If the menu entry is disabled then nothing
+<style color=#00ffffff size=1>.</style>                 happens.  If the entry has a command associated with it
+<style color=#00ffffff size=1>.</style>                 then the result of that command is returned as the
+<style color=#00ffffff size=1>.</style>                 result of the invoke widget command.  Otherwise the
+<style color=#00ffffff size=1>.</style>                 result is an empty string.  Note:  invoking a menu
+<style color=#00ffffff size=1>.</style>                 entry does not automatically unpost the menu\;  the
+<style color=#00ffffff size=1>.</style>                 default bindings normally take care of this before
+<style color=#00ffffff size=1>.</style>                 invoking the invoke widget command.
+
+<style color=#00ffffff size=1>.</style>            pathName post x y
+<style color=#00ffffff size=1>.</style>                 Arrange for the menu to be displayed on the screen at
+<style color=#00ffffff size=1>.</style>                 the screen coordinates given by x and y.  These
+<style color=#00ffffff size=1>.</style>                 coordinates are adjusted if necessary to guarantee that
+<style color=#00ffffff size=1>.</style>                 the entire menu is visible on the screen.  This command
+<style color=#00ffffff size=1>.</style>                 normally returns an empty string. If the postcommand
+<style color=#00ffffff size=1>.</style>                 option has been specified, then its value is executed
+<style color=#00ffffff size=1>.</style>                 as a Tk script before posting the menu and the result
+<style color=#00ffffff size=1>.</style>                 of that script is returned as the result of the post
+<style color=#00ffffff size=1>.</style>                 widget command. If an error returns while executing the
+<style color=#00ffffff size=1>.</style>                 command, then the error is returned without posting the
+<style color=#00ffffff size=1>.</style>                 menu.
+
+<style color=#00ffffff size=1>.</style>            pathName postcascade index
+<style color=#00ffffff size=1>.</style>                 Posts the submenu associated with the cascade entry
+<style color=#00ffffff size=1>.</style>                 given by index, and unposts any previously posted
+<style color=#00ffffff size=1>.</style>                 submenu. If index doesn't correspond to a cascade
+<style color=#00ffffff size=1>.</style>                 entry, or if pathName isn't posted, the command has no
+<style color=#00ffffff size=1>.</style>                 effect except to unpost any currently posted submenu.
+
+<style color=#00ffffff size=1>.</style>            pathName type index
+<style color=#00ffffff size=1>.</style>                 Returns the type of the menu entry given by index. This
+<style color=#00ffffff size=1>.</style>                 is the type argument passed to the add widget command
+<style color=#00ffffff size=1>.</style>                 when the entry was created, such as command or 
+<style color=#00ffffff size=1>.</style>                 separator.
+
+<style color=#00ffffff size=1>.</style>            pathName unpost
+<style color=#00ffffff size=1>.</style>                 Unmap the window so that it is no longer displayed.  If
+<style color=#00ffffff size=1>.</style>                 a lower-level cascaded menu is posted, unpost that
+<style color=#00ffffff size=1>.</style>                 menu.  Returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName yposition index
+<style color=#00ffffff size=1>.</style>                 Returns a decimal string giving the y-coordinate within
+<style color=#00ffffff size=1>.</style>                 the menu window of the topmost pixel in the entry
+<style color=#00ffffff size=1>.</style>                 specified by index.
+
+DEFAULT BINDINGS
+<style color=#00ffffff size=1>.</style>            Tk automatically creates bindings for menus that give them
+<style color=#00ffffff size=1>.</style>            the following default behaviour:
+
+<style color=#00ffffff size=1>.</style>            \[1\]  When the mouse enters a menu, the entry underneath the
+<style color=#00ffffff size=1>.</style>                 mouse cursor activates\;  as the mouse moves around the
+<style color=#00ffffff size=1>.</style>                 menu, the active entry changes to track the mouse.
+
+<style color=#00ffffff size=1>.</style>            \[2\]  When the mouse leaves a menu all of the entries in the
+<style color=#00ffffff size=1>.</style>                 menu deactivate, except in the special case where the
+<style color=#00ffffff size=1>.</style>                 mouse moves from a menu to a cascaded submenu.
+
+<style color=#00ffffff size=1>.</style>            \[3\]  When a button is released over a menu, the active entry
+<style color=#00ffffff size=1>.</style>                 (if any) is invoked. The menu also unposts unless it is
+<style color=#00ffffff size=1>.</style>                 a torn-off menu.
+
+<style color=#00ffffff size=1>.</style>            \[4\]  If any of the entries in a menu have letters underlined
+<style color=#00ffffff size=1>.</style>                 with with -underline option, then pressing one of the
+<style color=#00ffffff size=1>.</style>                 underlined letters (or its upper-case or lower-case
+<style color=#00ffffff size=1>.</style>                 equivalent) invokes that entry and unposts the menu.
+
+<style color=#00ffffff size=1>.</style>            Disabled menu entries are non-responsive:  they don't
+<style color=#00ffffff size=1>.</style>            activate and they ignore mouse button presses and releases.
+
+<style color=#00ffffff size=1>.</style>            The behaviour of menus can be changed by defining new
+<style color=#00ffffff size=1>.</style>            bindings for individual widgets.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The first time any colour option of an entry is configured,
+<style color=#00ffffff size=1>.</style>            all of the menu colour option values are captured and set in
+<style color=#00ffffff size=1>.</style>            the entry. Any subsequent changes to the menu's colour
+<style color=#00ffffff size=1>.</style>            options will not be reflected in the entry.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=options(9)>options(9)</action>, <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

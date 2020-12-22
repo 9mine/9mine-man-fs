@@ -1,0 +1,68 @@
+<action name=CRYPT-DSAGEN(2)>CRYPT-DSAGEN(2)</action>                                   <action name=CRYPT-DSAGEN(2)>CRYPT-DSAGEN(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            crypt: dsagen, eggen, rsagen, rsafill,  rsaencrypt,
+<style color=#00ffffff size=1>.</style>            rsadecrypt - specific public key systems
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "ipints.m"\;
+<style color=#00ffffff size=1>.</style>            ipints := load IPints IPints->PATH\;
+<style color=#00ffffff size=1>.</style>            IPint: import ipints\;
+
+<style color=#00ffffff size=1>.</style>            include "crypt.m"\;
+<style color=#00ffffff size=1>.</style>            crypt := load Crypt Crypt->PATH\;
+
+<style color=#00ffffff size=1>.</style>            dsagen:     fn(oldpk: ref PK.DSA): ref SK.DSA\;
+
+<style color=#00ffffff size=1>.</style>            eggen:      fn(nlen: int, nrep: int): ref SK.Elgamal\;
+
+<style color=#00ffffff size=1>.</style>            rsagen:     fn(nlen: int, elen: int, nrep: int): ref SK.RSA\;
+<style color=#00ffffff size=1>.</style>            rsafill:    fn(n: ref IPint, ek: ref IPint, dk: ref IPint,
+<style color=#00ffffff size=1>.</style>                           p: ref IPint, q: ref IPint): ref SK.RSA\;
+<style color=#00ffffff size=1>.</style>            rsaencrypt: fn(k: ref PK.RSA, m: ref IPint): ref IPint\;
+<style color=#00ffffff size=1>.</style>            rsadecrypt: fn(k: ref SK.RSA, m: ref IPint): ref IPint\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            <action name=Crypt-gensk(2)>Crypt-gensk(2)</action> describes a set of functions that generate
+<style color=#00ffffff size=1>.</style>            public/private key pairs given an algorithm name and a key
+<style color=#00ffffff size=1>.</style>            length. Some key types allow further parameters for key
+<style color=#00ffffff size=1>.</style>            generation or support further operations.
+
+<style color=#00ffffff size=1>.</style>            Dsagen generates a DSA public/private key pair, represented
+<style color=#00ffffff size=1>.</style>            by the pick adt SK.DSA, and compatible with the containing
+<style color=#00ffffff size=1>.</style>            type SK. If the parameter oldpk is not nil, dsagen takes the
+<style color=#00ffffff size=1>.</style>            new key's modulus and group order from the existing key\;
+<style color=#00ffffff size=1>.</style>            otherwise it generates a new pair of primes.
+
+<style color=#00ffffff size=1>.</style>            Eggen generates a new El-Gamal key pair, represented by the
+<style color=#00ffffff size=1>.</style>            pick adt SK.Elgamal. Nlen is the length of the modulus\; nrep
+<style color=#00ffffff size=1>.</style>            is the number of repetitions of the Miller-Rabin primality
+<style color=#00ffffff size=1>.</style>            test (0 gives the default, currently 18).
+
+<style color=#00ffffff size=1>.</style>            Rsagen generates an RSA public/private key pair, represented
+<style color=#00ffffff size=1>.</style>            by the pick adt SK.RSA, and compatible with the containing
+<style color=#00ffffff size=1>.</style>            type SK. Nlen gives the length of the key modulus in bits\;
+<style color=#00ffffff size=1>.</style>            elen gives the exponent length in bits\; and nrep is as
+<style color=#00ffffff size=1>.</style>            above.
+
+<style color=#00ffffff size=1>.</style>            The RSA private key representation used by Inferno includes
+<style color=#00ffffff size=1>.</style>            some extra values to speed computation. Rsagen provides
+<style color=#00ffffff size=1>.</style>            those values but keys imported from other systems might not.
+<style color=#00ffffff size=1>.</style>            Given the essential set of RSA private key parameters for a
+<style color=#00ffffff size=1>.</style>            given key, represented as IPints, rsafill returns a suitable
+<style color=#00ffffff size=1>.</style>            SK.RSA for that key, including the extra values.
+
+<style color=#00ffffff size=1>.</style>            The public key of type PK.RSA can be extracted from a given
+<style color=#00ffffff size=1>.</style>            private key value sk by referencing the field sk.pk.
+
+<style color=#00ffffff size=1>.</style>            Rsaencrypt encrypts a message m, represented by an IPint,
+<style color=#00ffffff size=1>.</style>            using the public key pk.
+
+<style color=#00ffffff size=1>.</style>            Rsadecrypt decrypts m using private key sk. The result is
+<style color=#00ffffff size=1>.</style>            again returned as an IPint.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=crypt-gensk(2)>crypt-gensk(2)</action>, <action name=crypt-sha1(2)>crypt-sha1(2)</action>, <action name=security-auth(2)>security-auth(2)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=security-oldauth(2)>security-oldauth(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,95 @@
+IAR(10.1)                                               IAR(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            iar - archive and library maintainer
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            iar key \[ posname \] afile \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Iar maintains groups of files combined into a single archive
+<style color=#00ffffff size=1>.</style>            file, afile. The main use of iar is to create and update
+<style color=#00ffffff size=1>.</style>            library files for the loaders 2l(10.1), etc. It can be used,
+<style color=#00ffffff size=1>.</style>            though, for any similar purpose.
+
+<style color=#00ffffff size=1>.</style>            Key is one character from the set drqtpmx, optionally
+<style color=#00ffffff size=1>.</style>            concatenated with one or more of vuaibclo. The files are
+<style color=#00ffffff size=1>.</style>            constituents of the archive afile. The meanings of the key
+<style color=#00ffffff size=1>.</style>            characters are:
+
+<style color=#00ffffff size=1>.</style>            d    Delete files from the archive file.
+
+<style color=#00ffffff size=1>.</style>            r    Replace files in the archive file, or add them if
+<style color=#00ffffff size=1>.</style>                 missing. Optional modifiers are
+<style color=#00ffffff size=1>.</style>                 u    Replace only files with modified dates later than
+<style color=#00ffffff size=1>.</style>                      that of the archive.
+<style color=#00ffffff size=1>.</style>                 a    Place new files after posname in the archive
+<style color=#00ffffff size=1>.</style>                      rather than at the end.
+<style color=#00ffffff size=1>.</style>                 b or i
+<style color=#00ffffff size=1>.</style>                      Place new files before posname in the archive.
+
+<style color=#00ffffff size=1>.</style>            q    Quick.  Append files to the end of the archive without
+<style color=#00ffffff size=1>.</style>                 checking for duplicates. Avoids quadratic behavior in
+<style color=#00ffffff size=1>.</style>                 `for (i in *.v) ar r lib.a $i'.
+
+<style color=#00ffffff size=1>.</style>            t    List a table of contents of the archive. If names are
+<style color=#00ffffff size=1>.</style>                 given, only those files are listed.
+
+<style color=#00ffffff size=1>.</style>            p    Print the named files in the archive.
+
+<style color=#00ffffff size=1>.</style>            m    Move the named files to the end or elsewhere, specified
+<style color=#00ffffff size=1>.</style>                 as with `r'.
+
+<style color=#00ffffff size=1>.</style>            o    Preserve the access and modification times of files
+<style color=#00ffffff size=1>.</style>                 extracted with the x command.
+
+<style color=#00ffffff size=1>.</style>            x    Extract the named files. If no names are given, all
+<style color=#00ffffff size=1>.</style>                 files in the archive are extracted. In neither case
+<style color=#00ffffff size=1>.</style>                 does x alter the archive file.
+
+<style color=#00ffffff size=1>.</style>            v    Verbose. Give a file-by-file description of the making
+<style color=#00ffffff size=1>.</style>                 of a new archive file from the old archive and the
+<style color=#00ffffff size=1>.</style>                 constituent files. With p, precede each file with a
+<style color=#00ffffff size=1>.</style>                 name. With t, give a long listing of all information
+<style color=#00ffffff size=1>.</style>                 about the files, somewhat like a listing by <action name=ls(1)>ls(1)</action>,
+<style color=#00ffffff size=1>.</style>                 showing
+
+<style color=#00ffffff size=1>.</style>                 	mode uid/gid size date name
+
+<style color=#00ffffff size=1>.</style>            c    Create. Normally iar will create a new archive when
+<style color=#00ffffff size=1>.</style>                 afile does not exist, and give a warning. Option c
+<style color=#00ffffff size=1>.</style>                 discards any old contents and suppresses the warning.
+
+<style color=#00ffffff size=1>.</style>            l    Local. Normally iar places its temporary files in the
+<style color=#00ffffff size=1>.</style>                 directory /tmp. This option causes them to be placed in
+<style color=#00ffffff size=1>.</style>                 the local directory.
+
+<style color=#00ffffff size=1>.</style>            When a d, r, or m key is specified and all members of the
+<style color=#00ffffff size=1>.</style>            archive are valid object files for the same architecture,
+<style color=#00ffffff size=1>.</style>            iar inserts a table of contents, required by the loaders, at
+<style color=#00ffffff size=1>.</style>            the front of the library. The table of contents is rebuilt
+<style color=#00ffffff size=1>.</style>            whenever the archive is modified, except when the q key is
+<style color=#00ffffff size=1>.</style>            specified or when the table of contents is explicitly moved
+<style color=#00ffffff size=1>.</style>            or deleted.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>                 `iar cr lib.a *.v' `Replace the contents of library'
+<style color=#00ffffff size=1>.</style>                 ``lib.a'' with the object files in the current
+<style color=#00ffffff size=1>.</style>                 directory.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /tmp/v*     temporaries
+SOURCE
+<style color=#00ffffff size=1>.</style>            /utils/iar
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            2l(10.1), ar(10.6)
+
+BUGS
+<style color=#00ffffff size=1>.</style>            If the same file is mentioned twice in an argument list, it
+<style color=#00ffffff size=1>.</style>            may be put in the archive twice.
+<style color=#00ffffff size=1>.</style>            The file format used by this command is taken from UNIX, and
+<style color=#00ffffff size=1>.</style>            makes some invalid assumptions, for instance that user IDs
+<style color=#00ffffff size=1>.</style>            are numeric.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

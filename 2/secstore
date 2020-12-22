@@ -1,0 +1,152 @@
+<action name=SECSTORE(2)>SECSTORE(2)</action>                                           <action name=SECSTORE(2)>SECSTORE(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            secstore - fetch data from Plan 9's secure storage service
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "dial.m"\;
+<style color=#00ffffff size=1>.</style>            include "secstore.m"\;
+<style color=#00ffffff size=1>.</style>            secstore := load Secstore Secstore->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Maxfilesize: con 128*1024\;	# default
+
+<style color=#00ffffff size=1>.</style>            init:       fn()\;
+<style color=#00ffffff size=1>.</style>            privacy:    fn(): int\;
+<style color=#00ffffff size=1>.</style>            cansecstore:    fn(addr: string, user: string): int\;
+<style color=#00ffffff size=1>.</style>            mkseckey:   fn(pass: string): array of byte\;
+<style color=#00ffffff size=1>.</style>            dial:       fn(addr: string): ref Dial->Connection\;
+<style color=#00ffffff size=1>.</style>            auth:       fn(conn: ref Dial->Connection, user: string, seckey: array of byte):
+<style color=#00ffffff size=1>.</style>                            (string, string)\;
+<style color=#00ffffff size=1>.</style>            connect:    fn(addr: string, user: string, seckey: array of byte):
+<style color=#00ffffff size=1>.</style>                            (ref Dial->Connection, string, string)\;
+<style color=#00ffffff size=1>.</style>            sendpin:    fn(conn: ref Dial->Connection, pin: string): int\;
+<style color=#00ffffff size=1>.</style>            files:       fn(conn: ref Dial->Connection):
+<style color=#00ffffff size=1>.</style>                            list of (string, int, string, string, array of byte)\;
+<style color=#00ffffff size=1>.</style>            getfile:    fn(conn: ref Dial->Connection, name: string,
+<style color=#00ffffff size=1>.</style>                            maxsize: int): array of byte\;
+<style color=#00ffffff size=1>.</style>            putfile:    fn(conn: ref Dial->Connection, name: string, data: array of byte): int\;
+<style color=#00ffffff size=1>.</style>            remove:     fn(conn: ref Dial->Connection, file: string): int\;
+<style color=#00ffffff size=1>.</style>            bye:        fn(conn: ref Dial->Connection)\;
+
+<style color=#00ffffff size=1>.</style>            mkfilekey:   fn(pass: string): array of byte\;
+<style color=#00ffffff size=1>.</style>            decrypt:    fn(data: array of byte, filekey: array of byte): array of byte\;
+<style color=#00ffffff size=1>.</style>            encrypt:    fn(data: array of byte, filekey: array of byte): array of byte\;
+<style color=#00ffffff size=1>.</style>            erasekey:   fn(key: array of byte)\;
+
+<style color=#00ffffff size=1>.</style>            lines:      fn(file: array of byte): list of array of byte\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Secstore establishes a secure authenticated connection with
+<style color=#00ffffff size=1>.</style>            a Plan 9 secstore service (or equivalent, such as Plan 9
+<style color=#00ffffff size=1>.</style>            from User Space), that can then be used to fetch and decrypt
+<style color=#00ffffff size=1>.</style>            data files, such as the factotum file containing the initial
+<style color=#00ffffff size=1>.</style>            keys for an instance of <action name=factotum(4)>factotum(4)</action>. The module's functions
+<style color=#00ffffff size=1>.</style>            hold the file descriptors for the connection in a
+<style color=#00ffffff size=1>.</style>            Dial->Connection value, as returned by <action name=dial(2)>dial(2)</action>. The addr
+<style color=#00ffffff size=1>.</style>            parameter that gives the network address of the secstore
+<style color=#00ffffff size=1>.</style>            service is also as defined in <action name=dial(2)>dial(2)</action>. A nil value defaults
+<style color=#00ffffff size=1>.</style>            to net!$auth!secstore, for translation in the usual way by
+<style color=#00ffffff size=1>.</style>            <action name=cs(8)>cs(8)</action>.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before invoking any other operation of
+<style color=#00ffffff size=1>.</style>            the module.
+
+<style color=#00ffffff size=1>.</style>            Privacy ensures the memory of the calling process cannot be
+<style color=#00ffffff size=1>.</style>            read, for instance by <action name=prog(3)>prog(3)</action>. It returns zero on success
+<style color=#00ffffff size=1>.</style>            and a negative value on failure.
+
+<style color=#00ffffff size=1>.</style>            Cansecstore returns true if a connection can be made to a
+<style color=#00ffffff size=1>.</style>            secstore at network address addr, and the given user has a
+<style color=#00ffffff size=1>.</style>            secstore account\; it returns false otherwise.
+
+<style color=#00ffffff size=1>.</style>            Users authenticate themselves to the service using a secret
+<style color=#00ffffff size=1>.</style>            key and a special protocol that does not reveal the key
+<style color=#00ffffff size=1>.</style>            itself to the remote service. The textual secret (eg,
+<style color=#00ffffff size=1>.</style>            password or pass phrase) is not used directly by the
+<style color=#00ffffff size=1>.</style>            following functions, but only after transformation by
+<style color=#00ffffff size=1>.</style>            mkseckey, which hashes it into an array of bytes. That is
+<style color=#00ffffff size=1>.</style>            the key parameter to the functions.
+
+<style color=#00ffffff size=1>.</style>            Dial dials the secstore at network address addr (as defined
+<style color=#00ffffff size=1>.</style>            by <action name=dial(2)>dial(2)</action>) and returns a reference to the resulting
+<style color=#00ffffff size=1>.</style>            Dial->Connection. It returns nil on an error and sets the
+<style color=#00ffffff size=1>.</style>            error string.
+
+<style color=#00ffffff size=1>.</style>            Auth authenticates a fresh connection as belonging to a
+<style color=#00ffffff size=1>.</style>            given user of the service. The parameter conn refers to the
+<style color=#00ffffff size=1>.</style>            Dial->Connection value representing the connection. User
+<style color=#00ffffff size=1>.</style>            names a user registered with the service. The parameter
+<style color=#00ffffff size=1>.</style>            seckey is the result of applying mkseckey to the user's
+<style color=#00ffffff size=1>.</style>            secret. Auth returns a tuple (srvname, diag). Srvname is the
+<style color=#00ffffff size=1>.</style>            service name configured in the remote host (often simply
+<style color=#00ffffff size=1>.</style>            secstore). On an error, srvname is nil, and diag is a
+<style color=#00ffffff size=1>.</style>            diagnostic. If the remote service has been configured to
+<style color=#00ffffff size=1>.</style>            demand extra authentication data, then diag contains a
+<style color=#00ffffff size=1>.</style>            demand for it. Currently the only such value is `needpin'\;
+<style color=#00ffffff size=1>.</style>            call sendpin to provide it to the connection. If sendpin
+<style color=#00ffffff size=1>.</style>            succeeds, it returns zero, and conn can be used normally\; on
+<style color=#00ffffff size=1>.</style>            error, sendpin returns -1 and the connection cannot be used.
+
+<style color=#00ffffff size=1>.</style>            Connect combines the actions of dial and auth: dials the
+<style color=#00ffffff size=1>.</style>            secstore at addr, and mutually authenticates the server and
+<style color=#00ffffff size=1>.</style>            the given user using the user's secret key for that service.
+<style color=#00ffffff size=1>.</style>            It returns a tuple (conn, srvname, diag), where each
+<style color=#00ffffff size=1>.</style>            component is as described for dial and auth above. On an
+<style color=#00ffffff size=1>.</style>            error, conn is nil, and diag contains a diagnostic.
+
+<style color=#00ffffff size=1>.</style>            Getfile retrieves the file name from the secure store, and
+<style color=#00ffffff size=1>.</style>            returns its contents as an array of bytes. Maxsize gives the
+<style color=#00ffffff size=1>.</style>            largest acceptable file size\; if the value is zero or
+<style color=#00ffffff size=1>.</style>            negative, a large value is used by default. The files stored
+<style color=#00ffffff size=1>.</style>            on the service are separately encrypted under the user's
+<style color=#00ffffff size=1>.</style>            secret key. Mkfilekey takes a textual secret key and returns
+<style color=#00ffffff size=1>.</style>            a hash of it as an array of bytes, suitable for use as the
+<style color=#00ffffff size=1>.</style>            filekey parameter in subsequent calls to decrypt. (The
+<style color=#00ffffff size=1>.</style>            filekey is not the same value as the seckey used for initial
+<style color=#00ffffff size=1>.</style>            authentication, although the secret text is the same.)
+
+<style color=#00ffffff size=1>.</style>            Putfile writes data under file name to the secure store,
+<style color=#00ffffff size=1>.</style>            overwriting a possibly existing file by that name. Data
+<style color=#00ffffff size=1>.</style>            should already be encrypted. The caller can arrange this by
+<style color=#00ffffff size=1>.</style>            calling encrypt. Putfile returns 0 on success and a negative
+<style color=#00ffffff size=1>.</style>            value on error.
+
+<style color=#00ffffff size=1>.</style>            Remove deletes the given file from the server. It returns 0
+<style color=#00ffffff size=1>.</style>            on success and a negative value on error.
+
+<style color=#00ffffff size=1>.</style>            Decrypt decrypts the data previously fetched from a file on
+<style color=#00ffffff size=1>.</style>            the secure store. It uses the filekey produced by mkfilekey
+<style color=#00ffffff size=1>.</style>            to decrypt the data in place (ie, modifying the contents of
+<style color=#00ffffff size=1>.</style>            data) and returns a slice of data that excludes any headers
+<style color=#00ffffff size=1>.</style>            and trailers in the encoding. It returns nil if the file
+<style color=#00ffffff size=1>.</style>            could not be decrypted (usually because the key value is not
+<style color=#00ffffff size=1>.</style>            actually the encryption key).
+
+<style color=#00ffffff size=1>.</style>            Encrypt does the opposite of decrypt. Given plain data and
+<style color=#00ffffff size=1>.</style>            filekey produced by mkfilekey, it returns an encrypted
+<style color=#00ffffff size=1>.</style>            version of data, including headers and trailers. This data
+<style color=#00ffffff size=1>.</style>            is suitable for writing to the secure store with putfile.
+
+<style color=#00ffffff size=1>.</style>            Erasekey clears the bytes of key to zero\; it should be
+<style color=#00ffffff size=1>.</style>            called on every value produced by mkfilekey and mkseckey,
+<style color=#00ffffff size=1>.</style>            after use, but can also be used on the data arrays returned
+<style color=#00ffffff size=1>.</style>            by getfile and decrypt.
+
+<style color=#00ffffff size=1>.</style>            Lines returns a list of slices of file, representing each
+<style color=#00ffffff size=1>.</style>            line of file in turn (including newline). <action name=Factotum(4)>Factotum(4)</action> for
+<style color=#00ffffff size=1>.</style>            instance requires keys to be written to its control file one
+<style color=#00ffffff size=1>.</style>            at a time.
+
+<style color=#00ffffff size=1>.</style>            Bye closes the connection to the secstore.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/secstore.b
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            As well as returning the error values described above,
+<style color=#00ffffff size=1>.</style>            functions set the system error string.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=crypt(1)>crypt(1)</action>, <action name=secstore(1)>secstore(1)</action>, <action name=factotum(2)>factotum(2)</action>, <action name=factotum(4)>factotum(4)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

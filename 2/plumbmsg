@@ -1,0 +1,198 @@
+<action name=PLUMBMSG(2)>PLUMBMSG(2)</action>                                           <action name=PLUMBMSG(2)>PLUMBMSG(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            plumbmsg - plumbing message module
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "plumbmsg.m"\;
+<style color=#00ffffff size=1>.</style>            plumbmsg := load Plumbmsg Plumbmsg->PATH\;
+<style color=#00ffffff size=1>.</style>            Msg: import plumbmsg\;
+
+<style color=#00ffffff size=1>.</style>            Msg: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                src:    string\;
+<style color=#00ffffff size=1>.</style>                dst:    string\; 
+<style color=#00ffffff size=1>.</style>                dir:    string\;
+<style color=#00ffffff size=1>.</style>                kind:   string\;
+<style color=#00ffffff size=1>.</style>                attr:   string\;
+<style color=#00ffffff size=1>.</style>                data:   array of byte\;
+<style color=#00ffffff size=1>.</style>                # used by applications
+<style color=#00ffffff size=1>.</style>                send:   fn(msg: self ref Msg): int\;
+<style color=#00ffffff size=1>.</style>                recv:   fn(): ref Msg\;
+<style color=#00ffffff size=1>.</style>                # used by plumb and send, recv
+<style color=#00ffffff size=1>.</style>                pack:   fn(msg: self ref Msg): array of byte\;
+<style color=#00ffffff size=1>.</style>                unpack: fn(b: array of byte): ref Msg\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Attr: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                name: string\;
+<style color=#00ffffff size=1>.</style>                val:  string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:         fn(willsend: int, rcvport: string, maxdata: int): int\;
+<style color=#00ffffff size=1>.</style>            shutdown:     fn()\;
+<style color=#00ffffff size=1>.</style>            string2attrs: fn(s: string): list of ref Attr\;
+<style color=#00ffffff size=1>.</style>            attrs2string: fn(l: list of ref Attr): string\;
+<style color=#00ffffff size=1>.</style>            lookup:       fn(attrs: list of ref Attr, name: string): (int, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Plumbmsg is an interface for message-passing between
+<style color=#00ffffff size=1>.</style>            applications via the <action name=plumber(8)>plumber(8)</action>. It allows applications to
+<style color=#00ffffff size=1>.</style>            receive messages from the plumber on a logical input port,
+<style color=#00ffffff size=1>.</style>            and send messages to other applications via the plumber.
+
+<style color=#00ffffff size=1>.</style>            Init must be called once when the application starts, to set
+<style color=#00ffffff size=1>.</style>            up its plumbing connections. Applications can choose to send
+<style color=#00ffffff size=1>.</style>            messages, receive them, or do both. Note that the plumber
+<style color=#00ffffff size=1>.</style>            must be running before any of these functions are useful.
+<style color=#00ffffff size=1>.</style>            Normally, that is done by the window system's initialisation
+<style color=#00ffffff size=1>.</style>            procedure, but in specialised systems, plumbing can be used
+<style color=#00ffffff size=1>.</style>            for attribute-oriented communication even without a window
+<style color=#00ffffff size=1>.</style>            system.
+
+<style color=#00ffffff size=1>.</style>            If the application will be sending messages via the plumber,
+<style color=#00ffffff size=1>.</style>            the value willsend must be non-zero, and init will open an
+<style color=#00ffffff size=1>.</style>            appropriate channel to the plumber\; if the application will
+<style color=#00ffffff size=1>.</style>            not send messages, the value should be zero.
+
+<style color=#00ffffff size=1>.</style>            If the application is prepared to receive messages, the
+<style color=#00ffffff size=1>.</style>            parameter rcvport names its logical input port, which must
+<style color=#00ffffff size=1>.</style>            also be known to the plumber (ie, it must be named as a
+<style color=#00ffffff size=1>.</style>            possible destination in <action name=plumbing(6)>plumbing(6)</action>)\; init will open an
+<style color=#00ffffff size=1>.</style>            appropriate channel to receive messages from the plumber.
+<style color=#00ffffff size=1>.</style>            The parameter maxdata gives the size in bytes of the largest
+<style color=#00ffffff size=1>.</style>            message the application is prepared to receive. Applications
+<style color=#00ffffff size=1>.</style>            that only send messages set rcvport to nil.
+
+<style color=#00ffffff size=1>.</style>            Init returns returns -1 if for any reason either connection
+<style color=#00ffffff size=1>.</style>            cannot be set up correctly, in particular if the plumber is
+<style color=#00ffffff size=1>.</style>            not running or the input port is unknown. Otherwise it
+<style color=#00ffffff size=1>.</style>            returns a non-negative value.
+
+<style color=#00ffffff size=1>.</style>            The following program fragment establishes input and output
+<style color=#00ffffff size=1>.</style>            plumbing for an application `edit':
+
+<style color=#00ffffff size=1>.</style>                 plumbed := 0\;
+<style color=#00ffffff size=1>.</style>                 plumbmsg = load Plumbmsg Plumbmsg->PATH\;
+<style color=#00ffffff size=1>.</style>                 if(plumbmsg->init(1, "edit", 1000) >= 0)
+<style color=#00ffffff size=1>.</style>                 	plumbed = 1\;
+
+<style color=#00ffffff size=1>.</style>            The variable plumbed is set to allow the application to
+<style color=#00ffffff size=1>.</style>            disable its plumbing user interface (and not attempt to send
+<style color=#00ffffff size=1>.</style>            messages) if initialisation fails.
+
+<style color=#00ffffff size=1>.</style>            The Msg adt encapsulates the message data routed between
+<style color=#00ffffff size=1>.</style>            applications and provides member functions to send and
+<style color=#00ffffff size=1>.</style>            receive them. Its components are used as follows:
+
+<style color=#00ffffff size=1>.</style>            src     The name of the program generating the message.
+
+<style color=#00ffffff size=1>.</style>            dst     The output port to which the plumber should route
+<style color=#00ffffff size=1>.</style>                    the message. In practice, destination is often left
+<style color=#00ffffff size=1>.</style>                    empty, and the destination port will be determined
+<style color=#00ffffff size=1>.</style>                    by the plumber applying the automatic routing rules
+<style color=#00ffffff size=1>.</style>                    (cf. <action name=plumbing(6)>plumbing(6)</action>)
+
+<style color=#00ffffff size=1>.</style>            dir     The directory in which to interpret the data (eg, if
+<style color=#00ffffff size=1>.</style>                    the data is a local file name).
+
+<style color=#00ffffff size=1>.</style>            kind    The format of the data. Currently, `text' is the
+<style color=#00ffffff size=1>.</style>                    only type that applications understand, but the
+<style color=#00ffffff size=1>.</style>                    plumbing system can route any kind of data.
+
+<style color=#00ffffff size=1>.</style>            attr    A string containing name=value pairs (eg, click=7),
+<style color=#00ffffff size=1>.</style>                    separated by tabs. Normally the value should be
+<style color=#00ffffff size=1>.</style>                    created using attrs2string and parsed using
+<style color=#00ffffff size=1>.</style>                    string2attrs, described below.
+
+<style color=#00ffffff size=1>.</style>            data    The message to be conveyed. If kind is text, and the
+<style color=#00ffffff size=1>.</style>                    message is a string s, data will be `array of byte
+<style color=#00ffffff size=1>.</style>                    s' (ie, its UTF encoding).
+
+<style color=#00ffffff size=1>.</style>            Plumbing messages are created directly using Limbo's ref
+<style color=#00ffffff size=1>.</style>            operator, giving the desired value to each field. For
+<style color=#00ffffff size=1>.</style>            example:
+
+<style color=#00ffffff size=1>.</style>                 	msg := ref Msg(
+<style color=#00ffffff size=1>.</style>                 		"WmSh",
+<style color=#00ffffff size=1>.</style>                 		"",
+<style color=#00ffffff size=1>.</style>                 		workdir->init(),
+<style color=#00ffffff size=1>.</style>                 		"text",
+<style color=#00ffffff size=1>.</style>                 		attr,
+<style color=#00ffffff size=1>.</style>                 		array of byte text)\;
+
+<style color=#00ffffff size=1>.</style>            The plumbing messages are exchanged with the plumber using
+<style color=#00ffffff size=1>.</style>            two member functions:
+
+<style color=#00ffffff size=1>.</style>            m.send(msg)
+<style color=#00ffffff size=1>.</style>                 Writes a plumbing message to the plumber. It returns
+<style color=#00ffffff size=1>.</style>                 the number of bytes written (the result of write in
+<style color=#00ffffff size=1>.</style>                 <action name=sys-read(2)>sys-read(2)</action> which does the writing). It returns -1 if
+<style color=#00ffffff size=1>.</style>                 the plumber cannot route the message.
+
+<style color=#00ffffff size=1>.</style>            Msg.recv()
+<style color=#00ffffff size=1>.</style>                 Reads a plumbing message from the file representing the
+<style color=#00ffffff size=1>.</style>                 application's input port, previously opened by init. It
+<style color=#00ffffff size=1>.</style>                 waits for a message, and returns a reference to a Msg
+<style color=#00ffffff size=1>.</style>                 that contains the message data.
+
+<style color=#00ffffff size=1>.</style>            Shutdown sends a message to the plumber that shuts down
+<style color=#00ffffff size=1>.</style>            plumbing for the application's input port rcvport. An
+<style color=#00ffffff size=1>.</style>            application must call it before it exits if it has an active
+<style color=#00ffffff size=1>.</style>            input port.
+
+<style color=#00ffffff size=1>.</style>            String2attrs takes a string containing a tab-separated list
+<style color=#00ffffff size=1>.</style>            of attribute pairs and returns a list of references to Attr
+<style color=#00ffffff size=1>.</style>            adts.
+
+<style color=#00ffffff size=1>.</style>            Attr2string converts a list of references to Attr adts into
+<style color=#00ffffff size=1>.</style>            a string of the form name=valuename=value . . .  . The name=
+<style color=#00ffffff size=1>.</style>            value pairs are separated by a single tab.
+
+<style color=#00ffffff size=1>.</style>            Lookup searches attrs for an attribute name, and if found,
+<style color=#00ffffff size=1>.</style>            returns the tuple (1,value). If name is not found, lookup
+<style color=#00ffffff size=1>.</style>            returns (0, nil).
+
+<style color=#00ffffff size=1>.</style>         Packed message format
+<style color=#00ffffff size=1>.</style>            The format of plumbing messages as transmitted, and member
+<style color=#00ffffff size=1>.</style>            functions that encapsulate it, are documented here for
+<style color=#00ffffff size=1>.</style>            completeness, and in case the details are useful in
+<style color=#00ffffff size=1>.</style>            interpreting plumbing messages outside the Inferno
+<style color=#00ffffff size=1>.</style>            environment.
+
+<style color=#00ffffff size=1>.</style>            Plumbing messages have a fixed structure: five lines of text
+<style color=#00ffffff size=1>.</style>            giving UTF representations of the corresponding fields of
+<style color=#00ffffff size=1>.</style>            Msg, then a line giving the length of data in decimal,
+<style color=#00ffffff size=1>.</style>            followed by the bytes of data:
+
+<style color=#00ffffff size=1>.</style>                 source\n
+<style color=#00ffffff size=1>.</style>                 destination\n
+<style color=#00ffffff size=1>.</style>                 directory\n
+<style color=#00ffffff size=1>.</style>                 kind\n
+<style color=#00ffffff size=1>.</style>                 attributes\n
+<style color=#00ffffff size=1>.</style>                 n\n
+<style color=#00ffffff size=1>.</style>                 n bytes
+
+<style color=#00ffffff size=1>.</style>            The details are encapsulated in two functions:
+
+<style color=#00ffffff size=1>.</style>            m.pack()
+<style color=#00ffffff size=1>.</style>                 Pack packs the contents Msg m into an array of byte for
+<style color=#00ffffff size=1>.</style>                 subsequent transmission using write (see <action name=sys-read(2)>sys-read(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            Msg.unpack(b)
+<style color=#00ffffff size=1>.</style>                 Unpack unpacks an array of byte b to form a copy of the
+<style color=#00ffffff size=1>.</style>                 original Msg, which it returns.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /chan/plumb.input    file to send messages to the plumber
+<style color=#00ffffff size=1>.</style>            /chan/plumb.rcvport  file to receive messages routed to the
+<style color=#00ffffff size=1>.</style>                                 logical name rcvport
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/plumbmsg.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Shutdown should not be needed: the <action name=plumber(8)>plumber(8)</action>, as a file
+<style color=#00ffffff size=1>.</style>            server, must know that a particular client has vanished.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

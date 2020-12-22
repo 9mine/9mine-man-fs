@@ -1,0 +1,45 @@
+<action name=INTRO(3)>INTRO(3)</action>                                                 <action name=INTRO(3)>INTRO(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            intro - introduction to the Inferno devices
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            An Inferno device implements a file tree for client
+<style color=#00ffffff size=1>.</style>            processes. A file name beginning with a hash (number)
+<style color=#00ffffff size=1>.</style>            symbol, such as `#c', names the root of a file tree
+<style color=#00ffffff size=1>.</style>            implemented by a particular kernel device driver identified
+<style color=#00ffffff size=1>.</style>            by the character after the hash. Such names are usually
+<style color=#00ffffff size=1>.</style>            bound to conventional locations in the name space. For
+<style color=#00ffffff size=1>.</style>            example, after
+
+<style color=#00ffffff size=1>.</style>                 sys->bind("#c", "/dev", sys->MREPL)
+
+<style color=#00ffffff size=1>.</style>            an <action name=ls(1)>ls(1)</action> of /dev will list the files provided by the console
+<style color=#00ffffff size=1>.</style>            device.
+
+<style color=#00ffffff size=1>.</style>            A kernel device driver is a server in the sense of the
+<style color=#00ffffff size=1>.</style>            Inferno File Protocol, 9P (see Section 5), but with the
+<style color=#00ffffff size=1>.</style>            messages implemented by local rather than remote procedure
+<style color=#00ffffff size=1>.</style>            calls. Also, several of the messages (Nop, Flush, and Error)
+<style color=#00ffffff size=1>.</style>            have no subroutine equivalents.
+
+<style color=#00ffffff size=1>.</style>            When a system call is passed a file name beginning with
+<style color=#00ffffff size=1>.</style>            ``#'' it looks at the next character, and if that is a valid
+<style color=#00ffffff size=1>.</style>            device character it performs an <action name=attach(5)>attach(5)</action> on the
+<style color=#00ffffff size=1>.</style>            corresponding device to get a channel representing the root
+<style color=#00ffffff size=1>.</style>            of that device's file tree. If there are any characters
+<style color=#00ffffff size=1>.</style>            after the device character but before the next ``/'' or end
+<style color=#00ffffff size=1>.</style>            of string, those characters are passed as parameter aname to
+<style color=#00ffffff size=1>.</style>            the attach.
+
+<style color=#00ffffff size=1>.</style>            Each kernel device has a conventional place at which to be
+<style color=#00ffffff size=1>.</style>            bound to the name space. The SYNOPSIS sections of the
+<style color=#00ffffff size=1>.</style>            following pages includes a shell bind command to put the
+<style color=#00ffffff size=1>.</style>            device in the conventional place. Most of these binds are
+<style color=#00ffffff size=1>.</style>            done automatically by the system when it initializes\; see
+<style color=#00ffffff size=1>.</style>            <action name=init(8)>init(8)</action>.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=intro(5)>intro(5)</action>, <action name=intro(2)>intro(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

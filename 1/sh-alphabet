@@ -1,0 +1,232 @@
+<action name=SH-ALPHABET(1)>SH-ALPHABET(1)</action>                                     <action name=SH-ALPHABET(1)>SH-ALPHABET(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            alphabet, typeset, declare, import, type, define,
+<style color=#00ffffff size=1>.</style>            autodeclare, autoconvert, -, rewrite, modules, types, usage,
+<style color=#00ffffff size=1>.</style>            info, clear - typed shell interface
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load alphabet
+
+<style color=#00ffffff size=1>.</style>            type qname...
+<style color=#00ffffff size=1>.</style>            declare name \[ usage \]
+<style color=#00ffffff size=1>.</style>            undeclare name...
+<style color=#00ffffff size=1>.</style>            define name expr
+<style color=#00ffffff size=1>.</style>            import qname...
+<style color=#00ffffff size=1>.</style>            typeset qname
+<style color=#00ffffff size=1>.</style>            autoconvert srctype dsttype expr
+<style color=#00ffffff size=1>.</style>            autodeclare 0|1
+<style color=#00ffffff size=1>.</style>            - {expression}
+<style color=#00ffffff size=1>.</style>            ${rewrite { expression } \[ dsttype \] }
+<style color=#00ffffff size=1>.</style>            ${modules}
+<style color=#00ffffff size=1>.</style>            ${types typeset }
+<style color=#00ffffff size=1>.</style>            ${usage qname }
+<style color=#00ffffff size=1>.</style>            info
+<style color=#00ffffff size=1>.</style>            clear
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Alphabet is a loadable <action name=sh(1)>sh(1)</action> module providing an interface
+<style color=#00ffffff size=1>.</style>            to a simple, experimental, typed shell. It initially
+<style color=#00ffffff size=1>.</style>            provides a small set of basic types, which can be added to
+<style color=#00ffffff size=1>.</style>            by loading new typesets. Types are atomic\; alphabet provides
+<style color=#00ffffff size=1>.</style>            no support for higher-order types. The root typeset, named /
+<style color=#00ffffff size=1>.</style>            , consists of the following kinds of value:
+
+<style color=#00ffffff size=1>.</style>            string    A simple string literal, represented by itself, or
+<style color=#00ffffff size=1>.</style>                      quoted according to the usual shell quoting rules.
+
+<style color=#00ffffff size=1>.</style>            cmd       A shell command or uninterpreted alphabet
+<style color=#00ffffff size=1>.</style>                      expression, represented by the syntax "{block}.
+
+<style color=#00ffffff size=1>.</style>            fd        A file open for reading.
+
+<style color=#00ffffff size=1>.</style>            wfd       A file open for reading and writing.
+
+<style color=#00ffffff size=1>.</style>            status    The status of a completed command.
+
+<style color=#00ffffff size=1>.</style>            Each typeset implements a set of types, and has an
+<style color=#00ffffff size=1>.</style>            associated set of modules. Initially, types may only be
+<style color=#00ffffff size=1>.</style>            referred to by their qualified names, consisting of the name
+<style color=#00ffffff size=1>.</style>            of the type prefixed with the name of its typeset\; for
+<style color=#00ffffff size=1>.</style>            instance /string for the string type, or /grid/data for a
+<style color=#00ffffff size=1>.</style>            type named data in the typeset /grid. An unqualified name is
+<style color=#00ffffff size=1>.</style>            the qualified name without the typeset prefix\; for instance
+<style color=#00ffffff size=1>.</style>            string or data.
+
+<style color=#00ffffff size=1>.</style>            To make a type available as its unqualified name, use the
+<style color=#00ffffff size=1>.</style>            type command, which imports the type named by the qualified
+<style color=#00ffffff size=1>.</style>            name qname from its parent typeset. This is a no-op if the
+<style color=#00ffffff size=1>.</style>            type has previously been imported from the same typeset\; an
+<style color=#00ffffff size=1>.</style>            error is raised if the type has previously been imported
+<style color=#00ffffff size=1>.</style>            from a different typeset.
+
+<style color=#00ffffff size=1>.</style>            Declare declares the module name with type usage. If name is
+<style color=#00ffffff size=1>.</style>            a qualified name, the module must exist in the specified
+<style color=#00ffffff size=1>.</style>            typeset and be compatible with the specified usage. If usage
+<style color=#00ffffff size=1>.</style>            is not given, the module itself will be loaded and queried
+<style color=#00ffffff size=1>.</style>            to find it out. If name is not qualified, the declaration is
+<style color=#00ffffff size=1>.</style>            virtual: the module cannot actually be used, but is
+<style color=#00ffffff size=1>.</style>            available for typechecking and expression rewriting. Declare
+<style color=#00ffffff size=1>.</style>            is a no-op if the module has already been declared with a
+<style color=#00ffffff size=1>.</style>            compatible usage, otherwise an error is raised. The syntax
+<style color=#00ffffff size=1>.</style>            of usage is similar to the usage messages printed by normal
+<style color=#00ffffff size=1>.</style>            shell commands, and defines the argument types expected by a
+<style color=#00ffffff size=1>.</style>            module. For example:
+
+<style color=#00ffffff size=1>.</style>                 declare /foo/bar '\[-a\] \[-x string\] fd string \[string...\] -> fd'
+
+<style color=#00ffffff size=1>.</style>            The above declares the module bar from typeset /foo, which
+<style color=#00ffffff size=1>.</style>            takes two possible options (one of which requires a single
+<style color=#00ffffff size=1>.</style>            associated argument of type string), two mandatory
+<style color=#00ffffff size=1>.</style>            arguments, of type fd and string respectively, and any
+<style color=#00ffffff size=1>.</style>            number of additional arguments of type string. The module
+<style color=#00ffffff size=1>.</style>            returns a value of type fd.
+
+<style color=#00ffffff size=1>.</style>            When first loaded, alphabet is lax about declaration
+<style color=#00ffffff size=1>.</style>            requirements: if a module is referred to by its qualified
+<style color=#00ffffff size=1>.</style>            name, and is not currently declared, the module will
+<style color=#00ffffff size=1>.</style>            automatically be declared and used as appropriate (as long
+<style color=#00ffffff size=1>.</style>            as the module actually exists). Use autodeclare to change
+<style color=#00ffffff size=1>.</style>            this behaviour. Autodeclare 0 turns off all automatic
+<style color=#00ffffff size=1>.</style>            declaration: all modules used in an expression must have
+<style color=#00ffffff size=1>.</style>            previously been declared\; autodeclare 1 reverts to the
+<style color=#00ffffff size=1>.</style>            original behaviour.
+
+<style color=#00ffffff size=1>.</style>            Once a module is declared, it may be referred to by its
+<style color=#00ffffff size=1>.</style>            qualified name. Import makes the module available under its
+<style color=#00ffffff size=1>.</style>            unqualified name. It is an error if a module of the same
+<style color=#00ffffff size=1>.</style>            name has already been imported from a different typeset. For
+<style color=#00ffffff size=1>.</style>            instance:
+
+<style color=#00ffffff size=1>.</style>                 declare /read 'string -> fd'
+<style color=#00ffffff size=1>.</style>                 import /read
+
+<style color=#00ffffff size=1>.</style>            This would declare a module named read from the root typeset
+<style color=#00ffffff size=1>.</style>            (checking that it accepts a single string argument and
+<style color=#00ffffff size=1>.</style>            returns a file), and make it available under the name read.
+
+<style color=#00ffffff size=1>.</style>            Undeclare removes the previously declared name. Note that an
+<style color=#00ffffff size=1>.</style>            imported module has two names: its qualified name and its
+<style color=#00ffffff size=1>.</style>            unqualified name.
+
+<style color=#00ffffff size=1>.</style>            Typeset loads the new typeset qname. Typesets are
+<style color=#00ffffff size=1>.</style>            hierarchical in the same way that types and modules are: a
+<style color=#00ffffff size=1>.</style>            typeset adds some types to its parent typeset, and has an
+<style color=#00ffffff size=1>.</style>            associated set of modules that provide transformations
+<style color=#00ffffff size=1>.</style>            between those types and between those of its parent.
+
+<style color=#00ffffff size=1>.</style>            Autoconvert specifies an automatic conversion between
+<style color=#00ffffff size=1>.</style>            srctype and dsttype, i.e. whereever a module expects an
+<style color=#00ffffff size=1>.</style>            argument of type dsttype, and the argument is actually of
+<style color=#00ffffff size=1>.</style>            type srctype, the module block (see below for definition)
+<style color=#00ffffff size=1>.</style>            expr (which must be compatible with type srctype->dsttype),
+<style color=#00ffffff size=1>.</style>            will be invoked to convert between the two. Several
+<style color=#00ffffff size=1>.</style>            conversions will be applied atop one another if necessary.
+<style color=#00ffffff size=1>.</style>            It is an error if adding the auto-conversion creates an
+<style color=#00ffffff size=1>.</style>            ambiguous conversion path between two types. As a
+<style color=#00ffffff size=1>.</style>            convenience, expr may simply be the name of a module, in
+<style color=#00ffffff size=1>.</style>            which case the expression will be rewritten as its identity
+<style color=#00ffffff size=1>.</style>            module block: {(srctype)\; expr}.
+
+<style color=#00ffffff size=1>.</style>            The - command evaluates the alphabet expression, of the
+<style color=#00ffffff size=1>.</style>            form:
+
+<style color=#00ffffff size=1>.</style>                 {command arg...}
+
+<style color=#00ffffff size=1>.</style>            Usually, command is the name of a previously declared
+<style color=#00ffffff size=1>.</style>            module, which must also have been imported if it is not a
+<style color=#00ffffff size=1>.</style>            qualified name. The arguments must conform to those expected
+<style color=#00ffffff size=1>.</style>            by the module. Each argument is either a literal string or
+<style color=#00ffffff size=1>.</style>            shell-command, as described earlier, or a subexpression of
+<style color=#00ffffff size=1>.</style>            the same form as above. All subexpressions are evaluated
+<style color=#00ffffff size=1>.</style>            fully before command is invoked. The result of the outermost
+<style color=#00ffffff size=1>.</style>            expression must be convertible to the type /status\; the
+<style color=#00ffffff size=1>.</style>            shell status of the - command will reflect this when the
+<style color=#00ffffff size=1>.</style>            command has completed.
+
+<style color=#00ffffff size=1>.</style>            As a convenience, alphabet provides a pipe-like syntax. It
+<style color=#00ffffff size=1>.</style>            will rewrite any expression of the form m1 m1args|m2 m2args
+<style color=#00ffffff size=1>.</style>            as m2 {m1 m1args}m2args. This occurs before any
+<style color=#00ffffff size=1>.</style>            auto-conversions have been applied.
+
+<style color=#00ffffff size=1>.</style>            Command may also be a module block, of the form:
+
+<style color=#00ffffff size=1>.</style>                 {(argtype...)\; command arg...}
+
+<style color=#00ffffff size=1>.</style>            The argtype values given in the brackets specify the types
+<style color=#00ffffff size=1>.</style>            of the arguments expected by the module block\; these can be
+<style color=#00ffffff size=1>.</style>            referred to in the arguments to command (and subexpressions
+<style color=#00ffffff size=1>.</style>            thereof) with values of the form $1, $2, etc. For instance,
+
+<style color=#00ffffff size=1>.</style>                 {(/string)\; echo $1} hello}
+
+<style color=#00ffffff size=1>.</style>            is exactly equivalent to:
+
+<style color=#00ffffff size=1>.</style>                 {echo hello}
+
+<style color=#00ffffff size=1>.</style>            In a module block with no arguments, the argument
+<style color=#00ffffff size=1>.</style>            declaration section may be omitted.
+
+<style color=#00ffffff size=1>.</style>            Define defines a new module in terms of previously declared
+<style color=#00ffffff size=1>.</style>            modules. Name (which must be an unqualified name) gives the
+<style color=#00ffffff size=1>.</style>            name of the module to define, and expr is a module block
+<style color=#00ffffff size=1>.</style>            giving the expression to evaluate when name is used. The
+<style color=#00ffffff size=1>.</style>            usage of the module is taken from the types declared in the
+<style color=#00ffffff size=1>.</style>            module block\; its return type is inferred from the return
+<style color=#00ffffff size=1>.</style>            type of expr. All modules used in the evaluation of expr are
+<style color=#00ffffff size=1>.</style>            evaluated when the definition takes place, so evaluation of
+<style color=#00ffffff size=1>.</style>            name is unaffected if any modules it uses are later
+<style color=#00ffffff size=1>.</style>            undeclared.
+
+<style color=#00ffffff size=1>.</style>            To show the complete form of an expression, after pipe
+<style color=#00ffffff size=1>.</style>            transformations and auto-conversions have been applied, and
+<style color=#00ffffff size=1>.</style>            module definitions expanded, use ${rewrite}, which returns
+<style color=#00ffffff size=1>.</style>            the expression's canonical form without actually executing
+<style color=#00ffffff size=1>.</style>            it. If dsttype is given, auto-conversions will be applied to
+<style color=#00ffffff size=1>.</style>            try to convert the result of expression to dsttype. Rewrite
+<style color=#00ffffff size=1>.</style>            raises an error if it finds any declarations incompatible
+<style color=#00ffffff size=1>.</style>            with expression or if the final type cannot be converted
+<style color=#00ffffff size=1>.</style>            successfully.
+
+<style color=#00ffffff size=1>.</style>            Alphabet also provides some shell operations that give
+<style color=#00ffffff size=1>.</style>            information on its current state: ${modules} yields a list
+<style color=#00ffffff size=1>.</style>            of all the currently declared module names (including
+<style color=#00ffffff size=1>.</style>            entries for both qualified and unqualified names)\; ${types}
+<style color=#00ffffff size=1>.</style>            yields a list of all currently available types (giving only
+<style color=#00ffffff size=1>.</style>            the types in typeset if specified)\; and ${usage} provides
+<style color=#00ffffff size=1>.</style>            usage information on module qname, which need not be
+<style color=#00ffffff size=1>.</style>            declared. Additionally, info searches the module directories
+<style color=#00ffffff size=1>.</style>            on all currently loaded typesets, and prints usage
+<style color=#00ffffff size=1>.</style>            information for everything it can find there, along with
+<style color=#00ffffff size=1>.</style>            information on all currently installed auto-conversions.
+
+<style color=#00ffffff size=1>.</style>            Finally, clear clears all existing declarations and
+<style color=#00ffffff size=1>.</style>            definitions, and starts again with a clean slate.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            load alphabet
+<style color=#00ffffff size=1>.</style>            type /string
+<style color=#00ffffff size=1>.</style>            type /fd
+<style color=#00ffffff size=1>.</style>            type /status
+<style color=#00ffffff size=1>.</style>            import /cat /filter
+<style color=#00ffffff size=1>.</style>            autoconvert string fd /read
+<style color=#00ffffff size=1>.</style>            autoconvert fd status {(fd)\; /print $1 1}
+<style color=#00ffffff size=1>.</style>            define wc {(fd)\; /filter $1 "{wc}}
+<style color=#00ffffff size=1>.</style>            - {cat /lib/polyhedra /dis/sh.dis | wc}
+<style color=#00ffffff size=1>.</style>            echo ${rewrite {cat /lib/polyhedra /dis/sh.dis | wc} status}
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/alphabet/*.b
+<style color=#00ffffff size=1>.</style>            /appl/alphabet/*/*.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Alphabet expressions involving external typesets and file
+<style color=#00ffffff size=1>.</style>            descriptors cannot have their I/O redirected at the shell
+<style color=#00ffffff size=1>.</style>            level. Unfortunately it is not possible to provide a
+<style color=#00ffffff size=1>.</style>            diagnostic when this occurs.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=alphabet(2)>alphabet(2)</action>, <action name=alphabet-main(1)>alphabet-main(1)</action>, <action name=alphabet-fs(1)>alphabet-fs(1)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=alphabet-grid(1)>alphabet-grid(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,93 @@
+<action name=MINITERM(1)>MINITERM(1)</action>                                           <action name=MINITERM(1)>MINITERM(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            miniterm - Minitel® emulator
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wm/minitel/miniterm \[ address \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Miniterm connects to the Minitel® service at the given
+<style color=#00ffffff size=1>.</style>            address, by default the France Telecom Internet gateway to
+<style color=#00ffffff size=1>.</style>            its Minitel® service, tcp!pdc.minitelfr.com!513. The address
+<style color=#00ffffff size=1>.</style>            can be any form acceptable to <action name=dial(2)>dial(2)</action>. Miniterm opens a new
+<style color=#00ffffff size=1>.</style>            window that mimics a Minitel display. An array of buttons on
+<style color=#00ffffff size=1>.</style>            the right hand side (in 40 character mode) or bottom (in 80
+<style color=#00ffffff size=1>.</style>            character mode) offer the special Minitel functions, with
+<style color=#00ffffff size=1>.</style>            French abbreviations. Characters typed on the keyboard are
+<style color=#00ffffff size=1>.</style>            sent to the server\; typing the return key acts as Suite or
+<style color=#00ffffff size=1>.</style>            Envoi as required. Clicking on a word with the mouse sends
+<style color=#00ffffff size=1>.</style>            it to the server.
+
+<style color=#00ffffff size=1>.</style>            The France Telecom gateway offers a demonstration service
+<style color=#00ffffff size=1>.</style>            using ID ZXNET1 with password DEMFTD. Once connected, the
+<style color=#00ffffff size=1>.</style>            services PAGESM (a directory of all Minitel services) and FT
+<style color=#00ffffff size=1>.</style>            (France Telecom's information service) are available without
+<style color=#00ffffff size=1>.</style>            charge. See www.minitelfr.com for further information.
+
+<style color=#00ffffff size=1>.</style>            On certain native Inferno hardware, miniterm can also
+<style color=#00ffffff size=1>.</style>            connect directly via a modem connection, using an address of
+<style color=#00ffffff size=1>.</style>            the form modem!modeminit!number, which sends the string
+<style color=#00ffffff size=1>.</style>            modeminit to the modem to initialise it, then dials the
+<style color=#00ffffff size=1>.</style>            given number. For example:
+
+<style color=#00ffffff size=1>.</style>                 wm/minitel/miniterm modem!F3!00133836431414
+
+<style color=#00ffffff size=1>.</style>            Here, the ``F3'' is a code that tells the modem to enable
+<style color=#00ffffff size=1>.</style>            V.23, which must be used when connecting to the France
+<style color=#00ffffff size=1>.</style>            Telecom servers. To use pulse dialing instead of tone
+<style color=#00ffffff size=1>.</style>            dialing the phone number can be prefixed with a `P', as in:
+
+<style color=#00ffffff size=1>.</style>                 wm/minitel/miniterm modem!F3!P3614
+
+<style color=#00ffffff size=1>.</style>            If the parameter specifies a network connection or a direct
+<style color=#00ffffff size=1>.</style>            connection with a phone number the software will attempt to
+<style color=#00ffffff size=1>.</style>            connect immediately. If the on-screen button Cx/Fin is used
+<style color=#00ffffff size=1>.</style>            to disconnect and then re-connect, miniterm will use the
+<style color=#00ffffff size=1>.</style>            same address if it is a network connection but prompt for a
+<style color=#00ffffff size=1>.</style>            new phone number for a direct connection. When prompting for
+<style color=#00ffffff size=1>.</style>            a new number the top row of the screen is used to allow the
+<style color=#00ffffff size=1>.</style>            user to edit the last used number. Simple editing is
+<style color=#00ffffff size=1>.</style>            available, and the minitel keys do the obvious things.
+
+<style color=#00ffffff size=1>.</style>            The Minitel function keys are displayed on the right hand
+<style color=#00ffffff size=1>.</style>            side of the screen in 40 column mode on a network connection
+<style color=#00ffffff size=1>.</style>            and can be swapped to the left hand side by hitting the
+<style color=#00ffffff size=1>.</style>            ``<-'' key. In direct dial mode and 80 column network mode
+<style color=#00ffffff size=1>.</style>            the keys are displayed at the bottom of the screen. In
+<style color=#00ffffff size=1>.</style>            network mode they are redisplayed as appropriate on 40 to 80
+<style color=#00ffffff size=1>.</style>            column mode changes.
+
+<style color=#00ffffff size=1>.</style>            Miniterm provides a software keyboard, activated by the
+<style color=#00ffffff size=1>.</style>            Clavier button, which understands some of the Minitel
+<style color=#00ffffff size=1>.</style>            keyboard mappings. For example, hitting `A' results in a
+<style color=#00ffffff size=1>.</style>            capital ``A'' on the screen in spite of the Videotex case
+<style color=#00ffffff size=1>.</style>            mapping.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /dev/modem      soft modem (no longer supported)
+<style color=#00ffffff size=1>.</style>            /dev/modemctl
+<style color=#00ffffff size=1>.</style>            /fonts/minitel  text and semigraphic characters
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/miniterm
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=charon(1)>charon(1)</action>, <action name=telnet(1)>telnet(1)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            There is no button to control use of error correction in
+<style color=#00ffffff size=1>.</style>            direct dial mode\; it will be enabled only if the server
+<style color=#00ffffff size=1>.</style>            requests it, but not all do. Without it direct dial screens
+<style color=#00ffffff size=1>.</style>            are occasionally corrupted.
+
+<style color=#00ffffff size=1>.</style>            The software keyboard is not AZERTY. Worse, it does not
+<style color=#00ffffff size=1>.</style>            always come to the top on a mode change.
+
+<style color=#00ffffff size=1>.</style>            Some screens look wrong in 80 column mode.
+
+<style color=#00ffffff size=1>.</style>            On a network connection, choosing USA displays `iC' at the
+<style color=#00ffffff size=1>.</style>            bottom left hand corner of the screen. The server really is
+<style color=#00ffffff size=1>.</style>            sending this sequence. Both the FT emulator and their
+<style color=#00ffffff size=1>.</style>            explorer plug-in suffer from it too.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

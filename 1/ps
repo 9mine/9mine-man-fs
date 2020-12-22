@@ -1,0 +1,42 @@
+<action name=PS(1)>PS(1)</action>                                                       <action name=PS(1)>PS(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ps - process (thread) status
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind '#p' /prog
+
+<style color=#00ffffff size=1>.</style>            ps
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ps prints to the standard output information about all
+<style color=#00ffffff size=1>.</style>            current Inferno processes. It looks in /prog for process
+<style color=#00ffffff size=1>.</style>            status files\; normally that requires that the <action name=prog(3)>prog(3)</action> device
+<style color=#00ffffff size=1>.</style>            has previously been bound there (as shown above), but it is
+<style color=#00ffffff size=1>.</style>            also possible to import /prog from a remote machine.
+
+<style color=#00ffffff size=1>.</style>            Each line of information printed consists of seven columns:
+<style color=#00ffffff size=1>.</style>            the process id, the process group id, the owner of the
+<style color=#00ffffff size=1>.</style>            process, cpu time used by the process, the run state of the
+<style color=#00ffffff size=1>.</style>            process, the amount of memory used by the process, and the
+<style color=#00ffffff size=1>.</style>            name of the module containing the currently running
+<style color=#00ffffff size=1>.</style>            function.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /prog/*/status
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ps.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=deb(1)>deb(1)</action>, <action name=kill(1)>kill(1)</action>, <action name=stack(1)>stack(1)</action>, wm/task and wm/memory in wm-misc
+<style color=#00ffffff size=1>.</style>            (1), <action name=prog(3)>prog(3)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The amount reported as ``memory used'' does not accurately
+<style color=#00ffffff size=1>.</style>            reflect the amount of memory referred to by the process,
+<style color=#00ffffff size=1>.</style>            because the heap is shared.
+<style color=#00ffffff size=1>.</style>            The cpu time used is currently shown as zero in most hosted
+<style color=#00ffffff size=1>.</style>            implementations.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

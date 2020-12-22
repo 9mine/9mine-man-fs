@@ -1,0 +1,10 @@
+<action name=INTRO(7)>INTRO(7)</action>                                                 <action name=INTRO(7)>INTRO(7)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            intro - introduction to databases
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This manual section describes databases available on Inferno
+<style color=#00ffffff size=1>.</style>            and the commands and modules that access them.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

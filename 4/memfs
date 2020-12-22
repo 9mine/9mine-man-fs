@@ -1,0 +1,47 @@
+<action name=MEMFS(4)>MEMFS(4)</action>                                                 <action name=MEMFS(4)>MEMFS(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            memfs - mount a heap based filesystem
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            memfs \[-s\] \[-rab\] \[-m size\] \[mountpoint\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Memfs mounts a newly created heap-based filesystem on the
+<style color=#00ffffff size=1>.</style>            given mountpoint directory (default /tmp).
+
+<style color=#00ffffff size=1>.</style>            The filesystem is entirely maintained in memory, no external
+<style color=#00ffffff size=1>.</style>            storage is used. File data is allocated in 512 byte blocks.
+<style color=#00ffffff size=1>.</style>            If a maximum size is specified, the actual maximum is
+<style color=#00ffffff size=1>.</style>            rounded down to the nearest whole number of blocks:
+
+<style color=#00ffffff size=1>.</style>                 actualsize := (size / 512) * 512\;
+
+<style color=#00ffffff size=1>.</style>            The root of the filesystem is owned by the user who invoked
+<style color=#00ffffff size=1>.</style>            memfs and is created with Read, Write and Execute
+<style color=#00ffffff size=1>.</style>            permissions for the owner and Read and Execute permissions
+<style color=#00ffffff size=1>.</style>            for everyone else (8r755).
+
+OPTIONS
+<style color=#00ffffff size=1>.</style>            -s   Serve styx on file descriptor 0. The mountpoint and
+<style color=#00ffffff size=1>.</style>                 other mount options are ignored.
+
+<style color=#00ffffff size=1>.</style>            -r   The default option. The old mountpoint directory
+<style color=#00ffffff size=1>.</style>                 becomes a union directory consisting of just the root
+<style color=#00ffffff size=1>.</style>                 of the new filesystem.
+
+<style color=#00ffffff size=1>.</style>            -a   Add the root of the new filesystem to the end of the
+<style color=#00ffffff size=1>.</style>                 union directory represented by the mountpoint
+<style color=#00ffffff size=1>.</style>                 directory.
+
+<style color=#00ffffff size=1>.</style>            -b   Add the root of the new filesystem to the beginning of
+<style color=#00ffffff size=1>.</style>                 the union directory represented by the mountpoint
+<style color=#00ffffff size=1>.</style>                 directory.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/memfs.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ramfile(4)>ramfile(4)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

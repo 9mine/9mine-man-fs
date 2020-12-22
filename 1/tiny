@@ -1,0 +1,239 @@
+<action name=TINY(1)>TINY(1)</action>                                                   <action name=TINY(1)>TINY(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tiny: sh, broke, kill, rm - reduced command line interface
+<style color=#00ffffff size=1>.</style>            to the Inferno system
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            tiny/sh \[ -n \] \[ -ccommand \] \[ file \]
+
+<style color=#00ffffff size=1>.</style>            tiny/broke
+
+<style color=#00ffffff size=1>.</style>            tiny/kill \[ -g \] \[ pid ... \] \[ module ... \]
+
+<style color=#00ffffff size=1>.</style>            tiny/rm \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The tiny commands are smaller, simpler versions of more
+<style color=#00ffffff size=1>.</style>            capable but larger Inferno commands. They are provided for
+<style color=#00ffffff size=1>.</style>            use on devices where a certain level of functionality might
+<style color=#00ffffff size=1>.</style>            be useful for configuration or maintenance (or development),
+<style color=#00ffffff size=1>.</style>            but device constraints are such as to make the use of the
+<style color=#00ffffff size=1>.</style>            normal, fleshier versions of the commands unattractive. For
+<style color=#00ffffff size=1>.</style>            example, the Dis object files can be as much as 5 times
+<style color=#00ffffff size=1>.</style>            smaller (or better) than the mainstream alternatives. They
+<style color=#00ffffff size=1>.</style>            are also useful when initially porting the system. They live
+<style color=#00ffffff size=1>.</style>            in the directory /dis/tiny, but could be placed in the /dis
+<style color=#00ffffff size=1>.</style>            of a small device (eg, via <action name=root(3)>root(3)</action>)·
+
+<style color=#00ffffff size=1>.</style>            Broke kills broken processes and prints their process IDs.
+
+<style color=#00ffffff size=1>.</style>            Kill terminates each process (for a numeric process ID pid)
+<style color=#00ffffff size=1>.</style>            or process running a given module (for a non-numeric module
+<style color=#00ffffff size=1>.</style>            name), by writing a ``kill'' message to the corresponding
+<style color=#00ffffff size=1>.</style>            process's control file in <action name=prog(3)>prog(3)</action>. The -g option causes kill
+<style color=#00ffffff size=1>.</style>            to write a ``killgrp'' message instead, killing all
+<style color=#00ffffff size=1>.</style>            processes in the given process's process group (see sys-pctl
+<style color=#00ffffff size=1>.</style>            (2)). Processes running a module are identified by their
+<style color=#00ffffff size=1>.</style>            ``status'' file, and the process ID of each such process is
+<style color=#00ffffff size=1>.</style>            printed on standard output.
+
+<style color=#00ffffff size=1>.</style>            Rm removes files and empty directories, subject to the
+<style color=#00ffffff size=1>.</style>            permission rules given in <action name=rm(1)>rm(1)</action>. There are no options.
+
+<style color=#00ffffff size=1>.</style>            Sh provides a simple user level interface (a shell) to the
+<style color=#00ffffff size=1>.</style>            Inferno system. (It was once the only Inferno shell.) It
+<style color=#00ffffff size=1>.</style>            reads input lines, identifies a command and arguments for
+<style color=#00ffffff size=1>.</style>            that command, and arranges for execution of the
+<style color=#00ffffff size=1>.</style>            corresponding Inferno module. There are features that allow
+<style color=#00ffffff size=1>.</style>            input/output redirection, creating pipelines, and performing
+<style color=#00ffffff size=1>.</style>            tasks in background. It is nevertheless a rudimentary shell
+<style color=#00ffffff size=1>.</style>            designed for starting and debugging applications. It is not
+<style color=#00ffffff size=1>.</style>            intended to serve as a general-purpose programmable shell.
+
+<style color=#00ffffff size=1>.</style>            If a file is named as a command line argument, that file is
+<style color=#00ffffff size=1>.</style>            the source of input\; otherwise, standard input is read.
+
+<style color=#00ffffff size=1>.</style>            Options are:
+
+<style color=#00ffffff size=1>.</style>            -n   Don't fork the namespace.  By default, sh forks the
+<style color=#00ffffff size=1>.</style>                 namespace, making subsequent namespace changes
+<style color=#00ffffff size=1>.</style>                 invisible to the previous namespace group.
+
+<style color=#00ffffff size=1>.</style>            -ccommand
+<style color=#00ffffff size=1>.</style>                 Execute the single command rather than prompting to
+<style color=#00ffffff size=1>.</style>                 read commands from the standard input.
+
+<style color=#00ffffff size=1>.</style>         Command line syntax
+<style color=#00ffffff size=1>.</style>            Each line consists of one or more command pipelines each
+<style color=#00ffffff size=1>.</style>            separated by either an ampersand (&) which indicates that
+<style color=#00ffffff size=1>.</style>            the pipeline should be run in background or a semi-colon
+<style color=#00ffffff size=1>.</style>            (\;). The semi-colon need not be provided for the last
+<style color=#00ffffff size=1>.</style>            command pipeline on a line.
+
+<style color=#00ffffff size=1>.</style>            Command pipelines are not allowed to span lines.
+
+<style color=#00ffffff size=1>.</style>            Each command pipeline consists of one or more commands
+<style color=#00ffffff size=1>.</style>            separated by a vertical bar (|) character. The standard
+<style color=#00ffffff size=1>.</style>            output of one command is made the standard input of the next
+<style color=#00ffffff size=1>.</style>            command to the right.
+
+<style color=#00ffffff size=1>.</style>            Redirection of input/output to pipes takes precedence over
+<style color=#00ffffff size=1>.</style>            redirection from/to files.
+
+<style color=#00ffffff size=1>.</style>            In the limit case, a command pipeline consists of a single
+<style color=#00ffffff size=1>.</style>            command with no pipes.
+
+<style color=#00ffffff size=1>.</style>            A command consists of one or more fields. The first
+<style color=#00ffffff size=1>.</style>            (leftmost) field is the command field. It is used to
+<style color=#00ffffff size=1>.</style>            determined the executable file to be loaded and run\; see
+<style color=#00ffffff size=1>.</style>            below. The remaining fields are parsed and become command
+<style color=#00ffffff size=1>.</style>            line arguments that are passed to the module's init function
+<style color=#00ffffff size=1>.</style>            as a list of strings.
+
+<style color=#00ffffff size=1>.</style>            Any input following a # on a line is discarded as comment.
+
+<style color=#00ffffff size=1>.</style>         Finding the module
+<style color=#00ffffff size=1>.</style>            The command field is converted to the pathname of the Dis
+<style color=#00ffffff size=1>.</style>            file of some module. That field can be either an absolute
+<style color=#00ffffff size=1>.</style>            pathname, starting from /, or a relative pathname from the
+<style color=#00ffffff size=1>.</style>            current directory.
+
+<style color=#00ffffff size=1>.</style>            As a convenience, the user need not specify the .dis suffix
+<style color=#00ffffff size=1>.</style>            to the filename. If missing, it will be added by the shell.
+
+<style color=#00ffffff size=1>.</style>            If the load fails there is, in general, a second attempt to
+<style color=#00ffffff size=1>.</style>            load the module by resolving the pathname relative to the
+<style color=#00ffffff size=1>.</style>            /dis directory (or any directory bound to the /dis directory
+<style color=#00ffffff size=1>.</style>            in the current namespace).
+
+<style color=#00ffffff size=1>.</style>            There are two exceptions to this second attempt. The second
+<style color=#00ffffff size=1>.</style>            load attempt is not performed if the command field provides
+<style color=#00ffffff size=1>.</style>            an absolute pathname or a relative pathname starting with
+<style color=#00ffffff size=1>.</style>            dot-slash (./). Such explicit naming is taken to mean that
+<style color=#00ffffff size=1>.</style>            the user will accept no substitutions.
+
+<style color=#00ffffff size=1>.</style>            The shell requires that the Dis file implement a module with
+<style color=#00ffffff size=1>.</style>            an interface equivalent to the ``Command'' module as
+<style color=#00ffffff size=1>.</style>            specified in /module/sh.m (see <action name=command(2)>command(2)</action>). Otherwise, the
+<style color=#00ffffff size=1>.</style>            named file will not load.
+
+<style color=#00ffffff size=1>.</style>            In lieu of a path mechanism, a process can create a union
+<style color=#00ffffff size=1>.</style>            directory at /dis.
+
+<style color=#00ffffff size=1>.</style>         File name expansion
+<style color=#00ffffff size=1>.</style>            Command line arguments (including the command field itself)
+<style color=#00ffffff size=1>.</style>            are expanded by the shell according to the regular
+<style color=#00ffffff size=1>.</style>            expression rules described in <action name=filepat(2)>filepat(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            This expansion is not applied to the filenames used for
+<style color=#00ffffff size=1>.</style>            input/output redirection.
+
+<style color=#00ffffff size=1>.</style>         Quoting
+<style color=#00ffffff size=1>.</style>            The shell special characters can be stripped of their
+<style color=#00ffffff size=1>.</style>            meaning and treated as literals by enclosing them in single
+<style color=#00ffffff size=1>.</style>            quotes. Inside a quoted string, the special meaning of the
+<style color=#00ffffff size=1>.</style>            single quote can be removed by immediately following it with
+<style color=#00ffffff size=1>.</style>            another single quote. Command lines with un-terminated
+<style color=#00ffffff size=1>.</style>            quoted strings are rejected and cause an error message.
+
+<style color=#00ffffff size=1>.</style>            For example:
+
+<style color=#00ffffff size=1>.</style>                 $ echo ''''
+<style color=#00ffffff size=1>.</style>                 '
+<style color=#00ffffff size=1>.</style>                 $ echo 'don''t'
+<style color=#00ffffff size=1>.</style>                 don't
+<style color=#00ffffff size=1>.</style>                 $ echo 'hello' 'world
+<style color=#00ffffff size=1>.</style>                 sh: unmatched quote
+<style color=#00ffffff size=1>.</style>                 $ echo 'a'b
+<style color=#00ffffff size=1>.</style>                 ab
+<style color=#00ffffff size=1>.</style>                 $ echo a'b'
+<style color=#00ffffff size=1>.</style>                 ab
+<style color=#00ffffff size=1>.</style>                 $
+
+<style color=#00ffffff size=1>.</style>         Shell special characters
+<style color=#00ffffff size=1>.</style>            The following characters are treated specially by sh and
+<style color=#00ffffff size=1>.</style>            must be quoted to be taken literally:
+
+<style color=#00ffffff size=1>.</style>            blank
+<style color=#00ffffff size=1>.</style>                 white space, except in a quoted string
+
+<style color=#00ffffff size=1>.</style>            tab  white space, except in a quoted string
+
+<style color=#00ffffff size=1>.</style>            newline
+<style color=#00ffffff size=1>.</style>                 command line terminator
+
+<style color=#00ffffff size=1>.</style>            #    Start of comment
+
+<style color=#00ffffff size=1>.</style>            '    Start of/end of quoted string (single quote)
+
+<style color=#00ffffff size=1>.</style>            |    Interface between commands in a command pipeline.
+
+<style color=#00ffffff size=1>.</style>            &    Terminator for command pipelines to be run in
+<style color=#00ffffff size=1>.</style>                 background.
+
+<style color=#00ffffff size=1>.</style>            \;    Terminator for command pipelines to be run
+<style color=#00ffffff size=1>.</style>                 synchronously by the shell.
+
+<style color=#00ffffff size=1>.</style>            >    Output re-direction: create file if it does not exist\;
+<style color=#00ffffff size=1>.</style>                 truncate file if it exists
+
+<style color=#00ffffff size=1>.</style>            >>   Output re-direction: create file if it does not exist\;
+<style color=#00ffffff size=1>.</style>                 append to file if it exists
+
+<style color=#00ffffff size=1>.</style>            <    Input re-direction.
+
+<style color=#00ffffff size=1>.</style>         Prompt
+<style color=#00ffffff size=1>.</style>            The shell uses a prompt consisting of the system name as
+<style color=#00ffffff size=1>.</style>            provided by /dev/sysname suffixed by $.
+
+<style color=#00ffffff size=1>.</style>         Input/output re-directions
+<style color=#00ffffff size=1>.</style>            By default, standard input is the console keyboard and
+<style color=#00ffffff size=1>.</style>            standard output the console display. Each command can
+<style color=#00ffffff size=1>.</style>            specify that standard input be taken from a file and
+<style color=#00ffffff size=1>.</style>            standard output be written to a file.
+
+<style color=#00ffffff size=1>.</style>            Attempts to redirect standard input to a non-existing file
+<style color=#00ffffff size=1>.</style>            will fail. Redirecting standard output to a non-existing
+<style color=#00ffffff size=1>.</style>            file will cause that file to be created. If the destination
+<style color=#00ffffff size=1>.</style>            file already exists, it will be overwritten. Any previous
+<style color=#00ffffff size=1>.</style>            contents are lost.
+
+<style color=#00ffffff size=1>.</style>            In cases of competing re-direction mechanisms (re-direct to
+<style color=#00ffffff size=1>.</style>            a file and to a pipe), the pipe has precedence.
+
+<style color=#00ffffff size=1>.</style>         Background tasks
+<style color=#00ffffff size=1>.</style>            In general, the shell waits for the termination of a command
+<style color=#00ffffff size=1>.</style>            pipeline before continuing execution, for example, prompting
+<style color=#00ffffff size=1>.</style>            the user for the next command. However, if the command
+<style color=#00ffffff size=1>.</style>            pipeline is terminated by an ampersand (&) character, the
+<style color=#00ffffff size=1>.</style>            wait stage is skipped and the shell continues execution
+<style color=#00ffffff size=1>.</style>            immediately, in this case the command pipeline executes as a
+<style color=#00ffffff size=1>.</style>            background task.
+
+<style color=#00ffffff size=1>.</style>         Name space concerns
+<style color=#00ffffff size=1>.</style>            When started, the shell creates an independent file name
+<style color=#00ffffff size=1>.</style>            space that is a copy of the file name space of the shell's
+<style color=#00ffffff size=1>.</style>            creator.
+
+<style color=#00ffffff size=1>.</style>            Command pipelines started by the shell are executed by
+<style color=#00ffffff size=1>.</style>            threads that share the shell's name space. If those commands
+<style color=#00ffffff size=1>.</style>            modify the file name space (and they have not mimicked the
+<style color=#00ffffff size=1>.</style>            shell in creating their own independent name space), those
+<style color=#00ffffff size=1>.</style>            modifications will be perceived by the shell when it
+<style color=#00ffffff size=1>.</style>            continues execution. See <action name=bind(1)>bind(1)</action> and <action name=sys-pctl(2)>sys-pctl(2)</action>.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /prog/n/wait
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/tiny/broke.b
+<style color=#00ffffff size=1>.</style>            /appl/tiny/kill.b
+<style color=#00ffffff size=1>.</style>            /appl/tiny/rm.b
+<style color=#00ffffff size=1>.</style>            /appl/tiny/sh.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bind(1)>bind(1)</action>, <action name=sh(1)>sh(1)</action>, <action name=filepat(2)>filepat(2)</action>, <action name=command(2)>command(2)</action>, <action name=sys-pctl(2)>sys-pctl(2)</action>, cons
+<style color=#00ffffff size=1>.</style>            (3), <action name=pipe(3)>pipe(3)</action>, <action name=prog(3)>prog(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

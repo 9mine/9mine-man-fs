@@ -1,0 +1,40 @@
+<action name=DATE(1)>DATE(1)</action>                                                   <action name=DATE(1)>DATE(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            date - print the date
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            date \[ -u \] \[ -n \] \[ seconds \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Prints the date to standard output, in the format:
+
+<style color=#00ffffff size=1>.</style>                 Wed Jan 12 11:54:06 GMT 2002
+
+<style color=#00ffffff size=1>.</style>            The options are
+
+<style color=#00ffffff size=1>.</style>            -u   Report Greenwich Mean Time (GMT) rather than local
+<style color=#00ffffff size=1>.</style>                 time.
+
+<style color=#00ffffff size=1>.</style>            -n   Report the date as the number of seconds since the
+<style color=#00ffffff size=1>.</style>                 epoch, 00:00:00 GMT, January 1, 1970.
+
+<style color=#00ffffff size=1>.</style>            Current time is obtained by reading /dev/time. The
+<style color=#00ffffff size=1>.</style>            conversion from Greenwich Mean Time to local time depends on
+<style color=#00ffffff size=1>.</style>            the contents of /locale/timezone.
+
+<style color=#00ffffff size=1>.</style>            If the optional argument seconds is present, it is used as
+<style color=#00ffffff size=1>.</style>            the time to convert rather than the real time.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /locale/timezone    Current time zone name and adjustments
+<style color=#00ffffff size=1>.</style>            /locale             A directory containing time zone tables
+<style color=#00ffffff size=1>.</style>            /dev/time           microseconds since the epoch, 00:00:00
+<style color=#00ffffff size=1>.</style>                                GMT, 1 January 1970
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/date.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=time(1)>time(1)</action>, <action name=daytime(2)>daytime(2)</action>, <action name=cons(3)>cons(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

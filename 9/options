@@ -1,0 +1,243 @@
+<action name=OPTIONS(9)>OPTIONS(9)</action>                                             <action name=OPTIONS(9)>OPTIONS(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            options - Standard options supported by widgets
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This manual entry describes the common configuration options
+<style color=#00ffffff size=1>.</style>            supported by widgets in the Tk toolkit.  Every widget does
+<style color=#00ffffff size=1>.</style>            not necessarily support every option (see the manual entries
+<style color=#00ffffff size=1>.</style>            for individual widgets for a list of the standard options
+<style color=#00ffffff size=1>.</style>            supported by that widget), but if a widget does support an
+<style color=#00ffffff size=1>.</style>            option with one of the names listed below, then the option
+<style color=#00ffffff size=1>.</style>            has exactly the effect described below. For a description of
+<style color=#00ffffff size=1>.</style>            kinds of values that can passed to the various options, see
+<style color=#00ffffff size=1>.</style>            <action name=types(9)>types(9)</action>.
+
+<style color=#00ffffff size=1>.</style>            In the descriptions below, the name refers to the switch
+<style color=#00ffffff size=1>.</style>            used in class commands and configure widget commands to set
+<style color=#00ffffff size=1>.</style>            this value.  For example, if an option's command-line switch
+<style color=#00ffffff size=1>.</style>            is set to -foreground and there exists a widget .a.b.c, then
+<style color=#00ffffff size=1>.</style>            the command
+<style color=#00ffffff size=1>.</style>                 .a.b.c configure -foreground black
+<style color=#00ffffff size=1>.</style>            may be used to specify the value black for the option in the
+<style color=#00ffffff size=1>.</style>            the widget .a.b.c.
+
+<style color=#00ffffff size=1>.</style>            -activebackground colour
+<style color=#00ffffff size=1>.</style>                 Specifies background colour to use when drawing active
+<style color=#00ffffff size=1>.</style>                 elements. An element (a widget or portion of a widget)
+<style color=#00ffffff size=1>.</style>                 is active if the mouse cursor is positioned over the
+<style color=#00ffffff size=1>.</style>                 element and pressing a mouse button will cause some
+<style color=#00ffffff size=1>.</style>                 action to occur.
+
+<style color=#00ffffff size=1>.</style>            -activeforeground colour
+<style color=#00ffffff size=1>.</style>                 Specifies foreground colour to use when drawing active
+<style color=#00ffffff size=1>.</style>                 elements. See above for definition of active elements.
+
+<style color=#00ffffff size=1>.</style>            -actx
+<style color=#00ffffff size=1>.</style>                 Returns the current x position of the widget in screen
+<style color=#00ffffff size=1>.</style>                 coordinates.
+
+<style color=#00ffffff size=1>.</style>            -acty
+<style color=#00ffffff size=1>.</style>                 Returns the current y position of the widget in screen
+<style color=#00ffffff size=1>.</style>                 coordinates.
+
+<style color=#00ffffff size=1>.</style>            -actwidth
+<style color=#00ffffff size=1>.</style>                 Returns the current allocated width of the widget.
+
+<style color=#00ffffff size=1>.</style>            -actheight
+<style color=#00ffffff size=1>.</style>                 Returns the current allocated height of the widget.
+
+<style color=#00ffffff size=1>.</style>            -anchor val
+<style color=#00ffffff size=1>.</style>                 Specifies how the information in a widget (e.g. text or
+<style color=#00ffffff size=1>.</style>                 a bitmap) is to be displayed in the widget. Val must be
+<style color=#00ffffff size=1>.</style>                 one of the values n, ne, e, se, s, sw, w, nw, or center
+<style color=#00ffffff size=1>.</style>                 . For example, nw means display the information such
+<style color=#00ffffff size=1>.</style>                 that its top-left corner is at the top-left corner of
+<style color=#00ffffff size=1>.</style>                 the widget.
+
+<style color=#00ffffff size=1>.</style>            -background colour or -bg colour
+<style color=#00ffffff size=1>.</style>                 Specifies the normal background colour to use when
+<style color=#00ffffff size=1>.</style>                 displaying the widget.
+
+<style color=#00ffffff size=1>.</style>            -bitmap bitmap
+<style color=#00ffffff size=1>.</style>                 Specifies a bitmap to display in the widget. The exact
+<style color=#00ffffff size=1>.</style>                 way in which the bitmap is displayed may be affected by
+<style color=#00ffffff size=1>.</style>                 other options such as anchor or justify. Typically, if
+<style color=#00ffffff size=1>.</style>                 this option is specified then it overrides other
+<style color=#00ffffff size=1>.</style>                 options that specify a textual value to display in the
+<style color=#00ffffff size=1>.</style>                 widget\; the bitmap option may be reset to an empty
+<style color=#00ffffff size=1>.</style>                 string to re-enable a text display. In widgets that
+<style color=#00ffffff size=1>.</style>                 support both bitmap and image options, image will
+<style color=#00ffffff size=1>.</style>                 usually override bitmap. For those widgets that support
+<style color=#00ffffff size=1>.</style>                 the foreground option, if the bitmap is monochrome it
+<style color=#00ffffff size=1>.</style>                 is displayed using the foreground colour.
+
+<style color=#00ffffff size=1>.</style>            -borderwidth dist or -bd dist
+<style color=#00ffffff size=1>.</style>                 Specifies a non-negative value indicating the width of
+<style color=#00ffffff size=1>.</style>                 the 3-D border to draw around the outside of the widget
+<style color=#00ffffff size=1>.</style>                 (if such a border is being drawn\;  the relief option
+<style color=#00ffffff size=1>.</style>                 typically determines this).  The value may also be used
+<style color=#00ffffff size=1>.</style>                 when drawing 3-D effects in the interior of the widget.
+
+<style color=#00ffffff size=1>.</style>            -disabledcolor colour
+<style color=#00ffffff size=1>.</style>                 Specifies the foreground colour to use when drawing
+<style color=#00ffffff size=1>.</style>                 disabled widgets. Certain widgets can be disabled by
+<style color=#00ffffff size=1>.</style>                 use of their -state option.
+
+<style color=#00ffffff size=1>.</style>            -font font
+<style color=#00ffffff size=1>.</style>                 Specifies the font to use when drawing text inside the
+<style color=#00ffffff size=1>.</style>                 widget.
+
+<style color=#00ffffff size=1>.</style>            -foreground colour or -fg colour
+<style color=#00ffffff size=1>.</style>                 Specifies the normal foreground colour to use when
+<style color=#00ffffff size=1>.</style>                 displaying the widget.
+
+<style color=#00ffffff size=1>.</style>            -highlightcolor colour
+<style color=#00ffffff size=1>.</style>                 Specifies the colour to use for the traversal highlight
+<style color=#00ffffff size=1>.</style>                 rectangle that is drawn around the widget when it has
+<style color=#00ffffff size=1>.</style>                 the input focus.
+
+<style color=#00ffffff size=1>.</style>            -highlightthickness dist
+<style color=#00ffffff size=1>.</style>                 Specifies a non-negative value indicating the width of
+<style color=#00ffffff size=1>.</style>                 the highlight rectangle to draw around the outside of
+<style color=#00ffffff size=1>.</style>                 the widget when it has the input focus. If the value is
+<style color=#00ffffff size=1>.</style>                 zero, no focus highlight is drawn around the widget.
+
+<style color=#00ffffff size=1>.</style>            -image image
+<style color=#00ffffff size=1>.</style>                 Specifies an image to display in the widget, which must
+<style color=#00ffffff size=1>.</style>                 have been created with the image create command.
+<style color=#00ffffff size=1>.</style>                 Typically, if the image option is specified then it
+<style color=#00ffffff size=1>.</style>                 overrides other options that specify a bitmap or
+<style color=#00ffffff size=1>.</style>                 textual value to display in the widget\; the image
+<style color=#00ffffff size=1>.</style>                 option may be reset to an empty string to re-enable a
+<style color=#00ffffff size=1>.</style>                 bitmap or text display. For those widgets that support
+<style color=#00ffffff size=1>.</style>                 the foreground option, if the image is monochrome it is
+<style color=#00ffffff size=1>.</style>                 displayed using the foreground colour.
+
+<style color=#00ffffff size=1>.</style>            -jump boolean
+<style color=#00ffffff size=1>.</style>                 For widgets with a slider that can be dragged to adjust
+<style color=#00ffffff size=1>.</style>                 a value, such as scrollbars, this option determines
+<style color=#00ffffff size=1>.</style>                 when notifications are made about changes in the value.
+<style color=#00ffffff size=1>.</style>                 If the value is false, updates are made continuously as
+<style color=#00ffffff size=1>.</style>                 the slider is dragged. If the value is true, updates
+<style color=#00ffffff size=1>.</style>                 are delayed until the mouse button is released to end
+<style color=#00ffffff size=1>.</style>                 the drag\;  at that point a single notification is made
+<style color=#00ffffff size=1>.</style>                 (the value ``jumps'' rather than changing smoothly).
+
+<style color=#00ffffff size=1>.</style>            -justify val
+<style color=#00ffffff size=1>.</style>                 When there are multiple lines of text displayed in a
+<style color=#00ffffff size=1>.</style>                 widget, this option determines how the lines line up
+<style color=#00ffffff size=1>.</style>                 with each other. Val must be one of left, center, or 
+<style color=#00ffffff size=1>.</style>                 right. Left means that the lines' left edges all line
+<style color=#00ffffff size=1>.</style>                 up, center means that the lines' centers are aligned,
+<style color=#00ffffff size=1>.</style>                 and right means that the lines' right edges line up.
+
+<style color=#00ffffff size=1>.</style>            -orient orientation
+<style color=#00ffffff size=1>.</style>                 For widgets that can lay themselves out with either a
+<style color=#00ffffff size=1>.</style>                 horizontal or vertical orientation, such as scrollbars,
+<style color=#00ffffff size=1>.</style>                 this option specifies which orientation should be used.
+<style color=#00ffffff size=1>.</style>                 Orientation must be either horizontal or vertical.
+
+<style color=#00ffffff size=1>.</style>            -padx dist
+<style color=#00ffffff size=1>.</style>                 Specifies a non-negative value indicating how much
+<style color=#00ffffff size=1>.</style>                 extra space to request for the widget in the
+<style color=#00ffffff size=1>.</style>                 X-direction. When computing how large a window it
+<style color=#00ffffff size=1>.</style>                 needs, the widget will add this amount to the width it
+<style color=#00ffffff size=1>.</style>                 would normally need (as determined by the width of the
+<style color=#00ffffff size=1>.</style>                 things displayed in the widget)\;  if the geometry
+<style color=#00ffffff size=1>.</style>                 manager can satisfy this request, the widget will end
+<style color=#00ffffff size=1>.</style>                 up with extra internal space to the left and/or right
+<style color=#00ffffff size=1>.</style>                 of what it displays inside. Most widgets only use this
+<style color=#00ffffff size=1>.</style>                 option for padding text:  if they are displaying a
+<style color=#00ffffff size=1>.</style>                 bitmap or image, then they usually ignore padding
+<style color=#00ffffff size=1>.</style>                 options.
+
+<style color=#00ffffff size=1>.</style>            -pady dist
+<style color=#00ffffff size=1>.</style>                 Specifies a non-negative value indicating how much
+<style color=#00ffffff size=1>.</style>                 extra space to request for the widget in the
+<style color=#00ffffff size=1>.</style>                 Y-direction. When computing how large a window it
+<style color=#00ffffff size=1>.</style>                 needs, the widget will add this amount to the height it
+<style color=#00ffffff size=1>.</style>                 would normally need (as determined by the height of the
+<style color=#00ffffff size=1>.</style>                 things displayed in the widget)\;  if the geometry
+<style color=#00ffffff size=1>.</style>                 manager can satisfy this request, the widget will end
+<style color=#00ffffff size=1>.</style>                 up with extra internal space above and/or below what it
+<style color=#00ffffff size=1>.</style>                 displays inside. Most widgets only use this option for
+<style color=#00ffffff size=1>.</style>                 padding text:  if they are displaying a bitmap or
+<style color=#00ffffff size=1>.</style>                 image, then they usually ignore padding options.
+
+<style color=#00ffffff size=1>.</style>            -relief val
+<style color=#00ffffff size=1>.</style>                 Specifies the 3-D effect desired for the widget.
+<style color=#00ffffff size=1>.</style>                 Acceptable values for val are raised , sunken , flat ,
+<style color=#00ffffff size=1>.</style>                 ridge , and groove. The value indicates how the
+<style color=#00ffffff size=1>.</style>                 interior of the widget should appear relative to its
+<style color=#00ffffff size=1>.</style>                 exterior\;  for example, raised means the interior of
+<style color=#00ffffff size=1>.</style>                 the widget should appear to protrude from the screen,
+<style color=#00ffffff size=1>.</style>                 relative to the exterior of the widget.
+
+<style color=#00ffffff size=1>.</style>            -selectbackground colour
+<style color=#00ffffff size=1>.</style>                 Specifies the background colour to use when displaying
+<style color=#00ffffff size=1>.</style>                 selected items.
+
+<style color=#00ffffff size=1>.</style>            -selectborderwidth dist
+<style color=#00ffffff size=1>.</style>                 Specifies a non-negative value indicating the width of
+<style color=#00ffffff size=1>.</style>                 the 3-D border to draw around selected items.
+
+<style color=#00ffffff size=1>.</style>            -selectforeground colour
+<style color=#00ffffff size=1>.</style>                 Specifies the foreground colour to use when displaying
+<style color=#00ffffff size=1>.</style>                 selected items.
+
+<style color=#00ffffff size=1>.</style>            -takefocus boolean
+<style color=#00ffffff size=1>.</style>                 Determines whether clicking on the widget will
+<style color=#00ffffff size=1>.</style>                 automatically give it the keyboard focus, and also
+<style color=#00ffffff size=1>.</style>                 whether the widget will become part of the keyboard
+<style color=#00ffffff size=1>.</style>                 focus list and made accessible by keyboard navigation.
+
+<style color=#00ffffff size=1>.</style>            -text val
+<style color=#00ffffff size=1>.</style>                 Specifies a string, val, to be displayed inside the
+<style color=#00ffffff size=1>.</style>                 widget.  The way in which the string is displayed
+<style color=#00ffffff size=1>.</style>                 depends on the particular widget and may be determined
+<style color=#00ffffff size=1>.</style>                 by other options, such as anchor or justify.
+
+<style color=#00ffffff size=1>.</style>            -underline integer
+<style color=#00ffffff size=1>.</style>                 Specifies the integer index of a character to underline
+<style color=#00ffffff size=1>.</style>                 in the widget. This option is used by the default
+<style color=#00ffffff size=1>.</style>                 bindings to implement keyboard traversal for menu
+<style color=#00ffffff size=1>.</style>                 buttons and menu entries. 0 corresponds to the first
+<style color=#00ffffff size=1>.</style>                 character of the text displayed in the widget, 1 to the
+<style color=#00ffffff size=1>.</style>                 next character, and so on.
+
+<style color=#00ffffff size=1>.</style>            -xscrollcommand command
+<style color=#00ffffff size=1>.</style>                 Specifies the prefix for a command used to communicate
+<style color=#00ffffff size=1>.</style>                 with horizontal scrollbars. When the view in the
+<style color=#00ffffff size=1>.</style>                 widget's window changes (or whenever anything else
+<style color=#00ffffff size=1>.</style>                 occurs that could change the display in a scrollbar,
+<style color=#00ffffff size=1>.</style>                 such as a change in the total size of the widget's
+<style color=#00ffffff size=1>.</style>                 contents), the widget will generate a Tk command by
+<style color=#00ffffff size=1>.</style>                 concatenating command and two numbers. Each of the
+<style color=#00ffffff size=1>.</style>                 numbers is a fraction between 0 and 1, which indicates
+<style color=#00ffffff size=1>.</style>                 a position in the document.  0 indicates the beginning
+<style color=#00ffffff size=1>.</style>                 of the document, 1 indicates the end, .333 indicates a
+<style color=#00ffffff size=1>.</style>                 position one third the way through the document, and so
+<style color=#00ffffff size=1>.</style>                 on. The first fraction indicates the first information
+<style color=#00ffffff size=1>.</style>                 in the document that is visible in the window, and the
+<style color=#00ffffff size=1>.</style>                 second fraction indicates the information just after
+<style color=#00ffffff size=1>.</style>                 the last portion that is visible. The command is then
+<style color=#00ffffff size=1>.</style>                 passed to the Tk interpreter for execution.  Typically
+<style color=#00ffffff size=1>.</style>                 the -xscrollcommand option consists of the path name of
+<style color=#00ffffff size=1>.</style>                 a scrollbar widget followed by ``set'', e.g. ``
+<style color=#00ffffff size=1>.</style>                 .x.scrollbar set'': this will cause the scrollbar to be
+<style color=#00ffffff size=1>.</style>                 updated whenever the view in the window changes. If
+<style color=#00ffffff size=1>.</style>                 this option is not specified, then no command will be
+<style color=#00ffffff size=1>.</style>                 executed.
+
+<style color=#00ffffff size=1>.</style>            -yscrollcommand command
+<style color=#00ffffff size=1>.</style>                 Specifies the prefix for a command used to communicate
+<style color=#00ffffff size=1>.</style>                 with vertical scrollbars.  This option is treated in
+<style color=#00ffffff size=1>.</style>                 the same way as the -xscrollcommand option, except that
+<style color=#00ffffff size=1>.</style>                 it is used for vertical scrollbars and is provided by
+<style color=#00ffffff size=1>.</style>                 widgets that support vertical scrolling. See the
+<style color=#00ffffff size=1>.</style>                 description of -xscrollcommand for details on how this
+<style color=#00ffffff size=1>.</style>                 option is used.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

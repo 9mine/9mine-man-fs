@@ -1,0 +1,202 @@
+9LOAD(10.8)                                           9LOAD(10.8)
+
+NAME
+<style color=#00ffffff size=1>.</style>            9load, ld, 9pxeload - PC bootstrap program
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            (Under MS-DOS)
+<style color=#00ffffff size=1>.</style>            \[ drive :\]\[ path \]ld \[ 9load \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            On the PC, bootstrap programs from Plan 9 are used to boot
+<style color=#00ffffff size=1>.</style>            Inferno as well (hence the naming convention). 9load and ld
+<style color=#00ffffff size=1>.</style>            are programs that reside in a FAT file system and bootstrap
+<style color=#00ffffff size=1>.</style>            Inferno. 9load loads the kernel, but it cannot be run from
+<style color=#00ffffff size=1>.</style>            DOS\; use ld to bootstrap (by starting 9load) if DOS is
+<style color=#00ffffff size=1>.</style>            running. 9load is run automatically by the boot procedures
+<style color=#00ffffff size=1>.</style>            described below\; it cannot be run directly by hand. There
+<style color=#00ffffff size=1>.</style>            are three bootstrap sequences:
+
+<style color=#00ffffff size=1>.</style>            -    BIOS, MBR, disk partition PBS, 9load, kernel
+
+<style color=#00ffffff size=1>.</style>            -    BIOS, floppy PBS, 9load, kernel
+
+<style color=#00ffffff size=1>.</style>            -    BIOS, MBR, DOS, ld, 9load, kernel.
+
+<style color=#00ffffff size=1>.</style>            Details follow.
+
+<style color=#00ffffff size=1>.</style>            9load is a bootstrap program that loads and starts a
+<style color=#00ffffff size=1>.</style>            program, typically the kernel, on a PC. It is run by the PC
+<style color=#00ffffff size=1>.</style>            partition boot sector program (PBS), which usually resides
+<style color=#00ffffff size=1>.</style>            in the first sector of the active partition. A copy of the
+<style color=#00ffffff size=1>.</style>            Plan 9 PBS is kept in /Inferno/386/pbs, but due to the
+<style color=#00ffffff size=1>.</style>            ``cylinder-head-sector'' (CHS) addressing mode of old
+<style color=#00ffffff size=1>.</style>            BIOSes, it can only operate up to 8.5GB into the disk. Plan
+<style color=#00ffffff size=1>.</style>            9 partitions further into the disk can only be booted using
+<style color=#00ffffff size=1>.</style>            /Inferno/386/pbslba, and then only if the machine's BIOS
+<style color=#00ffffff size=1>.</style>            supports linear block addressing (LBA) mode for disk
+<style color=#00ffffff size=1>.</style>            transfers.
+
+<style color=#00ffffff size=1>.</style>            When booting from floppy or hard disk, the BIOS loads the
+<style color=#00ffffff size=1>.</style>            first sector of the medium at location 0x7C00.  In the case
+<style color=#00ffffff size=1>.</style>            of a floppy, this is the PBS.  In the case of a hard disk it
+<style color=#00ffffff size=1>.</style>            it the master boot record (MBR). The MBR copies itself to
+<style color=#00ffffff size=1>.</style>            address 0x600, finds the active partition and loads its PBS
+<style color=#00ffffff size=1>.</style>            at address 0x7C00. A copy of the Plan 9 MBR is kept in
+<style color=#00ffffff size=1>.</style>            /Inferno/386/mbr\; some commercial MBRs cannot read sectors
+<style color=#00ffffff size=1>.</style>            past 2GB. The Plan 9 MBR can read sectors up to 8.5GB into
+<style color=#00ffffff size=1>.</style>            the disk, and further if the BIOS supports LBA. The single
+<style color=#00ffffff size=1>.</style>            file /Inferno/386/mbr detects whether the BIOS supports LBA
+<style color=#00ffffff size=1>.</style>            and acts appropriately, defaulting to CHS mode when LBA is
+<style color=#00ffffff size=1>.</style>            not present. The PBSs cannot do this due to code size
+<style color=#00ffffff size=1>.</style>            considerations. The Plan 9 MBR is suitable for booting
+<style color=#00ffffff size=1>.</style>            non-Plan 9 operating systems, and (modulo the large disk
+<style color=#00ffffff size=1>.</style>            constraints just described) non-Plan 9 MBRs are suitable for
+<style color=#00ffffff size=1>.</style>            booting Plan 9.
+
+<style color=#00ffffff size=1>.</style>            Thus the default sequence is: BIOS, MBR, PBS, 9load, kernel.
+
+<style color=#00ffffff size=1>.</style>            Because it contains many device drivers for different disks
+<style color=#00ffffff size=1>.</style>            and networks, 9load is larger than 64K and cannot be run as
+<style color=#00ffffff size=1>.</style>            a DOS ``.com'' executable. A stripped-down version that
+<style color=#00ffffff size=1>.</style>            knows about disks but not networks, called ld (really ld.com
+<style color=#00ffffff size=1>.</style>            ), fits in 64K and can be used under DOS to load and start a
+<style color=#00ffffff size=1>.</style>            program (default 9load) from the FAT16 partition. Its
+<style color=#00ffffff size=1>.</style>            command line argument is of the same format as the bootfile
+<style color=#00ffffff size=1>.</style>            specifiers described below. This profusion of loaders is
+<style color=#00ffffff size=1>.</style>            unfortunate, but at least ld and 9load are compiled from the
+<style color=#00ffffff size=1>.</style>            same source.
+
+<style color=#00ffffff size=1>.</style>            9load begins execution at address 0x80010000 (64K) and loads
+<style color=#00ffffff size=1>.</style>            the bootfile at the entry address specified by the header,
+<style color=#00ffffff size=1>.</style>            usually 0x80100020. After loading, control is passed to the
+<style color=#00ffffff size=1>.</style>            entry location.
+
+<style color=#00ffffff size=1>.</style>            Finally, 9pxeload is a version of 9load that can be booted
+<style color=#00ffffff size=1>.</style>            using the PXE download found on some ethernet card BIOSs.
+
+<style color=#00ffffff size=1>.</style>            In summary, Inferno and Plan 9 can be booted on a PC three
+<style color=#00ffffff size=1>.</style>            different ways: either by booting MS-DOS and using ld to
+<style color=#00ffffff size=1>.</style>            start 9load in the appropriate directory, by booting
+<style color=#00ffffff size=1>.</style>            directly from an Inferno/Plan 9 boot floppy or disk
+<style color=#00ffffff size=1>.</style>            partition prepared using format to install the appropriate
+<style color=#00ffffff size=1>.</style>            files and bootstrap sectors (see <action name=prep(8)>prep(8)</action>), or by using a PXE
+<style color=#00ffffff size=1>.</style>            capable BIOS to boot 9pxeload directly over the ethernet.
+
+<style color=#00ffffff size=1>.</style>            The bootfile, which may be compressed with <action name=gzip(1)>gzip(1)</action>, can be
+<style color=#00ffffff size=1>.</style>            specified to 9load as a bootfile= entry in plan9.ini, or if
+<style color=#00ffffff size=1>.</style>            booting from the ethernet, by a BOOTP server. If the
+<style color=#00ffffff size=1>.</style>            plan9.ini file contains multiple bootfile= entries, 9load
+<style color=#00ffffff size=1>.</style>            will present a numerical menu of the choices\; type the
+<style color=#00ffffff size=1>.</style>            corresponding number to select an entry.
+
+<style color=#00ffffff size=1>.</style>            The format of the bootfile name is device!file or device!
+<style color=#00ffffff size=1>.</style>            partition!file. If !file is omitted, the default for the
+<style color=#00ffffff size=1>.</style>            particular device is used. Supported devices are
+<style color=#00ffffff size=1>.</style>            fdn        An MS-DOS floppy disk. N specifies the floppy
+<style color=#00ffffff size=1>.</style>                       drive, either 0 or 1. The bootfile is the
+<style color=#00ffffff size=1>.</style>                       contents of the MS-DOS file. There is no default
+<style color=#00ffffff size=1>.</style>                       file. For compatibility with hard disks, a
+<style color=#00ffffff size=1>.</style>                       partition may be given, but only dos is
+<style color=#00ffffff size=1>.</style>                       recognized: fd0!dos!file.
+<style color=#00ffffff size=1>.</style>            ethern     Ethernet. N specifies the Ethernet device number.
+<style color=#00ffffff size=1>.</style>                       If a partition is specified, it is taken to be
+<style color=#00ffffff size=1>.</style>                       the name of a host machine from which to load the
+<style color=#00ffffff size=1>.</style>                       kernel. file is determined by the /lib/ndb (see
+<style color=#00ffffff size=1>.</style>                       <action name=ndb(6)>ndb(6)</action>) entry for this PC.
+<style color=#00ffffff size=1>.</style>            sdCn       Non-floppy disk. The device name format is
+<style color=#00ffffff size=1>.</style>                       described in <action name=sd(3)>sd(3)</action>. A partition must be given and
+<style color=#00ffffff size=1>.</style>                       must name a partition containing a FAT file
+<style color=#00ffffff size=1>.</style>                       system. The name dos refers to the first DOS
+<style color=#00ffffff size=1>.</style>                       partition on a given device. It is common for
+<style color=#00ffffff size=1>.</style>                       Inferno/Plan 9 partitions to contain a small FAT
+<style color=#00ffffff size=1>.</style>                       file system for configuration. By convention,
+<style color=#00ffffff size=1>.</style>                       this partition is called 9fat. There is no
+<style color=#00ffffff size=1>.</style>                       default partition or pathname.
+
+<style color=#00ffffff size=1>.</style>            When 9load starts running at physical address 0x10000, it
+<style color=#00ffffff size=1>.</style>            switches to 32-bit mode. It then double maps the first 16Mb
+<style color=#00ffffff size=1>.</style>            of physical memory to virtual addresses 0 and 0x80000000.
+<style color=#00ffffff size=1>.</style>            Physical memory from 0x300000 upwards is used as data space.
+<style color=#00ffffff size=1>.</style>            Next, in order to find configuration information, 9load
+<style color=#00ffffff size=1>.</style>            searches all units on devices fd and sdCn, in that order,
+<style color=#00ffffff size=1>.</style>            for a file called plan9\plan9.ini or plan9.ini (see
+<style color=#00ffffff size=1>.</style>            plan9.ini(10.6)) on a partition named dos or 9fat. If one is
+<style color=#00ffffff size=1>.</style>            found, searching stops and the file is read into memory at
+<style color=#00ffffff size=1>.</style>            physical address 0x1200 where it can be found later by any
+<style color=#00ffffff size=1>.</style>            loaded bootfile. Some options in plan9.ini are used by 9load
+<style color=#00ffffff size=1>.</style>            :
+<style color=#00ffffff size=1>.</style>            console
+<style color=#00ffffff size=1>.</style>            baud             Specifies the console device and baud rate
+<style color=#00ffffff size=1>.</style>                             if not a display.
+<style color=#00ffffff size=1>.</style>            ethern           Ethernet interfaces. These can be used to
+<style color=#00ffffff size=1>.</style>                             load the bootfile over a network. Probing
+<style color=#00ffffff size=1>.</style>                             for Ethernet interfaces is too prone to
+<style color=#00ffffff size=1>.</style>                             error.
+<style color=#00ffffff size=1>.</style>            bootfile=bootfile
+<style color=#00ffffff size=1>.</style>                             Specifies the bootfile. This option is
+<style color=#00ffffff size=1>.</style>                             overridden by a command-line argument.
+<style color=#00ffffff size=1>.</style>            bootfile=auto    Default.
+<style color=#00ffffff size=1>.</style>            bootfile=local   Like auto, but do not attempt to load over
+<style color=#00ffffff size=1>.</style>                             the network.
+<style color=#00ffffff size=1>.</style>            bootfile=manual  After determining which devices are
+<style color=#00ffffff size=1>.</style>                             available for loading from, enter prompt
+<style color=#00ffffff size=1>.</style>                             mode.
+
+<style color=#00ffffff size=1>.</style>            When the search for plan9.ini is done, 9load proceeds to
+<style color=#00ffffff size=1>.</style>            determine which bootfile to load. If there was no bootfile
+<style color=#00ffffff size=1>.</style>            option, 9load chooses a default from the following
+<style color=#00ffffff size=1>.</style>            prioritized device list:
+<style color=#00ffffff size=1>.</style>            	fd sd ether
+<style color=#00ffffff size=1>.</style>            9load then attempts to load the bootfile unless the
+<style color=#00ffffff size=1>.</style>            bootfile=manual option was given, in which case prompt mode
+<style color=#00ffffff size=1>.</style>            is entered immediately. If the default device is fd, 9load
+<style color=#00ffffff size=1>.</style>            will prompt the user for input before proceeding with the
+<style color=#00ffffff size=1>.</style>            default bootfile load after 5 seconds\; this prompt is
+<style color=#00ffffff size=1>.</style>            omitted if a command-line argument or bootfile option was
+<style color=#00ffffff size=1>.</style>            given.
+
+<style color=#00ffffff size=1>.</style>            9load prints the list of available devices and enters prompt
+<style color=#00ffffff size=1>.</style>            mode on encountering any error or if directed to do so by a
+<style color=#00ffffff size=1>.</style>            bootfile=manual option. In prompt mode, the user is required
+<style color=#00ffffff size=1>.</style>            to type a bootfile in response to the ``Boot from:'' prompt.
+
+<style color=#00ffffff size=1>.</style>            9load parses the master boot record and Plan 9 partition
+<style color=#00ffffff size=1>.</style>            tables (see <action name=prep(8)>prep(8)</action>), leaving partitioning information
+<style color=#00ffffff size=1>.</style>            appended to the in-memory contents of plan9.ini for the
+<style color=#00ffffff size=1>.</style>            bootfile. This is used by <action name=sd(3)>sd(3)</action> to initialize partitions so
+<style color=#00ffffff size=1>.</style>            that a file system in a partition can be found and mounted
+<style color=#00ffffff size=1>.</style>            as the root file system. A more extensive partitioning is
+<style color=#00ffffff size=1>.</style>            typically done by system initialisation in osinit.dis (see
+<style color=#00ffffff size=1>.</style>            <action name=root(3)>root(3)</action>).
+
+<style color=#00ffffff size=1>.</style>            A control-P character typed at any time on the console
+<style color=#00ffffff size=1>.</style>            causes 9load to perform a hardware reset (Ctrl-Alt-Del can
+<style color=#00ffffff size=1>.</style>            also be used on a PC keyboard).
+
+<style color=#00ffffff size=1>.</style>            When loaded from a PBS (rather than from ld.com), 9load must
+<style color=#00ffffff size=1>.</style>            be contiguously allocated on the disk. See <action name=dossrv(4)>dossrv(4)</action> for
+<style color=#00ffffff size=1>.</style>            information on ensuring this.
+
+FILES
+<style color=#00ffffff size=1>.</style>            \[drive:\] \[ path \]9load
+<style color=#00ffffff size=1>.</style>            \[drive:\] \[ path \]ld
+<style color=#00ffffff size=1>.</style>            FAT filesystem:\plan9\plan9.ini
+<style color=#00ffffff size=1>.</style>            FAT filesystem:\plan9.ini
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/boot/pc
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            plan9.ini(10.6), <action name=prep(8)>prep(8)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Much of the work done by 9load is duplicated by the loaded
+<style color=#00ffffff size=1>.</style>            kernel.
+
+<style color=#00ffffff size=1>.</style>            If ld detects an installed MS-DOS Extended Memory Manager,
+<style color=#00ffffff size=1>.</style>            it attempts to de-install it, but the technique used may not
+<style color=#00ffffff size=1>.</style>            always work. It is safer not to install the Extended Memory
+<style color=#00ffffff size=1>.</style>            Manager before running ld.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

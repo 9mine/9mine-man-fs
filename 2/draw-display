@@ -1,0 +1,239 @@
+<action name=DRAW-DISPLAY(2)>DRAW-DISPLAY(2)</action>                                   <action name=DRAW-DISPLAY(2)>DRAW-DISPLAY(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Display - connection to draw device
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include	"draw.m"\;
+<style color=#00ffffff size=1>.</style>            draw := load Draw Draw->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Display: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                image:       ref Image\;
+<style color=#00ffffff size=1>.</style>                white:       ref Image\;
+<style color=#00ffffff size=1>.</style>                black:       ref Image\;
+<style color=#00ffffff size=1>.</style>                opaque:      ref Image\;
+<style color=#00ffffff size=1>.</style>                transparent: ref Image\;
+
+<style color=#00ffffff size=1>.</style>                allocate:    fn(dev: string): ref Display\;
+<style color=#00ffffff size=1>.</style>                startrefresh:fn(d: self ref Display)\;
+<style color=#00ffffff size=1>.</style>                publicscreen:fn(d: self ref Display, id: int):
+<style color=#00ffffff size=1>.</style>                             ref Screen\;
+<style color=#00ffffff size=1>.</style>                newimage:    fn(d: self ref Display,
+<style color=#00ffffff size=1>.</style>                             r: Rect, chans: Chans,
+<style color=#00ffffff size=1>.</style>                             repl, rgba: int):
+<style color=#00ffffff size=1>.</style>                             ref Image\;
+<style color=#00ffffff size=1>.</style>                color:       fn(d: self ref Display, rgba: int):
+<style color=#00ffffff size=1>.</style>                             ref Image\;
+<style color=#00ffffff size=1>.</style>                colormix:    fn(d: self ref Display, one: int, three: int):
+<style color=#00ffffff size=1>.</style>                             ref Image\;
+<style color=#00ffffff size=1>.</style>                rgb:         fn(d: self ref Display, red, green, blue: int):
+<style color=#00ffffff size=1>.</style>                             ref Image\;
+<style color=#00ffffff size=1>.</style>                namedimage:  fn(d: self ref Display, name: string):
+<style color=#00ffffff size=1>.</style>                             ref Image\;
+<style color=#00ffffff size=1>.</style>                open:        fn(d: self ref Display, name: string):
+<style color=#00ffffff size=1>.</style>                             ref Image\;
+<style color=#00ffffff size=1>.</style>                readimage:   fn(d: self ref Display, fd: ref Sys->FD):
+<style color=#00ffffff size=1>.</style>                             ref Image\;
+<style color=#00ffffff size=1>.</style>                writeimage:  fn(d: self ref Display, fd: ref Sys->FD,
+<style color=#00ffffff size=1>.</style>                             i: ref Image): int\;
+<style color=#00ffffff size=1>.</style>                rgb2cmap:    fn(d: self ref Display, red, green, blue: int):
+<style color=#00ffffff size=1>.</style>                             int\;
+<style color=#00ffffff size=1>.</style>                cmap2rgb:    fn(d: self ref Display, c: int):
+<style color=#00ffffff size=1>.</style>                             (int, int, int)\;
+<style color=#00ffffff size=1>.</style>                cmap2rgba:   fn(d: self ref Display, c: int):
+<style color=#00ffffff size=1>.</style>                             int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Chans: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>               mk:    fn(s: string): Chans\;
+<style color=#00ffffff size=1>.</style>               text:  fn(c: self Chans): string\;
+<style color=#00ffffff size=1>.</style>               eq:    fn(c: self Chans, d: Chans): int\;
+<style color=#00ffffff size=1>.</style>               depth: fn(c: self Chans): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Display type represents a connection to a <action name=draw(3)>draw(3)</action>
+<style color=#00ffffff size=1>.</style>            device. This device is the external representation of a
+<style color=#00ffffff size=1>.</style>            physical display, such as a CRT, and its associated memory.
+<style color=#00ffffff size=1>.</style>            It contains the storage for all images, even invisible ones,
+<style color=#00ffffff size=1>.</style>            so all Image objects must be allocated through Display
+<style color=#00ffffff size=1>.</style>            member functions. Graphics operations that use multiple
+<style color=#00ffffff size=1>.</style>            Image objects may not mix images from different Displays.
+
+<style color=#00ffffff size=1>.</style>            The pixel channel structure of an Image is determined when
+<style color=#00ffffff size=1>.</style>            the image is allocated (including the image allocated by the
+<style color=#00ffffff size=1>.</style>            system to represent a physical display). This structure is
+<style color=#00ffffff size=1>.</style>            described externally by a channel format string, described
+<style color=#00ffffff size=1>.</style>            in <action name=colour(6)>colour(6)</action>, and internally by a value of the Chans adt,
+<style color=#00ffffff size=1>.</style>            which is used when allocating new images in the calls below.
+<style color=#00ffffff size=1>.</style>            Draw defines a set of constants of type Chans for common
+<style color=#00ffffff size=1>.</style>            channel types: GREY1, GREY2 and GREY8 for greyscale (depths
+<style color=#00ffffff size=1>.</style>            1, 2 and 8)\; CMAP8 for 8-bit <action name=rgbv(8)>rgbv(8)</action> colour-mapped images\;
+<style color=#00ffffff size=1>.</style>            RGB16 for 16-bit r5g6b5 colour images\; RGB24 for 24-bit
+<style color=#00ffffff size=1>.</style>            colour\; and RGBA32 for 24-bit colour with alpha channel.
+<style color=#00ffffff size=1>.</style>            Chans has the following operations:
+
+<style color=#00ffffff size=1>.</style>            Chans.mk(s)
+<style color=#00ffffff size=1>.</style>                      Return the Chans value corresponding to the
+<style color=#00ffffff size=1>.</style>                      channel format string s (see <action name=image(6)>image(6)</action> for the
+<style color=#00ffffff size=1>.</style>                      syntax of s).
+
+<style color=#00ffffff size=1>.</style>            c.depth() Return the depth in bits of c. The result is 0 if
+<style color=#00ffffff size=1>.</style>                      c is invalid\; in particular, Chans.mk(s).depth()
+<style color=#00ffffff size=1>.</style>                      is zero if s is invalid.
+
+<style color=#00ffffff size=1>.</style>            c.text()  Return the format string corresponding to c.
+
+<style color=#00ffffff size=1>.</style>            c.eq(d)   Return true if d has the same channel structure as
+<style color=#00ffffff size=1>.</style>                      c\; return false otherwise.
+
+<style color=#00ffffff size=1>.</style>            Colours in the calls below are specified as 32-bit integers
+<style color=#00ffffff size=1>.</style>            (`32-bit RGBA format') containing red, green, blue and alpha
+<style color=#00ffffff size=1>.</style>            components as 8-bit values, in order from most to least
+<style color=#00ffffff size=1>.</style>            significant byte. The 8-bit colour component values express
+<style color=#00ffffff size=1>.</style>            illumination, ranging from 0 (no colour) to 255 (saturated).
+<style color=#00ffffff size=1>.</style>            For the alpha component, 0 is fully transparent, and 255 is
+<style color=#00ffffff size=1>.</style>            fully opaque.
+
+<style color=#00ffffff size=1>.</style>            Display itself has the following components:
+
+<style color=#00ffffff size=1>.</style>            image     The visible contents of the display\; draw on image
+<style color=#00ffffff size=1>.</style>                      to change the display.
+
+<style color=#00ffffff size=1>.</style>            white, black
+<style color=#00ffffff size=1>.</style>                      Replicated images of a single pixel, either all
+<style color=#00ffffff size=1>.</style>                      ones (white) or all zeroes (black).
+
+<style color=#00ffffff size=1>.</style>            opaque, transparent
+<style color=#00ffffff size=1>.</style>                      Replicated images of a single pixel, either all
+<style color=#00ffffff size=1>.</style>                      ones (fully opaque) or all zeroes (fully
+<style color=#00ffffff size=1>.</style>                      transparent). Used as mattes for basic graphical
+<style color=#00ffffff size=1>.</style>                      operations.
+
+<style color=#00ffffff size=1>.</style>            allocate(dev)
+<style color=#00ffffff size=1>.</style>                      Attach to a new display, represented by the draw
+<style color=#00ffffff size=1>.</style>                      (3) device mounted in the specified dev directory.
+<style color=#00ffffff size=1>.</style>                      If dev is the empty string, /dev is used. The
+<style color=#00ffffff size=1>.</style>                      return value is nil if the allocation fails.
+
+<style color=#00ffffff size=1>.</style>            d.startrefresh()
+<style color=#00ffffff size=1>.</style>                      After allocating a Display object, the application
+<style color=#00ffffff size=1>.</style>                      should spawn a process to call startrefresh\; this
+<style color=#00ffffff size=1>.</style>                      thread will receive and process window refresh
+<style color=#00ffffff size=1>.</style>                      events from the device.
+
+<style color=#00ffffff size=1>.</style>            d.publicscreen(id)
+<style color=#00ffffff size=1>.</style>                      Create a locally addressable pointer to a public
+<style color=#00ffffff size=1>.</style>                      Screen\; see <action name=display-screen(2)>display-screen(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            d.newimage(r, chans, repl, rgba)
+<style color=#00ffffff size=1>.</style>                      Allocate an off-screen Image. The arguments supply
+<style color=#00ffffff size=1>.</style>                      values for the Image's r, chans, and repl, and an
+<style color=#00ffffff size=1>.</style>                      initial pixel value rgba in 32-bit RGBA format,
+<style color=#00ffffff size=1>.</style>                      used to paint the image when created. It can be
+<style color=#00ffffff size=1>.</style>                      Draw->Transparent to create a fully transparent
+<style color=#00ffffff size=1>.</style>                      image to draw on to form an arbitrarily-shaped
+<style color=#00ffffff size=1>.</style>                      image or matte. If it is Draw->Nofill, the image
+<style color=#00ffffff size=1>.</style>                      is not initialised. The image's clipr is
+<style color=#00ffffff size=1>.</style>                      initialized to r.
+
+<style color=#00ffffff size=1>.</style>            d.color(rgba)
+<style color=#00ffffff size=1>.</style>                      Creates a single-pixel, replicated off-screen
+<style color=#00ffffff size=1>.</style>                      image of the specified colour, expressed in 32-bit
+<style color=#00ffffff size=1>.</style>                      RGBA format. The Draw module defines constants for
+<style color=#00ffffff size=1>.</style>                      several dozen colours:
+
+<style color=#00ffffff size=1>.</style>                           Opaque:         con int 16rFFFFFFFF\;
+<style color=#00ffffff size=1>.</style>                           Transparent:    con int 16r00000000\;
+<style color=#00ffffff size=1>.</style>                           Black:          con int 16r000000FF\;
+<style color=#00ffffff size=1>.</style>                           White:          con int 16rFFFFFFFF\;
+<style color=#00ffffff size=1>.</style>                           Red:            con int 16rFF0000FF\;
+<style color=#00ffffff size=1>.</style>                           Green:          con int 16r00FF00FF\;
+<style color=#00ffffff size=1>.</style>                           Blue:           con int 16r0000FFFF\;
+<style color=#00ffffff size=1>.</style>                           Cyan:           con int 16r00FFFFFF\;
+<style color=#00ffffff size=1>.</style>                           Magenta:        con int 16rFF00FFFF\;
+<style color=#00ffffff size=1>.</style>                           Yellow:         con int 16rFFFF00FF\;
+<style color=#00ffffff size=1>.</style>                           Grey:           con int 16rEEEEEEFF\;
+<style color=#00ffffff size=1>.</style>                           Paleyellow:     con int 16rFFFFAAFF\;
+<style color=#00ffffff size=1>.</style>                           Darkyellow:     con int 16rEEEE9EFF\;
+<style color=#00ffffff size=1>.</style>                           Darkgreen:      con int 16r448844FF\;
+<style color=#00ffffff size=1>.</style>                           Palegreen:      con int 16rAAFFAAFF\;
+<style color=#00ffffff size=1>.</style>                           Medgreen:       con int 16r88CC88FF\;
+<style color=#00ffffff size=1>.</style>                           Darkblue:       con int 16r000055FF\;
+<style color=#00ffffff size=1>.</style>                           Palebluegreen:  con int 16rAAFFFFFF\;
+<style color=#00ffffff size=1>.</style>                           Paleblue:       con int 16r0000BBFF\;
+<style color=#00ffffff size=1>.</style>                           Bluegreen:      con int 16r008888FF\;
+<style color=#00ffffff size=1>.</style>                           Greygreen:      con int 16r55AAAAFF\;
+<style color=#00ffffff size=1>.</style>                           Palegreygreen:  con int 16r9EEEEEFF\;
+<style color=#00ffffff size=1>.</style>                           Yellowgreen:    con int 16r99994CFF\;
+<style color=#00ffffff size=1>.</style>                           Medblue:        con int 16r000099FF\;
+<style color=#00ffffff size=1>.</style>                           Greyblue:       con int 16r005DBBFF\;
+<style color=#00ffffff size=1>.</style>                           Palegreyblue:   con int 16r4993DDFF\;
+<style color=#00ffffff size=1>.</style>                           Purpleblue:     con int 16r8888CCFF\;
+<style color=#00ffffff size=1>.</style>                           Notacolor:      con int 16rFFFFFF00\;
+<style color=#00ffffff size=1>.</style>                           Nofill:         con Notacolor\;
+
+<style color=#00ffffff size=1>.</style>                      The special values Draw->Opaque (fully opaque) and
+<style color=#00ffffff size=1>.</style>                      Draw->Transparent (fully transparent) are useful
+<style color=#00ffffff size=1>.</style>                      as the pixel values for Display.newimage when
+<style color=#00ffffff size=1>.</style>                      forming a matte. The special value Draw->Nofill
+<style color=#00ffffff size=1>.</style>                      tells Display.newimage not to paint a new image
+<style color=#00ffffff size=1>.</style>                      with any colour, leaving it uninitialised.
+
+<style color=#00ffffff size=1>.</style>            d.colormix(one, three)
+<style color=#00ffffff size=1>.</style>                      Allocate background colours. On true color
+<style color=#00ffffff size=1>.</style>                      displays, it returns a 1×1 replicated image whose
+<style color=#00ffffff size=1>.</style>                      pixel is the result of mixing the two colours in a
+<style color=#00ffffff size=1>.</style>                      one to three ratio\; both colours are expressed in
+<style color=#00ffffff size=1>.</style>                      32-bit RGBA format. On 8-bit color-mapped
+<style color=#00ffffff size=1>.</style>                      displays, it returns a 2×2 replicated image with
+<style color=#00ffffff size=1>.</style>                      one pixel coloured one and the other three with
+<style color=#00ffffff size=1>.</style>                      three (after translation through the colour map).
+<style color=#00ffffff size=1>.</style>                      This simulates a wider range of tones than can be
+<style color=#00ffffff size=1>.</style>                      represented by a single pixel value on a
+<style color=#00ffffff size=1>.</style>                      colour-mapped display.
+
+<style color=#00ffffff size=1>.</style>            d.rgb(red, green, blue)
+<style color=#00ffffff size=1>.</style>                      Uses the values of red, green, and blue to create
+<style color=#00ffffff size=1>.</style>                      a single-pixel replicated image of that colour.
+<style color=#00ffffff size=1>.</style>                      The values are intensities that range from 0 (no
+<style color=#00ffffff size=1>.</style>                      colour) to 255 (saturated). The alpha component is
+<style color=#00ffffff size=1>.</style>                      always 255 (fully opaque).
+
+<style color=#00ffffff size=1>.</style>            d.namedimage(name)
+<style color=#00ffffff size=1>.</style>                      Returns a reference to the image published as name
+<style color=#00ffffff size=1>.</style>                      on display d by Image.name (see <action name=draw-image(2)>draw-image(2)</action>).
+<style color=#00ffffff size=1>.</style>                      This allows unrelated processes to share the image
+<style color=#00ffffff size=1>.</style>                      (eg, a window manager and client).
+
+<style color=#00ffffff size=1>.</style>            d.open(name)
+<style color=#00ffffff size=1>.</style>                      Read an image description from the named file and
+<style color=#00ffffff size=1>.</style>                      return an Image holding the picture. See <action name=image(6)>image(6)</action>
+<style color=#00ffffff size=1>.</style>                      for more information about image files.
+
+<style color=#00ffffff size=1>.</style>            d.readimage(fd)
+<style color=#00ffffff size=1>.</style>                      Analogous to open, but from an open file
+<style color=#00ffffff size=1>.</style>                      descriptor rather than a named file.
+
+<style color=#00ffffff size=1>.</style>            d.writeimage(fd, i)
+<style color=#00ffffff size=1>.</style>                      Complement of readimage: write an image file
+<style color=#00ffffff size=1>.</style>                      representing i to the open file descriptor.
+
+<style color=#00ffffff size=1>.</style>            d.rgb2cmap(red, green, blue)
+<style color=#00ffffff size=1>.</style>                      Return the rgbv colour map index (see <action name=colour(6)>colour(6)</action>)
+<style color=#00ffffff size=1>.</style>                      of the colour that best matches the given colour
+<style color=#00ffffff size=1>.</style>                      triple.  The values of the components range from 0
+<style color=#00ffffff size=1>.</style>                      (no colour) to 255 (saturated).
+
+<style color=#00ffffff size=1>.</style>            d.cmap2rgb(c)
+<style color=#00ffffff size=1>.</style>                      Return the colour triple (red, blue, green)
+<style color=#00ffffff size=1>.</style>                      corresponding to colour map index c.
+
+<style color=#00ffffff size=1>.</style>            d.cmap2rgba(c)
+<style color=#00ffffff size=1>.</style>                      Return the 32-bit RGBA representation of the
+<style color=#00ffffff size=1>.</style>                      colour corresponding to colour map index c. The
+<style color=#00ffffff size=1>.</style>                      alpha component is always 255 (fully opaque).
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

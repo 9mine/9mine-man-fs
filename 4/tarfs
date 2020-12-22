@@ -1,0 +1,28 @@
+<action name=TARFS(4)>TARFS(4)</action>                                                 <action name=TARFS(4)>TARFS(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tarfs - mount tar archive
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            tarfs \[ -ab \] \[ -p \] tarfile mountpt
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Tarfs makes the contents of the directories and files
+<style color=#00ffffff size=1>.</style>            archived in the given Unix/POSIX tar archive tarfile visible
+<style color=#00ffffff size=1>.</style>            in the name space under mountpt. They can then be accessed
+<style color=#00ffffff size=1>.</style>            in an obvious way by other commands such as <action name=ls(1)>ls(1)</action> and <action name=cp(1)>cp(1)</action>.
+<style color=#00ffffff size=1>.</style>            Only read access is supported. User and group names are
+<style color=#00ffffff size=1>.</style>            taken from the ``ustar'' headers when present.  Otherwise,
+<style color=#00ffffff size=1>.</style>            the numeric user and group IDs are used. The -a and -b
+<style color=#00ffffff size=1>.</style>            options cause the tarfile's name space to be placed after or
+<style color=#00ffffff size=1>.</style>            before the current contents of mountpt\; the default is to
+<style color=#00ffffff size=1>.</style>            replace that directory's contents. Option -p causes
+<style color=#00ffffff size=1>.</style>            permissions in the tar file to be discarded.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/tarfs.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=gettar(1)>gettar(1)</action>, <action name=archfs(4)>archfs(4)</action>, <action name=intro(5)>intro(5)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

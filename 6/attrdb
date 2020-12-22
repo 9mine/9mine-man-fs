@@ -1,0 +1,68 @@
+<action name=ATTRDB(6)>ATTRDB(6)</action>                                               <action name=ATTRDB(6)>ATTRDB(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            attrdb - data base of attribute-value pairs
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            An attribute data base is formed from one or more text
+<style color=#00ffffff size=1>.</style>            files, each containing groups of related attribute-value
+<style color=#00ffffff size=1>.</style>            pairs. A given data base typically stores data relating to a
+<style color=#00ffffff size=1>.</style>            single logical domain. For instance, Inferno uses an
+<style color=#00ffffff size=1>.</style>            attribute data base <action name=ndb(6)>ndb(6)</action> to organise network configuration
+<style color=#00ffffff size=1>.</style>            data. Attrdb (2) is typically used by applications to search
+<style color=#00ffffff size=1>.</style>            the data.
+
+<style color=#00ffffff size=1>.</style>            Each entry in the data base consists of one or more lines
+<style color=#00ffffff size=1>.</style>            containing attribute/value pairs, separated by white space.
+<style color=#00ffffff size=1>.</style>            The first line of an entry starts a line\; subsequent lines
+<style color=#00ffffff size=1>.</style>            in the entry are preceded by white space (spaces or tabs).
+<style color=#00ffffff size=1>.</style>            Pairs on the same line bind tighter together than others in
+<style color=#00ffffff size=1>.</style>            the same entry. (This is important when one known pair is
+<style color=#00ffffff size=1>.</style>            used to find another by attribute name.) The character `#'
+<style color=#00ffffff size=1>.</style>            causes the rest of the line to be ignored (eg, as
+<style color=#00ffffff size=1>.</style>            commentary). Empty lines are also ignored.
+
+<style color=#00ffffff size=1>.</style>            Attribute/value pairs are written as attribute=value, which
+<style color=#00ffffff size=1>.</style>            can be abbreviated to attribute= or simply attribute if the
+<style color=#00ffffff size=1>.</style>            attribute has no value. A value that contains white space,
+<style color=#00ffffff size=1>.</style>            or any of the characters #'"= must be quoted, using either
+<style color=#00ffffff size=1>.</style>            the single or double quote character. Within a quoted
+<style color=#00ffffff size=1>.</style>            string, two adjacent quotes can be written to enter a quote
+<style color=#00ffffff size=1>.</style>            in the string. For example:
+
+<style color=#00ffffff size=1>.</style>                 name='Paul Wilson' business company='Fruitbat Villas Ltd'
+<style color=#00ffffff size=1>.</style>                    title='Key Grip'
+<style color=#00ffffff size=1>.</style>                    address='39 Willis Street, York' tel='+44 1904 20927'
+<style color=#00ffffff size=1>.</style>                    address='On the road' tel='+44 7904 169 704'
+<style color=#00ffffff size=1>.</style>                 name='James Mason' personal=
+<style color=#00ffffff size=1>.</style>                    address='10 St James''s, East Grinstead' tel='01342 7674'
+
+<style color=#00ffffff size=1>.</style>            Note that the binding rule associates each address in the
+<style color=#00ffffff size=1>.</style>            first entry most closely with the tel on the same line. The
+<style color=#00ffffff size=1>.</style>            attributes business (first entry) and personal (second
+<style color=#00ffffff size=1>.</style>            entry) are both attributes without value.
+
+<style color=#00ffffff size=1>.</style>            A single logical data base can be formed by concatenating
+<style color=#00ffffff size=1>.</style>            several physical files, each having the format above. One of
+<style color=#00ffffff size=1>.</style>            the files must contain an entry (typically first in the
+<style color=#00ffffff size=1>.</style>            file) containing a database attribute and a sequence of
+<style color=#00ffffff size=1>.</style>            attributes of the form file=filename. For example:
+
+<style color=#00ffffff size=1>.</style>                 database=
+<style color=#00ffffff size=1>.</style>                    file=file1
+<style color=#00ffffff size=1>.</style>                    file=file2
+<style color=#00ffffff size=1>.</style>                    file=file3
+
+<style color=#00ffffff size=1>.</style>            The logical database is formed by (logically) concatenating
+<style color=#00ffffff size=1>.</style>            the contents of each filename in the order listed (ie, file1
+<style color=#00ffffff size=1>.</style>            , file2, and file3 above). Typically the file containing the
+<style color=#00ffffff size=1>.</style>            database attribute appears in the list as well, at the point
+<style color=#00ffffff size=1>.</style>            where its contents should go\; if it does not appear at all,
+<style color=#00ffffff size=1>.</style>            it is assumed to be first. The name of that file is also
+<style color=#00ffffff size=1>.</style>            used as the name of the logical database, for instance when
+<style color=#00ffffff size=1>.</style>            opened by <action name=attrdb(2)>attrdb(2)</action>.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cfg(2)>cfg(2)</action>, <action name=attrdb(2)>attrdb(2)</action>, <action name=ipattr(2)>ipattr(2)</action>, <action name=ndb(6)>ndb(6)</action>, <action name=cs(8)>cs(8)</action>, <action name=dns(8)>dns(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

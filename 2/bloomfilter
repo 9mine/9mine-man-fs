@@ -1,0 +1,54 @@
+<action name=BLOOMFILTER(2)>BLOOMFILTER(2)</action>                                     <action name=BLOOMFILTER(2)>BLOOMFILTER(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Bloomfilter - Bloom filters
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sets.m"\;
+<style color=#00ffffff size=1>.</style>            include "bloomfilter.m"\;
+<style color=#00ffffff size=1>.</style>            bloomfilter := load Bloomfilter Bloomfilter->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:   fn()\;
+<style color=#00ffffff size=1>.</style>            filter: fn(d: array of byte, logm, k: int): Sets->Set\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A Bloom filter is a method of representing a set to support
+<style color=#00ffffff size=1>.</style>            probabilistic membership queries. It uses independent hash
+<style color=#00ffffff size=1>.</style>            functions of members of the set to set elements of a
+<style color=#00ffffff size=1>.</style>            bit-vector. Init should be called first to initialise the
+<style color=#00ffffff size=1>.</style>            module. Filter returns a Set s representing the Bloom filter
+<style color=#00ffffff size=1>.</style>            for the single-member set {d}. K independent hash functions
+<style color=#00ffffff size=1>.</style>            are used, each of range \[0, 2^logm), to return a Bloom
+<style color=#00ffffff size=1>.</style>            filter 2^logm bits wide. It is an error if logm is less than
+<style color=#00ffffff size=1>.</style>            3 or greater than 30.
+
+<style color=#00ffffff size=1>.</style>            Bloom filters can be combined by set union. The set
+<style color=#00ffffff size=1>.</style>            represented by Bloom filter a is not a subset of another b
+<style color=#00ffffff size=1>.</style>            if there are any members in a that are not in b. Together,
+<style color=#00ffffff size=1>.</style>            logm, k, and n (the number of members in the set) determine
+<style color=#00ffffff size=1>.</style>            the false positve rate (the probability that a membership
+<style color=#00ffffff size=1>.</style>            test will not eliminate a member that is not in fact in the
+<style color=#00ffffff size=1>.</style>            set). The probability of a false positive is approximately
+<style color=#00ffffff size=1>.</style>            (1-e^(-kn/(2^logm))^k. For a given false positive rate, f, a
+<style color=#00ffffff size=1>.</style>            useful formula to determine appropriate parameters is: k
+<style color=#00ffffff size=1>.</style>            =ceil(-log₂(f)), and logm=ceil(log₂(nk)).
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Create a 128 bit-wide bloom filter f representing all the
+<style color=#00ffffff size=1>.</style>            elements in the string array elems, with k=6.
+<style color=#00ffffff size=1>.</style>                A, B, None: import Sets\;
+<style color=#00ffffff size=1>.</style>                for(i:=0\; i<len elems\; i++)
+<style color=#00ffffff size=1>.</style>                    f = f.X(A|B, filter(array of byte elems\[i\], 7, 6))\;
+<style color=#00ffffff size=1>.</style>            Test whether the string s is a member of f. If there were 12
+<style color=#00ffffff size=1>.</style>            elements in elems, the probability of a false positive would
+<style color=#00ffffff size=1>.</style>            be approximately 0.0063.
+<style color=#00ffffff size=1>.</style>                if(filter(array of byte s, 7, 6).X(A&~B, f).eq(None))
+<style color=#00ffffff size=1>.</style>                    sys->print("'%s' might be a member of f\n", s)\;
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/bloomfilter.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sets(2)>sets(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

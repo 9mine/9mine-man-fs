@@ -1,0 +1,80 @@
+<action name=SH-STRING(1)>SH-STRING(1)</action>                                         <action name=SH-STRING(1)>SH-STRING(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            prefix, in, splitl, splitr, drop, take, splitstrl,
+<style color=#00ffffff size=1>.</style>            splitstrr, tolower, toupper, len, alen, slice - shell script
+<style color=#00ffffff size=1>.</style>            string manipulation
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load string
+
+<style color=#00ffffff size=1>.</style>            prefix pre s
+<style color=#00ffffff size=1>.</style>            in c cl
+<style color=#00ffffff size=1>.</style>            ${splitl s cl}
+<style color=#00ffffff size=1>.</style>            ${splitr s cl}
+<style color=#00ffffff size=1>.</style>            ${splitstrl s t}
+<style color=#00ffffff size=1>.</style>            ${splitstrr s t}
+<style color=#00ffffff size=1>.</style>            ${take s cl}
+<style color=#00ffffff size=1>.</style>            ${tolower s}
+<style color=#00ffffff size=1>.</style>            ${toupper s}
+<style color=#00ffffff size=1>.</style>            ${len s}
+<style color=#00ffffff size=1>.</style>            ${alen s}
+<style color=#00ffffff size=1>.</style>            ${slice start end s}
+<style color=#00ffffff size=1>.</style>            ${fields cl s}
+<style color=#00ffffff size=1>.</style>            ${padl n \[ s... \]}
+<style color=#00ffffff size=1>.</style>            ${padr n \[ s... \]}
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            String is a loadable module for <action name=sh(1)>sh(1)</action> that provides a
+<style color=#00ffffff size=1>.</style>            shell-script interface to the string manipulation commands
+<style color=#00ffffff size=1>.</style>            found in <action name=string(2)>string(2)</action>, with a couple of other facilities thrown
+<style color=#00ffffff size=1>.</style>            in for good measure. Each of the substitution builtins
+<style color=#00ffffff size=1>.</style>            splitl, splitr, drop, take, splitstrl, splitstrr, tolower,
+<style color=#00ffffff size=1>.</style>            and toupper implements the same functionality as that
+<style color=#00ffffff size=1>.</style>            provided by the function of the same name in <action name=string(2)>string(2)</action>.
+<style color=#00ffffff size=1>.</style>            Where a function in the <action name=string(2)>string(2)</action> module returns a tuple,
+<style color=#00ffffff size=1>.</style>            the equivalent builtin yields a two-element list\; the others
+<style color=#00ffffff size=1>.</style>            yield a list with a single element.
+
+<style color=#00ffffff size=1>.</style>            In all string commands, the number of arguments provided
+<style color=#00ffffff size=1>.</style>            must be exactly that required by the command so, for
+<style color=#00ffffff size=1>.</style>            instance, giving an undefined variable (a zero element list)
+<style color=#00ffffff size=1>.</style>            as an argument will cause a usage exception to be generated.
+
+<style color=#00ffffff size=1>.</style>            The two builtins prefix and in are again similar to their
+<style color=#00ffffff size=1>.</style>            <action name=string(2)>string(2)</action> counterparts - their return value is true (an
+<style color=#00ffffff size=1>.</style>            empty string) if the equivalent <action name=string(2)>string(2)</action> function would be
+<style color=#00ffffff size=1>.</style>            non-zero.
+
+<style color=#00ffffff size=1>.</style>            Len returns the length of its argument s. Alen returns the
+<style color=#00ffffff size=1>.</style>            length of its argument s when converted to a byte-array.
+<style color=#00ffffff size=1>.</style>            (This will be different from the result of len when s
+<style color=#00ffffff size=1>.</style>            contains non-ASCII characters). Slice is similar to the
+<style color=#00ffffff size=1>.</style>            string-slicing operator in Limbo\; it returns the section of
+<style color=#00ffffff size=1>.</style>            s starting at index start and ending just before index end.
+<style color=#00ffffff size=1>.</style>            End may be the literal string end, in which ${slice start
+<style color=#00ffffff size=1>.</style>            end} is the same as ${slice start ${len s}}. Unlike in
+<style color=#00ffffff size=1>.</style>            Limbo, nothing untoward happens if an out-of-range slice is
+<style color=#00ffffff size=1>.</style>            taken: any out of range indices are trimmed to within the
+<style color=#00ffffff size=1>.</style>            bounds of s.
+
+<style color=#00ffffff size=1>.</style>            Fields is similar to ${split} in <action name=sh(1)>sh(1)</action>, but does not merge
+<style color=#00ffffff size=1>.</style>            field separator characters. It splits s into fields
+<style color=#00ffffff size=1>.</style>            separated by characters in class cl\; if there are n
+<style color=#00ffffff size=1>.</style>            characters matching cl inside s, fields will yield n+1 items
+<style color=#00ffffff size=1>.</style>            in its result.
+
+<style color=#00ffffff size=1>.</style>            Padl and padr widen the string s to n characters, padding it
+<style color=#00ffffff size=1>.</style>            with spaces on the right (for padl) or the left (for padr)
+<style color=#00ffffff size=1>.</style>            as necessary. If s is already at least n characters wide, it
+<style color=#00ffffff size=1>.</style>            is left unchanged. If several arguments are given, they are
+<style color=#00ffffff size=1>.</style>            concatenated, separated with spaces, before padding takes
+<style color=#00ffffff size=1>.</style>            place.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sh/string.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=string(2)>string(2)</action>, <action name=sh(1)>sh(1)</action>, <action name=sh-std(1)>sh-std(1)</action>, <action name=sh-expr(1)>sh-expr(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

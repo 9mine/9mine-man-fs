@@ -1,0 +1,62 @@
+INTRO(10)                                               INTRO(10)
+
+NAME
+<style color=#00ffffff size=1>.</style>            intro - introduction to hosted and native implementation
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Inferno provides a collection of compiler suites, libraries
+<style color=#00ffffff size=1>.</style>            and two closely-related kernels to span a range of host and
+<style color=#00ffffff size=1>.</style>            native platforms. Section 10 of this manual is divided into
+<style color=#00ffffff size=1>.</style>            subsections numbered in the same way as the main manual:
+<style color=#00ffffff size=1>.</style>            10.1 for commands, 10.2 for library and kernel routines, and
+<style color=#00ffffff size=1>.</style>            10.6 for file formats.
+
+<style color=#00ffffff size=1>.</style>            Section 10.1 describes the various compiler and utility
+<style color=#00ffffff size=1>.</style>            commands provided to support compilation and
+<style color=#00ffffff size=1>.</style>            cross-compilation of native kernels. These are derived from
+<style color=#00ffffff size=1>.</style>            similarly named programs of the system Plan 9 from Bell
+<style color=#00ffffff size=1>.</style>            Labs, converted to ANSI C to provide a consistent, portable
+<style color=#00ffffff size=1>.</style>            environment for cross-compiling any native kernel on any
+<style color=#00ffffff size=1>.</style>            host platform.
+
+<style color=#00ffffff size=1>.</style>            Section 10.2 describes the functions publicly available to
+<style color=#00ffffff size=1>.</style>            the authors of kernel code, particularly device drivers
+<style color=#00ffffff size=1>.</style>            (real and virtual). This section will eventually be much
+<style color=#00ffffff size=1>.</style>            expanded, but this makes a start. See the description of the
+<style color=#00ffffff size=1>.</style>            conventional header files below.
+
+<style color=#00ffffff size=1>.</style>            Section 10.6 describes include the native object file
+<style color=#00ffffff size=1>.</style>            formats, the Inferno (Plan 9) object library (archive)
+<style color=#00ffffff size=1>.</style>            format, and system configuration files.
+
+<style color=#00ffffff size=1>.</style>            Section 10.8 describes bootstrap programs and procedures for
+<style color=#00ffffff size=1>.</style>            native Inferno systems.
+
+<style color=#00ffffff size=1>.</style>         Native kernel declarations
+<style color=#00ffffff size=1>.</style>            The SYNOPSIS subsections in section 10.2 do not show the
+<style color=#00ffffff size=1>.</style>            header files needed for the standard kernel declarations.
+<style color=#00ffffff size=1>.</style>            The primary combinations summarised below:
+
+<style color=#00ffffff size=1>.</style>                      #include	"u.h"
+<style color=#00ffffff size=1>.</style>                      #include	"../port/lib.h"
+<style color=#00ffffff size=1>.</style>                      #include	"mem.h"
+<style color=#00ffffff size=1>.</style>                      #include	"dat.h"
+<style color=#00ffffff size=1>.</style>                      #include	"fns.h"
+<style color=#00ffffff size=1>.</style>                      #include	"../port/error.h"
+
+<style color=#00ffffff size=1>.</style>                 furthermore, added in IP code:
+<style color=#00ffffff size=1>.</style>                 #include "../ip/ip.h"
+
+<style color=#00ffffff size=1>.</style>                 furthermore, in hardware device drivers:
+<style color=#00ffffff size=1>.</style>                 #include "io.h"
+<style color=#00ffffff size=1>.</style>                 #include "ureg.h"
+
+<style color=#00ffffff size=1>.</style>                 furthermore, in network interfaces or ether drivers:
+<style color=#00ffffff size=1>.</style>                 #include "../port/netif.h"
+
+<style color=#00ffffff size=1>.</style>            There might also be specific include files needed by drivers
+<style color=#00ffffff size=1>.</style>            on particular platforms or to use specialised kernel
+<style color=#00ffffff size=1>.</style>            interfaces. The easiest method is to check the source of
+<style color=#00ffffff size=1>.</style>            likely-looking drivers nearby.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

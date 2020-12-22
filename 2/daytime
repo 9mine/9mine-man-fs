@@ -1,0 +1,115 @@
+<action name=DAYTIME(2)>DAYTIME(2)</action>                                             <action name=DAYTIME(2)>DAYTIME(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            daytime: text, filet, gmt, local, now, string2tm, time,
+<style color=#00ffffff size=1>.</style>            tm2epoch - time conversions
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "daytime.m"\;
+<style color=#00ffffff size=1>.</style>            daytime := load Daytime Daytime->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Tm: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                sec:    int\;    # seconds (0 to 59)
+<style color=#00ffffff size=1>.</style>                min:    int\;    # minutes (0 to 59)
+<style color=#00ffffff size=1>.</style>                hour:   int\;    # hours (0 to 23)
+<style color=#00ffffff size=1>.</style>                mday:   int\;    # day of the month (1 to 31)
+<style color=#00ffffff size=1>.</style>                mon:    int\;    # month (0 to 11)
+<style color=#00ffffff size=1>.</style>                year:   int\;    # year-1900\; 2000AD is 100
+<style color=#00ffffff size=1>.</style>                wday:   int\;    # day of week (0 to 6, Sunday is 0)
+<style color=#00ffffff size=1>.</style>                yday:   int\;    # day of year (0 to 365)
+<style color=#00ffffff size=1>.</style>                zone:   string\; # time zone name
+<style color=#00ffffff size=1>.</style>                tzoff:  int\;    # time zone offset (seconds from GMT)
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            text:      fn(tm: ref Tm): string\;
+<style color=#00ffffff size=1>.</style>            filet:     fn(now, t: int): string\;
+<style color=#00ffffff size=1>.</style>            gmt:       fn(tim: int): ref Tm\;
+<style color=#00ffffff size=1>.</style>            local:     fn(tim: int): ref Tm\;
+<style color=#00ffffff size=1>.</style>            now:       fn(): int\;
+<style color=#00ffffff size=1>.</style>            time:      fn(): string\;
+<style color=#00ffffff size=1>.</style>            tm2epoch:  fn(tm: ref Tm): int\;
+<style color=#00ffffff size=1>.</style>            string2tm: fn(date: string): ref Tm\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These routines perform time conversions relative to the
+<style color=#00ffffff size=1>.</style>            epoch 00:00:00 GMT, Jan. 1, 1970. Note the range of values
+<style color=#00ffffff size=1>.</style>            for each member of the Tm adt. The conventions are the same
+<style color=#00ffffff size=1>.</style>            as those of C's ctime.
+
+<style color=#00ffffff size=1>.</style>            Text converts a time structure referenced by tm from local
+<style color=#00ffffff size=1>.</style>            or GMT time to a string in the format:
+
+<style color=#00ffffff size=1>.</style>                 Sat Jan  1 13:00:00 GMT 2000
+
+<style color=#00ffffff size=1>.</style>            Filet converts the file access or modification time t from
+<style color=#00ffffff size=1>.</style>            seconds since the epoch to local time as a string in the
+<style color=#00ffffff size=1>.</style>            format:
+
+<style color=#00ffffff size=1>.</style>                 Jan  1 13:00
+
+<style color=#00ffffff size=1>.</style>            if the file is less than 6 months old or
+
+<style color=#00ffffff size=1>.</style>                 Jan  1 2000
+
+<style color=#00ffffff size=1>.</style>            if the file is older than 6 months, compared to the time now
+<style color=#00ffffff size=1>.</style>            .
+
+<style color=#00ffffff size=1>.</style>            Gmt converts seconds since the epoch, received in tim, to a
+<style color=#00ffffff size=1>.</style>            time structure in Greenwich Mean Time (GMT).
+
+<style color=#00ffffff size=1>.</style>            Local converts seconds since the epoch, received in tim, to
+<style color=#00ffffff size=1>.</style>            a time structure in local time.
+
+<style color=#00ffffff size=1>.</style>            Now returns the time in seconds since the epoch, obtained by
+<style color=#00ffffff size=1>.</style>            reading /dev/time (see <action name=cons(3)>cons(3)</action>).
+
+<style color=#00ffffff size=1>.</style>            Time converts seconds since the epoch to the local time as a
+<style color=#00ffffff size=1>.</style>            string in the format Fri May 19 17:01:36 BST 2000.
+
+<style color=#00ffffff size=1>.</style>            Tm2epoch converts a time structure referenced by tm from
+<style color=#00ffffff size=1>.</style>            local or GMT time to seconds since the epoch.
+
+<style color=#00ffffff size=1>.</style>            String2tm returns a reference to a Tm value corresponding to
+<style color=#00ffffff size=1>.</style>            the date and time in textual form in string s, which must
+<style color=#00ffffff size=1>.</style>            have one of the forms below:
+
+<style color=#00ffffff size=1>.</style>                 Sun, 06 Nov 1994 08:49:37 GMT    (RFC822, RFC1123)
+<style color=#00ffffff size=1>.</style>                 Sunday, 06-Nov-94 08:49:37 GMT   (RFC850)
+<style color=#00ffffff size=1>.</style>                 Sun Nov  6 08:49:37 GMT 1994     (output of text, above)
+
+<style color=#00ffffff size=1>.</style>            A missing time zone in any format is assumed to be GMT.
+<style color=#00ffffff size=1>.</style>            String2tm returns nil if s is not correctly formed.
+
+<style color=#00ffffff size=1>.</style>            When local time is first requested, daytime reads a table
+<style color=#00ffffff size=1>.</style>            for time zone conversion from the timezone environment
+<style color=#00ffffff size=1>.</style>            variable, if that is set, and otherwise from the file
+<style color=#00ffffff size=1>.</style>            /locale/timezone, which is copied from one of the other
+<style color=#00ffffff size=1>.</style>            files in /locale when the system is installed. The timezone
+<style color=#00ffffff size=1>.</style>            table is a text file containing lines of space-separated
+<style color=#00ffffff size=1>.</style>            fields. The first line gives the normal time zone name and
+<style color=#00ffffff size=1>.</style>            its difference from GMT in seconds followed by an
+<style color=#00ffffff size=1>.</style>            alternative time zone name (eg, for `daylight savings' or
+<style color=#00ffffff size=1>.</style>            `summer' time) and its difference from GMT followed by a
+<style color=#00ffffff size=1>.</style>            newline. The remainder is a list of pairs of times (seconds
+<style color=#00ffffff size=1>.</style>            past the start of 1970, in the first time zone) when the
+<style color=#00ffffff size=1>.</style>            alternative time zone applies. For example:
+
+<style color=#00ffffff size=1>.</style>                 EST -18000 EDT -14400
+<style color=#00ffffff size=1>.</style>                  9943200 25664400 41392800 57718800 ...
+
+<style color=#00ffffff size=1>.</style>            Greenwich Mean Time is represented by
+
+<style color=#00ffffff size=1>.</style>                 GMT 0
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/daytime.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cons(3)>cons(3)</action>, <action name=sys-millisec(2)>sys-millisec(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The sign bit of a Limbo integer holding a time will turn on
+<style color=#00ffffff size=1>.</style>            68 years from the epoch.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

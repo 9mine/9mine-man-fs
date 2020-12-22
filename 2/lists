@@ -1,0 +1,112 @@
+<action name=LISTS(2)>LISTS(2)</action>                                                 <action name=LISTS(2)>LISTS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            lists: allsat, anysat, append, combine, concat, delete,
+<style color=#00ffffff size=1>.</style>            filter, find, ismember, last, map, pair, partition, reverse,
+<style color=#00ffffff size=1>.</style>            unpair- list operations
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "lists.m"
+<style color=#00ffffff size=1>.</style>            lists := load Lists Lists->PATH\;
+
+<style color=#00ffffff size=1>.</style>            append:    fn\[T\](l: list of T, x: T): list of T\;
+<style color=#00ffffff size=1>.</style>            combine:   fn\[T\](l1: list of T, l2: list of T): list of T\;
+<style color=#00ffffff size=1>.</style>            concat:    fn\[T\](l1: list of T, l2: list of T): list of T\;
+<style color=#00ffffff size=1>.</style>            delete:    fn\[T\](x: T, l: list of T): list of T
+<style color=#00ffffff size=1>.</style>                         for { T => eq:  fn(a, b: T): int\; }\;
+<style color=#00ffffff size=1>.</style>            find:      fn\[T\](x: T, l: list of T): list of T
+<style color=#00ffffff size=1>.</style>                         for { T => eq:  fn(a, b: T): int\; }\;
+<style color=#00ffffff size=1>.</style>            ismember:  fn\[T\](x: T, l: list of T): int
+<style color=#00ffffff size=1>.</style>                         for { T =>  eq: fn(a, b: T): int\; }\;
+<style color=#00ffffff size=1>.</style>            last:      fn\[T\](l: list of T): T\;
+<style color=#00ffffff size=1>.</style>            pair:      fn\[T1, T2\](l1: list of T1, l2: list of T2):
+<style color=#00ffffff size=1>.</style>                         list of (T1, T2)\;
+<style color=#00ffffff size=1>.</style>            reverse:   fn\[T\](l: list of T): list of T\;
+<style color=#00ffffff size=1>.</style>            unpair:    fn\[T1, T2\](l: list of (T1, T2)):
+<style color=#00ffffff size=1>.</style>                         (list of T1, list of T2)\;
+
+<style color=#00ffffff size=1>.</style>            allsat:    fn\[T\](p: ref fn(x: T): int, l: list of T): int\;
+<style color=#00ffffff size=1>.</style>            anysat:    fn\[T\](p: ref fn(x: T): int, l: list of T): int\;
+<style color=#00ffffff size=1>.</style>            filter:    fn\[T\](p: ref fn(x: T): int, l: list of T): list of T\;
+<style color=#00ffffff size=1>.</style>            map:       fn\[T\](f: ref fn(x: T): T, l: list of T): list of T\;
+<style color=#00ffffff size=1>.</style>            partition: fn\[T\](p: ref fn(x: T): int, l: list of T):
+<style color=#00ffffff size=1>.</style>                         (list of T, list of T)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The module provides operations on lists of type T, which may
+<style color=#00ffffff size=1>.</style>            be any reference type, or string. Reference types are array,
+<style color=#00ffffff size=1>.</style>            chan, list, module, and ref adt. None of the operations
+<style color=#00ffffff size=1>.</style>            change their parameter lists: they always return a new list.
+
+<style color=#00ffffff size=1>.</style>            First, there is a group of common list operations.
+
+<style color=#00ffffff size=1>.</style>            Append returns a new list with the elements of l followed by
+<style color=#00ffffff size=1>.</style>            the element x.
+
+<style color=#00ffffff size=1>.</style>            Combine returns a new list that has the elements of both l1
+<style color=#00ffffff size=1>.</style>            and l2 in no defined order.
+
+<style color=#00ffffff size=1>.</style>            Concat returns a new list that has the elements of l1
+<style color=#00ffffff size=1>.</style>            followed by the elements of l2.
+
+<style color=#00ffffff size=1>.</style>            Delete returns a new list in which the first element of l
+<style color=#00ffffff size=1>.</style>            that is equal to x has been removed (all others remain). X
+<style color=#00ffffff size=1>.</style>            must be an adt reference type T with an operation T.eq that
+<style color=#00ffffff size=1>.</style>            returns true (non-zero) if two values of type T are
+<style color=#00ffffff size=1>.</style>            considered equal.
+
+<style color=#00ffffff size=1>.</style>            Find finds the first instance of x in list l and returns the
+<style color=#00ffffff size=1>.</style>            tail of l with x at its head. Find returns nil if there is
+<style color=#00ffffff size=1>.</style>            no instance of x in l.
+
+<style color=#00ffffff size=1>.</style>            Ismember returns 1 if there is an element of l that is equal
+<style color=#00ffffff size=1>.</style>            to x.
+
+<style color=#00ffffff size=1>.</style>            Last returns the value of the element at the end of list l.
+<style color=#00ffffff size=1>.</style>            A run-time error occurs if l is nil.
+
+<style color=#00ffffff size=1>.</style>            Pair takes two lists l1 and l2, and returns a new list of
+<style color=#00ffffff size=1>.</style>            tuples (v1, v2) in which each element of l1 has been paired
+<style color=#00ffffff size=1>.</style>            with the corresponding element of l2. A run-time error
+<style color=#00ffffff size=1>.</style>            occurs if the lists are not equal in length.
+
+<style color=#00ffffff size=1>.</style>            Reverse returns a new list containing the elements of l in
+<style color=#00ffffff size=1>.</style>            reverse order.
+
+<style color=#00ffffff size=1>.</style>            Unpair takes a list of tuples (v1, v2) and returns a tuple
+<style color=#00ffffff size=1>.</style>            of lists (l1, l2) where l1 contains the first element of
+<style color=#00ffffff size=1>.</style>            each tuple, and l2 contains the second element of each
+<style color=#00ffffff size=1>.</style>            tuple.
+
+<style color=#00ffffff size=1>.</style>            A second group of operations applies a function f or a
+<style color=#00ffffff size=1>.</style>            Boolean predicate p to each element of a list l, returning a
+<style color=#00ffffff size=1>.</style>            transformed list or a Boolean value. A predicate p must
+<style color=#00ffffff size=1>.</style>            return non-zero if its parameter value satisfies its
+<style color=#00ffffff size=1>.</style>            condition, and must return zero if it does not.
+
+<style color=#00ffffff size=1>.</style>            Allsat returns 1 if all elements of l satisfy p, and returns
+<style color=#00ffffff size=1>.</style>            0 otherwise.
+
+<style color=#00ffffff size=1>.</style>            Anysat returns 1 if any element of l satisfies p, and
+<style color=#00ffffff size=1>.</style>            returns 0 otherwise.
+
+<style color=#00ffffff size=1>.</style>            Filter returns a new list containing only the elements of l
+<style color=#00ffffff size=1>.</style>            that satisfy p.
+
+<style color=#00ffffff size=1>.</style>            Map returns a new list in which each element of l has been
+<style color=#00ffffff size=1>.</style>            transformed by f (ie, if l is e0::e1::... then the result is
+<style color=#00ffffff size=1>.</style>            f(e0)::f(e1)::...).
+
+<style color=#00ffffff size=1>.</style>            Partition returns a tuple of lists (l1, l2) of lists where
+<style color=#00ffffff size=1>.</style>            l1 contains all elements of l that satisfy p and l2 contains
+<style color=#00ffffff size=1>.</style>            all elements of l that do not satisfy p.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/lists.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The current implementation of polymorphism is limited to
+<style color=#00ffffff size=1>.</style>            reference types and strings, which in turn limits use of
+<style color=#00ffffff size=1>.</style>            this module.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

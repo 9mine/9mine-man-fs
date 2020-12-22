@@ -1,0 +1,46 @@
+<action name=FTL(8)>FTL(8)</action>                                                     <action name=FTL(8)>FTL(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ftl - Flash Translation Layer formatter
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            disk/ftl flashsize secsize kfsfile output
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ftl reads a file system image in <action name=kfs(3)>kfs(3)</action> format from kfsfile
+<style color=#00ffffff size=1>.</style>            and adds the data structures needed to make it a valid image
+<style color=#00ffffff size=1>.</style>            for the Flash Translation Layer driver <action name=ftl(3)>ftl(3)</action>. The result is
+<style color=#00ffffff size=1>.</style>            written to the output file, which can be copied to
+<style color=#00ffffff size=1>.</style>            initialise the flash memory of a suitable device (see flash
+<style color=#00ffffff size=1>.</style>            (3)).
+
+<style color=#00ffffff size=1>.</style>            The other arguments describe the characteristics of the
+<style color=#00ffffff size=1>.</style>            flash memory:
+
+<style color=#00ffffff size=1>.</style>            flashsize        The size in bytes of the flash memory to
+<style color=#00ffffff size=1>.</style>                             which output will be copied\; exactly
+<style color=#00ffffff size=1>.</style>                             flashsize bytes will be written to output.
+
+<style color=#00ffffff size=1>.</style>            secsize          The effective erase unit (sector) size in
+<style color=#00ffffff size=1>.</style>                             bytes of the flash memory, as seen by the
+<style color=#00ffffff size=1>.</style>                             processor, having allowed for bus width.
+<style color=#00ffffff size=1>.</style>                             For example, a bank of flash formed from
+<style color=#00ffffff size=1>.</style>                             byte-wide flash chips, each with 16kbyte
+<style color=#00ffffff size=1>.</style>                             sectors, wired across a 4 byte bus, might
+<style color=#00ffffff size=1>.</style>                             have an effective erase unit size of
+<style color=#00ffffff size=1>.</style>                             64kbytes.
+
+<style color=#00ffffff size=1>.</style>            The kfsfile must not be larger than the size (length) of the
+<style color=#00ffffff size=1>.</style>            ftldata file provided by <action name=ftl(3)>ftl(3)</action> for the target flash device
+<style color=#00ffffff size=1>.</style>            or partition. (That size is invariably less than the size of
+<style color=#00ffffff size=1>.</style>            the raw flash, owing to the overhead of FTL data structures
+<style color=#00ffffff size=1>.</style>            and a reserve pool of 5% to reduce the number of erase
+<style color=#00ffffff size=1>.</style>            cycles\; see <action name=ftl(3)>ftl(3)</action>).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/disk/ftl.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=flash(3)>flash(3)</action>, <action name=ftl(3)>ftl(3)</action>, <action name=kfs(3)>kfs(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

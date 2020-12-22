@@ -1,0 +1,266 @@
+<action name=ALPHABET-FS(1)>ALPHABET-FS(1)</action>                                     <action name=ALPHABET-FS(1)>ALPHABET-FS(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            fs - file-hierarchy traversal
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load alphabet
+<style color=#00ffffff size=1>.</style>            typeset /fs
+<style color=#00ffffff size=1>.</style>            type /fs/fs
+<style color=#00ffffff size=1>.</style>            type /fs/entries
+<style color=#00ffffff size=1>.</style>            type /fs/gate
+<style color=#00ffffff size=1>.</style>            type /fs/selector
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Fs is a typeset for alphabet (see <action name=sh-alphabet(1)>sh-alphabet(1)</action>) which
+<style color=#00ffffff size=1>.</style>            enables filtering of the contents of hierarchical
+<style color=#00ffffff size=1>.</style>            filesystems. Fs defines four new types:
+
+<style color=#00ffffff size=1>.</style>            fs        The complete contents of a filesystem.
+
+<style color=#00ffffff size=1>.</style>            entries   Information about the entries in a filesystem
+<style color=#00ffffff size=1>.</style>                      without their content.
+
+<style color=#00ffffff size=1>.</style>            gate      A condition that can be used with conditional
+<style color=#00ffffff size=1>.</style>                      verbs. A gate is open to entries satisfying
+<style color=#00ffffff size=1>.</style>                      particular criteria.
+
+<style color=#00ffffff size=1>.</style>            selector  A comparator which compares two entries and
+<style color=#00ffffff size=1>.</style>                      selects one, both or neither of them.
+
+<style color=#00ffffff size=1>.</style>            In the following description of the verbs provided, an entry
+<style color=#00ffffff size=1>.</style>            such as:
+
+<style color=#00ffffff size=1>.</style>            print entries -> status
+
+<style color=#00ffffff size=1>.</style>            describes a verb print, which takes one argument of type
+<style color=#00ffffff size=1>.</style>            entries, and the result of which is of type status. If the
+<style color=#00ffffff size=1>.</style>            type is not one of those described above, it should be taken
+<style color=#00ffffff size=1>.</style>            to be of type string.
+
+<style color=#00ffffff size=1>.</style>            All types and modules names are taken to be relative to the
+<style color=#00ffffff size=1>.</style>            typeset root, /fs.
+
+<style color=#00ffffff size=1>.</style>            Modules defined within fs include:
+
+<style color=#00ffffff size=1>.</style>            and gate gate \[gate...\] -> gate
+<style color=#00ffffff size=1>.</style>                      And is a gate that is open to an entry if all its
+<style color=#00ffffff size=1>.</style>                      arguments are open.
+
+<style color=#00ffffff size=1>.</style>            bundle fs -> void
+<style color=#00ffffff size=1>.</style>                      Bundle converts fs to an archival format and
+<style color=#00ffffff size=1>.</style>                      writes it to the standard output.
+
+<style color=#00ffffff size=1>.</style>            compose \[-d\] op -> selector
+<style color=#00ffffff size=1>.</style>                      Compose implements ``compositing''-style
+<style color=#00ffffff size=1>.</style>                      operators, useful when merging filesystems. Op
+<style color=#00ffffff size=1>.</style>                      specifies the operator, taking its name from the
+<style color=#00ffffff size=1>.</style>                      graphical Porter-Duff equivalent: AinB, AinB, BinA
+<style color=#00ffffff size=1>.</style>                      , AoutB, BoutA, A, AoverB, AatopB, AxorB, B,
+<style color=#00ffffff size=1>.</style>                      BoverA, or BatopA. For instance, AinB gives the
+<style color=#00ffffff size=1>.</style>                      intersection of A and B\; AatopB gives A whereever
+<style color=#00ffffff size=1>.</style>                      both A and B exist, and B otherwise. When used as
+<style color=#00ffffff size=1>.</style>                      a selector for merge, operators that exclude the
+<style color=#00ffffff size=1>.</style>                      union of A and B are not very useful, as they will
+<style color=#00ffffff size=1>.</style>                      exclude all common directories at the top level.
+<style color=#00ffffff size=1>.</style>                      Given the -d option, compose will allow through
+<style color=#00ffffff size=1>.</style>                      directories that would otherwise be excluded in
+<style color=#00ffffff size=1>.</style>                      this way, making operators such as AxorB (all that
+<style color=#00ffffff size=1>.</style>                      A does not hold in common with B) more useful,
+<style color=#00ffffff size=1>.</style>                      although accurate only for regular files.
+
+<style color=#00ffffff size=1>.</style>            depth n -> gate
+<style color=#00ffffff size=1>.</style>                      Depth is a gate open only to entries which are
+<style color=#00ffffff size=1>.</style>                      within n levels of the root of the filesystem.
+
+<style color=#00ffffff size=1>.</style>            entries fs -> entries
+<style color=#00ffffff size=1>.</style>                      Entries produces all the entries contained within
+<style color=#00ffffff size=1>.</style>                      fs.
+
+<style color=#00ffffff size=1>.</style>            filter  \[-d\] fsgate -> fs
+<style color=#00ffffff size=1>.</style>                      The result of filter is a filesystem from which
+<style color=#00ffffff size=1>.</style>                      all entries that will not pass through gate, and
+<style color=#00ffffff size=1>.</style>                      their descendents, have been removed. If the -d
+<style color=#00ffffff size=1>.</style>                      flag is given, only files are filtered -
+<style color=#00ffffff size=1>.</style>                      directories bypass the gate.
+
+<style color=#00ffffff size=1>.</style>            ls \[-um\] entries -> void
+<style color=#00ffffff size=1>.</style>                      Print each entry in the style of ls -l (see ls
+<style color=#00ffffff size=1>.</style>                      (1)). If the -u flag is given, the file access
+<style color=#00ffffff size=1>.</style>                      time rather than the file modification time will
+<style color=#00ffffff size=1>.</style>                      be printed. If the -m flag is given, the name of
+<style color=#00ffffff size=1>.</style>                      the user that last modified the file is printed
+<style color=#00ffffff size=1>.</style>                      too.
+
+<style color=#00ffffff size=1>.</style>            exec \[-pP\] \[-t cmd\] \[-n n\] entries cmd -> void
+<style color=#00ffffff size=1>.</style>                      Run its argument cmd for each entry in entries .
+<style color=#00ffffff size=1>.</style>                      If the -n flag is specified, exec will try to
+<style color=#00ffffff size=1>.</style>                      gather n entries together before invoking the
+<style color=#00ffffff size=1>.</style>                      command (default 1). The environent variable $file
+<style color=#00ffffff size=1>.</style>                      is set to the names of the entries that have been
+<style color=#00ffffff size=1>.</style>                      gathered. If the -p flag is given, environment
+<style color=#00ffffff size=1>.</style>                      variables are set giving information about the
+<style color=#00ffffff size=1>.</style>                      mode, owner, modification time and size of the
+<style color=#00ffffff size=1>.</style>                      entry (they are named after the equivalent field
+<style color=#00ffffff size=1>.</style>                      names in the Dir structure\; see <action name=sys-stat(2)>sys-stat(2)</action>). This
+<style color=#00ffffff size=1>.</style>                      option is only valid when n is 1. The -P flag
+<style color=#00ffffff size=1>.</style>                      causes all the other fields in the Dir structure
+<style color=#00ffffff size=1>.</style>                      to be included too. Note that the command is run
+<style color=#00ffffff size=1>.</style>                      in the same shell context each time, so
+<style color=#00ffffff size=1>.</style>                      environment variable set on one execution can be
+<style color=#00ffffff size=1>.</style>                      retrieved on the next. The -t flag can be used to
+<style color=#00ffffff size=1>.</style>                      specify a command which will be executed just
+<style color=#00ffffff size=1>.</style>                      before termination.
+
+<style color=#00ffffff size=1>.</style>            match \[-ar\] pattern -> gate
+<style color=#00ffffff size=1>.</style>                      Match is a gate that is open if the entry's
+<style color=#00ffffff size=1>.</style>                      filename matches the pattern. If the -a flag is
+<style color=#00ffffff size=1>.</style>                      given, the whole path will be used for the match.
+<style color=#00ffffff size=1>.</style>                      If -r is specified, the pattern is evaluated as a
+<style color=#00ffffff size=1>.</style>                      regular expression, otherwise it is a shell-style
+<style color=#00ffffff size=1>.</style>                      pattern in the style of <action name=filepat(2)>filepat(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            merge \[-1\] \[-c selector\] fs fs \[fs...\] -> fs
+<style color=#00ffffff size=1>.</style>                      Recursively merge the contents of its argument
+<style color=#00ffffff size=1>.</style>                      filesystems. Selector is consulted to see which
+<style color=#00ffffff size=1>.</style>                      entries are chosen for the result\; if not given,
+<style color=#00ffffff size=1>.</style>                      entries are resolved in favour of the first
+<style color=#00ffffff size=1>.</style>                      filesystem (equivalent to {compose AoverB}). If
+<style color=#00ffffff size=1>.</style>                      the -1 flag is given, merging takes place only in
+<style color=#00ffffff size=1>.</style>                      the top-level directory.
+
+<style color=#00ffffff size=1>.</style>            mode spec -> gate
+<style color=#00ffffff size=1>.</style>                      Mode is a gate that lets through entries whose
+<style color=#00ffffff size=1>.</style>                      file permissions satisfy spec, which is a string
+<style color=#00ffffff size=1>.</style>                      in the style of <action name=chmod(1)>chmod(1)</action>. If the op field is +,
+<style color=#00ffffff size=1>.</style>                      the specified permissions must be present\; if -,
+<style color=#00ffffff size=1>.</style>                      they must be absent, and if =, they must be
+<style color=#00ffffff size=1>.</style>                      exactly as given. The directory and auth modes are
+<style color=#00ffffff size=1>.</style>                      specified with the characters ``d'' and ``A''
+<style color=#00ffffff size=1>.</style>                      respectively.
+
+<style color=#00ffffff size=1>.</style>            not gate -> gate
+<style color=#00ffffff size=1>.</style>                      Not is a gate open to an entry if its argument is
+<style color=#00ffffff size=1>.</style>                      not.
+
+<style color=#00ffffff size=1>.</style>            or gate gate \[gate...\] -> gate
+<style color=#00ffffff size=1>.</style>                      Or is a gate open to an entry if any argument is
+<style color=#00ffffff size=1>.</style>                      open.
+
+<style color=#00ffffff size=1>.</style>            path \[-x\] path... -> gate
+<style color=#00ffffff size=1>.</style>                      Path is a gate open to an entry whose full
+<style color=#00ffffff size=1>.</style>                      pathname is an ancestor or a descendent of any
+<style color=#00ffffff size=1>.</style>                      path. If -x is specified, the gate is open to any
+<style color=#00ffffff size=1>.</style>                      path except descendents of the paths given.
+
+<style color=#00ffffff size=1>.</style>            pipe \[-1pP\] fs cmd -> status
+<style color=#00ffffff size=1>.</style>                      Pipe is similar to exec, except that the contents
+<style color=#00ffffff size=1>.</style>                      of all files in fs are piped through cmd. Unless
+<style color=#00ffffff size=1>.</style>                      the -1 option is given, cmd is started once for
+<style color=#00ffffff size=1>.</style>                      each file, with $file set to its name, and other
+<style color=#00ffffff size=1>.</style>                      environment variables set according to the -p or
+<style color=#00ffffff size=1>.</style>                      -P options, as for exec. If the -1 option is
+<style color=#00ffffff size=1>.</style>                      specified, cmd is started once only - all file
+<style color=#00ffffff size=1>.</style>                      data is piped through that.
+
+<style color=#00ffffff size=1>.</style>            print entries -> fd
+<style color=#00ffffff size=1>.</style>                      Print the path name of each entry to fd.
+
+<style color=#00ffffff size=1>.</style>            proto \[-r root\] protofile -> fs
+<style color=#00ffffff size=1>.</style>                      Evaluate protofile as a <action name=mkfs(8)>mkfs(8)</action> proto file. If
+<style color=#00ffffff size=1>.</style>                      root is specified, it will be used as the root of
+<style color=#00ffffff size=1>.</style>                      the resulting fs.
+
+<style color=#00ffffff size=1>.</style>            query cmd -> gate
+<style color=#00ffffff size=1>.</style>                      Query is a gate that runs cmd to determine whether
+<style color=#00ffffff size=1>.</style>                      it is open: an empty exit status from the command
+<style color=#00ffffff size=1>.</style>                      yields an open gate. The environment variable
+<style color=#00ffffff size=1>.</style>                      $file is set for the command to the path name of
+<style color=#00ffffff size=1>.</style>                      the entry that is being queried for.
+
+<style color=#00ffffff size=1>.</style>            run cmd -> string
+<style color=#00ffffff size=1>.</style>                      Run runs cmd and substitutes the value of the
+<style color=#00ffffff size=1>.</style>                      environment variable $s after its invocation. $s
+<style color=#00ffffff size=1>.</style>                      must have exactly one element.
+
+<style color=#00ffffff size=1>.</style>            select gate entries -> entries
+<style color=#00ffffff size=1>.</style>                      Select only those entries within entries that will
+<style color=#00ffffff size=1>.</style>                      pass through gate. Descendents of elided entries
+<style color=#00ffffff size=1>.</style>                      are not affected.
+
+<style color=#00ffffff size=1>.</style>            setroot \[-c\] fs path -> fs
+<style color=#00ffffff size=1>.</style>                      Setroot sets the name of the root directory of fs.
+<style color=#00ffffff size=1>.</style>                      If the -c flag is given, the elements in the root
+<style color=#00ffffff size=1>.</style>                      directory will be made explicit in the hierarchy
+<style color=#00ffffff size=1>.</style>                      (i.e. the name of the top directory will not
+<style color=#00ffffff size=1>.</style>                      contain any / characters).
+
+<style color=#00ffffff size=1>.</style>            size entries -> fd
+<style color=#00ffffff size=1>.</style>                      Print the sum of the size of all entries, in bytes
+<style color=#00ffffff size=1>.</style>                      to fd.
+
+<style color=#00ffffff size=1>.</style>            unbundle fd -> fs
+<style color=#00ffffff size=1>.</style>                      Unbundle reads an archive as produced by bundle
+<style color=#00ffffff size=1>.</style>                      from fd\; its result is the contents of the
+<style color=#00ffffff size=1>.</style>                      filesystem that was originally bundled.
+
+<style color=#00ffffff size=1>.</style>            walk path -> fs
+<style color=#00ffffff size=1>.</style>                      Walk produces a filesystem that is the result of
+<style color=#00ffffff size=1>.</style>                      traversing all the files and directories
+<style color=#00ffffff size=1>.</style>                      underneath path.
+
+<style color=#00ffffff size=1>.</style>            write fs dir -> void
+<style color=#00ffffff size=1>.</style>                      Write the contents of fs to the filesystem rooted
+<style color=#00ffffff size=1>.</style>                      at dir . If dir is empty, fs will be written to
+<style color=#00ffffff size=1>.</style>                      the root directory originally associated with fs.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            The examples below assume the following alphabet
+<style color=#00ffffff size=1>.</style>            declarations:
+<style color=#00ffffff size=1>.</style>            	load alphabet
+<style color=#00ffffff size=1>.</style>            	typeset /fs
+<style color=#00ffffff size=1>.</style>            	type /string /fd /fs/fs /fs/entries /fs/gate
+<style color=#00ffffff size=1>.</style>            	import /fs/size /fs/walk /fs/select /fs/mode /fs/merge
+<style color=#00ffffff size=1>.</style>            	import /fs/compose /fs/exec /fs/bundle /fs/write /fs/unbundle
+<style color=#00ffffff size=1>.</style>            	import /fs/print /fs/depth /fs/filter /fs/query
+<style color=#00ffffff size=1>.</style>            	autoconvert string fs walk
+<style color=#00ffffff size=1>.</style>            	autoconvert fs entries /fs/entries
+<style color=#00ffffff size=1>.</style>            	autoconvert string gate /fs/match
+<style color=#00ffffff size=1>.</style>            	autoconvert entries fd /fs/print
+<style color=#00ffffff size=1>.</style>            	autoconvert fd /status {(/fd)\; /print $1 1}
+<style color=#00ffffff size=1>.</style>            Print the size of all files below the current directory:
+<style color=#00ffffff size=1>.</style>            	-{size .}
+<style color=#00ffffff size=1>.</style>            Show the names of all files in x that aren't in y:
+<style color=#00ffffff size=1>.</style>            	-{walk x | merge -c {compose -d AoutB} y | select {mode -d}}
+<style color=#00ffffff size=1>.</style>            Remove all files from /appl ending in .dis:
+<style color=#00ffffff size=1>.</style>            	-{walk /appl | select '*.dis' | exec "{rm $file}}
+<style color=#00ffffff size=1>.</style>            Recursively copy the current directory to /tmp/foo.
+<style color=#00ffffff size=1>.</style>            	-{write . /tmp/foo}
+<style color=#00ffffff size=1>.</style>            Interactively remove all regular files from one level of the
+<style color=#00ffffff size=1>.</style>            current directory:
+
+<style color=#00ffffff size=1>.</style>                 	-{walk . |
+<style color=#00ffffff size=1>.</style>                 		filter {depth 1} |
+<style color=#00ffffff size=1>.</style>                 		select {mode -d} |
+<style color=#00ffffff size=1>.</style>                 		select {
+<style color=#00ffffff size=1>.</style>                 			query "{echo -n $file:\; ~ `{read} y yes}
+<style color=#00ffffff size=1>.</style>                 		} |
+<style color=#00ffffff size=1>.</style>                 		exec "{rm $file}
+<style color=#00ffffff size=1>.</style>                 	}
+
+<style color=#00ffffff size=1>.</style>            Create a new archive containing those files from below the
+<style color=#00ffffff size=1>.</style>            current directory that were held in an old archive:
+<style color=#00ffffff size=1>.</style>            	-{merge -c {compose AinB} . {unbundle old.bundle} |
+<style color=#00ffffff size=1>.</style>            		bundle |
+<style color=#00ffffff size=1>.</style>            		/create new.bundle
+<style color=#00ffffff size=1>.</style>            	}
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/alphabet/fs.b, /appl/alphabet/fstypes.b
+<style color=#00ffffff size=1>.</style>            /appl/alphabet/auxi/fsfilter.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/fs/*.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh-alphabet(1)>sh-alphabet(1)</action>, <action name=alphabet-main(1)>alphabet-main(1)</action>, <action name=alphabet-fs(2)>alphabet-fs(2)</action>, <action name=sh(1)>sh(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

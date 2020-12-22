@@ -1,0 +1,393 @@
+<action name=PALMFILE(2)>PALMFILE(2)</action>                                           <action name=PALMFILE(2)>PALMFILE(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Palmfile: Categories, DBInfo, Doc, Entry, Pfile, Record -
+<style color=#00ffffff size=1>.</style>            read Palm™ file formats
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "bufio.m"\;
+<style color=#00ffffff size=1>.</style>            include "palmfile.m"\;
+
+<style color=#00ffffff size=1>.</style>            palmfile := load Palmfile Palmfile->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Pfile: adt {
+<style color=#00ffffff size=1>.</style>                fname:  string\;
+
+<style color=#00ffffff size=1>.</style>                appinfo:  array of byte\;
+<style color=#00ffffff size=1>.</style>                sortinfo: array of int\;
+
+<style color=#00ffffff size=1>.</style>                entries:  array of ref Entry\;
+
+<style color=#00ffffff size=1>.</style>                open:   fn(name: string, mode: int): (ref Pfile, string)\;
+<style color=#00ffffff size=1>.</style>                close:  fn(pf: self ref Pfile): int\;
+<style color=#00ffffff size=1>.</style>                read:   fn(pf: self ref Pfile, index: int): (ref Record, string)\;
+<style color=#00ffffff size=1>.</style>                stat:   fn(pf: self ref Pfile): ref DBInfo\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            DBInfo: adt {
+<style color=#00ffffff size=1>.</style>                name:    string\; # database name on Palm
+<style color=#00ffffff size=1>.</style>                attr:    int\;    # file attributes (defined below)
+<style color=#00ffffff size=1>.</style>                dtype:   string\; # database type (byte\[4\])
+<style color=#00ffffff size=1>.</style>                version: int\;    # version of data layout, defined by application
+<style color=#00ffffff size=1>.</style>                creator: string\; # creating application (byte\[4\])
+<style color=#00ffffff size=1>.</style>                ctime:   int\;    # creation time
+<style color=#00ffffff size=1>.</style>                mtime:   int\;    # modification time
+<style color=#00ffffff size=1>.</style>                btime:   int\;    # last backup
+<style color=#00ffffff size=1>.</style>                modno:   int\;    # modification number
+<style color=#00ffffff size=1>.</style>                uidseed: int\;    # unique record ID seed
+
+<style color=#00ffffff size=1>.</style>                new:     fn(name: string, attr: int, dtype: string,
+<style color=#00ffffff size=1>.</style>                               version: int, creator: string): ref DBInfo\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Entry: adt {
+<style color=#00ffffff size=1>.</style>                id: int\;        # resource: id\; record: unique ID
+<style color=#00ffffff size=1>.</style>                offset: int\;    # offset in file
+<style color=#00ffffff size=1>.</style>                size:   int\;    # size in bytes
+<style color=#00ffffff size=1>.</style>                name:   int\;    # resource entry only
+<style color=#00ffffff size=1>.</style>                attr:   int\;    # record entry only
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Record: adt {
+<style color=#00ffffff size=1>.</style>                id:     int\;    # resource: ID\; data: unique record ID
+<style color=#00ffffff size=1>.</style>                index:  int\;    # record index (origin 0)
+<style color=#00ffffff size=1>.</style>                name:   int\;    # byte\[4\]: resource record only
+<style color=#00ffffff size=1>.</style>                attr:   int\;    # attributes, defined below, data record only
+<style color=#00ffffff size=1>.</style>                cat:    int\;    # category, data record only
+<style color=#00ffffff size=1>.</style>                data:   array of byte\;   # content of record
+
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Categories: adt {
+<style color=#00ffffff size=1>.</style>                renamed: int\;    # which categories have been renamed
+<style color=#00ffffff size=1>.</style>                labels:  array of string\; # category names
+<style color=#00ffffff size=1>.</style>                uids:    array of int\;    # corresponding unique IDs
+<style color=#00ffffff size=1>.</style>                lastuid: int\;             # last unique ID assigned
+<style color=#00ffffff size=1>.</style>                appdata: array of byte\;   # remaining application-specific data
+
+<style color=#00ffffff size=1>.</style>                new:     fn(labels: array of string): ref Categories\;
+<style color=#00ffffff size=1>.</style>                unpack:  fn(a: array of byte): ref Categories\;
+<style color=#00ffffff size=1>.</style>                pack:    fn(c: self ref Categories): array of byte\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Doc: adt {
+<style color=#00ffffff size=1>.</style>                version:  int\;
+<style color=#00ffffff size=1>.</style>                length:   int\;  # uncompressed
+<style color=#00ffffff size=1>.</style>                nrec:     int\;  # text records only
+<style color=#00ffffff size=1>.</style>                recsize:  int\;  # uncompressed
+<style color=#00ffffff size=1>.</style>                position: int\;
+<style color=#00ffffff size=1>.</style>                sizes:    array of int\;   # sizes of uncompressed records
+
+<style color=#00ffffff size=1>.</style>                open:     fn(file: ref Pfile): (ref Doc, string)\;
+<style color=#00ffffff size=1>.</style>                read:     fn(doc: self ref Doc, i: int): (string, string)\;
+<style color=#00ffffff size=1>.</style>                iscompressed:  fn(doc: self ref Doc): int\;
+<style color=#00ffffff size=1>.</style>                unpacktext: fn(doc: self ref Doc, a: array of byte):
+<style color=#00ffffff size=1>.</style>                               (string, string)\;
+<style color=#00ffffff size=1>.</style>                textlength: fn(doc: self ref Doc, a: array of byte): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:     fn(): string\;
+
+<style color=#00ffffff size=1>.</style>            filename: fn(s: string): string\;
+<style color=#00ffffff size=1>.</style>            dbname:   fn(s: string): string\;
+
+<style color=#00ffffff size=1>.</style>            gets:     fn(a: array of byte): string\;
+<style color=#00ffffff size=1>.</style>            puts:     fn(a: array of byte, s: string)\;
+<style color=#00ffffff size=1>.</style>            get2:     fn(a: array of byte): int\;
+<style color=#00ffffff size=1>.</style>            get3:     fn(a: array of byte): int\;
+<style color=#00ffffff size=1>.</style>            get4:     fn(a: array of byte): int\;
+<style color=#00ffffff size=1>.</style>            put2:     fn(a: array of byte, v: int)\;
+<style color=#00ffffff size=1>.</style>            put3:     fn(a: array of byte, v: int)\;
+<style color=#00ffffff size=1>.</style>            put4:     fn(a: array of byte, v: int)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Palmfile provides read-only access to files in the Palm™
+<style color=#00ffffff size=1>.</style>            database and document formats. It currently handles three
+<style color=#00ffffff size=1>.</style>            types of files: Palm Database (.pdb) files, which store data
+<style color=#00ffffff size=1>.</style>            for applications\; Palm Resource (.prc) files, which store
+<style color=#00ffffff size=1>.</style>            code resources and user interface resource elements\; and
+<style color=#00ffffff size=1>.</style>            Palm Doc (.doc) files, which store compressed documents for
+<style color=#00ffffff size=1>.</style>            the Palm document and e-book readers. Database and resource
+<style color=#00ffffff size=1>.</style>            files have a similar structure, with slight differences in
+<style color=#00ffffff size=1>.</style>            representation, and differing mainly in how the contents are
+<style color=#00ffffff size=1>.</style>            used.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other function in the file.
+<style color=#00ffffff size=1>.</style>            It returns a diagnostic if it cannot initialise the module.
+
+<style color=#00ffffff size=1>.</style>            Pfile represents an open Palm file of any type:
+
+<style color=#00ffffff size=1>.</style>            open()
+<style color=#00ffffff size=1>.</style>                 Opens file name with the given mode (which must
+<style color=#00ffffff size=1>.</style>                 currently be Sys->OREAD) and returns a tuple (pf,err).
+<style color=#00ffffff size=1>.</style>                 Pf is a new Pfile instance giving access to the file,
+<style color=#00ffffff size=1>.</style>                 or nil if the open failed, in which case the err string
+<style color=#00ffffff size=1>.</style>                 contains a diagnostic.
+
+<style color=#00ffffff size=1>.</style>            pf.close()
+<style color=#00ffffff size=1>.</style>                 Close the file (needed only when writing to a file is
+<style color=#00ffffff size=1>.</style>                 eventually supported).
+
+<style color=#00ffffff size=1>.</style>            pf.read(index)
+<style color=#00ffffff size=1>.</style>                 Returns a tuple (rec, err) where rec is a Record
+<style color=#00ffffff size=1>.</style>                 containing the data of the record with the given index
+<style color=#00ffffff size=1>.</style>                 (origin 0), or nil if no such record index exists or it
+<style color=#00ffffff size=1>.</style>                 cannot be read. In the latter case, err is a diagnostic
+<style color=#00ffffff size=1>.</style>                 string.
+
+<style color=#00ffffff size=1>.</style>            pf.stat()
+<style color=#00ffffff size=1>.</style>                 Return the database information for pf.
+
+<style color=#00ffffff size=1>.</style>            entries
+<style color=#00ffffff size=1>.</style>                 An array of Entry values (see below), one per record.
+<style color=#00ffffff size=1>.</style>                 The length of the array is consequently the length of
+<style color=#00ffffff size=1>.</style>                 the file in records. It can be nil or empty.
+
+<style color=#00ffffff size=1>.</style>            appinfo
+<style color=#00ffffff size=1>.</style>                 Optional application-specific data (see Categories
+<style color=#00ffffff size=1>.</style>                 below).
+
+<style color=#00ffffff size=1>.</style>            sortinfo
+<style color=#00ffffff size=1>.</style>                 Optional application-specific data (typically an array
+<style color=#00ffffff size=1>.</style>                 of record IDs in a chosen sorting order).
+
+<style color=#00ffffff size=1>.</style>            fname
+<style color=#00ffffff size=1>.</style>                 File name given to Pfile.open.
+
+<style color=#00ffffff size=1>.</style>            DBInfo gives the database information for a file:
+
+<style color=#00ffffff size=1>.</style>            name     Database name used on the Palm, maximum of 31
+<style color=#00ffffff size=1>.</style>                     characters.
+
+<style color=#00ffffff size=1>.</style>            attr     A bit set of file attributes, containing the
+<style color=#00ffffff size=1>.</style>                     following values:
+
+<style color=#00ffffff size=1>.</style>                     Fresource      File is a resource file (.prc) not a
+<style color=#00ffffff size=1>.</style>                                    database file (.pdb).
+
+<style color=#00ffffff size=1>.</style>                     Fronly         File is read only.
+
+<style color=#00ffffff size=1>.</style>                     Fappinfodirty  Application information has changed.
+
+<style color=#00ffffff size=1>.</style>                     Fbackup        No conduit program exists (the whole
+<style color=#00ffffff size=1>.</style>                                    file must be backed up).
+
+<style color=#00ffffff size=1>.</style>                     Foverwrite     Overwrite older copy if present.
+
+<style color=#00ffffff size=1>.</style>                     Freset         Reset PDA after installing this
+<style color=#00ffffff size=1>.</style>                                    file.
+
+<style color=#00ffffff size=1>.</style>                     Fprivate       Don't allow copy of this file to be
+<style color=#00ffffff size=1>.</style>                                    beamed.
+
+<style color=#00ffffff size=1>.</style>            dtype    String identifying database type (up to 4
+<style color=#00ffffff size=1>.</style>                     characters). It is usually the string "appI" for
+<style color=#00ffffff size=1>.</style>                     resource files.
+
+<style color=#00ffffff size=1>.</style>            version  Identifies the version of the data format
+<style color=#00ffffff size=1>.</style>                     (application specific).
+
+<style color=#00ffffff size=1>.</style>            creator  String identifying creating application (up to 4
+<style color=#00ffffff size=1>.</style>                     characters).
+
+<style color=#00ffffff size=1>.</style>            ctime    File creation time, in seconds from the Inferno
+<style color=#00ffffff size=1>.</style>                     epoch (see <action name=daytime(2)>daytime(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            mtime    Time file last modified, in seconds from the epoch.
+
+<style color=#00ffffff size=1>.</style>            btime    Time file last backed up, in seconds from the
+<style color=#00ffffff size=1>.</style>                     epoch.
+
+<style color=#00ffffff size=1>.</style>            uidseed  Seed for generating unique record IDs (typically
+<style color=#00ffffff size=1>.</style>                     set to 0 for database files, always 0 for resource
+<style color=#00ffffff size=1>.</style>                     files).
+
+<style color=#00ffffff size=1>.</style>            new(name, attr, dtype, creator)
+<style color=#00ffffff size=1>.</style>                     Return a new DBInfo with the given values.
+
+<style color=#00ffffff size=1>.</style>            In some applications, it is useful to use a data base name
+<style color=#00ffffff size=1>.</style>            (ie, DBInfo.name) as a component of an Inferno file name.
+<style color=#00ffffff size=1>.</style>            The device allows space and slash characters in names,
+<style color=#00ffffff size=1>.</style>            though, which makes it hard to use the name directly.
+<style color=#00ffffff size=1>.</style>            Filename maps each space character in s to U+00A0
+<style color=#00ffffff size=1>.</style>            (unpaddable space) and each slash character to U+2215
+<style color=#00ffffff size=1>.</style>            (`division /'), and returns the result. Dbname maps the
+<style color=#00ffffff size=1>.</style>            other way.
+
+<style color=#00ffffff size=1>.</style>         Entries and Records
+<style color=#00ffffff size=1>.</style>            Each record in the file is represented by an Entry in
+<style color=#00ffffff size=1>.</style>            memory, which holds the record's essential attributes,
+<style color=#00ffffff size=1>.</style>            leaving the data on file. The meaning of some of the
+<style color=#00ffffff size=1>.</style>            elements depends on whether the file is a data file or a
+<style color=#00ffffff size=1>.</style>            resource file.
+
+<style color=#00ffffff size=1>.</style>            id      Resource ID, 16 bits (resource file)\; unique record
+<style color=#00ffffff size=1>.</style>                    ID, 24 bits (data file).
+
+<style color=#00ffffff size=1>.</style>            offset  Offset in file, in bytes.
+
+<style color=#00ffffff size=1>.</style>            size    Size of record in bytes.
+
+<style color=#00ffffff size=1>.</style>            name    Name of the resource (resource record only).
+
+<style color=#00ffffff size=1>.</style>            attrs   Record attributes (data record only):
+
+<style color=#00ffffff size=1>.</style>                    Rdelete   Delete the record when file next
+<style color=#00ffffff size=1>.</style>                              synchronised.
+
+<style color=#00ffffff size=1>.</style>                    Rdirty    Record has been modified.
+
+<style color=#00ffffff size=1>.</style>                    Rinuse    Record in use (not typically used in
+<style color=#00ffffff size=1>.</style>                              Inferno).
+
+<style color=#00ffffff size=1>.</style>                    Rsecret   Record is secret (shown on the device only
+<style color=#00ffffff size=1>.</style>                              with use of a password).
+
+<style color=#00ffffff size=1>.</style>                    Rarchive  Archive this record when file next
+<style color=#00ffffff size=1>.</style>                              synchronised.
+
+<style color=#00ffffff size=1>.</style>                    Rmcat     Mask for the 4-bit category field (in
+<style color=#00ffffff size=1>.</style>                              Entry.attrs only).
+
+<style color=#00ffffff size=1>.</style>            Records read from the file are represented by a Record adt
+<style color=#00ffffff size=1>.</style>            containing its data and associated values. Some fields are
+<style color=#00ffffff size=1>.</style>            valid only for particular classes of records.
+
+<style color=#00ffffff size=1>.</style>            id     Resource or record ID, as for Entry.
+
+<style color=#00ffffff size=1>.</style>            index  Index (origin 0) of the record in the file.
+
+<style color=#00ffffff size=1>.</style>            name   Resource name (resource record only).
+
+<style color=#00ffffff size=1>.</style>            attr   Record attributes, as above (data record only).
+
+<style color=#00ffffff size=1>.</style>            cat    Record's category ID (data record only).
+
+<style color=#00ffffff size=1>.</style>            data   The actual data.
+
+<style color=#00ffffff size=1>.</style>         Application data
+<style color=#00ffffff size=1>.</style>            The contents of both the ``application information'' and
+<style color=#00ffffff size=1>.</style>            ``sort information'' sections of the file are defined by an
+<style color=#00ffffff size=1>.</style>            application in general. Even so, both have conventional uses
+<style color=#00ffffff size=1>.</style>            with many Palm applications. The Palm software often assigns
+<style color=#00ffffff size=1>.</style>            data records to particular categories (eg, ``Business'' or
+<style color=#00ffffff size=1>.</style>            ``Personal''), and stores up to 16 category names and IDs in
+<style color=#00ffffff size=1>.</style>            the application data in a fixed format (possibly followed by
+<style color=#00ffffff size=1>.</style>            further data that is application specific). This is
+<style color=#00ffffff size=1>.</style>            represented by an instance of Categories, which provides the
+<style color=#00ffffff size=1>.</style>            following:
+
+<style color=#00ffffff size=1>.</style>            renamed  Bit set indicating which categories have been
+<style color=#00ffffff size=1>.</style>                     renamed (for category 0, bit 1<<0, for 1, bit 1<<1,
+<style color=#00ffffff size=1>.</style>                     and so on).
+
+<style color=#00ffffff size=1>.</style>            labels   Array of 16 category labels.
+
+<style color=#00ffffff size=1>.</style>            uids     Array of 16 category IDs, each in the range 0 to
+<style color=#00ffffff size=1>.</style>                     255. (It is said that the Palm itself assigns 0 to
+<style color=#00ffffff size=1>.</style>                     127 and desktop applications assign 128 to 255.)
+
+<style color=#00ffffff size=1>.</style>            lastuid  Last unique category ID assigned.
+
+<style color=#00ffffff size=1>.</style>            appdata  Any data that remained after unpacking the category
+<style color=#00ffffff size=1>.</style>                     data.
+
+<style color=#00ffffff size=1>.</style>            new(labels)
+<style color=#00ffffff size=1>.</style>                     Return a new Categories value for the given array
+<style color=#00ffffff size=1>.</style>                     of labels, assigning unique IDs to each in turn,
+<style color=#00ffffff size=1>.</style>                     starting from 128. There can be at most 16 labels\;
+<style color=#00ffffff size=1>.</style>                     if there are fewer, the remaining labels will be
+<style color=#00ffffff size=1>.</style>                     marked as unused (empty strings).
+
+<style color=#00ffffff size=1>.</style>            unpack(a)
+<style color=#00ffffff size=1>.</style>                     Unpack the application data in array a (typically
+<style color=#00ffffff size=1>.</style>                     pf.appinfo for some Pfile pf), returning a
+<style color=#00ffffff size=1>.</style>                     reference to a new Categories instance. A nil value
+<style color=#00ffffff size=1>.</style>                     is returned if the array is too short to hold valid
+<style color=#00ffffff size=1>.</style>                     category data.
+
+<style color=#00ffffff size=1>.</style>            c.pack() Pack c into a form suitable for writing back to a
+<style color=#00ffffff size=1>.</style>                     file's application information area.
+
+<style color=#00ffffff size=1>.</style>            Binary data in Palm files is typically encoded in big-endian
+<style color=#00ffffff size=1>.</style>            form. Palmfile functions account for that internally, but
+<style color=#00ffffff size=1>.</style>            some Palm applications might use big-endian data in their
+<style color=#00ffffff size=1>.</style>            own data records. Several functions are therefore provided
+<style color=#00ffffff size=1>.</style>            to decode and encode big-endian data: getn retrieves an
+<style color=#00ffffff size=1>.</style>            integer from the first n bytes of array a\; putn stores a
+<style color=#00ffffff size=1>.</style>            big-endian representation of the value v in the first n
+<style color=#00ffffff size=1>.</style>            bytes of array a.
+
+<style color=#00ffffff size=1>.</style>            Strings are stored in fixed-length arrays of bytes, always
+<style color=#00ffffff size=1>.</style>            terminated by a zero byte. The character encoding is
+<style color=#00ffffff size=1>.</style>            (apparently) Latin-1 (ISO 8859-1), not UTF-8, so functions
+<style color=#00ffffff size=1>.</style>            gets and puts are provided to convert between that
+<style color=#00ffffff size=1>.</style>            representation and a Limbo string.
+
+<style color=#00ffffff size=1>.</style>         Documents
+<style color=#00ffffff size=1>.</style>            Doc provides read-only access to Palm documents and
+<style color=#00ffffff size=1>.</style>            (unencrypted) e-books:
+
+<style color=#00ffffff size=1>.</style>            open(file)
+<style color=#00ffffff size=1>.</style>                      Given a Pfile file, return a tuple (doc, err)
+<style color=#00ffffff size=1>.</style>                      where doc is a new Doc instance giving access to
+<style color=#00ffffff size=1>.</style>                      the document contents in file. If an error occurs,
+<style color=#00ffffff size=1>.</style>                      in particular if file does not appear to be a
+<style color=#00ffffff size=1>.</style>                      valid Palm document, doc is nil and the string err
+<style color=#00ffffff size=1>.</style>                      diagnoses the error.
+
+<style color=#00ffffff size=1>.</style>            doc.iscompressed()
+<style color=#00ffffff size=1>.</style>                      Returns true (non-zero) if the document is
+<style color=#00ffffff size=1>.</style>                      compressed\; returns false (zero) otherwise.
+
+<style color=#00ffffff size=1>.</style>            doc.read(i)
+<style color=#00ffffff size=1>.</style>                      Read text record with index i (origin 0),
+<style color=#00ffffff size=1>.</style>                      returning a tuple (s, err) where s is the
+<style color=#00ffffff size=1>.</style>                      uncompressed text for record i, or nil if the
+<style color=#00ffffff size=1>.</style>                      record does not exist (or there is an error
+<style color=#00ffffff size=1>.</style>                      reading it). On any error, err is a diagnostic
+<style color=#00ffffff size=1>.</style>                      string. Note that i is an index into the set of
+<style color=#00ffffff size=1>.</style>                      text records, and is not an index into the set of
+<style color=#00ffffff size=1>.</style>                      all records. It must be no greater than doc.nrec.
+<style color=#00ffffff size=1>.</style>                      doc.unpacktext(a) Returns a tuple (s, err) where s
+<style color=#00ffffff size=1>.</style>                      is the text in array a, after uncompressing if doc
+<style color=#00ffffff size=1>.</style>                      contains compressed records. Following Palm
+<style color=#00ffffff size=1>.</style>                      conventions, the text is assumed to be written in
+<style color=#00ffffff size=1>.</style>                      the Latin-1 encoding (ISO-8859-1). If it is
+<style color=#00ffffff size=1>.</style>                      compressed but the data in a is corrupt (cannot be
+<style color=#00ffffff size=1>.</style>                      uncompressed), s is nil and err diagnoses the
+<style color=#00ffffff size=1>.</style>                      problem.
+
+<style color=#00ffffff size=1>.</style>            doc.textlength(a)
+<style color=#00ffffff size=1>.</style>                      Returns the number of bytes required to store the
+<style color=#00ffffff size=1>.</style>                      text in array a once it has been uncompressed (if
+<style color=#00ffffff size=1>.</style>                      necessary).
+
+<style color=#00ffffff size=1>.</style>            version   The document's version number.
+
+<style color=#00ffffff size=1>.</style>            length    The length of the whole document in bytes, when
+<style color=#00ffffff size=1>.</style>                      uncompressed.
+
+<style color=#00ffffff size=1>.</style>            nrec      Number of text records in the document.
+
+<style color=#00ffffff size=1>.</style>            recsize   Size of uncompressed text records.
+
+<style color=#00ffffff size=1>.</style>            position  Possibly records the position where reading last
+<style color=#00ffffff size=1>.</style>                      stopped.
+
+<style color=#00ffffff size=1>.</style>            sizes     Array giving sizes of all text records, once
+<style color=#00ffffff size=1>.</style>                      uncompressed.
+
+<style color=#00ffffff size=1>.</style>            Most document-reading applications require only Doc.open and
+<style color=#00ffffff size=1>.</style>            Doc.read, and perhaps Doc.length to guide the construction
+<style color=#00ffffff size=1>.</style>            of scroll bars (for instance).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/palmfile.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            Palm® File Format Specification, Gary Hillerson, Palm Inc.,
+<style color=#00ffffff size=1>.</style>            Document Number 3008-004, 1 May 2001. \[Palm®\] standard text
+<style color=#00ffffff size=1>.</style>            document file format, Paul Lucas, 18 August 1998.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

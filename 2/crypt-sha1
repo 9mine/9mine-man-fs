@@ -1,0 +1,94 @@
+<action name=CRYPT-SHA1(2)>CRYPT-SHA1(2)</action>                                       <action name=CRYPT-SHA1(2)>CRYPT-SHA1(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            crypt: sha1, sha224, sha256, sha384, sha512, md4, md5,
+<style color=#00ffffff size=1>.</style>            hmac_sha1, hmac_md5 - cryptographic digests
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "ipints.m"\;
+<style color=#00ffffff size=1>.</style>            ipints := load IPints IPints->PATH\;
+<style color=#00ffffff size=1>.</style>            IPint: import ipints\;
+
+<style color=#00ffffff size=1>.</style>            include "crypt.m"\;
+<style color=#00ffffff size=1>.</style>            crypt := load Crypt Crypt->PATH\;
+
+<style color=#00ffffff size=1>.</style>            DigestState: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                # hidden state
+<style color=#00ffffff size=1>.</style>                copy:   fn(d: self ref DigestState): ref DigestState\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            sha1:	fn(buf: array of byte, n: int, digest: array of byte,
+<style color=#00ffffff size=1>.</style>            		state: ref DigestState): ref DigestState\;
+<style color=#00ffffff size=1>.</style>            sha224:	fn(buf: array of byte, n: int, digest: array of byte,
+<style color=#00ffffff size=1>.</style>            		state: ref DigestState): ref DigestState\;
+<style color=#00ffffff size=1>.</style>            sha256:	fn(buf: array of byte, n: int, digest: array of byte,
+<style color=#00ffffff size=1>.</style>            		state: ref DigestState): ref DigestState\;
+<style color=#00ffffff size=1>.</style>            sha384:	fn(buf: array of byte, n: int, digest: array of byte,
+<style color=#00ffffff size=1>.</style>            		state: ref DigestState): ref DigestState\;
+<style color=#00ffffff size=1>.</style>            sha512:	fn(buf: array of byte, n: int, digest: array of byte,
+<style color=#00ffffff size=1>.</style>            		state: ref DigestState): ref DigestState\;
+<style color=#00ffffff size=1>.</style>            md4:	fn(buf: array of byte, n: int, digest: array of byte,
+<style color=#00ffffff size=1>.</style>            		state: ref DigestState): ref DigestState\;
+<style color=#00ffffff size=1>.</style>            md5:	fn(buf: array of byte, n: int, digest: array of byte,
+<style color=#00ffffff size=1>.</style>            		state: ref DigestState): ref DigestState\;
+
+<style color=#00ffffff size=1>.</style>            SHA1dlen, SHA224dlen, SHA256dlen, SHA384dlen, SHA512dlen, MD4dlen, MD5dlen: con ...\;
+
+<style color=#00ffffff size=1>.</style>            hmac_sha1: fn(buf: array of byte, n: int, key: array of byte,
+<style color=#00ffffff size=1>.</style>            		    digest: array of byte,
+<style color=#00ffffff size=1>.</style>            		    state: ref DigestState): ref DigestState\;
+<style color=#00ffffff size=1>.</style>            hmac_md5:  fn(buf: array of byte, n: int, key: array of byte,
+<style color=#00ffffff size=1>.</style>            		    digest: array of byte,
+<style color=#00ffffff size=1>.</style>            		    state: ref DigestState): ref DigestState\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Sha1, sha224, sha256, sha384, sha512, md4 and md5 are
+<style color=#00ffffff size=1>.</style>            cryptographically secure hash functions that produce output
+<style color=#00ffffff size=1>.</style>            called a message digest. Each function computes a hash of n
+<style color=#00ffffff size=1>.</style>            bytes of the data in buf, using the named algorithm, and
+<style color=#00ffffff size=1>.</style>            updates the current state. They can be called iteratively to
+<style color=#00ffffff size=1>.</style>            form a single digest for many data blocks. The state is kept
+<style color=#00ffffff size=1>.</style>            in the DigestState value referenced by state between calls.
+<style color=#00ffffff size=1>.</style>            State should be nil on the first call, and a newly allocated
+<style color=#00ffffff size=1>.</style>            DigestState will be returned for use in subsequent calls. On
+<style color=#00ffffff size=1>.</style>            a call in which digest is not nil, the hash is completed and
+<style color=#00ffffff size=1>.</style>            copied into the digest array. Sha1 produces a 20-byte hash (
+<style color=#00ffffff size=1>.</style>            SHA1dlen), sha224 a 28-byte hash (SHA224dlen), sha256 a
+<style color=#00ffffff size=1>.</style>            32-byte hash (SHA256dlen), sha384 a 48-byte hash (SHA384dlen
+<style color=#00ffffff size=1>.</style>            ), sha256 a 64-byte hash (SHA512dlen), md4 and md5 a 16-byte
+<style color=#00ffffff size=1>.</style>            one (MD4len and MD5len).
+
+<style color=#00ffffff size=1>.</style>            Hmac_sha1 and hmac_md5 are keyed versions of the hashing
+<style color=#00ffffff size=1>.</style>            functions, following Internet RFC2104. The key must be
+<style color=#00ffffff size=1>.</style>            provided in each call, but otherwise the calling conventions
+<style color=#00ffffff size=1>.</style>            are those of sha1. The key must currently be no more than 64
+<style color=#00ffffff size=1>.</style>            bytes.
+
+<style color=#00ffffff size=1>.</style>            DigestState hides the state of partially completed hash
+<style color=#00ffffff size=1>.</style>            functions during processing. Its copy operation returns a
+<style color=#00ffffff size=1>.</style>            reference to a new copy of a given state.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            A program to read a file and hash it using SHA might contain
+<style color=#00ffffff size=1>.</style>            the following inner loop:
+
+<style color=#00ffffff size=1>.</style>                 state: ref DigestState = nil\;
+<style color=#00ffffff size=1>.</style>                 while((n := sys->read(fd, buf, len buf)) > 0)
+<style color=#00ffffff size=1>.</style>                 	state = kr->sha1(buf, n, nil, state)\;
+<style color=#00ffffff size=1>.</style>                 digest := array\[kr->SHA1dlen\] of byte\;
+<style color=#00ffffff size=1>.</style>                 kr->sha1(buf, 0, digest, state)\;
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/crypt.c
+<style color=#00ffffff size=1>.</style>            /libsec/port/hmac.c
+<style color=#00ffffff size=1>.</style>            /libsec/port/md4.c
+<style color=#00ffffff size=1>.</style>            /libsec/port/md5.c
+<style color=#00ffffff size=1>.</style>            /libsec/port/sha1.c
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The MD4 algorithm is included only to allow communication
+<style color=#00ffffff size=1>.</style>            with software that might still use it\; it should not
+<style color=#00ffffff size=1>.</style>            otherwise be used now, because it is easily broken.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

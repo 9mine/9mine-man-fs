@@ -1,0 +1,51 @@
+<action name=PLUMBER(8)>PLUMBER(8)</action>                                             <action name=PLUMBER(8)>PLUMBER(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            plumber - plumber for interapplication message routing
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            plumber \[ -v \] \[ -w \] \[ -c wmchan \] \[ rulefile ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Plumber provides high-level message-passing between
+<style color=#00ffffff size=1>.</style>            applications. In a plumbed environment, applications can
+<style color=#00ffffff size=1>.</style>            receive messages on an input port, which is given a logical
+<style color=#00ffffff size=1>.</style>            name. Messages are not sent directly between applications
+<style color=#00ffffff size=1>.</style>            but are routed via the plumber, following user-specified
+<style color=#00ffffff size=1>.</style>            rules.
+
+<style color=#00ffffff size=1>.</style>            Plumber is typically started by <action name=wm(1)>wm(1)</action>'s startup script. It
+<style color=#00ffffff size=1>.</style>            reads each rulefile (default: /usr/user/lib/plumbing) in
+<style color=#00ffffff size=1>.</style>            turn. Each file has the form described in <action name=plumbing(6)>plumbing(6)</action>\; the
+<style color=#00ffffff size=1>.</style>            rules direct the routing of each message plumber receives.
+<style color=#00ffffff size=1>.</style>            Plumber then lurks in the background with its mate, awaiting
+<style color=#00ffffff size=1>.</style>            plumbing requests sent by <action name=plumbmsg(2)>plumbmsg(2)</action>, by windowing
+<style color=#00ffffff size=1>.</style>            applications in response to events such as button clicks or
+<style color=#00ffffff size=1>.</style>            drag-and-drop, or by <action name=plumb(1)>plumb(1)</action>.
+
+<style color=#00ffffff size=1>.</style>            When a message arrives, plumber applies the rules to decide
+<style color=#00ffffff size=1>.</style>            how to route it. It forwards the message to the selected
+<style color=#00ffffff size=1>.</style>            application's input port, starting it if necessary. If no
+<style color=#00ffffff size=1>.</style>            rule applies (or some other error occurs), plumber returns
+<style color=#00ffffff size=1>.</style>            an error to the message's sender. The -v option causes
+<style color=#00ffffff size=1>.</style>            plumber to log the contents of messages it receives, to help
+<style color=#00ffffff size=1>.</style>            debug plumbing rules and applications.
+
+<style color=#00ffffff size=1>.</style>            Plumber normally starts applications directly. For use on
+<style color=#00ffffff size=1>.</style>            devices that have specialised window managers, not <action name=wm(1)>wm(1)</action>,
+<style color=#00ffffff size=1>.</style>            the -w option causes plumber to start applications
+<style color=#00ffffff size=1>.</style>            indirectly, by sending a message to a window manager
+<style color=#00ffffff size=1>.</style>            listening on /chan/wm, allowing the window manager to track
+<style color=#00ffffff size=1>.</style>            every application started. The -c option can select an
+<style color=#00ffffff size=1>.</style>            alternative wmchan to /chan/wm.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /usr/user/lib/plumbing  default plumbing rules for user
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/plumber.b
+<style color=#00ffffff size=1>.</style>            /appl/lib/plumbing.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=plumb(1)>plumb(1)</action>, <action name=wm(1)>wm(1)</action>, <action name=plumbmsg(2)>plumbmsg(2)</action>, <action name=plumbing(6)>plumbing(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

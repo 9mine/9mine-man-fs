@@ -1,0 +1,55 @@
+<action name=GPIO(3)>GPIO(3)</action>                                                   <action name=GPIO(3)>GPIO(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            gpio - access to GPIO registers
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #G /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/gpioclear
+<style color=#00ffffff size=1>.</style>            /dev/gpioctl
+<style color=#00ffffff size=1>.</style>            /dev/gpioedge
+<style color=#00ffffff size=1>.</style>            /dev/gpioset
+<style color=#00ffffff size=1>.</style>            /dev/gpiostatus
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The GPIO interface serves a one-level directory with five
+<style color=#00ffffff size=1>.</style>            files that give access to the GPIO registers in the SA1100.
+<style color=#00ffffff size=1>.</style>            See the SA1100 handbook for details of the function of the
+<style color=#00ffffff size=1>.</style>            various registers.
+
+<style color=#00ffffff size=1>.</style>            The control file gpioctl accepts commands to set individual
+<style color=#00ffffff size=1>.</style>            bits in the edge detect registers. Each control message has
+<style color=#00ffffff size=1>.</style>            three space-separated fields:
+
+<style color=#00ffffff size=1>.</style>                 reg pin value
+
+<style color=#00ffffff size=1>.</style>            where reg is a single character denoting a register, pin a
+<style color=#00ffffff size=1>.</style>            bit within it, and val the value (0 or 1) for that bit.
+<style color=#00ffffff size=1>.</style>            Valid choices for reg are: d (GPDR), r (GRER), f (GFER), and
+<style color=#00ffffff size=1>.</style>            a (GAFR). For example, the control message
+
+<style color=#00ffffff size=1>.</style>                 d 10 1
+
+<style color=#00ffffff size=1>.</style>            sets bit 10 (following the handbook's bit-numbering
+<style color=#00ffffff size=1>.</style>            conventions) in the GPIO pin direction register GPDR.
+
+<style color=#00ffffff size=1>.</style>            The read-only file gpiostatus shows the names and values (in
+<style color=#00ffffff size=1>.</style>            hexadecimal) of all GPIO registers.
+
+<style color=#00ffffff size=1>.</style>            The remaining data files allow bits to be read by Sys->read
+<style color=#00ffffff size=1>.</style>            requests and set by Sys->write requests. When read, each
+<style color=#00ffffff size=1>.</style>            file returns the value of a given register as a single 8
+<style color=#00ffffff size=1>.</style>            digit hexadecimal number: gpioset and gpioclear both give
+<style color=#00ffffff size=1>.</style>            the value of the level register, GPLR\; and gpioedge gives
+<style color=#00ffffff size=1>.</style>            the value of the edge dectect register, GEDR. Each write
+<style color=#00ffffff size=1>.</style>            request should present a single number in textual form,
+<style color=#00ffffff size=1>.</style>            which is assumed to be hexadecimal by default. The value is
+<style color=#00ffffff size=1>.</style>            written to a GPIO register: gpioset corresponds to GPSR,
+<style color=#00ffffff size=1>.</style>            gpioclear corresponds to GPCR, and gpioedge corresponds to
+<style color=#00ffffff size=1>.</style>            GEDR.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/sa1100/devgpio.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

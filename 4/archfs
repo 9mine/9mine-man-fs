@@ -1,0 +1,36 @@
+<action name=ARCHFS(4)>ARCHFS(4)</action>                                               <action name=ARCHFS(4)>ARCHFS(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            archfs - mount a mkfs archive
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            archfs \[ -ab \] \[ -s \] \[ -m mountpoint \] archfile \[ prefix
+<style color=#00ffffff size=1>.</style>            ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Archfs mounts at mountpoint (default: /mnt/arch), a
+<style color=#00ffffff size=1>.</style>            read-only file system representing the contents of archfile,
+<style color=#00ffffff size=1>.</style>            which is a file of the format produced by <action name=mkfs(8)>mkfs(8)</action> with the
+<style color=#00ffffff size=1>.</style>            -a option. Typically the archive file will have been created
+<style color=#00ffffff size=1>.</style>            by <action name=mkfs(8)>mkfs(8)</action> or <action name=create(8)>create(8)</action>. Any prefix names limit the file
+<style color=#00ffffff size=1>.</style>            system's contents to files and directories in the archive
+<style color=#00ffffff size=1>.</style>            whose path names start with one of the prefixes.
+
+<style color=#00ffffff size=1>.</style>            The -a and -b options cause the archive contents to be
+<style color=#00ffffff size=1>.</style>            mounted after or before the mount point's existing contents,
+<style color=#00ffffff size=1>.</style>            in a union dirctory (see <action name=bind(1)>bind(1)</action> for details). Normally the
+<style color=#00ffffff size=1>.</style>            archive contents replace the contents of mountpoint. The -s
+<style color=#00ffffff size=1>.</style>            option causes the rest of the archive to be skipped once a
+<style color=#00ffffff size=1>.</style>            file is found in the archive which does not start with any
+<style color=#00ffffff size=1>.</style>            of the given prefixes. This is useful an archive is known to
+<style color=#00ffffff size=1>.</style>            start with a description of its contents (eg, the /wrap
+<style color=#00ffffff size=1>.</style>            directory provided by <action name=create(8)>create(8)</action>), and that is all that is
+<style color=#00ffffff size=1>.</style>            needed under mountpoint.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/archfs.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=tarfs(4)>tarfs(4)</action>, <action name=mkfs(8)>mkfs(8)</action>, <action name=create(8)>create(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

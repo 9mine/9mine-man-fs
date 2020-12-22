@@ -1,0 +1,50 @@
+<action name=RTC(3)>RTC(3)</action>                                                     <action name=RTC(3)>RTC(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            rtc - real-time clock and non-volatile memory
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -b '#r' /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/rtc
+<style color=#00ffffff size=1>.</style>            /dev/rtcid
+<style color=#00ffffff size=1>.</style>            /dev/nvram
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The rtc device provides access to the real-time clock and
+<style color=#00ffffff size=1>.</style>            any associated non-volatile memory. Physical devices
+<style color=#00ffffff size=1>.</style>            supported include the Mostek MK48T12-15
+<style color=#00ffffff size=1>.</style>            Zeropower/Timekeeper, the Dallas Semiconductor DS1687
+<style color=#00ffffff size=1>.</style>            real-time clock, and the IBM PC real-time clock on various
+<style color=#00ffffff size=1>.</style>            platforms.
+
+<style color=#00ffffff size=1>.</style>            The rtc file when read returns the time as a decimal number,
+<style color=#00ffffff size=1>.</style>            expressed as the number of seconds since the epoch, 1
+<style color=#00ffffff size=1>.</style>            January 1970 00:00 GMT. The clock is set by writing the
+<style color=#00ffffff size=1>.</style>            desired number of seconds since the epoch to the file.
+<style color=#00ffffff size=1>.</style>            Setting the time in this device has no effect on system time
+<style color=#00ffffff size=1>.</style>            returned by /dev/time (see <action name=cons(3)>cons(3)</action>), which must be set
+<style color=#00ffffff size=1>.</style>            separately if desired. For example, when rtc is available
+<style color=#00ffffff size=1>.</style>            osinit (see <action name=init(8)>init(8)</action>) uses it to set /dev/time.
+
+<style color=#00ffffff size=1>.</style>            The nvram file provides access to the non-volatile memory
+<style color=#00ffffff size=1>.</style>            commonly implemented by these clock chips. There are no
+<style color=#00ffffff size=1>.</style>            cross-platform standards for the range of addresses that can
+<style color=#00ffffff size=1>.</style>            be safely used by Inferno, or for the content and format of
+<style color=#00ffffff size=1>.</style>            the data.
+
+<style color=#00ffffff size=1>.</style>            The rtcid file holds a decimal number giving the serial
+<style color=#00ffffff size=1>.</style>            number of the device, set during manufacturing. The file
+<style color=#00ffffff size=1>.</style>            exists only if a particular device provides such a number.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/*/devrtc.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cons(3)>cons(3)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The rtc file returns seconds but /dev/time returns
+<style color=#00ffffff size=1>.</style>            microseconds: it's history.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

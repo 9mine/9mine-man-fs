@@ -1,0 +1,36 @@
+<action name=CPU(1)>CPU(1)</action>                                                     <action name=CPU(1)>CPU(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            cpu - execute a remote command
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            cpu \[ -C alg \] \[net!\]host \[ command \[ arg... \] \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Cpu dials host (using network tcp if net is not given),
+<style color=#00ffffff size=1>.</style>            exports the local namespace and executes the given command
+<style color=#00ffffff size=1>.</style>            on that machine. The local namespace is visible to the
+<style color=#00ffffff size=1>.</style>            command in /n/client\; local device files are bound into the
+<style color=#00ffffff size=1>.</style>            remote device directory. If command is not given, then
+<style color=#00ffffff size=1>.</style>            /dis/sh is run.
+
+<style color=#00ffffff size=1>.</style>            The -C option sets the algorithm to be used following
+<style color=#00ffffff size=1>.</style>            authentication for digesting or encryption, to alg. See ssl
+<style color=#00ffffff size=1>.</style>            (3) for the supported algorithms. The default is none: ssl
+<style color=#00ffffff size=1>.</style>            (3) is not used after authentication.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/cpu.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=dial(2)>dial(2)</action>, <action name=keyring-auth(2)>keyring-auth(2)</action>, <action name=security-auth(2)>security-auth(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Although the draw device files are visible to the remote
+<style color=#00ffffff size=1>.</style>            command, the original implementation of Tk meant that
+<style color=#00ffffff size=1>.</style>            windowing applications could not receive events when run
+<style color=#00ffffff size=1>.</style>            remotely. That has been fixed in this release, but cpu has
+<style color=#00ffffff size=1>.</style>            not yet been updated to take advantage. A later update will
+<style color=#00ffffff size=1>.</style>            do that.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

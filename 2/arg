@@ -1,0 +1,117 @@
+<action name=ARG(2)>ARG(2)</action>                                                     <action name=ARG(2)>ARG(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            arg - parse program arguments
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "arg.m"\;
+<style color=#00ffffff size=1>.</style>            arg := load Arg Arg->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:     fn(argv: list of string)\;
+<style color=#00ffffff size=1>.</style>            setusage: fn(s: string)\;
+<style color=#00ffffff size=1>.</style>            usage:    fn()\;
+<style color=#00ffffff size=1>.</style>            progname: fn(): string\;
+<style color=#00ffffff size=1>.</style>            opt:      fn(): int\;
+<style color=#00ffffff size=1>.</style>            arg:      fn(): string\;
+<style color=#00ffffff size=1>.</style>            earg:     fn(): string\;
+<style color=#00ffffff size=1>.</style>            argv:     fn(): list of string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Arg parses a program's argument list in a traditional form,
+<style color=#00ffffff size=1>.</style>            as received from a shell or other program (see <action name=command(2)>command(2)</action>).
+<style color=#00ffffff size=1>.</style>            The list must be passed to init to set the state for the
+<style color=#00ffffff size=1>.</style>            other functions.
+
+<style color=#00ffffff size=1>.</style>            Arg takes the first argument to be the program name.
+<style color=#00ffffff size=1>.</style>            Subsequent calls to progname return it.
+
+<style color=#00ffffff size=1>.</style>            Options are arguments containing one or more letters
+<style color=#00ffffff size=1>.</style>            preceded by - (dash, hyphen, minus). The list of options
+<style color=#00ffffff size=1>.</style>            ends before the first argument that does not begin with a -.
+<style color=#00ffffff size=1>.</style>            Option lists also end after an argument --, to allow
+<style color=#00ffffff size=1>.</style>            programs to accept arguments that would otherwise look like
+<style color=#00ffffff size=1>.</style>            options (eg, file names for <action name=rm(1)>rm(1)</action> or a pattern for <action name=grep(1)>grep(1)</action>).
+<style color=#00ffffff size=1>.</style>            Finally, option lists end before an argument -, which is
+<style color=#00ffffff size=1>.</style>            traditionally interpreted by some commands as referring to
+<style color=#00ffffff size=1>.</style>            the standard input or output (depending on context).
+
+<style color=#00ffffff size=1>.</style>            Successive calls to opt return option characters in turn\; 0
+<style color=#00ffffff size=1>.</style>            is returned at the end of the list. A program might take a
+<style color=#00ffffff size=1>.</style>            parameter to a given option (eg, an option of the form -f
+<style color=#00ffffff size=1>.</style>            file or -f file). Following a call to opt, a call to arg
+<style color=#00ffffff size=1>.</style>            will return the rest of the current argument string if not
+<style color=#00ffffff size=1>.</style>            empty, failing that, the next argument string if any, and
+<style color=#00ffffff size=1>.</style>            otherwise nil. Earg is like arg except that if there is no
+<style color=#00ffffff size=1>.</style>            argument associated with the option, an error message is
+<style color=#00ffffff size=1>.</style>            printed to standard error, and a "fail:usage" exception
+<style color=#00ffffff size=1>.</style>            raised. Setusage sets the error message that will be printed
+<style color=#00ffffff size=1>.</style>            in this case (preceded by `usage:' and followed by a
+<style color=#00ffffff size=1>.</style>            newline).
+
+<style color=#00ffffff size=1>.</style>            The argument list remaining after the last call to opt is
+<style color=#00ffffff size=1>.</style>            returned by argv.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            The following Limbo program takes options b, c and f, where
+<style color=#00ffffff size=1>.</style>            f takes a file name argument.
+
+<style color=#00ffffff size=1>.</style>            implement Prog\;
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>                sys: Sys\;
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            include "arg.m"\;
+<style color=#00ffffff size=1>.</style>                arg: Arg\;
+<style color=#00ffffff size=1>.</style>            Prog: module
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                init: fn(nil: ref Draw->Context, nil: list of string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init(nil: ref Draw->Context, args: list of string)
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                sys = load Sys Sys->PATH\;
+<style color=#00ffffff size=1>.</style>                arg = load Arg Arg->PATH\;
+
+<style color=#00ffffff size=1>.</style>                bflag := cflag := 0\;
+<style color=#00ffffff size=1>.</style>                file := ""\;
+<style color=#00ffffff size=1>.</style>                arg->init(args)\;
+<style color=#00ffffff size=1>.</style>                while((c := arg->opt()) != 0)
+<style color=#00ffffff size=1>.</style>                    case c {
+<style color=#00ffffff size=1>.</style>                    'b' => bflag = 1\;
+<style color=#00ffffff size=1>.</style>                    'c' => cflag = 1\;
+<style color=#00ffffff size=1>.</style>                    'f' => file = arg->arg()\;
+<style color=#00ffffff size=1>.</style>                    * =>   sys->print("unknown option (%c)\n", c)\;
+<style color=#00ffffff size=1>.</style>                    }
+<style color=#00ffffff size=1>.</style>                args = arg->argv()\;
+<style color=#00ffffff size=1>.</style>                sys->print("%s %d %d %s\n", arg->progname(), bflag, cflag, file)\;
+<style color=#00ffffff size=1>.</style>                for(\; args != nil\; args = tl args)
+<style color=#00ffffff size=1>.</style>                    sys->print("%s\n", hd args)\;
+<style color=#00ffffff size=1>.</style>            }
+
+<style color=#00ffffff size=1>.</style>            When invoked as follows:
+
+<style color=#00ffffff size=1>.</style>                 prog -bc -ffile a b c
+
+<style color=#00ffffff size=1>.</style>            the output is:
+
+<style color=#00ffffff size=1>.</style>                 prog 1 1 file
+<style color=#00ffffff size=1>.</style>                 a
+<style color=#00ffffff size=1>.</style>                 b
+<style color=#00ffffff size=1>.</style>                 c
+
+<style color=#00ffffff size=1>.</style>            and when invoked by:
+
+<style color=#00ffffff size=1>.</style>                 ./prog -b -f file -z -- -bc
+
+<style color=#00ffffff size=1>.</style>            the output is:
+
+<style color=#00ffffff size=1>.</style>                 unknown option (z)
+<style color=#00ffffff size=1>.</style>                 ./prog 1 0 file
+<style color=#00ffffff size=1>.</style>                 -bc
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/arg.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, ma<action name=sh(1)>sh(1)</action>, <action name=command(2)>command(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

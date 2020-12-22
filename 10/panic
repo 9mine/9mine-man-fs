@@ -1,0 +1,19 @@
+PANIC(10.2)                                           PANIC(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            panic - abandon hope
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            void	panic(char *fmt, ...)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Panic writes a message to the console and causes the system
+<style color=#00ffffff size=1>.</style>            to give up the ghost. It enables interrupts, dumps the
+<style color=#00ffffff size=1>.</style>            kernel stack, and halts the current processor\; if more than
+<style color=#00ffffff size=1>.</style>            one, others will gradually come to a halt. Depending on
+<style color=#00ffffff size=1>.</style>            configuration settings, the platform-dependent exit might
+<style color=#00ffffff size=1>.</style>            reboot the system. The format fmt and associated arguments
+<style color=#00ffffff size=1>.</style>            are the same as those for print(10.2). Panic adds a prefix
+<style color=#00ffffff size=1>.</style>            ``panic: '' and a trailing newline.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

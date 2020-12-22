@@ -1,0 +1,42 @@
+<action name=VIRGILD(8)>VIRGILD(8)</action>                                             <action name=VIRGILD(8)>VIRGILD(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            virgild - connection service for remote clients
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ndb/cs
+<style color=#00ffffff size=1>.</style>            ip/virgild
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Virgild receives requests for name service on UDP/IP port
+<style color=#00ffffff size=1>.</style>            virgil, defined as 2202 by <action name=services(6)>services(6)</action>, and hard-coded in
+<style color=#00ffffff size=1>.</style>            <action name=virgil(2)>virgil(2)</action>. Each request has the form:
+
+<style color=#00ffffff size=1>.</style>                 userid?machine-name
+
+<style color=#00ffffff size=1>.</style>            Virgild translates the machine-name using the local
+<style color=#00ffffff size=1>.</style>            connection server (see <action name=cs(8)>cs(8)</action>), and sends a response of the
+<style color=#00ffffff size=1>.</style>            following form to the requesting client:
+
+<style color=#00ffffff size=1>.</style>                 userid?machine-name=network-address
+
+<style color=#00ffffff size=1>.</style>            If the machine-name cannot be translated, virgild makes no
+<style color=#00ffffff size=1>.</style>            response\; unless another server replies, the client's
+<style color=#00ffffff size=1>.</style>            request will time out.
+
+<style color=#00ffffff size=1>.</style>            Virgild requires that <action name=cs(8)>cs(8)</action> be running before it is started.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ip/virgild.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=rcmd(1)>rcmd(1)</action>, <action name=cs(8)>cs(8)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The userid part is currently unused but must still be
+<style color=#00ffffff size=1>.</style>            included.
+<style color=#00ffffff size=1>.</style>            Virgild is single threaded: a delay in translating a name
+<style color=#00ffffff size=1>.</style>            for one client will delay response to any subsequent
+<style color=#00ffffff size=1>.</style>            clients.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

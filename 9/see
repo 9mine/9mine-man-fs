@@ -1,0 +1,39 @@
+<action name=SEE(9)>SEE(9)</action>                                                     <action name=SEE(9)>SEE(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            see - Make a portion of a widget visible.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            see option ?pathName?
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            See makes sure that a portion of a widget is visible in its
+<style color=#00ffffff size=1>.</style>            containing view\; for instance, it will scroll a canvas or
+<style color=#00ffffff size=1>.</style>            text widget to ensure that the specified portion is in view.
+<style color=#00ffffff size=1>.</style>            The following options are supported:
+
+<style color=#00ffffff size=1>.</style>            -rectangle  list
+<style color=#00ffffff size=1>.</style>                 Specifies a list with four dist coordinates describing
+<style color=#00ffffff size=1>.</style>                 the left, top, right, and bottom coordinates of the
+<style color=#00ffffff size=1>.</style>                 rectangular region, in coordinates relative to the
+<style color=#00ffffff size=1>.</style>                 widget origin, of the area that should be made visible.
+
+<style color=#00ffffff size=1>.</style>            -point list\P
+<style color=#00ffffff size=1>.</style>                 Specifies a list with two dist coordinates describing a
+<style color=#00ffffff size=1>.</style>                 point within the widget that should be made visible by
+<style color=#00ffffff size=1>.</style>                 preference if the entirety of the above-specified
+<style color=#00ffffff size=1>.</style>                 rectangle cannot be shown. Defaults to the top left of
+<style color=#00ffffff size=1>.</style>                 the specified rectangle.
+
+<style color=#00ffffff size=1>.</style>            -where
+<style color=#00ffffff size=1>.</style>                 If this option is given, see returns a list containing
+<style color=#00ffffff size=1>.</style>                 the left, top, right and bottom coordinates of the
+<style color=#00ffffff size=1>.</style>                 currently visible portion of pathName.
+
+<style color=#00ffffff size=1>.</style>            If neither the -rectangle or the -point options are given,
+<style color=#00ffffff size=1>.</style>            then the entire area of pathName will be made visible.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=options(9)>options(9)</action>, <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,41 @@
+<action name=LOGIND(8)>LOGIND(8)</action>                                               <action name=LOGIND(8)>LOGIND(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            logind - login daemon
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            auth/logind
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Logind is normally started by <action name=svc(8)>svc(8)</action> to service requests on
+<style color=#00ffffff size=1>.</style>            the inflogin TCP/IP port, to provide a `signing' service
+<style color=#00ffffff size=1>.</style>            (identity authentication) for a network. Ultimately, the
+<style color=#00ffffff size=1>.</style>            client receives a certificate that can be used to establish
+<style color=#00ffffff size=1>.</style>            its identity with any host that is willing to honour
+<style color=#00ffffff size=1>.</style>            certificates from the certificate's signer.
+
+<style color=#00ffffff size=1>.</style>            The signer constructs the certificate from the contents of
+<style color=#00ffffff size=1>.</style>            the signer's key file /keydb/signerkey, typically created by
+<style color=#00ffffff size=1>.</style>            <action name=createsignerkey(8)>createsignerkey(8)</action>, and the ID string and password supplied
+<style color=#00ffffff size=1>.</style>            by the client (which are used to access <action name=keyfs(4)>keyfs(4)</action> to check
+<style color=#00ffffff size=1>.</style>            identity).
+
+<style color=#00ffffff size=1>.</style>            The protocol involves an exchange of information between the
+<style color=#00ffffff size=1>.</style>            client and server, as summarised in <action name=login(6)>login(6)</action>. The client
+<style color=#00ffffff size=1>.</style>            side of this exchange can be managed by the Login module\;
+<style color=#00ffffff size=1>.</style>            see <action name=security-login(2)>security-login(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            Client and server communicate over the Secure Socket Layer
+<style color=#00ffffff size=1>.</style>            device <action name=ssl(3)>ssl(3)</action>.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /keydb/keys
+<style color=#00ffffff size=1>.</style>            /keydb/signerkey
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auth/logind.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=security-login(2)>security-login(2)</action>, <action name=ssl(3)>ssl(3)</action>, <action name=keyfs(4)>keyfs(4)</action>, <action name=keys(6)>keys(6)</action>, changelogin
+<style color=#00ffffff size=1>.</style>            (8), <action name=createsignerkey(8)>createsignerkey(8)</action>, <action name=svc(8)>svc(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

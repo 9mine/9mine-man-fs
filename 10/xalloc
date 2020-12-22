@@ -1,0 +1,51 @@
+XALLOC(10.2)                                         XALLOC(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            xalloc, xspanalloc, xfree - basic memory management
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            void*	xalloc(ulong size)
+
+<style color=#00ffffff size=1>.</style>            void*	xspanalloc(ulong size, int align, ulong span)
+
+<style color=#00ffffff size=1>.</style>            void	xfree(void *p)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Xalloc and xfree are primitives used by higher-level memory
+<style color=#00ffffff size=1>.</style>            allocators in the kernel, such as malloc(10.2). They are not
+<style color=#00ffffff size=1>.</style>            intended for use directly by most kernel routines. The main
+<style color=#00ffffff size=1>.</style>            exceptions are routines that permanently allocate large
+<style color=#00ffffff size=1>.</style>            structures, or need the special alignment properties
+<style color=#00ffffff size=1>.</style>            guaranteed by xspanalloc.
+
+<style color=#00ffffff size=1>.</style>            Xalloc returns a pointer to a range of size bytes of memory.
+<style color=#00ffffff size=1>.</style>            The memory will be zero filled and aligned on a 8 byte (BY2V
+<style color=#00ffffff size=1>.</style>            ) address. If the memory is not available, xalloc returns a
+<style color=#00ffffff size=1>.</style>            null pointer.
+
+<style color=#00ffffff size=1>.</style>            Xspanalloc allocates memory given alignment and spanning
+<style color=#00ffffff size=1>.</style>            constraints. The block returned will contain size bytes,
+<style color=#00ffffff size=1>.</style>            aligned on a boundary that is 0 mod align, in such a way
+<style color=#00ffffff size=1>.</style>            that the memory in the block does not span an address that
+<style color=#00ffffff size=1>.</style>            is 0 mod span. Xspanalloc is intended for use allocating
+<style color=#00ffffff size=1>.</style>            hardware data structures (eg, page tables) or I/O buffers
+<style color=#00ffffff size=1>.</style>            that must satisfy specific alignment restrictions. If
+<style color=#00ffffff size=1>.</style>            xspanalloc cannot allocate memory to satisfy the given
+<style color=#00ffffff size=1>.</style>            constraints, it will panic(10.2). The technique it uses can
+<style color=#00ffffff size=1>.</style>            sometimes cause memory to be wasted. Consequently,
+<style color=#00ffffff size=1>.</style>            xspanalloc should be used sparingly.
+
+<style color=#00ffffff size=1>.</style>            Xfree frees the block of memory at p, which must be an
+<style color=#00ffffff size=1>.</style>            address previously returned by xalloc (not xspanalloc).
+
+<style color=#00ffffff size=1>.</style>         Allocation status
+<style color=#00ffffff size=1>.</style>            Some memory allocation statistics are written to the console
+<style color=#00ffffff size=1>.</style>            in response to the debugging sequence `control-T control-T
+<style color=#00ffffff size=1>.</style>            x'. The output includes the total free space, the number of
+<style color=#00ffffff size=1>.</style>            free holes, and a summary of active holes. Each line shows
+<style color=#00ffffff size=1>.</style>            `address top size'.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            malloc(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

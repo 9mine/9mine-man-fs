@@ -1,0 +1,26 @@
+<action name=SYS-UTFBYTES(2)>SYS-UTFBYTES(2)</action>                                   <action name=SYS-UTFBYTES(2)>SYS-UTFBYTES(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            utfbytes - compute UTF length of complete Unicode characters
+<style color=#00ffffff size=1>.</style>            in a UTF byte sequence
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            utfbytes: fn(buf: array of byte, n: int): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Utfbytes examines the n-byte UTF sequence in buf and returns
+<style color=#00ffffff size=1>.</style>            the number of bytes representing complete Unicode
+<style color=#00ffffff size=1>.</style>            characters. The value will be less than n when the region
+<style color=#00ffffff size=1>.</style>            inspected ends with an incomplete UTF sequence.
+
+DIAGNOSTIC
+<style color=#00ffffff size=1>.</style>            A bounds check error results if n exceeds the length of the
+<style color=#00ffffff size=1>.</style>            array.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-byte2char(2)>sys-byte2char(2)</action>, <action name=utf(6)>utf(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

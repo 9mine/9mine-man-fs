@@ -1,0 +1,48 @@
+<action name=DICT(2)>DICT(2)</action>                                                   <action name=DICT(2)>DICT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dict - list of string pairs
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "dict.m"\;
+<style color=#00ffffff size=1>.</style>            dict := load Dictionary Dictionary->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Dict: adt {
+<style color=#00ffffff size=1>.</style>            	add: fn(d: self ref Dict, e: (string, string))\;
+<style color=#00ffffff size=1>.</style>            	delete: fn(d: self ref Dict, k: string)\;
+<style color=#00ffffff size=1>.</style>            	lookup: fn(d: self ref Dict, k: string): string\;
+<style color=#00ffffff size=1>.</style>            	keys: fn(d: self ref Dict): list of string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dict provides a simple string to string association list:
+
+<style color=#00ffffff size=1>.</style>            d.add(e)
+<style color=#00ffffff size=1>.</style>                 Adds a new tuple e to the list, representing a new (key
+<style color=#00ffffff size=1>.</style>                 , value) pair.
+
+<style color=#00ffffff size=1>.</style>            d.delete(k)
+<style color=#00ffffff size=1>.</style>                 Deletes all pairs with key k from the list.
+
+<style color=#00ffffff size=1>.</style>            d.lookup(k)
+<style color=#00ffffff size=1>.</style>                 Tries to find a pair with key k and returns its
+<style color=#00ffffff size=1>.</style>                 associated value, or nil if the key was not found.
+
+<style color=#00ffffff size=1>.</style>            d.keys()
+<style color=#00ffffff size=1>.</style>                 Returns a list of all keys in the list.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/dict.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=hash(2)>hash(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            No attempt is made to keep keys unique in the list\; if more
+<style color=#00ffffff size=1>.</style>            than one pair exists with the same key, then lookup will
+<style color=#00ffffff size=1>.</style>            select one of them arbitrarily.
+
+<style color=#00ffffff size=1>.</style>            Computational overhead of lookup and deletion of keys is
+<style color=#00ffffff size=1>.</style>            proportional to the number of pairs in the list.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

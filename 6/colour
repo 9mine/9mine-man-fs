@@ -1,0 +1,152 @@
+<action name=COLOUR(6)>COLOUR(6)</action>                                               <action name=COLOUR(6)>COLOUR(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            colour - representation of pixels and colours
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            An image manipulated by <action name=draw(2)>draw(2)</action> (via the device <action name=draw(3)>draw(3)</action>),
+<style color=#00ffffff size=1>.</style>            including the image corresponding to a physical display,
+<style color=#00ffffff size=1>.</style>            contains a set of pixels. Each pixel has one or more
+<style color=#00ffffff size=1>.</style>            components: colour components (red, green, blue)\; greyscale
+<style color=#00ffffff size=1>.</style>            value\; colour-map index\; alpha value\; and ``don't care''
+<style color=#00ffffff size=1>.</style>            (for padding). Each component takes a given number of bits\;
+<style color=#00ffffff size=1>.</style>            the sum of the sizes of all components determines the size
+<style color=#00ffffff size=1>.</style>            of the pixel. The implementation supports only pixel sizes
+<style color=#00ffffff size=1>.</style>            that are either divisors or multiples of 8 bits. All pixels
+<style color=#00ffffff size=1>.</style>            in an image have the same structure, corresponding to the
+<style color=#00ffffff size=1>.</style>            channels of that image (see <action name=image(6)>image(6)</action>).
+
+<style color=#00ffffff size=1>.</style>            The values of the red, green and blue components are chosen
+<style color=#00ffffff size=1>.</style>            so 0 represents no intensity (black) and the maximum value
+<style color=#00ffffff size=1>.</style>            (all ones, 255 for an 8-bit component) represents full
+<style color=#00ffffff size=1>.</style>            intensity (eg, full red). Common colour physical display
+<style color=#00ffffff size=1>.</style>            depths are 24 bits per pixel, with 8 bits per colour in
+<style color=#00ffffff size=1>.</style>            order red, green, blue, and 16 bits per pixel, with 5 bits
+<style color=#00ffffff size=1>.</style>            of red, 6 bits of green, and 5 bits of blue.
+
+<style color=#00ffffff size=1>.</style>            Colors may also be created with an opacity factor called
+<style color=#00ffffff size=1>.</style>            alpha, which is scaled so 0 represents fully transparent and
+<style color=#00ffffff size=1>.</style>            the maximum value (eg, 255 for an 8-bit alpha component)
+<style color=#00ffffff size=1>.</style>            represents opaque colour. The alpha is premultiplied into
+<style color=#00ffffff size=1>.</style>            the other channels, as described in the paper by Porter and
+<style color=#00ffffff size=1>.</style>            Duff cited in <action name=draw-image(2)>draw-image(2)</action>. The function Draw->setalpha
+<style color=#00ffffff size=1>.</style>            (see <action name=draw-intro(2)>draw-intro(2)</action>) aids the initialisation of colour values
+<style color=#00ffffff size=1>.</style>            with non-trivial alpha.
+
+<style color=#00ffffff size=1>.</style>            Because images are stored in memory managed by <action name=draw(3)>draw(3)</action> and
+<style color=#00ffffff size=1>.</style>            operated through <action name=draw-image(2)>draw-image(2)</action>, the details of pixel
+<style color=#00ffffff size=1>.</style>            representation internally can be ignored by many
+<style color=#00ffffff size=1>.</style>            applications. The representation is visible, however, when
+<style color=#00ffffff size=1>.</style>            using the operations Image.readpixels and Image.writepixels
+<style color=#00ffffff size=1>.</style>            (see <action name=draw-image(2)>draw-image(2)</action>). The bits representing a pixel's channel
+<style color=#00ffffff size=1>.</style>            components are packed contiguously, and pixels are stored in
+<style color=#00ffffff size=1>.</style>            contiguous bytes. The packing of pixels into bytes and words
+<style color=#00ffffff size=1>.</style>            is odd. For compatibility with VGA frame buffers, the bits
+<style color=#00ffffff size=1>.</style>            within a pixel byte are in big-endian order (leftmost pixel
+<style color=#00ffffff size=1>.</style>            is most significant bits in byte), while bytes within a
+<style color=#00ffffff size=1>.</style>            pixel are packed in little-endian order. This results in
+<style color=#00ffffff size=1>.</style>            unintuitive pixel formats. For example, for the RGB24
+<style color=#00ffffff size=1>.</style>            format, the byte ordering is blue, green, red.
+
+<style color=#00ffffff size=1>.</style>            To maintain a constant external representation, the <action name=draw(3)>draw(3)</action>
+<style color=#00ffffff size=1>.</style>            interface as well as the various graphics libraries
+<style color=#00ffffff size=1>.</style>            represent colours by 32-bit integers, containing red, blue,
+<style color=#00ffffff size=1>.</style>            green and alpha components as 8-bit values, in that order
+<style color=#00ffffff size=1>.</style>            from most to least significant byte. The color component
+<style color=#00ffffff size=1>.</style>            values range from 0 (no colour) to 255 (saturated)\; alpha
+<style color=#00ffffff size=1>.</style>            ranges from 0 (fully transparent) to 255 (fully opaque).
+
+<style color=#00ffffff size=1>.</style>            On displays with 8 bits per pixel or less, to address
+<style color=#00ffffff size=1>.</style>            problems of consistency and portability amongst Inferno
+<style color=#00ffffff size=1>.</style>            applications, Inferno uses a fixed colour map, called rgbv.
+<style color=#00ffffff size=1>.</style>            Although this avoids problems caused by multiplexing colour
+<style color=#00ffffff size=1>.</style>            maps between applications, it requires that the colour map
+<style color=#00ffffff size=1>.</style>            chosen be suitable for most purposes and usable for all.
+<style color=#00ffffff size=1>.</style>            Other systems that use fixed colour maps tend to sample the
+<style color=#00ffffff size=1>.</style>            colour cube uniformly, which has advantages—mapping from a
+<style color=#00ffffff size=1>.</style>            (red, green, blue) triple to the colour map and back again
+<style color=#00ffffff size=1>.</style>            is easy—but ignores an important property of the human
+<style color=#00ffffff size=1>.</style>            visual system: eyes are much more sensitive to small changes
+<style color=#00ffffff size=1>.</style>            in intensity than to changes in hue. Sampling the colour
+<style color=#00ffffff size=1>.</style>            cube uniformly gives a colour map with many different hues,
+<style color=#00ffffff size=1>.</style>            but only a few shades of each. Continuous tone images
+<style color=#00ffffff size=1>.</style>            converted into such maps demonstrate conspicuous artifacts.
+
+<style color=#00ffffff size=1>.</style>            Rather than dice the colour cube into subregions of size
+<style color=#00ffffff size=1>.</style>            6×6×6 (as in Netscape Navigator) or 8×8×4 picking 1 colour
+<style color=#00ffffff size=1>.</style>            in each, the rgbv colour map uses a 4×4×4 subdivision, with
+<style color=#00ffffff size=1>.</style>            4 shades in each subcube. The idea is to reduce the colour
+<style color=#00ffffff size=1>.</style>            resolution by dicing the colour cube into fewer cells, and
+<style color=#00ffffff size=1>.</style>            to use the extra space to increase the intensity resolution.
+<style color=#00ffffff size=1>.</style>            This results in 16 grey shades (4 grey subcubes with 4
+<style color=#00ffffff size=1>.</style>            samples in each), 13 shades of each primary and secondary
+<style color=#00ffffff size=1>.</style>            colour (3 subcubes with 4 samples plus black) and a
+<style color=#00ffffff size=1>.</style>            reasonable selection of colours covering the rest of the
+<style color=#00ffffff size=1>.</style>            colour cube. The advantage is better representation of
+<style color=#00ffffff size=1>.</style>            continuous tones.
+
+<style color=#00ffffff size=1>.</style>            The following function computes the 256 3-byte entries in
+<style color=#00ffffff size=1>.</style>            the colour map:
+
+<style color=#00ffffff size=1>.</style>                 void
+<style color=#00ffffff size=1>.</style>                 setmaprgbv(uchar cmap\[256\]\[3\])
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                     uchar *c\;
+<style color=#00ffffff size=1>.</style>                     int r, g, b, v\;
+<style color=#00ffffff size=1>.</style>                     int num, den\;
+<style color=#00ffffff size=1>.</style>                     int i, j\;
+
+<style color=#00ffffff size=1>.</style>                     for(r=0,i=0\; r!=4\; r++)
+<style color=#00ffffff size=1>.</style>                       for(v=0\; v!=4\; v++,i+=16)
+<style color=#00ffffff size=1>.</style>                         for(g=0,j=v-r\; g!=4\; g++)
+<style color=#00ffffff size=1>.</style>                           for(b=0\; b!=4\; b++,j++){
+<style color=#00ffffff size=1>.</style>                             c = cmap\[i+(j&15)\]\;
+<style color=#00ffffff size=1>.</style>                             den = r\;
+<style color=#00ffffff size=1>.</style>                             if(g > den)
+<style color=#00ffffff size=1>.</style>                                 den = g\;
+<style color=#00ffffff size=1>.</style>                             if(b > den)
+<style color=#00ffffff size=1>.</style>                                 den = b\;
+<style color=#00ffffff size=1>.</style>                             if(den == 0) /* would divide check\; pick grey shades */
+<style color=#00ffffff size=1>.</style>                                 c\[0\] = c\[1\] = c\[2\] = 17*v\;
+<style color=#00ffffff size=1>.</style>                             else{
+<style color=#00ffffff size=1>.</style>                                 num = 17*(4*den+v)\;
+<style color=#00ffffff size=1>.</style>                                 c\[0\] = r*num/den\;
+<style color=#00ffffff size=1>.</style>                                 c\[1\] = g*num/den\;
+<style color=#00ffffff size=1>.</style>                                 c\[2\] = b*num/den\;
+<style color=#00ffffff size=1>.</style>                             }
+<style color=#00ffffff size=1>.</style>                           }
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>            There are 4 nested loops to pick the (red,green,blue)
+<style color=#00ffffff size=1>.</style>            coordinates of the subcube, and the value (intensity) within
+<style color=#00ffffff size=1>.</style>            the subcube, indexed by r, g, b, and v, whence the name rgbv
+<style color=#00ffffff size=1>.</style>            . The peculiar order in which the colour map is indexed is
+<style color=#00ffffff size=1>.</style>            designed to distribute the grey shades uniformly through the
+<style color=#00ffffff size=1>.</style>            map—the i'th grey shade, 0<=i<=15 has index i×17, with black
+<style color=#00ffffff size=1>.</style>            going to 0 and white to 255. Therefore, when a call to
+<style color=#00ffffff size=1>.</style>            Image.draw (see <action name=draw-image(2)>draw-image(2)</action>) converts a 1, 2 or 4
+<style color=#00ffffff size=1>.</style>            bit-per-pixel picture to 8 bits per pixel (which it does by
+<style color=#00ffffff size=1>.</style>            replicating the pixels' bits), the converted pixel values
+<style color=#00ffffff size=1>.</style>            are the appropriate grey shades.
+
+<style color=#00ffffff size=1>.</style>            The rgbv map is not gamma-corrected, for many reasons.
+<style color=#00ffffff size=1>.</style>            First, photographic film and television are both normally
+<style color=#00ffffff size=1>.</style>            under-corrected, the former by an accident of physics and
+<style color=#00ffffff size=1>.</style>            the latter by NTSC's design. Second, we require extra colour
+<style color=#00ffffff size=1>.</style>            resolution at low intensities because of the non-linear
+<style color=#00ffffff size=1>.</style>            response and adaptation of the human visual system. Properly
+<style color=#00ffffff size=1>.</style>            gamma-corrected displays with adequate low-intensity
+<style color=#00ffffff size=1>.</style>            resolution pack the high-intensity parts of the colour cube
+<style color=#00ffffff size=1>.</style>            with colours whose differences are almost imperceptible.
+<style color=#00ffffff size=1>.</style>            Either of these reasons suggests concentrating the available
+<style color=#00ffffff size=1>.</style>            intensities at the low end of the range. Third, the
+<style color=#00ffffff size=1>.</style>            compositing computations underlying the graphics operations
+<style color=#00ffffff size=1>.</style>            in <action name=draw-image(2)>draw-image(2)</action> assume a linear colour space. Finally, the
+<style color=#00ffffff size=1>.</style>            right value for gamma correction is determined in part by
+<style color=#00ffffff size=1>.</style>            the characteristics of the physical display device, and
+<style color=#00ffffff size=1>.</style>            correction should be done on output.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=draw-intro(2)>draw-intro(2)</action>, <action name=draw-image(2)>draw-image(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

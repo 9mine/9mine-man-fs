@@ -1,0 +1,11 @@
+intro 0intro arch arch audio audio boot boot cap cap cmd cmd cons
+<style color=#00ffffff size=1>.</style>            cons dbg dbg draw draw ds ds dup dup dynld dynld eia eia env
+<style color=#00ffffff size=1>.</style>            env ether ether flash flash floppy floppy fpga fpga fs fs
+<style color=#00ffffff size=1>.</style>            ftl ftl gpio gpio i2c i2c i82365 i82365 indir indir ip ip
+<style color=#00ffffff size=1>.</style>            kprof kprof logfs logfs lpt lpt mnt mnt mpeg mpeg pbus pbus
+<style color=#00ffffff size=1>.</style>            pipe pipe plap plap pci pnp pnp pnp pointer pointer prof
+<style color=#00ffffff size=1>.</style>            prof prog prog root root rtc rtc sd sd sign sign snarf snarf
+<style color=#00ffffff size=1>.</style>            srv srv srv9 srv9 ssl ssl switch switch tinyfs tinyfs tls
+<style color=#00ffffff size=1>.</style>            tls touch touch tv tv usb usb vga vga vid vid
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,133 @@
+<action name=GEODESY(2)>GEODESY(2)</action>                                             <action name=GEODESY(2)>GEODESY(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            geodesy - Geodesy module
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "geodesy.m"\;
+<style color=#00ffffff size=1>.</style>            geodesy := load Geodesy Geodesy->PATH\;
+
+<style color=#00ffffff size=1>.</style>            # easting, northing
+<style color=#00ffffff size=1>.</style>            Eano: adt{
+<style color=#00ffffff size=1>.</style>            	e: real\;
+<style color=#00ffffff size=1>.</style>            	n: real\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            # latitude, longitude in radians
+<style color=#00ffffff size=1>.</style>            Lalo: adt{
+<style color=#00ffffff size=1>.</style>            	la: real\;
+<style color=#00ffffff size=1>.</style>            	lo: real\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            OSGB36, Ireland65, ED50, WGS84, ITRS2000, ETRS89: con iota\;
+
+<style color=#00ffffff size=1>.</style>            Natgrid, IrishNatgrid, UTMEur, UTM: con iota\;
+
+<style color=#00ffffff size=1>.</style>            init: fn(d: int, t: int, z: int)\;
+<style color=#00ffffff size=1>.</style>            format: fn(d: int, t: int, z: int)\;
+<style color=#00ffffff size=1>.</style>            os2en: fn(s: string): (int, Eano)\;
+<style color=#00ffffff size=1>.</style>            en2os: fn(en: Eano): string\;
+<style color=#00ffffff size=1>.</style>            str2lalo: fn(s: string): (int, Lalo)\;
+<style color=#00ffffff size=1>.</style>            lalo2str: fn(lalo: Lalo): string\;
+<style color=#00ffffff size=1>.</style>            str2en: fn(s: string): (int, Eano)\;
+<style color=#00ffffff size=1>.</style>            en2lalo: fn(en: Eano): Lalo\;
+<style color=#00ffffff size=1>.</style>            lalo2en: fn(lalo: Lalo): Eano\;
+<style color=#00ffffff size=1>.</style>            datum2datum: fn(lalo: Lalo, f: int, t: int): Lalo\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Geodesy provides routines to deal with (some) terrestrial
+<style color=#00ffffff size=1>.</style>            coordinate systems.
+
+<style color=#00ffffff size=1>.</style>            Eastings and northings are defined by the Eano adt and are
+<style color=#00ffffff size=1>.</style>            measured in metres and latitude and longitude (which should
+<style color=#00ffffff size=1>.</style>            be in radians) by the Lalo adt. Latitude is in the range
+<style color=#00ffffff size=1>.</style>            -π/2 to π/2 radians and longitude in the range -π to π
+<style color=#00ffffff size=1>.</style>            radians.
+
+<style color=#00ffffff size=1>.</style>            OSGB36 (Ordnance Survey Great Britain 1936), Ireland65
+<style color=#00ffffff size=1>.</style>            (Ireland 1965), ED50 (European Datum 1950), WGS84 (World
+<style color=#00ffffff size=1>.</style>            Geodetic System 1984), ITRS2000 (International Terrestrial
+<style color=#00ffffff size=1>.</style>            Reference System 2000), and ETRS89 (European Terrestrial
+<style color=#00ffffff size=1>.</style>            Reference System 1989) are the current datums defined.
+<style color=#00ffffff size=1>.</style>            Helmert transformations are used to convert between them.
+<style color=#00ffffff size=1>.</style>            Note that Ireland65 and ED50 are currently not supported and
+<style color=#00ffffff size=1>.</style>            WGS84 and ITRS2000 are considered equivalent.
+
+<style color=#00ffffff size=1>.</style>            Natgrid (National Grid), IrishNatgrid (Irish National Grid),
+<style color=#00ffffff size=1>.</style>            UTMEur (European Universal Transverse Mercator), and UTM
+<style color=#00ffffff size=1>.</style>            (Universal Transverse Mercator) are the current transverse
+<style color=#00ffffff size=1>.</style>            Mercator projections supported.
+
+<style color=#00ffffff size=1>.</style>            The following functions are provided
+
+<style color=#00ffffff size=1>.</style>            init The module should always be initialized first. The
+<style color=#00ffffff size=1>.</style>                 parameters are the required datum (default WGS84),
+<style color=#00ffffff size=1>.</style>                 transverse Mercator projection (default Natgrid) and
+<style color=#00ffffff size=1>.</style>                 UTM zone (default 30) if appropriate. Negative values
+<style color=#00ffffff size=1>.</style>                 or out of range values are ignored.
+
+<style color=#00ffffff size=1>.</style>            format
+<style color=#00ffffff size=1>.</style>                 Parameters as above. Alters the current settings at any
+<style color=#00ffffff size=1>.</style>                 time though care must be taken to ensure existing
+<style color=#00ffffff size=1>.</style>                 coordinates are still treated as in their original
+<style color=#00ffffff size=1>.</style>                 form.
+
+<style color=#00ffffff size=1>.</style>            os2en
+<style color=#00ffffff size=1>.</style>                 Converts an Ordnance Survey National Grid reference to
+<style color=#00ffffff size=1>.</style>                 an easting, northing. The formats XYen, XYeenn,
+<style color=#00ffffff size=1>.</style>                 XYeeennn, XYeeeennnn, XYeeeeennnnn, eenn, eeennn,
+<style color=#00ffffff size=1>.</style>                 eeeennnn, eeeeennnnn and eeeeeennnnnn are allowed. Here
+<style color=#00ffffff size=1>.</style>                 X and Y are upper case letters, e is an easting digit
+<style color=#00ffffff size=1>.</style>                 and n is a northing digit. The reference can therefore
+<style color=#00ffffff size=1>.</style>                 be rounded to the nearest decakilometre, kilometre,
+<style color=#00ffffff size=1>.</style>                 hectometre, decametre or metre. The first element of
+<style color=#00ffffff size=1>.</style>                 the returned tuple is zero if the string has an
+<style color=#00ffffff size=1>.</style>                 incorrect format.
+
+<style color=#00ffffff size=1>.</style>            en2os
+<style color=#00ffffff size=1>.</style>                 Converts an easting, northing to an OS reference in the
+<style color=#00ffffff size=1>.</style>                 form XYeeeeennnnn as  above.
+
+<style color=#00ffffff size=1>.</style>            str2lalo
+<style color=#00ffffff size=1>.</style>                 Converts a latitude/longitude string to a latitude,
+<style color=#00ffffff size=1>.</style>                 longitude. The string may have the formats deg\[N|S\],
+<style color=#00ffffff size=1>.</style>                 deg:min\[N|S\] or deg:min:sec\[N|S\] for latitude,
+<style color=#00ffffff size=1>.</style>                 deg\[E|W\], deg:min\[E|W\] or deg:min:sec\[E|W\] for
+<style color=#00ffffff size=1>.</style>                 longitude. The latitude must come first, then optional
+<style color=#00ffffff size=1>.</style>                 white space, then the longitude. Degrees, minutes and
+<style color=#00ffffff size=1>.</style>                 seconds may be integer or real. Format errors are
+<style color=#00ffffff size=1>.</style>                 indicated as in os2en.
+
+<style color=#00ffffff size=1>.</style>            lalo2str
+<style color=#00ffffff size=1>.</style>                 Converts a latitude, longitude to string format as
+<style color=#00ffffff size=1>.</style>                 above. Seconds are given to two decimal places.
+
+<style color=#00ffffff size=1>.</style>            str2en
+<style color=#00ffffff size=1>.</style>                 Converts a string in OS or latitude/longitude format as
+<style color=#00ffffff size=1>.</style>                 above to an easting, northing. Format errors indicated
+<style color=#00ffffff size=1>.</style>                 as in os2en.
+
+<style color=#00ffffff size=1>.</style>            en2lalo
+<style color=#00ffffff size=1>.</style>                 Converts an easting, northing to latitude, longitude
+<style color=#00ffffff size=1>.</style>                 using the current transverse Mercator projection.If the
+<style color=#00ffffff size=1>.</style>                 latter is UTM or UTMEur the current zone setting will
+<style color=#00ffffff size=1>.</style>                 be used.
+
+<style color=#00ffffff size=1>.</style>            lalo2en
+<style color=#00ffffff size=1>.</style>                 Converts latitude, longitude to an easting, northing
+<style color=#00ffffff size=1>.</style>                 using the current transverse Mercator projection.
+
+<style color=#00ffffff size=1>.</style>            datum2datum
+<style color=#00ffffff size=1>.</style>                 Approximate (Helmert) transformation of a latitude,
+<style color=#00ffffff size=1>.</style>                 longitude between any of OSGB36, WGS84, ITRS2000 or
+<style color=#00ffffff size=1>.</style>                 ETRS89. The `from' datum appears first in the parameter
+<style color=#00ffffff size=1>.</style>                 list.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /module/math/geodesy.m
+<style color=#00ffffff size=1>.</style>            /appl/math/geodesy.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The module is heavily biased towards Great Britain.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

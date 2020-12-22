@@ -1,0 +1,73 @@
+<action name=NAMESPACE(6)>NAMESPACE(6)</action>                                         <action name=NAMESPACE(6)>NAMESPACE(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            namespace - name space description file
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Namespace files describe how to construct a name space from
+<style color=#00ffffff size=1>.</style>            scratch, or add to an existing name space. The files are
+<style color=#00ffffff size=1>.</style>            interpreted by <action name=newns(2)>newns(2)</action>, invoked by commands such as logon
+<style color=#00ffffff size=1>.</style>            (1) and by other system services.
+
+<style color=#00ffffff size=1>.</style>            The name space description file contains one or more lines
+<style color=#00ffffff size=1>.</style>            each of which specifies one name space operation. Empty
+<style color=#00ffffff size=1>.</style>            lines and lines with # as the first non-space character are
+<style color=#00ffffff size=1>.</style>            ignored. Environment variables of the form $name are
+<style color=#00ffffff size=1>.</style>            expanded within arguments, where name is a string terminated
+<style color=#00ffffff size=1>.</style>            by white space, or one of the characters `/', `.', or `$'.
+
+<style color=#00ffffff size=1>.</style>            The known operations and their arguments are:
+
+<style color=#00ffffff size=1>.</style>            bind \[-abci\] old  new
+<style color=#00ffffff size=1>.</style>                 Use new as an alias for file or directory old. Options
+<style color=#00ffffff size=1>.</style>                 a, b and c translate to flag values Sys->MAFTER,
+<style color=#00ffffff size=1>.</style>                 Sys->MBEFORE and Sys->MCREATE of <action name=sys-bind(2)>sys-bind(2)</action>. If
+<style color=#00ffffff size=1>.</style>                 neither a nor b are given, the default is Sys->MREPL.
+<style color=#00ffffff size=1>.</style>                 Option i means to ignore errors.
+
+<style color=#00ffffff size=1>.</style>            cd directory
+<style color=#00ffffff size=1>.</style>                 Change working directory to directory.
+
+<style color=#00ffffff size=1>.</style>            fork Split the name space before modification. This is
+<style color=#00ffffff size=1>.</style>                 equivalent to passing a value of Sys->FORKNS to
+<style color=#00ffffff size=1>.</style>                 <action name=sys-pctl(2)>sys-pctl(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            mount \[-abc9i\] \[-k keyfile \] \[-C alg \] \[ net !\] machine \[!
+<style color=#00ffffff size=1>.</style>                 svc \] dir  \[ spec \]
+<style color=#00ffffff size=1>.</style>                 Mount the file tree of machine upon directory dir. The
+<style color=#00ffffff size=1>.</style>                 default service is styx. Options a, b, c and are the
+<style color=#00ffffff size=1>.</style>                 same as for bind. The tokens dir and spec translate to
+<style color=#00ffffff size=1>.</style>                 old and aname of mount as described under <action name=sys-bind(2)>sys-bind(2)</action>.
+<style color=#00ffffff size=1>.</style>                 The -k, -C and -9 options are the same as those for the
+<style color=#00ffffff size=1>.</style>                 mount command (see <action name=bind(1)>bind(1)</action>).
+
+<style color=#00ffffff size=1>.</style>            import \[-abc9i\] \[ net !\] machine \[! svc \] \[ remotedir \] dir
+<style color=#00ffffff size=1>.</style>                 Import a directory from a remote Plan 9 machine and
+<style color=#00ffffff size=1>.</style>                 make it appear on directory dir. Options a, b, c and i
+<style color=#00ffffff size=1>.</style>                 are the same as for mount. By default, remotedir is
+<style color=#00ffffff size=1>.</style>                 assumed to be the same name as dir. The default service
+<style color=#00ffffff size=1>.</style>                 is exportfs. (Currently this operation works only under
+<style color=#00ffffff size=1>.</style>                 native Inferno and Plan 9.)
+
+<style color=#00ffffff size=1>.</style>            new  Create a new name space in which the current directory
+<style color=#00ffffff size=1>.</style>                 becomes the root directory\; typically used after cd.
+<style color=#00ffffff size=1>.</style>                 This is equivalent to passing a value of Sys->NEWNS to
+<style color=#00ffffff size=1>.</style>                 <action name=sys-pctl(2)>sys-pctl(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            nodev
+<style color=#00ffffff size=1>.</style>                 Disallow device attaches. This is equivalent to passing
+<style color=#00ffffff size=1>.</style>                 a value of Sys->NODEVS to <action name=sys-pctl(2)>sys-pctl(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            unmount \[-i\] \[ name \] from
+<style color=#00ffffff size=1>.</style>                 If two arguments are given, undo a bind or mount with
+<style color=#00ffffff size=1>.</style>                 the same arguments. If only one argument is given,
+<style color=#00ffffff size=1>.</style>                 everything bound to or mounted on from is unmounted.
+<style color=#00ffffff size=1>.</style>                 The -i option means ignore errors.
+
+<style color=#00ffffff size=1>.</style>            . path
+<style color=#00ffffff size=1>.</style>                 Include the name space description file path.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=nsbuild(1)>nsbuild(1)</action>, <action name=wm(1)>wm(1)</action>, <action name=newns(2)>newns(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

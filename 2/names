@@ -1,0 +1,65 @@
+<action name=NAMES(2)>NAMES(2)</action>                                                 <action name=NAMES(2)>NAMES(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Names: basename, cleanname, dirname, elements, isprefix,
+<style color=#00ffffff size=1>.</style>            pathname, relative, rooted - file name manipulation
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "names.m"\;
+<style color=#00ffffff size=1>.</style>            names := load Names Names->PATH\;
+
+<style color=#00ffffff size=1>.</style>            basename:  fn(name: string, suffix: string): string\;
+<style color=#00ffffff size=1>.</style>            cleanname: fn(name: string): string\;
+<style color=#00ffffff size=1>.</style>            dirname:   fn(name: string): string\;
+<style color=#00ffffff size=1>.</style>            elements:  fn(name: string): list of string\;
+<style color=#00ffffff size=1>.</style>            isprefix:  fn(a: string, b: string): int\;
+<style color=#00ffffff size=1>.</style>            pathname:  fn(els: list of string): string\;
+<style color=#00ffffff size=1>.</style>            relative:  fn(name: string, root: string): string\;
+<style color=#00ffffff size=1>.</style>            rooted:    fn(root: string, name: string): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Names provides operations on file names (path names):
+
+<style color=#00ffffff size=1>.</style>            basename   Return the trailing component of name (the text
+<style color=#00ffffff size=1>.</style>                       after the final `/'), shorn of suffix (which may
+<style color=#00ffffff size=1>.</style>                       be null).
+
+<style color=#00ffffff size=1>.</style>            cleanname  Return a `cleaner' version of name: there are no
+<style color=#00ffffff size=1>.</style>                       redundant and trailing slashes, and directory
+<style color=#00ffffff size=1>.</style>                       names ``.'' and ``..'' have been interpreted
+<style color=#00ffffff size=1>.</style>                       lexically. If the result would otherwise be the
+<style color=#00ffffff size=1>.</style>                       empty string, the name ``.'' is returned instead.
+
+<style color=#00ffffff size=1>.</style>            dirname    Return the directory component of name: the
+<style color=#00ffffff size=1>.</style>                       string up to but not including the final
+<style color=#00ffffff size=1>.</style>                       slash(es).
+
+<style color=#00ffffff size=1>.</style>            elements   Return a list of the path elements of name: the
+<style color=#00ffffff size=1>.</style>                       words between slashes. If name starts with a `/',
+<style color=#00ffffff size=1>.</style>                       the head of the list will be the string "/" but
+<style color=#00ffffff size=1>.</style>                       otherwise slashes do not appear.
+
+<style color=#00ffffff size=1>.</style>            pathname   Return a path name formed from a list of elements
+<style color=#00ffffff size=1>.</style>                       as produced by elements.
+
+<style color=#00ffffff size=1>.</style>            isprefix   Return true iff path name a is a prefix of path
+<style color=#00ffffff size=1>.</style>                       name b.
+
+<style color=#00ffffff size=1>.</style>            relative   If name is root/X for some X, return X\; otherwise
+<style color=#00ffffff size=1>.</style>                       return name unchanged.
+
+<style color=#00ffffff size=1>.</style>            rooted     Return the path name for name relative to a given
+<style color=#00ffffff size=1>.</style>                       root directory (either name may be nil). If name
+<style color=#00ffffff size=1>.</style>                       itself starts with ``/'' or `#', the result is
+<style color=#00ffffff size=1>.</style>                       name\; otherwise it is root/name.
+
+<style color=#00ffffff size=1>.</style>            See <action name=sys-intro(2)>sys-intro(2)</action> for details of file name syntax and its
+<style color=#00ffffff size=1>.</style>            interpretation.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/names.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-fd2path(2)>sys-fd2path(2)</action>, <action name=workdir(2)>workdir(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

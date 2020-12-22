@@ -1,0 +1,50 @@
+<action name=SRV(3)>SRV(3)</action>                                                     <action name=SRV(3)>SRV(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            srv - server registry
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind #s \[ spec \] /chan
+
+<style color=#00ffffff size=1>.</style>            sys->bind("#sspec", "/chan", Sys->MREPL)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Srv converts between file system operations by applications
+<style color=#00ffffff size=1>.</style>            and messages on channels, as described in <action name=sys-file2chan(2)>sys-file2chan(2)</action>.
+<style color=#00ffffff size=1>.</style>            Each attach that does not include a spec produces a new
+<style color=#00ffffff size=1>.</style>            instance: an empty directory owned by the current user in
+<style color=#00ffffff size=1>.</style>            which only files may be created, and then only by
+<style color=#00ffffff size=1>.</style>            sys-file2chan, using a special internal interface. Each such
+<style color=#00ffffff size=1>.</style>            file initially has the same owner as the directory, and
+<style color=#00ffffff size=1>.</style>            permissions 8r600 (read-write for the owner only), but the
+<style color=#00ffffff size=1>.</style>            permissions can be changed by Sys->wstat (see <action name=sys-stat(2)>sys-stat(2)</action>)
+<style color=#00ffffff size=1>.</style>            and thus <action name=chmod(1)>chmod(1)</action>. If mode Sys->DMEXCL is thereby set, the
+<style color=#00ffffff size=1>.</style>            file becomes exclusive-use and can be opened by only one
+<style color=#00ffffff size=1>.</style>            process at a time. The file length and mode bit
+<style color=#00ffffff size=1>.</style>            Sys->DMAPPEND may also be set by wstat but are not
+<style color=#00ffffff size=1>.</style>            interpreted by the system.
+
+<style color=#00ffffff size=1>.</style>            Files may be removed, directly using <action name=sys-remove(2)>sys-remove(2)</action> (and thus
+<style color=#00ffffff size=1>.</style>            <action name=rm(1)>rm(1)</action>), or indirectly by opening them with mode Sys->ORCLOSE
+<style color=#00ffffff size=1>.</style>            (see <action name=sys-open(2)>sys-open(2)</action>). File2chan also removes the corresponding
+<style color=#00ffffff size=1>.</style>            file when the last references to the server's read and write
+<style color=#00ffffff size=1>.</style>            channels have gone (eg, on server exit).
+
+<style color=#00ffffff size=1>.</style>            A spec may be given to name specific instances of srv, so
+<style color=#00ffffff size=1>.</style>            that a new name space can bind in a service created in
+<style color=#00ffffff size=1>.</style>            another. Only the owner (original creator) of the instance
+<style color=#00ffffff size=1>.</style>            may attach to it, unless the mode of the service directory
+<style color=#00ffffff size=1>.</style>            is changed using Sys->wstat (see <action name=sys-stat(2)>sys-stat(2)</action>) to have
+<style color=#00ffffff size=1>.</style>            general access.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /chan  directory to which srv is conventionally bound by
+<style color=#00ffffff size=1>.</style>                   various applications
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/devsrv.c
+<style color=#00ffffff size=1>.</style>            /os/port/devsrv.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=plumb(1)>plumb(1)</action>, <action name=wm(1)>wm(1)</action>, <action name=sys-file2chan(2)>sys-file2chan(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

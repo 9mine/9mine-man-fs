@@ -1,0 +1,56 @@
+<action name=INIT(8)>INIT(8)</action>                                                   <action name=INIT(8)>INIT(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            init: emuinit, osinit - Inferno initialisation
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            Init: module
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	init: fn()\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            /dis/emuinit.dis
+
+<style color=#00ffffff size=1>.</style>            #/./osinit.dis
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Both <action name=emu(1)>emu(1)</action> and the native kernels run a Dis program to
+<style color=#00ffffff size=1>.</style>            initialise the system.
+
+<style color=#00ffffff size=1>.</style>            Emuinit is the default initialisation program for <action name=emu(1)>emu(1)</action>.
+<style color=#00ffffff size=1>.</style>            Emu sets the environment variable (see <action name=env(3)>env(3)</action>) /env/emuargs
+<style color=#00ffffff size=1>.</style>            to the command line originally given to emu, which has the
+<style color=#00ffffff size=1>.</style>            following form:
+
+<style color=#00ffffff size=1>.</style>                 emu \[-d\] \[ command \[ arg ...\] \]
+
+<style color=#00ffffff size=1>.</style>            Emuinit uses the value of emuargs to decide which command to
+<style color=#00ffffff size=1>.</style>            start and its arguments. The default command is /dis/sh.dis,
+<style color=#00ffffff size=1>.</style>            unless the -d option is given, in which case
+<style color=#00ffffff size=1>.</style>            /dis/lib/srv.dis is used by default instead, to cause emu to
+<style color=#00ffffff size=1>.</style>            run on the host system as a server (`daemon' mode).
+
+<style color=#00ffffff size=1>.</style>            Osinit is built-in to the <action name=root(3)>root(3)</action> of native kernels.
+<style color=#00ffffff size=1>.</style>            Although the kernel uses the fixed name #/./osinit.dis the
+<style color=#00ffffff size=1>.</style>            contents are taken from one of the files in /os/init
+<style color=#00ffffff size=1>.</style>            selected by the init section of the kernel configuration
+<style color=#00ffffff size=1>.</style>            file. Osinit's action is platform-specific in detail, but
+<style color=#00ffffff size=1>.</style>            might include: building an initial /dev by mounting device
+<style color=#00ffffff size=1>.</style>            drivers\; binding the physical network driver (eg, <action name=ether(3)>ether(3)</action>)
+<style color=#00ffffff size=1>.</style>            into /net and initialising <action name=ip(3)>ip(3)</action>, usually setting addresses
+<style color=#00ffffff size=1>.</style>            and routes using bootp\; attaching to a remote file system\;
+<style color=#00ffffff size=1>.</style>            setting up flash translation using <action name=ftl(3)>ftl(3)</action>\; starting dossrv
+<style color=#00ffffff size=1>.</style>            or 9660srv (see <action name=dossrv(4)>dossrv(4)</action>), or <action name=kfs(3)>kfs(3)</action> to serve local files
+<style color=#00ffffff size=1>.</style>            from disk or flash memory.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /env/emuargs
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/emuinit.b
+<style color=#00ffffff size=1>.</style>            /os/init/*.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=emu(1)>emu(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

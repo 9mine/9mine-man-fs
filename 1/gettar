@@ -1,0 +1,58 @@
+<action name=GETTAR(1)>GETTAR(1)</action>                                               <action name=GETTAR(1)>GETTAR(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            gettar, lstar, puttar - tar archive utilities
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            gettar \[ -k \] \[ -v \] \[ -R \] \[ name ... \]
+<style color=#00ffffff size=1>.</style>            lstar
+<style color=#00ffffff size=1>.</style>            puttar \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These commands manage POSIX.1 tar archives in Inferno.
+
+<style color=#00ffffff size=1>.</style>            Gettar reads a tar file from standard input and unpacks the
+<style color=#00ffffff size=1>.</style>            contents into the current directory tree. By default, gettar
+<style color=#00ffffff size=1>.</style>            converts absolute path names, including names starting with
+<style color=#00ffffff size=1>.</style>            `#', into names relative to the current directory\; the -R
+<style color=#00ffffff size=1>.</style>            option extracts such names as-is. The -k option tells gettar
+<style color=#00ffffff size=1>.</style>            to keep existing files rather than overwriting them with
+<style color=#00ffffff size=1>.</style>            files from the archive. The -v option causes gettar to print
+<style color=#00ffffff size=1>.</style>            on standard error the names of files extracted. Finally,
+<style color=#00ffffff size=1>.</style>            listing one or more names as arguments will extract only
+<style color=#00ffffff size=1>.</style>            those files.
+
+<style color=#00ffffff size=1>.</style>            Lstar reads a tar file from standard input and lists the
+<style color=#00ffffff size=1>.</style>            files contained therein, one per line, with four
+<style color=#00ffffff size=1>.</style>            space-separated fields giving the file name, modification
+<style color=#00ffffff size=1>.</style>            time (in seconds since the epoch), size (in bytes), and a
+<style color=#00ffffff size=1>.</style>            constant 0 (the place holder for a checksum). The format is
+<style color=#00ffffff size=1>.</style>            the same as that produced by du -n -t.
+
+<style color=#00ffffff size=1>.</style>            Puttar writes a tar file to standard output that contains
+<style color=#00ffffff size=1>.</style>            each file, and its substructure if it is a directory. Given
+<style color=#00ffffff size=1>.</style>            no arguments, puttar instead reads a list of file names from
+<style color=#00ffffff size=1>.</style>            standard input and includes each file or directory named\; it
+<style color=#00ffffff size=1>.</style>            does not copy directory substructure.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            The following commands create a tar file with two files
+<style color=#00ffffff size=1>.</style>            test.b and srv.b:
+
+<style color=#00ffffff size=1>.</style>                 $ cat tarlist
+<style color=#00ffffff size=1>.</style>                 test.b
+<style color=#00ffffff size=1>.</style>                 srv.b
+<style color=#00ffffff size=1>.</style>                 $ puttar <tarlist >test.tar
+<style color=#00ffffff size=1>.</style>                 $ lstar <test.tar
+<style color=#00ffffff size=1>.</style>                 test.b 867178082 1104 0
+<style color=#00ffffff size=1>.</style>                 srv.b 866042662 3865 0
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/gettar.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/lstar.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/puttar.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=tarfs(4)>tarfs(4)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

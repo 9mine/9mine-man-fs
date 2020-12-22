@@ -1,0 +1,124 @@
+<action name=SH-EXPR(1)>SH-EXPR(1)</action>                                             <action name=SH-EXPR(1)>SH-EXPR(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            expr, ntest, mpexpr - shell module for simple arithmetic.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load expr OR load mpexpr
+
+<style color=#00ffffff size=1>.</style>            ${expr \[ -r radix \] \[ arg... \] }
+<style color=#00ffffff size=1>.</style>            ntest num
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Expr and mpexpr are loadable modules for <action name=sh(1)>sh(1)</action> that provide
+<style color=#00ffffff size=1>.</style>            support for integer arithmetic. Expr uses 64-bit signed
+<style color=#00ffffff size=1>.</style>            integers\; mpexpr uses arbitrary-precision signed integers.
+<style color=#00ffffff size=1>.</style>            They each provide the same interface: a command ntest, which
+<style color=#00ffffff size=1>.</style>            performs a simple boolean test on its integer argument, and
+<style color=#00ffffff size=1>.</style>            the substitution operator expr, which takes an expression in
+<style color=#00ffffff size=1>.</style>            Reverse Polish notation, and yields its result.
+
+<style color=#00ffffff size=1>.</style>            Ntest returns true if its argument num is non-zero, and
+<style color=#00ffffff size=1>.</style>            false otherwise.
+
+<style color=#00ffffff size=1>.</style>            Expr evaluates each arg in turn\; if it is an integer it gets
+<style color=#00ffffff size=1>.</style>            pushed onto the stack\; otherwise it should name one of the
+<style color=#00ffffff size=1>.</style>            operators below, whereupon the appropriate number of
+<style color=#00ffffff size=1>.</style>            operands are popped off the stack, evaluated as arguments to
+<style color=#00ffffff size=1>.</style>            the operator, and the result pushed back onto the stack.
+<style color=#00ffffff size=1>.</style>            Arguments are passed to the operator first-pushed first, so,
+<style color=#00ffffff size=1>.</style>            for instance, ${expr 2 1 -} yields 1, not -1. Alternative
+<style color=#00ffffff size=1>.</style>            names are given for some operators\; this is to avoid the
+<style color=#00ffffff size=1>.</style>            necessity of quoting operators that contain <action name=sh(1)>sh(1)</action>
+<style color=#00ffffff size=1>.</style>            metacharacters. Integers are given in the same form
+<style color=#00ffffff size=1>.</style>            acceptable to Limbo. The relational operators yield either 1
+<style color=#00ffffff size=1>.</style>            (true) or 0 (false). If the -r option is given, radix
+<style color=#00ffffff size=1>.</style>            specifies an output base for printed numbers. It may be from
+<style color=#00ffffff size=1>.</style>            2 to 36\; mpexpr also allows 64 to specify base64 notation.
+<style color=#00ffffff size=1>.</style>            Numbers are printed in a form suitable for re-interpretation
+<style color=#00ffffff size=1>.</style>            by expr.
+
+<style color=#00ffffff size=1>.</style>            When all its arguments have been evaluated, expr yields all
+<style color=#00ffffff size=1>.</style>            the values remaining on its stack, first pushed first. Note
+<style color=#00ffffff size=1>.</style>            that bitwise operators treat their operands as if they were
+<style color=#00ffffff size=1>.</style>            stored in two's complement form. The operators supported by
+<style color=#00ffffff size=1>.</style>            expr are as follows (the number of operands required in is
+<style color=#00ffffff size=1>.</style>            given parentheses).
+
+<style color=#00ffffff size=1>.</style>            + (2)          Addition
+
+<style color=#00ffffff size=1>.</style>            - (2)          Subtraction
+
+<style color=#00ffffff size=1>.</style>            x, * (2)       Multiplication
+
+<style color=#00ffffff size=1>.</style>            / (2)          Division. Division by zero raises a divide by
+<style color=#00ffffff size=1>.</style>                           zero exception.
+
+<style color=#00ffffff size=1>.</style>            % (2)          Modulus. A zero modulus will cause a divide
+<style color=#00ffffff size=1>.</style>                           by zero exception to be raised.
+
+<style color=#00ffffff size=1>.</style>            and (2)        Bitwise-and.
+
+<style color=#00ffffff size=1>.</style>            or (2)         Bitwise-or.
+
+<style color=#00ffffff size=1>.</style>            xor (2)        Bitwise-xor.
+
+<style color=#00ffffff size=1>.</style>            ~ (1)          Bitwise-complement..
+
+<style color=#00ffffff size=1>.</style>            _ (1)          Unary minus.
+
+<style color=#00ffffff size=1>.</style>            <<, shl (2)    Shift left.
+
+<style color=#00ffffff size=1>.</style>            >>, shr (2)    Shift right.
+
+<style color=#00ffffff size=1>.</style>            =, ==, eq (2)  Equality.
+
+<style color=#00ffffff size=1>.</style>            !=, neq (2)    Inequality.
+
+<style color=#00ffffff size=1>.</style>            >, gt (2)      Greater than.
+
+<style color=#00ffffff size=1>.</style>            <, lt (2)      Less than.
+
+<style color=#00ffffff size=1>.</style>            <=, le (2)     Less than or equal to.
+
+<style color=#00ffffff size=1>.</style>            >=, ge (2)     Greater than or equal to.
+
+<style color=#00ffffff size=1>.</style>            !, not (1)     Logical negation.
+
+<style color=#00ffffff size=1>.</style>            rep (n)        Rep repeats the last operation (which must
+<style color=#00ffffff size=1>.</style>                           have been a two-operand operation other than
+<style color=#00ffffff size=1>.</style>                           seq) until the values in the stack are
+<style color=#00ffffff size=1>.</style>                           exhausted.
+
+<style color=#00ffffff size=1>.</style>            seq (2)        Seq pushes on the stack a sequence of numbers
+<style color=#00ffffff size=1>.</style>                           ranging numerically from its first argument
+<style color=#00ffffff size=1>.</style>                           up to and including its second argument. If
+<style color=#00ffffff size=1>.</style>                           its second argument is less than its first,
+<style color=#00ffffff size=1>.</style>                           the sequence will descend.
+
+<style color=#00ffffff size=1>.</style>            rand (1)       (mpexpr only). Push a secure random number\;
+<style color=#00ffffff size=1>.</style>                           the argument value gives the size of the
+<style color=#00ffffff size=1>.</style>                           number, in bits.
+
+<style color=#00ffffff size=1>.</style>            bits (1)       (mpexpr only). Push the size, in bits, of the
+<style color=#00ffffff size=1>.</style>                           argument.
+
+<style color=#00ffffff size=1>.</style>            expmod, invert (2)
+<style color=#00ffffff size=1>.</style>                           (mpexpr only). See <action name=keyring-ipint(2)>keyring-ipint(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            exp, xx, **    (mpexpr only). Exponentiation.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sh/expr.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=sh-std(1)>sh-std(1)</action>, <action name=sh-tk(1)>sh-tk(1)</action>, <action name=keyring-ipint(2)>keyring-ipint(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Postfix notation can be confusing. Any operators that
+<style color=#00ffffff size=1>.</style>            contain shell metacharacters (e.g. ``*'', ``>'') must be
+<style color=#00ffffff size=1>.</style>            quoted to avoid interpretation by the shell. Base64 notation
+<style color=#00ffffff size=1>.</style>            can contain # characters, which need quoting to avoid
+<style color=#00ffffff size=1>.</style>            interpretation by the shell.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

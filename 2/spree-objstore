@@ -1,0 +1,45 @@
+<action name=SPREE-OBJSTORE(2)>SPREE-OBJSTORE(2)</action>                               <action name=SPREE-OBJSTORE(2)>SPREE-OBJSTORE(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Objstore - support for object archiving in Spree engines.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "spree.m"\;
+<style color=#00ffffff size=1>.</style>            include "spree/objstore.m"\;
+<style color=#00ffffff size=1>.</style>            Object: import Spree\;
+<style color=#00ffffff size=1>.</style>            objstore := load Objstore Objstore->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:       fn(m: Spree, c: ref Clique)\;
+<style color=#00ffffff size=1>.</style>            setname:    fn(o: ref Object, name: string)\;
+<style color=#00ffffff size=1>.</style>            unarchive:  fn()\;
+<style color=#00ffffff size=1>.</style>            get:        fn(name: string): ref Object\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The <action name=spree(2)>spree(2)</action> module provides an Archives module to allow
+<style color=#00ffffff size=1>.</style>            storage of an engine's object hierarchy to a persistent
+<style color=#00ffffff size=1>.</style>            medium. This does not store the state internal to an engine
+<style color=#00ffffff size=1>.</style>            that is not reflected in the object hierarchy, e.g. global
+<style color=#00ffffff size=1>.</style>            variables. In particular, if an engine holds a variable
+<style color=#00ffffff size=1>.</style>            referring to an object, it is not able to reset that
+<style color=#00ffffff size=1>.</style>            variable correctly when the archive is later restored. The
+<style color=#00ffffff size=1>.</style>            Objstore module provides some support for the naming of
+<style color=#00ffffff size=1>.</style>            objects before archival, and for their retrieval by name, in
+<style color=#00ffffff size=1>.</style>            order to enable this.
+
+<style color=#00ffffff size=1>.</style>            Init must be called first with the spree module, m, and the
+<style color=#00ffffff size=1>.</style>            current clique, c. When a module is archiving itself, it
+<style color=#00ffffff size=1>.</style>            should name each object that it wishes to retrieve, using
+<style color=#00ffffff size=1>.</style>            setname. It is permissible for a single object to be given
+<style color=#00ffffff size=1>.</style>            multiple names: the object will later be retrievable under
+<style color=#00ffffff size=1>.</style>            any of its given names.
+
+<style color=#00ffffff size=1>.</style>            When restoring from an archive, a module should call
+<style color=#00ffffff size=1>.</style>            unarchive, which scans through the object hierarchy looking
+<style color=#00ffffff size=1>.</style>            for named objects and storing their names. After this, get(
+<style color=#00ffffff size=1>.</style>            name) will return the object, o, that was named name by a
+<style color=#00ffffff size=1>.</style>            previous setname(o, name), or nil if there was none such.
+
+<style color=#00ffffff size=1>.</style>            The names for an object are stored in the attribute ``§'',
+<style color=#00ffffff size=1>.</style>            which is cleared when unarchive is called.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

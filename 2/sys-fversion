@@ -1,0 +1,51 @@
+<action name=SYS-FVERSION(2)>SYS-FVERSION(2)</action>                                   <action name=SYS-FVERSION(2)>SYS-FVERSION(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            fversion - initialize 9P connection and negotiate version
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            fversion: fn(fd: ref FD, bufsize: int, version: string): (int, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Fversion initialises the 9P connection represented by fd and
+<style color=#00ffffff size=1>.</style>            negotiates the maximum message size and the version of the
+<style color=#00ffffff size=1>.</style>            protocol to be used.
+
+<style color=#00ffffff size=1>.</style>            The bufsize determines the size of the I/O buffer used to
+<style color=#00ffffff size=1>.</style>            stage 9P requests to the server, subject to the constraints
+<style color=#00ffffff size=1>.</style>            of the server itself. The version is a text string that
+<style color=#00ffffff size=1>.</style>            represents the highest version level the protocol will
+<style color=#00ffffff size=1>.</style>            support.
+
+<style color=#00ffffff size=1>.</style>            Fversion returns a tuple (n,useversion) where n is -1 if the
+<style color=#00ffffff size=1>.</style>            request was rejected, and otherwise n is bufsize and
+<style color=#00ffffff size=1>.</style>            useversion is a string representing the negotiated, possibly
+<style color=#00ffffff size=1>.</style>            lower, version of the protocol.
+
+<style color=#00ffffff size=1>.</style>            Default values of zero for bufsize and the empty string for
+<style color=#00ffffff size=1>.</style>            version will negotiate sensible defaults for the connection.
+
+<style color=#00ffffff size=1>.</style>            The interpretation of the version strings is defined in
+<style color=#00ffffff size=1>.</style>            <action name=version(5)>version(5)</action>.
+
+<style color=#00ffffff size=1>.</style>            It is rare to use fversion directly\; usually the default
+<style color=#00ffffff size=1>.</style>            negotiation performed by the kernel during mount (see
+<style color=#00ffffff size=1>.</style>            <action name=sys-bind(2)>sys-bind(2)</action>) is sufficient.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-fauth(2)>sys-fauth(2)</action>, <action name=intro(5)>intro(5)</action>, <action name=version(5)>version(5)</action>.
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Fversion returns a value of -1 for n on error, including
+<style color=#00ffffff size=1>.</style>            failure to negotiate acceptable values, and sets the system
+<style color=#00ffffff size=1>.</style>            error string.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The returned value of n when no error occurs should be the
+<style color=#00ffffff size=1>.</style>            negotiated message size but is currently the original
+<style color=#00ffffff size=1>.</style>            bufsize parameter.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

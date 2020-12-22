@@ -1,0 +1,323 @@
+<action name=ENTRY(9)>ENTRY(9)</action>                                                 <action name=ENTRY(9)>ENTRY(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            entry - Create and manipulate entry widgets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            entry pathName ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -background  -highlightcolor     -selectbackground
+<style color=#00ffffff size=1>.</style>            -borderwidth -highlightthickness -selectforeground
+<style color=#00ffffff size=1>.</style>            -font        -justify            -takefocus
+<style color=#00ffffff size=1>.</style>            -foreground  -relief             -xscrollcommand
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -show string
+<style color=#00ffffff size=1>.</style>                 If this option is specified, then the true contents of
+<style color=#00ffffff size=1>.</style>                 the entry are not displayed in the window. Instead,
+<style color=#00ffffff size=1>.</style>                 each character in the entry's value will be displayed
+<style color=#00ffffff size=1>.</style>                 as the first character in the value of this option,
+<style color=#00ffffff size=1>.</style>                 such as ``*''. This is useful, for example, if the
+<style color=#00ffffff size=1>.</style>                 entry is to be used to enter a password.
+
+<style color=#00ffffff size=1>.</style>            -state state
+<style color=#00ffffff size=1>.</style>                 Specifies one of two states for the entry:  normal or 
+<style color=#00ffffff size=1>.</style>                 disabled. If the entry is disabled then the value may
+<style color=#00ffffff size=1>.</style>                 not be changed using widget commands and no insertion
+<style color=#00ffffff size=1>.</style>                 cursor will be displayed, even if the input focus is in
+<style color=#00ffffff size=1>.</style>                 the widget.
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies an integer value indicating the desired width
+<style color=#00ffffff size=1>.</style>                 of the entry window.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The entry command creates a new window (given by the
+<style color=#00ffffff size=1>.</style>            pathName argument) and makes it into an entry widget.
+<style color=#00ffffff size=1>.</style>            Additional options, described above, may be specified on the
+<style color=#00ffffff size=1>.</style>            command line to configure aspects of the entry such as its
+<style color=#00ffffff size=1>.</style>            colours, font, and relief.  The entry command returns its
+<style color=#00ffffff size=1>.</style>            pathName argument.  At the time this command is invoked,
+<style color=#00ffffff size=1>.</style>            there must not exist a window named pathName.
+
+<style color=#00ffffff size=1>.</style>            An entry is a widget that displays a one-line text string
+<style color=#00ffffff size=1>.</style>            and allows that string to be edited using widget commands
+<style color=#00ffffff size=1>.</style>            described below, which are typically bound to keystrokes and
+<style color=#00ffffff size=1>.</style>            mouse actions. When first created, an entry's string is
+<style color=#00ffffff size=1>.</style>            empty. A portion of the entry may be selected as described
+<style color=#00ffffff size=1>.</style>            below. Entries observe the standard Tk rules for dealing
+<style color=#00ffffff size=1>.</style>            with the input focus.  When an entry has the input focus it
+<style color=#00ffffff size=1>.</style>            displays an insertion cursor to indicate where new
+<style color=#00ffffff size=1>.</style>            characters will be inserted.
+
+<style color=#00ffffff size=1>.</style>            Entries are capable of displaying strings that are too long
+<style color=#00ffffff size=1>.</style>            to fit entirely within the widget's window.  In this case,
+<style color=#00ffffff size=1>.</style>            only a portion of the string will be displayed\;  commands
+<style color=#00ffffff size=1>.</style>            described below may be used to change the view in the
+<style color=#00ffffff size=1>.</style>            window.  Entries use the standard xscrollcommand mechanism
+<style color=#00ffffff size=1>.</style>            for interacting with scrollbars (see the description of the 
+<style color=#00ffffff size=1>.</style>            xscrollcommand option for details).
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The entry command creates a new Tk command whose name is 
+<style color=#00ffffff size=1>.</style>            pathName.  This command may be used to invoke various
+<style color=#00ffffff size=1>.</style>            operations on the widget.  It has the following general
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathName option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            Option and the args determine the exact behaviour of the
+<style color=#00ffffff size=1>.</style>            command.
+
+<style color=#00ffffff size=1>.</style>            Many of the widget commands for entries take one or more
+<style color=#00ffffff size=1>.</style>            indices as arguments.  An index specifies a particular
+<style color=#00ffffff size=1>.</style>            character in the entry's string, in any of the following
+<style color=#00ffffff size=1>.</style>            ways:
+
+<style color=#00ffffff size=1>.</style>            number      Specifies the character as a numerical index,
+<style color=#00ffffff size=1>.</style>                        where 0 corresponds to the first character in
+<style color=#00ffffff size=1>.</style>                        the string.
+
+<style color=#00ffffff size=1>.</style>            anchor      Indicates the anchor point for the selection,
+<style color=#00ffffff size=1>.</style>                        which is set with the select from and select
+<style color=#00ffffff size=1>.</style>                        adjust widget commands.
+
+<style color=#00ffffff size=1>.</style>            end         Indicates the character just after the last one
+<style color=#00ffffff size=1>.</style>                        in the entry's string. This is equivalent to
+<style color=#00ffffff size=1>.</style>                        specifying a numerical index equal to the length
+<style color=#00ffffff size=1>.</style>                        of the entry's string.
+
+<style color=#00ffffff size=1>.</style>            insert      Indicates the character adjacent to and
+<style color=#00ffffff size=1>.</style>                        immediately following the insertion cursor.
+
+<style color=#00ffffff size=1>.</style>            sel.first   Indicates the first character in the selection.
+<style color=#00ffffff size=1>.</style>                        It is an error to use this form if the selection
+<style color=#00ffffff size=1>.</style>                        isn't in the entry window.
+
+<style color=#00ffffff size=1>.</style>            sel.last    Indicates the character just after the last one
+<style color=#00ffffff size=1>.</style>                        in the selection. It is an error to use this
+<style color=#00ffffff size=1>.</style>                        form if the selection isn't in the entry window.
+
+<style color=#00ffffff size=1>.</style>            @number     In this form, number is treated as an
+<style color=#00ffffff size=1>.</style>                        x-coordinate in the entry's window\;  the
+<style color=#00ffffff size=1>.</style>                        character spanning that x-coordinate is used.
+<style color=#00ffffff size=1>.</style>                        For example, ``@0'' indicates the left-most
+<style color=#00ffffff size=1>.</style>                        character in the window.
+
+<style color=#00ffffff size=1>.</style>            The following commands are possible for entry widgets:
+
+<style color=#00ffffff size=1>.</style>            pathName bbox index
+<style color=#00ffffff size=1>.</style>                 Returns a list of four numbers describing the bounding
+<style color=#00ffffff size=1>.</style>                 box of the character given by index. The first two
+<style color=#00ffffff size=1>.</style>                 elements of the list give the x and y coordinates of
+<style color=#00ffffff size=1>.</style>                 the upper-left corner of the screen area covered by the
+<style color=#00ffffff size=1>.</style>                 character (in pixels relative to the widget) and the
+<style color=#00ffffff size=1>.</style>                 last two elements give the width and height of the
+<style color=#00ffffff size=1>.</style>                 character, in pixels. The bounding box may refer to a
+<style color=#00ffffff size=1>.</style>                 region outside the visible area of the window.
+
+<style color=#00ffffff size=1>.</style>            pathName cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the entry command.
+
+<style color=#00ffffff size=1>.</style>            pathName configure ?option? ?value option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathName.  If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, then the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the entry command.
+
+<style color=#00ffffff size=1>.</style>            pathName delete first ?last?
+<style color=#00ffffff size=1>.</style>                 Delete one or more elements of the entry. First is the
+<style color=#00ffffff size=1>.</style>                 index of the first character to delete, and last is the
+<style color=#00ffffff size=1>.</style>                 index of the character just after the last one to
+<style color=#00ffffff size=1>.</style>                 delete. If last isn't specified it defaults to first+1,
+<style color=#00ffffff size=1>.</style>                 i.e. a single character is deleted. This command
+<style color=#00ffffff size=1>.</style>                 returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName get
+<style color=#00ffffff size=1>.</style>                 Returns the entry's string.
+
+<style color=#00ffffff size=1>.</style>            pathName icursor index
+<style color=#00ffffff size=1>.</style>                 Arrange for the insertion cursor to be displayed just
+<style color=#00ffffff size=1>.</style>                 before the character given by index.  Returns an empty
+<style color=#00ffffff size=1>.</style>                 string.
+
+<style color=#00ffffff size=1>.</style>            pathName index index
+<style color=#00ffffff size=1>.</style>                 Returns the numerical index corresponding to index.
+
+<style color=#00ffffff size=1>.</style>            pathName insert index string
+<style color=#00ffffff size=1>.</style>                 Insert the characters of string just before the
+<style color=#00ffffff size=1>.</style>                 character indicated by index.  Returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName see index
+<style color=#00ffffff size=1>.</style>                 Adjusts the view in the window so that the character
+<style color=#00ffffff size=1>.</style>                 given by index is completely visible.
+
+<style color=#00ffffff size=1>.</style>            pathName selection option arg
+<style color=#00ffffff size=1>.</style>                 This command is used to adjust the selection within an
+<style color=#00ffffff size=1>.</style>                 entry.  It has several forms, depending on option:
+
+<style color=#00ffffff size=1>.</style>                 pathName selection adjust index
+<style color=#00ffffff size=1>.</style>                      Locate the end of the selection nearest to the
+<style color=#00ffffff size=1>.</style>                      character given by index, and adjust that end of
+<style color=#00ffffff size=1>.</style>                      the selection to be at index (i.e including but
+<style color=#00ffffff size=1>.</style>                      not going beyond index).  The other end of the
+<style color=#00ffffff size=1>.</style>                      selection is made the anchor point for future
+<style color=#00ffffff size=1>.</style>                      select to commands.  If the selection isn't
+<style color=#00ffffff size=1>.</style>                      currently in the entry, then a new selection is
+<style color=#00ffffff size=1>.</style>                      created to include the characters between index
+<style color=#00ffffff size=1>.</style>                      and the most recent selection anchor point,
+<style color=#00ffffff size=1>.</style>                      inclusive. Returns an empty string.
+
+<style color=#00ffffff size=1>.</style>                 pathName selection clear
+<style color=#00ffffff size=1>.</style>                      Clear the selection if it is currently in this
+<style color=#00ffffff size=1>.</style>                      widget.  If the selection isn't in this widget
+<style color=#00ffffff size=1>.</style>                      then the command has no effect. Returns an empty
+<style color=#00ffffff size=1>.</style>                      string.
+
+<style color=#00ffffff size=1>.</style>                 pathName selection from index
+<style color=#00ffffff size=1>.</style>                      Set the selection anchor point to just before the
+<style color=#00ffffff size=1>.</style>                      character given by index.  Doesn't change the
+<style color=#00ffffff size=1>.</style>                      selection. Returns an empty string.
+
+<style color=#00ffffff size=1>.</style>                 pathName selection present
+<style color=#00ffffff size=1>.</style>                      Returns 1 if there are characters selected in the
+<style color=#00ffffff size=1>.</style>                      entry, 0 if nothing is selected.
+
+<style color=#00ffffff size=1>.</style>                 pathName selection range start end
+<style color=#00ffffff size=1>.</style>                      Sets the selection to include the characters
+<style color=#00ffffff size=1>.</style>                      starting with the one indexed by start and ending
+<style color=#00ffffff size=1>.</style>                      with the one just before end. If end refers to the
+<style color=#00ffffff size=1>.</style>                      same character as start or an earlier one, then
+<style color=#00ffffff size=1>.</style>                      the entry's selection is cleared.
+
+<style color=#00ffffff size=1>.</style>                 pathName selection to index
+<style color=#00ffffff size=1>.</style>                      If index is before the anchor point, set the
+<style color=#00ffffff size=1>.</style>                      selection to the characters from index up to but
+<style color=#00ffffff size=1>.</style>                      not including the anchor point. If index is the
+<style color=#00ffffff size=1>.</style>                      same as the anchor point, do nothing. If index is
+<style color=#00ffffff size=1>.</style>                      after the anchor point, set the selection to the
+<style color=#00ffffff size=1>.</style>                      characters from the anchor point up to but not
+<style color=#00ffffff size=1>.</style>                      including index. The anchor point is determined by
+<style color=#00ffffff size=1>.</style>                      the most recent select from or select adjust
+<style color=#00ffffff size=1>.</style>                      command in this widget. If the selection isn't in
+<style color=#00ffffff size=1>.</style>                      this widget then a new selection is created using
+<style color=#00ffffff size=1>.</style>                      the most recent anchor point specified for the
+<style color=#00ffffff size=1>.</style>                      widget. Returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName xview args
+<style color=#00ffffff size=1>.</style>                 This command is used to query and change the horizontal
+<style color=#00ffffff size=1>.</style>                 position of the text in the widget's window.  It can
+<style color=#00ffffff size=1>.</style>                 take any of the following forms:
+
+<style color=#00ffffff size=1>.</style>                 pathName xview
+<style color=#00ffffff size=1>.</style>                      Returns a list containing two elements. Each
+<style color=#00ffffff size=1>.</style>                      element is a real fraction between 0 and 1\;
+<style color=#00ffffff size=1>.</style>                      together they describe the horizontal span that is
+<style color=#00ffffff size=1>.</style>                      visible in the window. For example, if the first
+<style color=#00ffffff size=1>.</style>                      element is .2 and the second element is .6, 20% of
+<style color=#00ffffff size=1>.</style>                      the entry's text is off-screen to the left, the
+<style color=#00ffffff size=1>.</style>                      middle 40% is visible in the window, and 40% of
+<style color=#00ffffff size=1>.</style>                      the text is off-screen to the right. These are the
+<style color=#00ffffff size=1>.</style>                      same values passed to scrollbars via the 
+<style color=#00ffffff size=1>.</style>                      -xscrollcommand option.
+
+<style color=#00ffffff size=1>.</style>                 pathName xview index
+<style color=#00ffffff size=1>.</style>                      Adjusts the view in the window so that the
+<style color=#00ffffff size=1>.</style>                      character given by index is displayed at the left
+<style color=#00ffffff size=1>.</style>                      edge of the window.
+
+<style color=#00ffffff size=1>.</style>                 pathName xview moveto fraction
+<style color=#00ffffff size=1>.</style>                      Adjusts the view in the window so that the
+<style color=#00ffffff size=1>.</style>                      character fraction of the way through the text
+<style color=#00ffffff size=1>.</style>                      appears at the left edge of the window. Fraction
+<style color=#00ffffff size=1>.</style>                      must be a fraction between 0 and 1.
+
+<style color=#00ffffff size=1>.</style>                 pathName xview scroll number what
+<style color=#00ffffff size=1>.</style>                      This command shifts the view in the window left or
+<style color=#00ffffff size=1>.</style>                      right according to number and what. Number must be
+<style color=#00ffffff size=1>.</style>                      an integer. What must be either units or pages. If
+<style color=#00ffffff size=1>.</style>                      what is units, the view adjusts left or right by
+<style color=#00ffffff size=1>.</style>                      number average-width characters on the display\;
+<style color=#00ffffff size=1>.</style>                      if it is pages then the view adjusts by number
+<style color=#00ffffff size=1>.</style>                      screenfuls. If number is negative then characters
+<style color=#00ffffff size=1>.</style>                      farther to the left become visible\;  if it is
+<style color=#00ffffff size=1>.</style>                      positive then characters farther to the right
+<style color=#00ffffff size=1>.</style>                      become visible.
+
+DEFAULT BINDINGS
+<style color=#00ffffff size=1>.</style>            Tk automatically creates bindings for entries that give them
+<style color=#00ffffff size=1>.</style>            the following default behaviour. In the descriptions below,
+<style color=#00ffffff size=1>.</style>            ``word'' refers to a contiguous group of letters, digits, or
+<style color=#00ffffff size=1>.</style>            ``_'' characters, or any single character other than these.
+
+<style color=#00ffffff size=1>.</style>            \[1\]  Clicking mouse button 1 positions the insertion cursor
+<style color=#00ffffff size=1>.</style>                 just before the character underneath the mouse cursor,
+<style color=#00ffffff size=1>.</style>                 sets the input focus to this widget, and clears any
+<style color=#00ffffff size=1>.</style>                 selection in the widget. Dragging with mouse button 1
+<style color=#00ffffff size=1>.</style>                 strokes out a selection between the insertion cursor
+<style color=#00ffffff size=1>.</style>                 and the character under the mouse.
+
+<style color=#00ffffff size=1>.</style>            \[2\]  Double-clicking with mouse button 1 selects the word
+<style color=#00ffffff size=1>.</style>                 under the mouse and positions the insertion cursor at
+<style color=#00ffffff size=1>.</style>                 the beginning of the word.
+
+<style color=#00ffffff size=1>.</style>            \[3\]  If any normal printing characters are typed in an
+<style color=#00ffffff size=1>.</style>                 entry, the current selection is deleted, and they are
+<style color=#00ffffff size=1>.</style>                 inserted at the point of the insertion cursor
+
+<style color=#00ffffff size=1>.</style>            \[4\]  The view in the entry can be adjusted by dragging with
+<style color=#00ffffff size=1>.</style>                 mouse button 2.
+
+<style color=#00ffffff size=1>.</style>            \[5\]  The Left and Right keys move the insertion cursor one
+<style color=#00ffffff size=1>.</style>                 character to the left or right\;  they also clear any
+<style color=#00ffffff size=1>.</style>                 selection in the entry and set the selection anchor.
+<style color=#00ffffff size=1>.</style>                 Control-b and Control-f behave the same as Left and
+<style color=#00ffffff size=1>.</style>                 Right, respectively.
+
+<style color=#00ffffff size=1>.</style>            \[6\]  The Home key, or Control-a, will move the insertion
+<style color=#00ffffff size=1>.</style>                 cursor to the beginning of the entry and clear any
+<style color=#00ffffff size=1>.</style>                 selection in the entry.
+
+<style color=#00ffffff size=1>.</style>            \[7\]  The End key, or Control-e, will move the insertion
+<style color=#00ffffff size=1>.</style>                 cursor to the end of the entry and clear any selection
+<style color=#00ffffff size=1>.</style>                 in the entry.
+
+<style color=#00ffffff size=1>.</style>            \[8\]  Control-/ selects all the text in the entry.
+
+<style color=#00ffffff size=1>.</style>            \[9\]  Control-\ clears any selection in the entry.
+
+<style color=#00ffffff size=1>.</style>            \[10\] The Delete key deletes the selection, if there is one
+<style color=#00ffffff size=1>.</style>                 in the entry. If there is no selection, it deletes the
+<style color=#00ffffff size=1>.</style>                 character to the right of the insertion cursor.
+
+<style color=#00ffffff size=1>.</style>            \[11\] The BackSpace key and Control-h delete the selection,
+<style color=#00ffffff size=1>.</style>                 if there is one in the entry. If there is no selection,
+<style color=#00ffffff size=1>.</style>                 it deletes the character to the left of the insertion
+<style color=#00ffffff size=1>.</style>                 cursor.
+
+<style color=#00ffffff size=1>.</style>            \[12\] Control-d deletes the character to the right of the
+<style color=#00ffffff size=1>.</style>                 insertion cursor.
+
+<style color=#00ffffff size=1>.</style>            \[13\] Control-k deletes all the characters to the right of
+<style color=#00ffffff size=1>.</style>                 the insertion cursor.
+
+<style color=#00ffffff size=1>.</style>            \[14\] Control-w deletes the word to the left of the insertion
+<style color=#00ffffff size=1>.</style>                 cursor.
+
+<style color=#00ffffff size=1>.</style>            If the entry is disabled using the -state option, then the
+<style color=#00ffffff size=1>.</style>            entry's view can still be adjusted and text in the entry can
+<style color=#00ffffff size=1>.</style>            still be selected, but no insertion cursor will be displayed
+<style color=#00ffffff size=1>.</style>            and no text modifications will take place.
+
+<style color=#00ffffff size=1>.</style>            The behaviour of entries can be changed by defining new
+<style color=#00ffffff size=1>.</style>            bindings for individual widgets.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=options(9)>options(9)</action>, <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

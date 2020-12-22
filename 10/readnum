@@ -1,0 +1,37 @@
+READNUM(10.2)                                       READNUM(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            readnum, readstr - return values from read from device
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            int readstr(ulong off, char *buf, ulong n, char *str)
+
+<style color=#00ffffff size=1>.</style>            int readnum(ulong off, char *buf, ulong n, ulong val, int
+<style color=#00ffffff size=1>.</style>            size)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Readstr and readnum simplify the return of strings and
+<style color=#00ffffff size=1>.</style>            numbers from device read routines, because they deal with
+<style color=#00ffffff size=1>.</style>            any buffering and boundary cases. Several parameters to the
+<style color=#00ffffff size=1>.</style>            read call are often handed on directly to these functions:
+<style color=#00ffffff size=1>.</style>            the file offset, as off\; the address of the user's buffer,
+<style color=#00ffffff size=1>.</style>            as buf\; and the number of bytes requested, as n. Both
+<style color=#00ffffff size=1>.</style>            functions return the number of bytes they have stored in buf
+<style color=#00ffffff size=1>.</style>            , and which can often be returned directly from the device
+<style color=#00ffffff size=1>.</style>            read routine.
+
+<style color=#00ffffff size=1>.</style>            Readstr satisfies a read by copying data into buf from the
+<style color=#00ffffff size=1>.</style>            NUL-terminated string in str. The data transferred is
+<style color=#00ffffff size=1>.</style>            selected and limited by off, n and the length of str.
+
+<style color=#00ffffff size=1>.</style>            Readnum converts the unsigned integer val to a decimal
+<style color=#00ffffff size=1>.</style>            representation in buf. The value is right-justified in a
+<style color=#00ffffff size=1>.</style>            field of size-1 places and is followed by a blank. Size can
+<style color=#00ffffff size=1>.</style>            be the global constant ``NUMSIZE'' for 32-bit integers\; the
+<style color=#00ffffff size=1>.</style>            largest size allowed is 64 bytes. 
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/devcons.c
+<style color=#00ffffff size=1>.</style>            /emu/port/devcon.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

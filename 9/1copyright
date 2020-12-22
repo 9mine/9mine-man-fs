@@ -1,0 +1,64 @@
+<action name=COPYRIGHT(9)>COPYRIGHT(9)</action>                                         <action name=COPYRIGHT(9)>COPYRIGHT(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            copyright - copyright notice for Tk documentation
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The following pages were derived by Vita Nuova from
+<style color=#00ffffff size=1>.</style>            documentation that is
+
+<style color=#00ffffff size=1>.</style>                 Copyright © 1990 The Regents of the University of
+<style color=#00ffffff size=1>.</style>                 California
+<style color=#00ffffff size=1>.</style>                 Copyright © 1994-1996 Sun Microsystems, Inc.
+
+<style color=#00ffffff size=1>.</style>            and was made available on the following terms:
+
+<style color=#00ffffff size=1>.</style>                 This software is copyrighted by the Regents of the
+<style color=#00ffffff size=1>.</style>                 University of California, Sun Microsystems, Inc., and
+<style color=#00ffffff size=1>.</style>                 other parties.  The following terms apply to all files
+<style color=#00ffffff size=1>.</style>                 associated with the software unless explicitly
+<style color=#00ffffff size=1>.</style>                 disclaimed in individual files.
+
+<style color=#00ffffff size=1>.</style>            The authors hereby grant permission to use, copy, modify,
+<style color=#00ffffff size=1>.</style>                 distribute, and license this software and its
+<style color=#00ffffff size=1>.</style>                 documentation for any purpose, provided that existing
+<style color=#00ffffff size=1>.</style>                 copyright notices are retained in all copies and that
+<style color=#00ffffff size=1>.</style>                 this notice is included verbatim in any distributions.
+<style color=#00ffffff size=1>.</style>                 No written agreement, license, or royalty fee is
+<style color=#00ffffff size=1>.</style>                 required for any of the authorized uses. Modifications
+<style color=#00ffffff size=1>.</style>                 to this software may be copyrighted by their authors
+<style color=#00ffffff size=1>.</style>                 and need not follow the licensing terms described here,
+<style color=#00ffffff size=1>.</style>                 provided that the new terms are clearly indicated on
+<style color=#00ffffff size=1>.</style>                 the first page of each file where they apply.
+
+<style color=#00ffffff size=1>.</style>            IN NO EVENT SHALL THE AUTHORS OR DISTRIBUTORS BE LIABLE TO
+<style color=#00ffffff size=1>.</style>                 ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR
+<style color=#00ffffff size=1>.</style>                 CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OF THIS
+<style color=#00ffffff size=1>.</style>                 SOFTWARE, ITS DOCUMENTATION, OR ANY DERIVATIVES
+<style color=#00ffffff size=1>.</style>                 THEREOF, EVEN IF THE AUTHORS HAVE BEEN ADVISED OF THE
+<style color=#00ffffff size=1>.</style>                 POSSIBILITY OF SUCH DAMAGE.
+
+<style color=#00ffffff size=1>.</style>            THE AUTHORS AND DISTRIBUTORS SPECIFICALLY DISCLAIM ANY
+<style color=#00ffffff size=1>.</style>                 WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+<style color=#00ffffff size=1>.</style>                 WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+<style color=#00ffffff size=1>.</style>                 PURPOSE, AND NON-INFRINGEMENT.  THIS SOFTWARE IS
+<style color=#00ffffff size=1>.</style>                 PROVIDED ON AN "AS IS" BASIS, AND THE AUTHORS AND
+<style color=#00ffffff size=1>.</style>                 DISTRIBUTORS HAVE NO OBLIGATION TO PROVIDE MAINTENANCE,
+<style color=#00ffffff size=1>.</style>                 SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+<style color=#00ffffff size=1>.</style>            GOVERNMENT USE: If you are acquiring this software on behalf
+<style color=#00ffffff size=1>.</style>                 of the U.S. government, the Government shall have only
+<style color=#00ffffff size=1>.</style>                 "Restricted Rights" in the software and related
+<style color=#00ffffff size=1>.</style>                 documentation as defined in the Federal Acquisition
+<style color=#00ffffff size=1>.</style>                 Regulations (FARs) in Clause 52.227.19 (c) (2).  If you
+<style color=#00ffffff size=1>.</style>                 are acquiring the software on behalf of the Department
+<style color=#00ffffff size=1>.</style>                 of Defense, the software shall be classified as
+<style color=#00ffffff size=1>.</style>                 "Commercial Computer Software" and the Government shall
+<style color=#00ffffff size=1>.</style>                 have only "Restricted Rights" as defined in Clause
+<style color=#00ffffff size=1>.</style>                 252.227-7013 (c) (1) of DFARs.  Notwithstanding the
+<style color=#00ffffff size=1>.</style>                 foregoing, the authors grant the U.S. Government and
+<style color=#00ffffff size=1>.</style>                 others acting in its behalf permission to use and
+<style color=#00ffffff size=1>.</style>                 distribute the software in accordance with the terms
+<style color=#00ffffff size=1>.</style>                 specified in this license.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,69 @@
+<action name=UTF(6)>UTF(6)</action>                                                     <action name=UTF(6)>UTF(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            UTF, Unicode, ASCII, rune - character set and format
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Inferno character set and representation are based on
+<style color=#00ffffff size=1>.</style>            the Unicode Standard and on the ISO multibyte UTF-8 encoding
+<style color=#00ffffff size=1>.</style>            (Universal Character Set Transformation Format, 8 bits
+<style color=#00ffffff size=1>.</style>            wide). The Unicode Standard represents its characters in 21
+<style color=#00ffffff size=1>.</style>            bits\; UTF-8 represents such values in an 8-bit byte stream.
+<style color=#00ffffff size=1>.</style>            Throughout this manual, UTF-8 is shortened to UTF.
+
+<style color=#00ffffff size=1>.</style>            Internally, programs store individual Unicode characters as
+<style color=#00ffffff size=1>.</style>            32-bit integers, of which only 21 bits are currently used.
+<style color=#00ffffff size=1>.</style>            Documentation often refers to them as `runes', following
+<style color=#00ffffff size=1>.</style>            Plan 9. However, any external manifestation of textual
+<style color=#00ffffff size=1>.</style>            information, in files or at the interface between programs,
+<style color=#00ffffff size=1>.</style>            uses the machine-independent, byte-stream encoding called
+<style color=#00ffffff size=1>.</style>            UTF.
+
+<style color=#00ffffff size=1>.</style>            UTF is designed so the 7-bit ASCII set (values hexadecimal
+<style color=#00ffffff size=1>.</style>            00 to 7F), appear only as themselves in the encoding.
+<style color=#00ffffff size=1>.</style>            Characters with values above 7F appear as sequences of two
+<style color=#00ffffff size=1>.</style>            or more bytes with values only from 80 to FF.
+
+<style color=#00ffffff size=1>.</style>            The UTF encoding of the Unicode Standard is backward
+<style color=#00ffffff size=1>.</style>            compatible with ASCII\c : programs presented only with ASCII
+<style color=#00ffffff size=1>.</style>            work on Inferno even if not written to deal with UTF\c , as
+<style color=#00ffffff size=1>.</style>            do programs that deal with uninterpreted byte streams.
+<style color=#00ffffff size=1>.</style>            However, programs that perform semantic processing on
+<style color=#00ffffff size=1>.</style>            characters must convert from UTF to runes in order to work
+<style color=#00ffffff size=1>.</style>            properly with non-\c ASCII input. Normally, all necessary
+<style color=#00ffffff size=1>.</style>            conversions are done by the Limbo compiler and execution
+<style color=#00ffffff size=1>.</style>            envirnoment, when converting between array of byte and
+<style color=#00ffffff size=1>.</style>            string , but sometimes more is needed, such as when a
+<style color=#00ffffff size=1>.</style>            program receives UTF input one byte at a time\; see
+<style color=#00ffffff size=1>.</style>            <action name=sys-byte2char(2)>sys-byte2char(2)</action> for routines to handle such processing.
+
+<style color=#00ffffff size=1>.</style>            Letting numbers be binary, a rune x is converted to a
+<style color=#00ffffff size=1>.</style>            multibyte UTF sequence as follows:
+
+<style color=#00ffffff size=1>.</style>            01.   x in \[000000.00000000.0bbbbbbb\] → 0bbbbbbb
+<style color=#00ffffff size=1>.</style>            10.   x in \[000000.00000bbb.bbbbbbbb\] → 110bbbbb, 10bbbbbb
+<style color=#00ffffff size=1>.</style>            11.   x in \[000000.bbbbbbbb.bbbbbbbb\] → 1110bbbb, 10bbbbbb,
+<style color=#00ffffff size=1>.</style>            10bbbbbb
+<style color=#00ffffff size=1>.</style>            100. x in \[bbbbbb.bbbbbbbb.bbbbbbbb\] → 1110bbbb, 10bbbbbb,
+<style color=#00ffffff size=1>.</style>            10bbbbbb, 10bbbbbb
+
+<style color=#00ffffff size=1>.</style>            Conversion 01 provides a one-byte sequence that spans the
+<style color=#00ffffff size=1>.</style>            ASCII character set in a compatible way. Conversions 10, 11
+<style color=#00ffffff size=1>.</style>            and 100 represent higher-valued characters as sequences of
+<style color=#00ffffff size=1>.</style>            two, three or four bytes with the high bit set. Inferno does
+<style color=#00ffffff size=1>.</style>            not support the 5 and 6 byte sequences proposed by X-Open.
+<style color=#00ffffff size=1>.</style>            When there are multiple ways to encode a value, for example
+<style color=#00ffffff size=1>.</style>            rune 0, the shortest encoding is used.
+
+<style color=#00ffffff size=1>.</style>            In the inverse mapping, any sequence except those described
+<style color=#00ffffff size=1>.</style>            above is incorrect and is converted to the rune hexadecimal
+<style color=#00ffffff size=1>.</style>            FFFD.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/unicode   table of characters and descriptions,
+<style color=#00ffffff size=1>.</style>                           suitable for <action name=look(1)>look(1)</action>.
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ascii(1)>ascii(1)</action>, <action name=tcs(1)>tcs(1)</action>, <action name=sys-byte2char(2)>sys-byte2char(2)</action>, <action name=keyboard(6)>keyboard(6)</action>, The Unicode
+<style color=#00ffffff size=1>.</style>            Standard.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,94 @@
+<action name=KEYRING-CRYPT(2)>KEYRING-CRYPT(2)</action>                                 <action name=KEYRING-CRYPT(2)>KEYRING-CRYPT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            keyring: aessetup, aescbc, dessetup, descbc, desecb,
+<style color=#00ffffff size=1>.</style>            ideasetup, ideacbc, ideaecb - data encryption
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "keyring.m"\;
+<style color=#00ffffff size=1>.</style>            keyring := load Keyring Keyring->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Encrypt:   con 0\;
+<style color=#00ffffff size=1>.</style>            Decrypt:   con 1\;
+
+<style color=#00ffffff size=1>.</style>            AESbsize:  con 16\;
+
+<style color=#00ffffff size=1>.</style>            aessetup:  fn(key: array of byte, ivec: array of byte): ref AESstate\;
+<style color=#00ffffff size=1>.</style>            aescbc:    fn(state: ref AESstate, buf: array of byte,
+<style color=#00ffffff size=1>.</style>                         n: int, direction: int)\;
+
+<style color=#00ffffff size=1>.</style>            BFbsize: con 8\;
+
+<style color=#00ffffff size=1>.</style>            blowfishsetup: fn(key: array of byte, ivec: array of byte): ref BFstate\;
+<style color=#00ffffff size=1>.</style>            blowfishcbc:   fn(state: ref BFstate, buf: array of byte,
+<style color=#00ffffff size=1>.</style>                         n: int, direction: int)\;
+
+<style color=#00ffffff size=1>.</style>            DESbsize:  con 8\;
+
+<style color=#00ffffff size=1>.</style>            dessetup:  fn(key: array of byte, ivec: array of byte): ref DESstate\;
+<style color=#00ffffff size=1>.</style>            descbc:    fn(state: ref DESstate, buf: array of byte,
+<style color=#00ffffff size=1>.</style>                         n: int, direction: int)\;
+<style color=#00ffffff size=1>.</style>            desecb:    fn(state: ref DESstate, buf: array of byte,
+<style color=#00ffffff size=1>.</style>                         n: int, direction: int)\;
+
+<style color=#00ffffff size=1>.</style>            IDEAbsize: con 8\;
+
+<style color=#00ffffff size=1>.</style>            ideasetup: fn(key: array of byte, ivec: array of byte): ref IDEAstate\;
+<style color=#00ffffff size=1>.</style>            ideacbc:   fn(state: ref IDEAstate, buf: array of byte,
+<style color=#00ffffff size=1>.</style>                         n: int, direction: int)\;
+<style color=#00ffffff size=1>.</style>            ideaecb:   fn(state: ref IDEAstate, buf: array of byte,
+<style color=#00ffffff size=1>.</style>                         n: int, direction: int)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These functions encrypt and decrypt blocks of data using
+<style color=#00ffffff size=1>.</style>            different encryption algorithms. The interfaces are similar.
+
+<style color=#00ffffff size=1>.</style>            Each algorithm has an adt that holds the current state for a
+<style color=#00ffffff size=1>.</style>            given encryption. It is produced by the setup function for
+<style color=#00ffffff size=1>.</style>            the algorithm, algsetup, which is given a secret key and an
+<style color=#00ffffff size=1>.</style>            initialisation vector ivec. A sequence of blocks of data can
+<style color=#00ffffff size=1>.</style>            then be encrypted or decrypted by repeatedly calling algcbc
+<style color=#00ffffff size=1>.</style>            (for `cipher block chaining'), or algebc (the less secure
+<style color=#00ffffff size=1>.</style>            `electronic code book', if provided). On each call, buf
+<style color=#00ffffff size=1>.</style>            provides n bytes of the data to encrypt or decrypt. N must
+<style color=#00ffffff size=1>.</style>            be a multiple of the encryption block size ALGbsize.
+<style color=#00ffffff size=1>.</style>            Exceptionally, aescbc allows n to be other than a multiple
+<style color=#00ffffff size=1>.</style>            of AESbsize in length, but then for successful decryption,
+<style color=#00ffffff size=1>.</style>            the decryptor must use the same sequence of buffer sizes as
+<style color=#00ffffff size=1>.</style>            the encryptor. Direction is the constant Encrypt or Decrypt
+<style color=#00ffffff size=1>.</style>            as required. State maintains the encryption state, initially
+<style color=#00ffffff size=1>.</style>            produced by the setup function, and updated as each buffer
+<style color=#00ffffff size=1>.</style>            is encrypted or decrypted.
+
+<style color=#00ffffff size=1>.</style>            The algorithms currently available are:
+
+<style color=#00ffffff size=1>.</style>            aes  The Advanced Encryption Standard, AES (also known as
+<style color=#00ffffff size=1>.</style>                 Rijndael). The key should be 16, 24 or 32 bytes long
+<style color=#00ffffff size=1>.</style>                 (128, 192 or 256 bits). Ivec should be AESbsize bytes
+<style color=#00ffffff size=1>.</style>                 of random data: random enough to be unlikely to be
+<style color=#00ffffff size=1>.</style>                 reused but not cryptographically strongly
+<style color=#00ffffff size=1>.</style>                 unpredictable.
+
+<style color=#00ffffff size=1>.</style>            blowfish
+<style color=#00ffffff size=1>.</style>                 Bruce Schneier's symmetric block cipher. The key is any
+<style color=#00ffffff size=1>.</style>                 length from 4 to 56 bytes. Ivec if non-nil is BFbsize
+<style color=#00ffffff size=1>.</style>                 bytes of random data. For blowfishcbc, n must be a
+<style color=#00ffffff size=1>.</style>                 multiple of BFbsize.
+
+<style color=#00ffffff size=1>.</style>            des  The older Data Encryption Standard, DES. Key is 8 bytes
+<style color=#00ffffff size=1>.</style>                 (64 bits), containing a 56-bit key encoded into 64 bits
+<style color=#00ffffff size=1>.</style>                 where every eighth bit is parity. Ivec is DESbsize
+<style color=#00ffffff size=1>.</style>                 bytes of random data.
+
+<style color=#00ffffff size=1>.</style>            idea The International Data Encryption Standard, IDEA™. The
+<style color=#00ffffff size=1>.</style>                 key is 16 bytes long (128 bits). Ivec is IDEAbsize
+<style color=#00ffffff size=1>.</style>                 bytes of random data.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=keyring-intro(2)>keyring-intro(2)</action>, <action name=keyring-rc4(2)>keyring-rc4(2)</action>, <action name=security-random(2)>security-random(2)</action>
+
+<style color=#00ffffff size=1>.</style>            IDEA was patented by Ascom-Tech AG (EP 0 482 154 B1,
+<style color=#00ffffff size=1>.</style>            US005214703), currently held by iT_SEC Systec Ltd. The
+<style color=#00ffffff size=1>.</style>            patent expired in 2012.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

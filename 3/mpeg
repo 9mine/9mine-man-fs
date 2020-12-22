@@ -1,0 +1,71 @@
+<action name=MPEG(3)>MPEG(3)</action>                                                   <action name=MPEG(3)>MPEG(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mpeg - Boffin mpeg decoder
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -b #E /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/mpeg
+<style color=#00ffffff size=1>.</style>            /dev/mpegctl
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The mpeg device serves two files giving access to a Boffin
+<style color=#00ffffff size=1>.</style>            MPEG-1 decoder.
+
+<style color=#00ffffff size=1>.</style>            The control file mpegctl when read returns lines of text
+<style color=#00ffffff size=1>.</style>            giving the device's properties. Each line starts video or
+<style color=#00ffffff size=1>.</style>            audio followed by a list of capabilities. The current device
+<style color=#00ffffff size=1>.</style>            returns a fixed set:
+
+<style color=#00ffffff size=1>.</style>                 video mpeg1,sif
+<style color=#00ffffff size=1>.</style>                 audio musicam,I musicam,II
+
+<style color=#00ffffff size=1>.</style>            The control file accepts the following commands:
+
+<style color=#00ffffff size=1>.</style>            init   Reinitialise the device's video and audio subsystems\;
+<style color=#00ffffff size=1>.</style>                   cancel the effect of stop or pause
+
+<style color=#00ffffff size=1>.</style>            stop   Stop the display immediately.
+
+<style color=#00ffffff size=1>.</style>            pause  Suspend display.
+
+<style color=#00ffffff size=1>.</style>            video iso11172 mpeg1,sif
+<style color=#00ffffff size=1>.</style>                   Set the output video mode and formats\; only this
+<style color=#00ffffff size=1>.</style>                   precise setting is valid.
+
+<style color=#00ffffff size=1>.</style>            audio format rate
+<style color=#00ffffff size=1>.</style>                   There are two choices for format: musicam,I (MPEG
+<style color=#00ffffff size=1>.</style>                   audio layer 1), with rate from 64000 to 448000 Hz,
+<style color=#00ffffff size=1>.</style>                   and musicam,II (MPEG audio layer 2) with rate from
+<style color=#00ffffff size=1>.</style>                   48000 to 384000.
+
+<style color=#00ffffff size=1>.</style>            window minx miny maxx maxy
+<style color=#00ffffff size=1>.</style>                   Sets the overlay window on the screen, in screen
+<style color=#00ffffff size=1>.</style>                   coordinates. If the window size exceeds 320x240, the
+<style color=#00ffffff size=1>.</style>                   image is scaled accordingly, separately in each
+<style color=#00ffffff size=1>.</style>                   dimension.
+
+<style color=#00ffffff size=1>.</style>            The data file mpeg is an exclusive-use device. Once the
+<style color=#00ffffff size=1>.</style>            device has been initialised and an output window set using
+<style color=#00ffffff size=1>.</style>            the init and window commands to the control file, and an
+<style color=#00ffffff size=1>.</style>            audio format selected by the audio command, MPEG data can be
+<style color=#00ffffff size=1>.</style>            written in the agreed format to the mpeg file, for display
+<style color=#00ffffff size=1>.</style>            in the output window. The driver buffers the data written
+<style color=#00ffffff size=1>.</style>            and implements flow control between application and the
+<style color=#00ffffff size=1>.</style>            hardware. When closed, the device waits for the last block
+<style color=#00ffffff size=1>.</style>            of data to display before returning to the application.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/pc/devmpeg.c
+
+CONFIGURATION
+<style color=#00ffffff size=1>.</style>            mpeg0=port=0x1e0 irq=15 dma=6
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=mpeg(2)>mpeg(2)</action>, stream in <action name=sys-read(2)>sys-read(2)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            An error results on a write to the device once stopped.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

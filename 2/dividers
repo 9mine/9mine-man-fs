@@ -1,0 +1,50 @@
+<action name=DIVIDERS(2)>DIVIDERS(2)</action>                                           <action name=DIVIDERS(2)>DIVIDERS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Dividers - user-draggable tk dividing bars
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "dividers.m"\;
+<style color=#00ffffff size=1>.</style>            dividers := load Dividers Dividers->PATH\;
+<style color=#00ffffff size=1>.</style>            Divider: import dividers\;
+
+<style color=#00ffffff size=1>.</style>            init: fn()\;
+<style color=#00ffffff size=1>.</style>            Divider: adt {
+<style color=#00ffffff size=1>.</style>                new: fn(win: ref Tk->Toplevel, w: string, wl: list of string, dir: int):
+<style color=#00ffffff size=1>.</style>                    (ref Divider, chan of string)\;
+<style color=#00ffffff size=1>.</style>                event: fn(d: self ref Divider, e: string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dividers presents an interface allowing Tk widgets to be
+<style color=#00ffffff size=1>.</style>            arranged within a window, divided by bars which can be
+<style color=#00ffffff size=1>.</style>            dragged by the user to determine the proportion of the
+<style color=#00ffffff size=1>.</style>            available space to allocate to each widget. The groups can
+<style color=#00ffffff size=1>.</style>            be stacked vertically or horizontally. Divider widgets can
+<style color=#00ffffff size=1>.</style>            be nested.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before anything else, to allow Dividers
+<style color=#00ffffff size=1>.</style>            to initialise its internal state. Divider.new creates a new
+<style color=#00ffffff size=1>.</style>            divider widget\; it will be named w, and it will divide up
+<style color=#00ffffff size=1>.</style>            the widgets named in the list wl. Dir can be Dividers->NS,
+<style color=#00ffffff size=1>.</style>            to stack the widgets one on top of another, or Dividers->EW
+<style color=#00ffffff size=1>.</style>            to stack the widgets left-right. Divider.new returns a new
+<style color=#00ffffff size=1>.</style>            Divider adt, and a channel through which Divider events will
+<style color=#00ffffff size=1>.</style>            be received. The application should arrange that events
+<style color=#00ffffff size=1>.</style>            received on this channel be passed to the event() function.
+
+<style color=#00ffffff size=1>.</style>            A Divider widget must be informed if its size has changed by
+<style color=#00ffffff size=1>.</style>            configuring its width and height appropriately\; it does the
+<style color=#00ffffff size=1>.</style>            same to the items it is dividing.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/dividers.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            It should not be necessary to inform the Divider widget of
+<style color=#00ffffff size=1>.</style>            size changes.
+
+<style color=#00ffffff size=1>.</style>            The event-based mechanism seems somewhat contrary to the
+<style color=#00ffffff size=1>.</style>            preferred Limbo way of doing things.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

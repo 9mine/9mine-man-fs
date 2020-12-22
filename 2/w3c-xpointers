@@ -1,0 +1,230 @@
+<action name=W3C-XPOINTERS(2)>W3C-XPOINTERS(2)</action>                                 <action name=W3C-XPOINTERS(2)>W3C-XPOINTERS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            w3c-xpointers - parser for XPointers framework including
+<style color=#00ffffff size=1>.</style>            XPath
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "xpointers.m"\;
+
+<style color=#00ffffff size=1>.</style>            xpointers := load Xpointers Xpointers->PATH\;
+<style color=#00ffffff size=1>.</style>            Xpath, Xstep: import xpointers\;
+
+<style color=#00ffffff size=1>.</style>            # special operators ('+', '-', etc represent themselves)
+<style color=#00ffffff size=1>.</style>            One, Ole, Oge, Omul, Odiv, Omod, Oand, Oor, Oneg,
+<style color=#00ffffff size=1>.</style>            Onodetype, Onametest, Ofilter, Opath: con ...\;
+
+<style color=#00ffffff size=1>.</style>            # axis types
+<style color=#00ffffff size=1>.</style>            Aancestor,
+<style color=#00ffffff size=1>.</style>            Aancestor_or_self,
+<style color=#00ffffff size=1>.</style>            Aattribute,
+<style color=#00ffffff size=1>.</style>            Achild,
+<style color=#00ffffff size=1>.</style>            Adescendant,
+<style color=#00ffffff size=1>.</style>            Adescendant_or_self,
+<style color=#00ffffff size=1>.</style>            Afollowing,
+<style color=#00ffffff size=1>.</style>            Afollowing_sibling,
+<style color=#00ffffff size=1>.</style>            Anamespace,
+<style color=#00ffffff size=1>.</style>            Aparent,
+<style color=#00ffffff size=1>.</style>            Apreceding,
+<style color=#00ffffff size=1>.</style>            Apreceding_sibling,
+<style color=#00ffffff size=1>.</style>            Aself: con iota\;
+
+<style color=#00ffffff size=1>.</style>            Xstep: adt {
+<style color=#00ffffff size=1>.</style>               axis:  int\;  # Aancestor, ... (above)
+<style color=#00ffffff size=1>.</style>               op:    int\;  # Onametest or Onodetype
+<style color=#00ffffff size=1>.</style>               ns:    string\;
+<style color=#00ffffff size=1>.</style>               name:  string\;
+<style color=#00ffffff size=1>.</style>               arg:   string\;  # optional parameter to processing-instruction
+<style color=#00ffffff size=1>.</style>               preds: cyclic list of ref Xpath\;
+
+<style color=#00ffffff size=1>.</style>               text:  fn(nil: self ref Xstep): string\;
+<style color=#00ffffff size=1>.</style>               axisname:  fn(i: int): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Xpath: adt {
+<style color=#00ffffff size=1>.</style>               pick{
+<style color=#00ffffff size=1>.</style>               E =>
+<style color=#00ffffff size=1>.</style>                  op:    int\;
+<style color=#00ffffff size=1>.</style>                  l, r:  cyclic ref Xpath\;
+<style color=#00ffffff size=1>.</style>               Fn =>
+<style color=#00ffffff size=1>.</style>                  ns:    string\;
+<style color=#00ffffff size=1>.</style>                  name:  string\;
+<style color=#00ffffff size=1>.</style>                  args:  cyclic list of ref Xpath\;
+<style color=#00ffffff size=1>.</style>               Var =>
+<style color=#00ffffff size=1>.</style>                  ns:    string\;
+<style color=#00ffffff size=1>.</style>                  name:  string\;
+<style color=#00ffffff size=1>.</style>               Path =>
+<style color=#00ffffff size=1>.</style>                  abs:   int\;
+<style color=#00ffffff size=1>.</style>                  steps: list of ref Xstep\;
+<style color=#00ffffff size=1>.</style>               Int =>
+<style color=#00ffffff size=1>.</style>                  val:   big\;
+<style color=#00ffffff size=1>.</style>               Real =>
+<style color=#00ffffff size=1>.</style>                  val:   real\;
+<style color=#00ffffff size=1>.</style>               Str =>
+<style color=#00ffffff size=1>.</style>                  s:     string\;
+<style color=#00ffffff size=1>.</style>               }
+<style color=#00ffffff size=1>.</style>               text: fn(nil: self ref Xpath): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            framework:  fn(s: string):
+<style color=#00ffffff size=1>.</style>                           (string, list of (string, string, string), string)\;
+
+<style color=#00ffffff size=1>.</style>            # predefined schemes
+<style color=#00ffffff size=1>.</style>            element:    fn(s: string): (string, list of int, string)\;
+<style color=#00ffffff size=1>.</style>            xmlns:      fn(s: string): (string, string, string)\;
+<style color=#00ffffff size=1>.</style>            xpointer:   fn(s: string): (ref Xpath, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Xpointers implements a parser for the World-Wide Web
+<style color=#00ffffff size=1>.</style>            Consortium's XPointers framework, including a parser for
+<style color=#00ffffff size=1>.</style>            XPath expressions.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other operation in the
+<style color=#00ffffff size=1>.</style>            module.
+
+<style color=#00ffffff size=1>.</style>            Framework parses a string s according to the grammar for the
+<style color=#00ffffff size=1>.</style>            XPointers framework, and returns a tuple (short, pointers,
+<style color=#00ffffff size=1>.</style>            err). On an error, the string err gives a diagnostic and the
+<style color=#00ffffff size=1>.</style>            other two values are nil. Otherwise, if short is non-nil,
+<style color=#00ffffff size=1>.</style>            the XPointer was a `shorthand pointer', with the given
+<style color=#00ffffff size=1>.</style>            value\; pointers will be nil. If a scheme-based pointer is
+<style color=#00ffffff size=1>.</style>            used, short is nil and pointers has a list of tuples (ns,
+<style color=#00ffffff size=1>.</style>            scheme, data), each representing one pointer value. Ns is
+<style color=#00ffffff size=1>.</style>            the XML name space for the given scheme\; the default name
+<style color=#00ffffff size=1>.</style>            space is represented by nil. Scheme is the XPointer scheme
+<style color=#00ffffff size=1>.</style>            name within that name space\; and data is the actual pointer
+<style color=#00ffffff size=1>.</style>            value following the rules of that scheme. (They all have
+<style color=#00ffffff size=1>.</style>            completely different syntax.)
+
+<style color=#00ffffff size=1>.</style>            Three common schemes are directly supported by the module,
+<style color=#00ffffff size=1>.</style>            by functions named after the scheme. All of them follow the
+<style color=#00ffffff size=1>.</style>            convention of returning a tuple in which the last element is
+<style color=#00ffffff size=1>.</style>            a diagnostic string. On an error, all but that last element
+<style color=#00ffffff size=1>.</style>            of the tuple will be nil, and the last element will be a
+<style color=#00ffffff size=1>.</style>            non-nil string with a diagnostic.
+
+<style color=#00ffffff size=1>.</style>            Xmlns parses an XML name space definition of the form ns=
+<style color=#00ffffff size=1>.</style>            uri, and returns its components.
+
+<style color=#00ffffff size=1>.</style>            Element parses a value of the XPointer element scheme, given
+<style color=#00ffffff size=1>.</style>            by the grammar:
+
+<style color=#00ffffff size=1>.</style>                 selector ::= name child*  |  child+
+<style color=#00ffffff size=1>.</style>                 child ::= '/' \[1-9\]\[0-9\]*
+
+<style color=#00ffffff size=1>.</style>            The optional name is an XPointer `shorthand pointer'. Each
+<style color=#00ffffff size=1>.</style>            child number selects the child with that index (origin 1) at
+<style color=#00ffffff size=1>.</style>            the corresponding level of the XML tree beneath the node
+<style color=#00ffffff size=1>.</style>            selected by the name, or starting at the root of the XML
+<style color=#00ffffff size=1>.</style>            tree. Element returns a tuple ((name, path), err) where name
+<style color=#00ffffff size=1>.</style>            is the top element name or nil if none was specified, and
+<style color=#00ffffff size=1>.</style>            path is a list of int giving the path of child indices.
+
+<style color=#00ffffff size=1>.</style>            The most complex scheme is xpointer, because its syntax is
+<style color=#00ffffff size=1>.</style>            that of XML's elaborate XPath expression. Xpointer parses
+<style color=#00ffffff size=1>.</style>            such an expression and returns a tuple (e, err) where e
+<style color=#00ffffff size=1>.</style>            refers to an Xpath value that represents the abstract syntax
+<style color=#00ffffff size=1>.</style>            of the XPath Expr. Xpointer checks only the syntax of s, and
+<style color=#00ffffff size=1>.</style>            does not check that functions are limited to those specified
+<style color=#00ffffff size=1>.</style>            by the xpointer scheme (that is consistent with it being a
+<style color=#00ffffff size=1>.</style>            parse of s, rather than an XPointer or XPath evaluator).
+
+<style color=#00ffffff size=1>.</style>            Xpath and Xstep together represent an abstract syntax of the
+<style color=#00ffffff size=1>.</style>            XPath grammar.
+
+<style color=#00ffffff size=1>.</style>            Xstep represents the XPath Step grammar rule, with all
+<style color=#00ffffff size=1>.</style>            abbreviations expanded to their full form:
+
+<style color=#00ffffff size=1>.</style>                 Step ::= AxisName '::' NodeTest Predicate*
+<style color=#00ffffff size=1>.</style>                 NodeTest ::= NameTest | NodeType '(' ')'
+<style color=#00ffffff size=1>.</style>                 NameTest ::= '*' | NCName ':' '*' | (NCName ':')? NCName
+<style color=#00ffffff size=1>.</style>                 Predicate ::= '\[' Expr '\]'
+
+<style color=#00ffffff size=1>.</style>            The correspondence is as follows:
+
+<style color=#00ffffff size=1>.</style>            s.axis    Represents the AxisName by one of the constants
+<style color=#00ffffff size=1>.</style>                      Aancestor to Aself.
+
+<style color=#00ffffff size=1>.</style>            s.op      Onametest or Onodetype to say which rule is
+<style color=#00ffffff size=1>.</style>                      represented
+
+<style color=#00ffffff size=1>.</style>            s.ns      For a NameTest, gives the XML name space\; can be
+<style color=#00ffffff size=1>.</style>                      ``*'' for `any name space' or nil for the default
+<style color=#00ffffff size=1>.</style>                      name space. For a NodeType, gives the type:
+<style color=#00ffffff size=1>.</style>                      comment, node, processing-instruction, or text.
+
+<style color=#00ffffff size=1>.</style>            s.name    Gives the name for a NameTest\; can be ``*'' for
+<style color=#00ffffff size=1>.</style>                      `any name'.
+
+<style color=#00ffffff size=1>.</style>            s.arg     The optional literal parameter to a NodeType that
+<style color=#00ffffff size=1>.</style>                      is a processing-instruction.
+
+<style color=#00ffffff size=1>.</style>            s.preds   A list of Xpath values representing the optional
+<style color=#00ffffff size=1>.</style>                      sequence of Predicate expressions
+
+<style color=#00ffffff size=1>.</style>            s.text()  Returns a string representing the Xstep in textual
+<style color=#00ffffff size=1>.</style>                      form.
+
+<style color=#00ffffff size=1>.</style>            s.axisname(a)
+<style color=#00ffffff size=1>.</style>                      Returns the printable text for axis code a (ie,
+<style color=#00ffffff size=1>.</style>                      one of Aancestor to Aself)
+
+<style color=#00ffffff size=1>.</style>            Xpath values represent an abstract syntax for an XPath
+<style color=#00ffffff size=1>.</style>            expression. Briefly, an expression follows the grammar below
+<style color=#00ffffff size=1>.</style>            (see the XPath specification for the full concrete syntax).
+
+<style color=#00ffffff size=1>.</style>                 e ::=	e 'or' e
+<style color=#00ffffff size=1>.</style>                    |	e 'and' e
+<style color=#00ffffff size=1>.</style>                    |	e ('=' | '!=') e
+<style color=#00ffffff size=1>.</style>                    |	e ('<' | '<=' | '>=' | '>') e
+<style color=#00ffffff size=1>.</style>                    |	e ('+' | '-') e
+<style color=#00ffffff size=1>.</style>                    |	e ('*' | 'div' | 'mod') e
+<style color=#00ffffff size=1>.</style>                    |	'-' e
+<style color=#00ffffff size=1>.</style>                    |	e '|' e
+<style color=#00ffffff size=1>.</style>                    |	filter
+<style color=#00ffffff size=1>.</style>                    |	path
+<style color=#00ffffff size=1>.</style>                 filter ::= primary predicate* (('/' | '//') relpath)?
+<style color=#00ffffff size=1>.</style>                 primary ::= '$' QName | '(' e ')' | Literal | Number | FunctionName '(' (e (',' e)*) ')'
+<style color=#00ffffff size=1>.</style>                 path ::= '/' relpath | relpath
+<style color=#00ffffff size=1>.</style>                 relpath ::= relpath '/' relpath | relpath '//' relpath | Step
+
+<style color=#00ffffff size=1>.</style>            Most of e is represented by a binary tree using the pick
+<style color=#00ffffff size=1>.</style>            Xpath.E(op, l, r) where op is an operator symbol (either the
+<style color=#00ffffff size=1>.</style>            character itself or one of the constants One, Odiv, etc. for
+<style color=#00ffffff size=1>.</style>            compound symbols), and l and r represent the operands. The
+<style color=#00ffffff size=1>.</style>            only unary operator Oneg has its operand in l. A filter uses
+<style color=#00ffffff size=1>.</style>            the binary operator Xpath.E(Ofilter, e, pred) to apply each
+<style color=#00ffffff size=1>.</style>            predicate to the preceding primary or predicate. A filter
+<style color=#00ffffff size=1>.</style>            also uses Xpath.E(Opath, e, relpath) to apply the optional
+<style color=#00ffffff size=1>.</style>            relpath (represented by a value of Xpath.Path) to the
+<style color=#00ffffff size=1>.</style>            preceding part of the filter expression.
+
+<style color=#00ffffff size=1>.</style>            The other cases in the pick adt correspond to the various
+<style color=#00ffffff size=1>.</style>            choices of path and primary. Integer and real numbers are
+<style color=#00ffffff size=1>.</style>            distinguished. Literal is represented by Xpath.Str\; variable
+<style color=#00ffffff size=1>.</style>            references (ie, $QName\c ) are represented by XPath.Var,
+<style color=#00ffffff size=1>.</style>            where ns gives the optional XML name space of the name. Path
+<style color=#00ffffff size=1>.</style>            is represented by Xpath.Path(abs, steps) where abs is
+<style color=#00ffffff size=1>.</style>            non-zero if and only if the path is absolute (starts with
+<style color=#00ffffff size=1>.</style>            `/' or `//'), and steps lists the Xstep values corresponding
+<style color=#00ffffff size=1>.</style>            to the slash-separated Steps in the grammar. Abbreviated
+<style color=#00ffffff size=1>.</style>            forms such as `//' are converted by xpointer to their full
+<style color=#00ffffff size=1>.</style>            internal form in terms of `/', as defined by the
+<style color=#00ffffff size=1>.</style>            specification, so there is no need to distinguish the
+<style color=#00ffffff size=1>.</style>            delimiters in this representation.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/w3c/xpointers.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            ``XML Path Language (XPath) Version 1.0'',
+<style color=#00ffffff size=1>.</style>            http://www.w3.org/TR/xpath
+<style color=#00ffffff size=1>.</style>            ``XPointer framework'', http://www.w3.org/TR/xptr-framework/
+<style color=#00ffffff size=1>.</style>            ``XPointer element() scheme'',
+<style color=#00ffffff size=1>.</style>            http://www.w3.org/TR/xptr-element/
+<style color=#00ffffff size=1>.</style>            ``XPointer xmlns() scheme'',
+<style color=#00ffffff size=1>.</style>            http://www.w3.org/TR/xptr-xmlns/
+<style color=#00ffffff size=1>.</style>            ``XPointer xpointer() scheme'',
+<style color=#00ffffff size=1>.</style>            http://www.w3.org/TR/xptr-xpointer/
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

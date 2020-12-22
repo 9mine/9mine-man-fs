@@ -1,0 +1,49 @@
+<action name=GRID-NS(1)>GRID-NS(1)</action>                                             <action name=GRID-NS(1)>GRID-NS(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            grid: ns - exports a selected namespace and serves it on
+<style color=#00ffffff size=1>.</style>            standard input
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            grid/srv/ns	\[ -r relpath \] path1 path2...path n
+<style color=#00ffffff size=1>.</style>            grid/runns	\[ -r relpath \] path1 path2...path n
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ns exports a selected subsection of the local namespace and
+<style color=#00ffffff size=1>.</style>            serves it on stdin. The path arguments specify which
+<style color=#00ffffff size=1>.</style>            directories are to be exported. If subdirectories are
+<style color=#00ffffff size=1>.</style>            exported without their parents, ns attempts to maintain the
+<style color=#00ffffff size=1>.</style>            namespace structure by creating the parents but populating
+<style color=#00ffffff size=1>.</style>            them only with the selected subdirectories. For example,
+<style color=#00ffffff size=1>.</style>            exporting /appl/lib would mean that the exported /appl
+<style color=#00ffffff size=1>.</style>            directory contained nothing apart from the lib subdirectory.
+<style color=#00ffffff size=1>.</style>            If relpath is specified, all paths will be viewed relative
+<style color=#00ffffff size=1>.</style>            to this path. For instance, if relpath is /usr/inferno, then
+<style color=#00ffffff size=1>.</style>            /usr/inferno/bin/dis would be listed as /bin/dis and /tmp
+<style color=#00ffffff size=1>.</style>            would not be listed at all.
+
+<style color=#00ffffff size=1>.</style>            <action name=Grid-register(1)>Grid-register(1)</action> may be used in conjunction with ns to
+<style color=#00ffffff size=1>.</style>            register it with a <action name=registry(4)>registry(4)</action> and to export and serve its
+<style color=#00ffffff size=1>.</style>            namespace across <action name=dial(2)>dial(2)</action> network connections. Incoming
+<style color=#00ffffff size=1>.</style>            connections may also be displayed visually using
+<style color=#00ffffff size=1>.</style>            <action name=grid-monitor(1)>grid-monitor(1)</action>. For example:
+
+<style color=#00ffffff size=1>.</style>            grid/register \[ options ... \] { grid/srv/ns paths... } |
+<style color=#00ffffff size=1>.</style>            grid/srv/monitor 1 'NS resource'
+
+<style color=#00ffffff size=1>.</style>            This set of commands is encapsulated within the shell script
+<style color=#00ffffff size=1>.</style>            runns which will automatically register ns with a registry
+<style color=#00ffffff size=1>.</style>            (4) if possible and start up the graphical display to show
+<style color=#00ffffff size=1>.</style>            connections to the resource. There is no need for the user
+<style color=#00ffffff size=1>.</style>            to execute ns outside of runns unless the namespace it
+<style color=#00ffffff size=1>.</style>            provides is required to be accessible in a different way to
+<style color=#00ffffff size=1>.</style>            that provided by <action name=grid-register(1)>grid-register(1)</action>.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/grid/srv/ns.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=grid-cpu(4)>grid-cpu(4)</action>, <action name=grid-monitor(1)>grid-monitor(1)</action>, <action name=grid-register(1)>grid-register(1)</action>, grid-session
+<style color=#00ffffff size=1>.</style>            (1)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

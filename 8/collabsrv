@@ -1,0 +1,190 @@
+<action name=COLLABSRV(8)>COLLABSRV(8)</action>                                         <action name=COLLABSRV(8)>COLLABSRV(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            collabsrv - multi-user collaboration
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            collab/collabsrv \[ -f keyfile \] \[ -n netaddress \] \[ dir \]
+
+<style color=#00ffffff size=1>.</style>            collab/servers/chatsrv
+
+<style color=#00ffffff size=1>.</style>            collab/servers/mpx
+
+<style color=#00ffffff size=1>.</style>            collab/servers/wbsrv
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Collabsrv listens on network address netaddress (default:
+<style color=#00ffffff size=1>.</style>            tcp!*!9999) for incoming requests to attach to services it
+<style color=#00ffffff size=1>.</style>            offers. The services are defined by the contents of
+<style color=#00ffffff size=1>.</style>            directory dir (default: /services/collab). Collabsrv serves
+<style color=#00ffffff size=1>.</style>            an authenticated 9P connection that exports the contents of
+<style color=#00ffffff size=1>.</style>            dir/export (default: /services/collab/export). The exported
+<style color=#00ffffff size=1>.</style>            name space can contain directories from a shared file
+<style color=#00ffffff size=1>.</style>            server, but it will also contain a directory services giving
+<style color=#00ffffff size=1>.</style>            access to any collaborative activity services that have been
+<style color=#00ffffff size=1>.</style>            configured.
+
+<style color=#00ffffff size=1>.</style>            The services directory contains a single ctl file and a set
+<style color=#00ffffff size=1>.</style>            of subdirectories, numbered 0, 1 and so on. The ctl is used
+<style color=#00ffffff size=1>.</style>            to activate and access services. Each service instance is
+<style color=#00ffffff size=1>.</style>            identified by a name\; clients connect to a given instance by
+<style color=#00ffffff size=1>.</style>            presenting its name. Each directory represents one instance
+<style color=#00ffffff size=1>.</style>            of a service. Each service instance corresponds to a name
+<style color=#00ffffff size=1>.</style>            space\; the clients all share that name space. The name space
+<style color=#00ffffff size=1>.</style>            is determined by the service.
+
+<style color=#00ffffff size=1>.</style>            A client wishing to make use of the services must first dial
+<style color=#00ffffff size=1>.</style>            (2) to connect to collabsrv, and authenticate and mount the
+<style color=#00ffffff size=1>.</style>            resulting 9P connection. It can do so using the mount
+<style color=#00ffffff size=1>.</style>            command (see <action name=bind(1)>bind(1)</action>), or by using <action name=security-auth(2)>security-auth(2)</action> and
+<style color=#00ffffff size=1>.</style>            Sys->mount (see <action name=sys-bind(2)>sys-bind(2)</action>). Normally, this is done by
+<style color=#00ffffff size=1>.</style>            <action name=collab(1)>collab(1)</action>.
+
+<style color=#00ffffff size=1>.</style>            A new connection to a particular service is requested by
+<style color=#00ffffff size=1>.</style>            opening the ctl file for reading and writing, writing a
+<style color=#00ffffff size=1>.</style>            service request to it, and reading back the number of the
+<style color=#00ffffff size=1>.</style>            directory corresponding to the requested service. A service
+<style color=#00ffffff size=1>.</style>            request written to ctl is text of the following form:
+
+<style color=#00ffffff size=1>.</style>                 service id
+
+<style color=#00ffffff size=1>.</style>            where service is a string specifying the type of service
+<style color=#00ffffff size=1>.</style>            (eg, chat) and id is a string identifying the instance. The
+<style color=#00ffffff size=1>.</style>            server does not interpret id\; it is up to the clients to
+<style color=#00ffffff size=1>.</style>            agree a naming convention (often using the name of a shared
+<style color=#00ffffff size=1>.</style>            file as an id). Collabsrv will connect to instance id of the
+<style color=#00ffffff size=1>.</style>            requested service type if one is already running, or start
+<style color=#00ffffff size=1>.</style>            one if necessary\; the write request returns an error if the
+<style color=#00ffffff size=1>.</style>            service cannot be started. Following a successful write to
+<style color=#00ffffff size=1>.</style>            ctl, a read will return the number of the service directory
+<style color=#00ffffff size=1>.</style>            containing the client's private connection to that service
+<style color=#00ffffff size=1>.</style>            instance. Closing the ctl file disconnects from the service.
+
+<style color=#00ffffff size=1>.</style>            Available services are defined by a configuration file
+<style color=#00ffffff size=1>.</style>            /services/collab/services.cfg, which contains a sequence of
+<style color=#00ffffff size=1>.</style>            configuration entries of the following form:
+
+<style color=#00ffffff size=1>.</style>                 service
+<style color=#00ffffff size=1>.</style>                 	path=disfile
+
+<style color=#00ffffff size=1>.</style>            where service is the name presented in a service request,
+<style color=#00ffffff size=1>.</style>            and disfile names a Dis file implementing that service\; path
+<style color=#00ffffff size=1>.</style>            names are interpreted relative to /services/collab, but
+<style color=#00ffffff size=1>.</style>            usually refer to files in /dis/collab/servers.
+
+<style color=#00ffffff size=1>.</style>            Each collabsrv service is represented by a name space
+<style color=#00ffffff size=1>.</style>            peculiar to that service. The interface to the service is
+<style color=#00ffffff size=1>.</style>            therefore implemented by a service-specific 9P server (
+<style color=#00ffffff size=1>.</style>            disfile in the configuration file). Current services are
+<style color=#00ffffff size=1>.</style>            described below.
+
+<style color=#00ffffff size=1>.</style>         Chat
+<style color=#00ffffff size=1>.</style>            Chatsrv provides a simple service for the exchange of text
+<style color=#00ffffff size=1>.</style>            messages. It serves a name space containing two files. The
+<style color=#00ffffff size=1>.</style>            files together represent a single messaging group:
+<style color=#00ffffff size=1>.</style>            users  A read-only file that lists the user names of the
+<style color=#00ffffff size=1>.</style>                   current members of the group, one per line. The
+<style color=#00ffffff size=1>.</style>                   version number of the file's Qid (see <action name=sys-stat(2)>sys-stat(2)</action>) is
+<style color=#00ffffff size=1>.</style>                   incremented each time a client arrives or leaves.
+<style color=#00ffffff size=1>.</style>            msgs
+<style color=#00ffffff size=1>.</style>                        A client connects to the messaging group by
+<style color=#00ffffff size=1>.</style>                        opening this file. A message is sent to the
+<style color=#00ffffff size=1>.</style>                        group by writing to the file. Each read returns
+<style color=#00ffffff size=1>.</style>                        the next unread message, prefixed by the name of
+<style color=#00ffffff size=1>.</style>                        the sender, or <you> for a message sent by the
+<style color=#00ffffff size=1>.</style>                        current client. A client sees no messages sent
+<style color=#00ffffff size=1>.</style>                        before it connects. Messages are delivered in
+<style color=#00ffffff size=1>.</style>                        the same order to all clients\; clients receive
+<style color=#00ffffff size=1>.</style>                        their own messages. Two special messages are
+<style color=#00ffffff size=1>.</style>                        generated by the server:
+<style color=#00ffffff size=1>.</style>                        +++ name has arrived
+<style color=#00ffffff size=1>.</style>                        --- name has left
+<style color=#00ffffff size=1>.</style>                   as clients come and go.
+<style color=#00ffffff size=1>.</style>         Multiplexor
+<style color=#00ffffff size=1>.</style>            Mpx offers a general fan-out/fan-in multiplexing service for
+<style color=#00ffffff size=1>.</style>            a tree of processes, with one controlling or root process at
+<style color=#00ffffff size=1>.</style>            the root of the tree, and a set of client processes at the
+<style color=#00ffffff size=1>.</style>            leaves of the tree. It serves three files:
+<style color=#00ffffff size=1>.</style>            root   An exclusive-use file read and written by the root
+<style color=#00ffffff size=1>.</style>                   process to communicate with the leaf processes.
+<style color=#00ffffff size=1>.</style>            leaf   Client processes read and write this file to
+<style color=#00ffffff size=1>.</style>                   communicate with the root process (each open of leaf
+<style color=#00ffffff size=1>.</style>                   is independent). It cannot be opened until a process
+<style color=#00ffffff size=1>.</style>                   has opened root. After root has been closed, and any
+<style color=#00ffffff size=1>.</style>                   remaining messages on leaf have been read, subsequent
+<style color=#00ffffff size=1>.</style>                   reads will return zero bytes (end-of-file).
+<style color=#00ffffff size=1>.</style>            users  A read-only text file that lists the user names of
+<style color=#00ffffff size=1>.</style>                   processes that currently have leaf open. There is one
+<style color=#00ffffff size=1>.</style>                   line per leaf, containing a unique numeric ID for the
+<style color=#00ffffff size=1>.</style>                   leaf, a space, and then the users's name.
+<style color=#00ffffff size=1>.</style>            A message written to root is replicated on all instances of
+<style color=#00ffffff size=1>.</style>            leaf that are currently open. A message written to any
+<style color=#00ffffff size=1>.</style>            instance of leaf will be read by the process reading root.
+<style color=#00ffffff size=1>.</style>            Data written to both root and leaf has a prefix added to
+<style color=#00ffffff size=1>.</style>            identify the sender, causing messages to have the following
+<style color=#00ffffff size=1>.</style>            format:
+<style color=#00ffffff size=1>.</style>                 seq clientid op name data
+<style color=#00ffffff size=1>.</style>            where seq is a unique message sequence number\; clientid is a
+<style color=#00ffffff size=1>.</style>            unique number identifying the process amongst currently
+<style color=#00ffffff size=1>.</style>            connected clients, with 0 identifying the root process\; op
+<style color=#00ffffff size=1>.</style>            is a single character giving the message type (see below)\;
+<style color=#00ffffff size=1>.</style>            name is the sending process's user name\; and data is the
+<style color=#00ffffff size=1>.</style>            data written by the process, which can be text or binary
+<style color=#00ffffff size=1>.</style>            (the message header is always text). Mpx also generates
+<style color=#00ffffff size=1>.</style>            messages as root and leaf processes arrive and leave. These
+<style color=#00ffffff size=1>.</style>            are identified by op. The various op values and the
+<style color=#00ffffff size=1>.</style>            direction in which they can occur are listed below:
+<style color=#00ffffff size=1>.</style>            a    New leaf process has arrived (leaf to root)
+<style color=#00ffffff size=1>.</style>            M    Message from root process (root to leaf)
+<style color=#00ffffff size=1>.</style>            m    Message from leaf process (leaf to root)
+<style color=#00ffffff size=1>.</style>            L    Root process has left (root to leaf)
+<style color=#00ffffff size=1>.</style>            l    Leaf process has left (leaf to root)
+<style color=#00ffffff size=1>.</style>            Messages are only ever sent from the root to all leaves, or
+<style color=#00ffffff size=1>.</style>            from a leaf to the root, never from leaf to leaf\; the root
+<style color=#00ffffff size=1>.</style>            process could of course rebroadcast a message from a leaf.
+<style color=#00ffffff size=1>.</style>            The multiplexor service is used to implement a real-time
+<style color=#00ffffff size=1>.</style>            poll (see poll and poller in <action name=collab-clients(1)>collab-clients(1)</action>), but could
+<style color=#00ffffff size=1>.</style>            be used for several other services, such as auctions.
+<style color=#00ffffff size=1>.</style>         Whiteboard
+<style color=#00ffffff size=1>.</style>            Wbsrv offers a service for sharing a simple line drawing. It
+<style color=#00ffffff size=1>.</style>            serves two files:
+
+<style color=#00ffffff size=1>.</style>            wb.bit
+<style color=#00ffffff size=1>.</style>                 A read-only file containing an uncompressed <action name=image(6)>image(6)</action>
+<style color=#00ffffff size=1>.</style>                 with the current state of the drawing.
+
+<style color=#00ffffff size=1>.</style>            strokes
+<style color=#00ffffff size=1>.</style>                 This file is read and written to exchange strokes with
+<style color=#00ffffff size=1>.</style>                 other clients. A stroke has the following
+<style color=#00ffffff size=1>.</style>                 representation:
+
+<style color=#00ffffff size=1>.</style>                      colour width x0 y0 x1 y1 ...
+
+<style color=#00ffffff size=1>.</style>                 where all values are space-separated decimal numbers:
+<style color=#00ffffff size=1>.</style>                 colour is an index into the <action name=rgbv(6)>rgbv(6)</action> colour map\; width
+<style color=#00ffffff size=1>.</style>                 is the width of the line in pixels, and the sequence of
+<style color=#00ffffff size=1>.</style>                 coordinate pairs defines the connected line segments to
+<style color=#00ffffff size=1>.</style>                 draw. A stroke is transmitted from one client to all
+<style color=#00ffffff size=1>.</style>                 others by writing a stroke description to the file in a
+<style color=#00ffffff size=1>.</style>                 single write. Each read returns a description of a
+<style color=#00ffffff size=1>.</style>                 stroke made by another client.
+
+<style color=#00ffffff size=1>.</style>            A whiteboard client should read the wb.bit file to obtain
+<style color=#00ffffff size=1>.</style>            its image, then read the strokes file for instructions to
+<style color=#00ffffff size=1>.</style>            keep it up to date.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /services/collab/export/services  active service directory
+<style color=#00ffffff size=1>.</style>            /services/collab/services.cfg     maps service names to
+<style color=#00ffffff size=1>.</style>                                              modules
+<style color=#00ffffff size=1>.</style>            /dis/collab/servers               service implementation
+<style color=#00ffffff size=1>.</style>                                              modules
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/collabsrv
+<style color=#00ffffff size=1>.</style>            /appl/collab/servers
+<style color=#00ffffff size=1>.</style>            /appl/collab/lib
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=collab(1)>collab(1)</action>, <action name=collab-clients(1)>collab-clients(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

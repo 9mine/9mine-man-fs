@@ -1,0 +1,72 @@
+SLEEP(10.2)                                           SLEEP(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            sleep, wakeup, tsleep, return0 - process synchronisation
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            void	sleep(Rendez *r, int (*f)(void*), void *arg)
+
+<style color=#00ffffff size=1>.</style>            void	wakeup(Rendez *r)
+
+<style color=#00ffffff size=1>.</style>            void	tsleep(Rendez *r, int (*f)(void*), void *arg, int ms)
+
+<style color=#00ffffff size=1>.</style>            int	return0(void *arg)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A process running in the kernel can use these functions to
+<style color=#00ffffff size=1>.</style>            synchronise with an interrupt handler or another kernel
+<style color=#00ffffff size=1>.</style>            process. In particular, they are used by device drivers to
+<style color=#00ffffff size=1>.</style>            wait for an event to be signalled on receipt of an
+<style color=#00ffffff size=1>.</style>            interrupt. (In practice, they are most often used
+<style color=#00ffffff size=1>.</style>            indirectly, through qio(10.2) for instance.)
+
+<style color=#00ffffff size=1>.</style>            The caller of sleep and a caller of wakeup share a Rendez
+<style color=#00ffffff size=1>.</style>            structure, to provide a rendezvous point between them to
+<style color=#00ffffff size=1>.</style>            synchronise on an event. Sleep uses a condition function f
+<style color=#00ffffff size=1>.</style>            that returns true if the event has occurred.
+
+<style color=#00ffffff size=1>.</style>            Sleep evaluates f(arg). If true, the event has happened and
+<style color=#00ffffff size=1>.</style>            sleep returns immediately. Otherwise, sleep blocks on the
+<style color=#00ffffff size=1>.</style>            event variable r, awaiting wakeup.
+
+<style color=#00ffffff size=1>.</style>            Wakeup is called by either a process or an interrupt handler
+<style color=#00ffffff size=1>.</style>            to wake any process sleeping at r, signifying that the
+<style color=#00ffffff size=1>.</style>            corresponding condition is true (the event has occurred). It
+<style color=#00ffffff size=1>.</style>            has no effect if there is no sleeping process.
+
+<style color=#00ffffff size=1>.</style>            Tsleep is similar to sleep, except that if the condition f(
+<style color=#00ffffff size=1>.</style>            arg) is false and the caller does sleep, and nothing else
+<style color=#00ffffff size=1>.</style>            wakes it within ms millliseconds, the system will wake it.
+<style color=#00ffffff size=1>.</style>            Tsleep's caller must check its environment to decide whether
+<style color=#00ffffff size=1>.</style>            timeout or the event occurred. The timing provided by tsleep
+<style color=#00ffffff size=1>.</style>            is imprecise, but adequate in practice for the normal use of
+<style color=#00ffffff size=1>.</style>            protecting against lost interrupts and otherwise
+<style color=#00ffffff size=1>.</style>            unresponsive devices or software.
+
+<style color=#00ffffff size=1>.</style>            Return0 ignores its arguments and returns zero. It is
+<style color=#00ffffff size=1>.</style>            commonly used as the predicate f in a call to tsleep to
+<style color=#00ffffff size=1>.</style>            obtain a time delay, using a Rendez variable sleep in the
+<style color=#00ffffff size=1>.</style>            Proc structure, for example:
+
+<style color=#00ffffff size=1>.</style>                 tsleep(&up->sleep, return0, nil, 10)\;
+
+<style color=#00ffffff size=1>.</style>            Both sleep and tsleep can be interrupted by swiproc (see
+<style color=#00ffffff size=1>.</style>            kproc(10.2)), causing a non-local goto through a call to
+<style color=#00ffffff size=1>.</style>            error(10.2).
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            There can be at most one process waiting on a Rendez, and if
+<style color=#00ffffff size=1>.</style>            two processes collide, the system will panic(10.2) (``double
+<style color=#00ffffff size=1>.</style>            sleep''). Access to a Rendez must therefore be serialised by
+<style color=#00ffffff size=1>.</style>            some other mechanism, usually qlock(10.2).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/proc.c
+<style color=#00ffffff size=1>.</style>            /emu/port/proc.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            lock(10.2), qlock(10.2), delay(10.2)
+<style color=#00ffffff size=1>.</style>            ``Process Sleep and Wakeup on a Shared-memory
+<style color=#00ffffff size=1>.</style>            Multiprocessor'', in Plan 9 Programmer's Manual: Volume 2.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

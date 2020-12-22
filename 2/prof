@@ -1,0 +1,209 @@
+<action name=PROFILE(2)>PROFILE(2)</action>                                             <action name=PROFILE(2)>PROFILE(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            profile - profiling library
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "profile.m"\;
+
+<style color=#00ffffff size=1>.</style>            profile := load Profile Profile->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Range: adt{
+<style color=#00ffffff size=1>.</style>                l: int\;
+<style color=#00ffffff size=1>.</style>                u: int\;
+<style color=#00ffffff size=1>.</style>                f: int\;
+<style color=#00ffffff size=1>.</style>                n: cyclic ref Range\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Funprof: adt{
+<style color=#00ffffff size=1>.</style>                name: string\;
+<style color=#00ffffff size=1>.</style>                line: int\;
+<style color=#00ffffff size=1>.</style>                count: int\;
+<style color=#00ffffff size=1>.</style>                counte: int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Modprof: adt{
+<style color=#00ffffff size=1>.</style>                name: string\;
+<style color=#00ffffff size=1>.</style>                path: string\;
+<style color=#00ffffff size=1>.</style>                srcpath: string\;
+<style color=#00ffffff size=1>.</style>                rawtab: array of (int, int)\;
+<style color=#00ffffff size=1>.</style>                linetab: array of int\;
+<style color=#00ffffff size=1>.</style>                rngtab: array of ref Range\;
+<style color=#00ffffff size=1>.</style>                funtab: array of Funprof\;
+<style color=#00ffffff size=1>.</style>                total: int\;
+<style color=#00ffffff size=1>.</style>                totals: array of int\;
+<style color=#00ffffff size=1>.</style>                covered: int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Prof: adt{
+<style color=#00ffffff size=1>.</style>                mods: list of Modprof\;
+<style color=#00ffffff size=1>.</style>                total: int\;
+<style color=#00ffffff size=1>.</style>                totals: array of int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Coverage: type list of (string, int, list of (list of (int, int, byte), string))\;
+
+<style color=#00ffffff size=1>.</style>            MODULE: con 1\;	# give stats for each module
+<style color=#00ffffff size=1>.</style>            FUNCTION: con 2\;	# give stats for each function
+<style color=#00ffffff size=1>.</style>            LINE: con 4\;	# give stats for each line
+<style color=#00ffffff size=1>.</style>            VERBOSE: con 8\;	# full stats
+<style color=#00ffffff size=1>.</style>            FULLHDR: con 16\;	# file:lineno: on each line of output
+<style color=#00ffffff size=1>.</style>            FREQUENCY: con 32\;	# show frequency rather than coverage
+
+<style color=#00ffffff size=1>.</style>            init: fn(): int\;
+<style color=#00ffffff size=1>.</style>            profile: fn(m: string): int\;
+<style color=#00ffffff size=1>.</style>            sample: fn(i: int): int\;
+<style color=#00ffffff size=1>.</style>            start: fn(): int\;
+<style color=#00ffffff size=1>.</style>            stop: fn(): int\;
+<style color=#00ffffff size=1>.</style>            stats: fn() : Prof\;
+<style color=#00ffffff size=1>.</style>            show: fn(p: Prof, v: int): int\;
+<style color=#00ffffff size=1>.</style>            end: fn(): int\;
+
+<style color=#00ffffff size=1>.</style>            # coverage profiling specific functions
+
+<style color=#00ffffff size=1>.</style>            cpstart: fn(pid: int): int\;
+<style color=#00ffffff size=1>.</style>            cpstats: fn(rec: int, v: int): Prof\;
+<style color=#00ffffff size=1>.</style>            cpfstats: fn(v: int): Prof\;
+<style color=#00ffffff size=1>.</style>            cpshow: fn(p: Prof, v: int): int\;
+
+<style color=#00ffffff size=1>.</style>            coverage: fn(p: Prof, v: int): Coverage\;
+
+<style color=#00ffffff size=1>.</style>            # memory profiling specific functions
+
+<style color=#00ffffff size=1>.</style>            memstart: fn(): int\;
+<style color=#00ffffff size=1>.</style>            memstats: fn(): Prof\;
+<style color=#00ffffff size=1>.</style>            memshow: fn(p: Prof, v: int): int\;
+
+<style color=#00ffffff size=1>.</style>            lasterror: fn(): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Profile provides an interface to the kernel profile device.
+<style color=#00ffffff size=1>.</style>            It contains routines to start and stop profiling, to gather
+<style color=#00ffffff size=1>.</style>            profiling statistics and to display these statistics in
+<style color=#00ffffff size=1>.</style>            relation to the relevant limbo source code. All of these
+<style color=#00ffffff size=1>.</style>            routines apart from lasterror return a negative integer if
+<style color=#00ffffff size=1>.</style>            an error occurred during their execution. Once this happens,
+<style color=#00ffffff size=1>.</style>            a call to lasterror will give the error message.
+
+<style color=#00ffffff size=1>.</style>            init initializes the module and binds the kernel profile
+<style color=#00ffffff size=1>.</style>            device onto the /prof directory. It should be called before
+<style color=#00ffffff size=1>.</style>            any other functions in this module.
+
+<style color=#00ffffff size=1>.</style>            profile takes a module name or a path name as its argument
+<style color=#00ffffff size=1>.</style>            and indicates a module to be profiled. Repeated calls of
+<style color=#00ffffff size=1>.</style>            this function allow a number of modules to be profiled
+<style color=#00ffffff size=1>.</style>            together. In the absence of any calls to this routine, the
+<style color=#00ffffff size=1>.</style>            profile device profiles all modules loaded by the kernel.
+
+<style color=#00ffffff size=1>.</style>            sample sets the sampling interval of the profiling. The
+<style color=#00ffffff size=1>.</style>            argument is in ms. The default value in the profile device
+<style color=#00ffffff size=1>.</style>            is 100ms.
+
+<style color=#00ffffff size=1>.</style>            start starts profiling.
+
+<style color=#00ffffff size=1>.</style>            stop stops profiling.
+
+<style color=#00ffffff size=1>.</style>            stats returns profiling statistics. It is recommended that
+<style color=#00ffffff size=1>.</style>            this is called once profiling has been stopped, otherwise
+<style color=#00ffffff size=1>.</style>            the results may be slightly inaccurate. It returns an adt of
+<style color=#00ffffff size=1>.</style>            type Prof. Its first field mods is a list of profile
+<style color=#00ffffff size=1>.</style>            statistics for each module under profile. Its second field 
+<style color=#00ffffff size=1>.</style>            total is the number of samples made altogether. The
+<style color=#00ffffff size=1>.</style>            statistics for each module are represented in the Modprof
+<style color=#00ffffff size=1>.</style>            adt. Its fields are
+
+<style color=#00ffffff size=1>.</style>            name      The name of the module.
+
+<style color=#00ffffff size=1>.</style>            path      The path of the module's corresponding dis file.
+
+<style color=#00ffffff size=1>.</style>            srcpath   The path of the module's corresponding source
+<style color=#00ffffff size=1>.</style>                      file.
+
+<style color=#00ffffff size=1>.</style>            linetab   The line frequency count table. The number of
+<style color=#00ffffff size=1>.</style>                      samples made on a particular line of the above
+<style color=#00ffffff size=1>.</style>                      source file is found by indexing this table.
+
+<style color=#00ffffff size=1>.</style>            funtab    The function frequency count table. This array of
+<style color=#00ffffff size=1>.</style>                      Funprof adt gives the name, line number and number
+<style color=#00ffffff size=1>.</style>                      of samples made for each function in the above
+<style color=#00ffffff size=1>.</style>                      source file.
+
+<style color=#00ffffff size=1>.</style>            total     The total number of samples made in this module.
+
+<style color=#00ffffff size=1>.</style>            stats will ignore modules if it fails to locate the symbol
+<style color=#00ffffff size=1>.</style>            (.sbl) file for a particular dis file.
+
+<style color=#00ffffff size=1>.</style>            show simply prints out the profile information returned by
+<style color=#00ffffff size=1>.</style>            stats. For each module it will print out either the line
+<style color=#00ffffff size=1>.</style>            number statistics or the function statistics or both. The
+<style color=#00ffffff size=1>.</style>            former gives the line number, percentage of time spent on
+<style color=#00ffffff size=1>.</style>            this line and the source code for each line in the source
+<style color=#00ffffff size=1>.</style>            file. The latter gives the line number, function name and
+<style color=#00ffffff size=1>.</style>            percentage of time spent in this function for each function
+<style color=#00ffffff size=1>.</style>            in the source file. The amount of output can be controlled
+<style color=#00ffffff size=1>.</style>            by the second argument to show. The following should be ored
+<style color=#00ffffff size=1>.</style>            together in the required combination to get the desired
+<style color=#00ffffff size=1>.</style>            effect.
+
+<style color=#00ffffff size=1>.</style>            FUNCTION  Print the function table.
+
+<style color=#00ffffff size=1>.</style>            LINE      Print the line number table.
+
+<style color=#00ffffff size=1>.</style>            VERBOSE   Normally lines and functions are not shown if the
+<style color=#00ffffff size=1>.</style>                      sample frequency for them is zero. This option
+<style color=#00ffffff size=1>.</style>                      prevents this.
+
+<style color=#00ffffff size=1>.</style>            FULLHDR   Prints the file name as well as the line number in
+<style color=#00ffffff size=1>.</style>                      a form that can be selected in acme to show that
+<style color=#00ffffff size=1>.</style>                      particular line in a window.
+
+<style color=#00ffffff size=1>.</style>            show will ignore modules if it fails to locate the source
+<style color=#00ffffff size=1>.</style>            (.b) file for a particular dis file.
+
+<style color=#00ffffff size=1>.</style>            end ends the profiling session. This should be called when
+<style color=#00ffffff size=1>.</style>            all statistics have been gathered in order to clean up the
+<style color=#00ffffff size=1>.</style>            device profile's data structures.
+
+<style color=#00ffffff size=1>.</style>            In order to support coverage profiling as well the following
+<style color=#00ffffff size=1>.</style>            new routines are provided.
+
+<style color=#00ffffff size=1>.</style>            cpstart Start coverage profiling on the process whose pid is
+<style color=#00ffffff size=1>.</style>            given.
+
+<style color=#00ffffff size=1>.</style>            cpstats Returns coverage profiling statistics from the
+<style color=#00ffffff size=1>.</style>            profile device. If the first argument is true, the raw
+<style color=#00ffffff size=1>.</style>            results will be stored in a profile file whose name is
+<style color=#00ffffff size=1>.</style>            <file>.prf where <file> is the prefix of the corresponding
+<style color=#00ffffff size=1>.</style>            dis file.
+
+<style color=#00ffffff size=1>.</style>            cpfstats Returns coverage profiling statistics from any
+<style color=#00ffffff size=1>.</style>            saved profile files.
+
+<style color=#00ffffff size=1>.</style>            cpshow Shows the coverage profiling statistics.
+
+<style color=#00ffffff size=1>.</style>            coverage Given the coverage profiler statistics this returns
+<style color=#00ffffff size=1>.</style>            the list of modules profiled. Each module has a name, a
+<style color=#00ffffff size=1>.</style>            boolean indicating whether all instructions in the module
+<style color=#00ffffff size=1>.</style>            were executed and a list of lines. Each line consists of a
+<style color=#00ffffff size=1>.</style>            list of ranges and the source code. The list of ranges
+<style color=#00ffffff size=1>.</style>            contains the character positions on the line of code
+<style color=#00ffffff size=1>.</style>            corresponding to instructions that were not executed and an
+<style color=#00ffffff size=1>.</style>            indicator of whether partial execution was performed.
+
+<style color=#00ffffff size=1>.</style>            For the further support of memory profiling the following
+<style color=#00ffffff size=1>.</style>            routines are available.
+
+<style color=#00ffffff size=1>.</style>            memstart Start memory profiling.
+
+<style color=#00ffffff size=1>.</style>            memstats Return the memory profile statisics.
+
+<style color=#00ffffff size=1>.</style>            memshow Send memory profile statistics to standard output.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /module/profile.m
+<style color=#00ffffff size=1>.</style>            /appl/lib/profile.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=prof(3)>prof(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

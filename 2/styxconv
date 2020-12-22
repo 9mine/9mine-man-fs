@@ -1,0 +1,63 @@
+<action name=STYXCONV(2)>STYXCONV(2)</action>                                           <action name=STYXCONV(2)>STYXCONV(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            styxconv - convert between old 1995 Styx and current Styx
+<style color=#00ffffff size=1>.</style>            (9P)
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "styxconv.m"\;
+<style color=#00ffffff size=1>.</style>            styxconv := load Styxconv Styxconv->PATHNEW2OLD\;
+<style color=#00ffffff size=1>.</style>            styxconv := load Styxconv Styxconv->PATHOLD2NEW\;
+
+<style color=#00ffffff size=1>.</style>            init:     fn()\;
+<style color=#00ffffff size=1>.</style>            styxconv: fn(client: ref Sys->FD, server: ref Sys->FD)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Styxconv converts between the obsolete 1995 version of the
+<style color=#00ffffff size=1>.</style>            Styx protocol, as used for instance in Inferno's Third
+<style color=#00ffffff size=1>.</style>            Edition and earlier, and the current file service protocol,
+<style color=#00ffffff size=1>.</style>            previously also called `Styx' but based on 9P2000 and
+<style color=#00ffffff size=1>.</style>            defined by <action name=intro(5)>intro(5)</action>.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other function in the module.
+
+<style color=#00ffffff size=1>.</style>            The function styxconv takes two file descriptors: client
+<style color=#00ffffff size=1>.</style>            should be a connection to a client requiring one version of
+<style color=#00ffffff size=1>.</style>            the protocol\; server should be a connection to a server
+<style color=#00ffffff size=1>.</style>            serving the other version of the protocol. There are two
+<style color=#00ffffff size=1>.</style>            conversion modules: PATHNEW2OLD converts from a new client
+<style color=#00ffffff size=1>.</style>            to an old server\; PATHOLD2NEW converts from an old client to
+<style color=#00ffffff size=1>.</style>            a new server.
+
+<style color=#00ffffff size=1>.</style>            Styxconv should be spawned by the caller, and copies
+<style color=#00ffffff size=1>.</style>            messages between client and server, converting as required.
+<style color=#00ffffff size=1>.</style>            See the example below.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Apply styxconv to file descriptor fd, connected to an old
+<style color=#00ffffff size=1>.</style>            Styx server, and return a file descriptor suitable for
+<style color=#00ffffff size=1>.</style>            mounting with <action name=mount(2)>mount(2)</action>.
+
+<style color=#00ffffff size=1>.</style>                 cvstyx(fd: ref Sys->FD): ref Sys->FD
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                 	styxconv := load Styxconv Styxconv->NEW2OLDPATH\;
+<style color=#00ffffff size=1>.</style>                 	if(styxconv == nil)
+<style color=#00ffffff size=1>.</style>                 		return nil\;
+<style color=#00ffffff size=1>.</style>                 	p := array\[2\] of ref Sys->FD\;
+<style color=#00ffffff size=1>.</style>                 	if(sys->pipe(p) < 0)
+<style color=#00ffffff size=1>.</style>                 		return nil\;
+<style color=#00ffffff size=1>.</style>                 	styxconv->init()\;
+<style color=#00ffffff size=1>.</style>                 	spawn styxconv->styxconv(p\[1\], fd)\;
+<style color=#00ffffff size=1>.</style>                 	return p\[0\]\;
+<style color=#00ffffff size=1>.</style>                 }
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/styxconv
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bind(1)>bind(1)</action>, <action name=sys-bind(2)>sys-bind(2)</action>, <action name=sys-pipe(2)>sys-pipe(2)</action>, <action name=intro(5)>intro(5)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            There is no provision for 9P2000 authentication.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

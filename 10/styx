@@ -1,0 +1,209 @@
+STYX(10.2)                                             STYX(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            Fcall, convS2M, convD2M, convM2S, convM2D, fcallfmt, dirfmt,
+<style color=#00ffffff size=1>.</style>            dirmodefmt, statcheck, sizeS2M, sizeD2M - interface to
+<style color=#00ffffff size=1>.</style>            Inferno File protocol
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            #include <lib9.h>
+<style color=#00ffffff size=1>.</style>            #include <styx.h>
+
+<style color=#00ffffff size=1>.</style>            uint convS2M(Fcall *f, uchar *ap, uint nap)
+
+<style color=#00ffffff size=1>.</style>            uint convD2M(Dir *d, uchar *ap, uint nap)
+
+<style color=#00ffffff size=1>.</style>            uint convM2S(uchar *ap, uint nap, Fcall *f)
+
+<style color=#00ffffff size=1>.</style>            uint convM2D(uchar *ap, uint nap, Dir *d, char *strs)
+
+<style color=#00ffffff size=1>.</style>            int dirfmt(Fmt*)
+
+<style color=#00ffffff size=1>.</style>            int fcallfmt(Fmt*)
+
+<style color=#00ffffff size=1>.</style>            int dirmodefmt(Fmt*)
+
+<style color=#00ffffff size=1>.</style>            int statcheck(uchar *buf, uint nbuf)
+
+<style color=#00ffffff size=1>.</style>            uint sizeS2M(Fcall *f)
+
+<style color=#00ffffff size=1>.</style>            uint sizeD2M(Dir *d)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These routines convert messages in the machine-independent
+<style color=#00ffffff size=1>.</style>            format of the Inferno file protocol, described by <action name=intro(5)>intro(5)</action>,
+<style color=#00ffffff size=1>.</style>            to and from a more convenient form, an Fcall structure:
+
+<style color=#00ffffff size=1>.</style>            #define MAXWELEM 16
+
+<style color=#00ffffff size=1>.</style>            typedef
+<style color=#00ffffff size=1>.</style>            struct Fcall
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	uchar	type\;
+<style color=#00ffffff size=1>.</style>            	u32int	fid\;
+<style color=#00ffffff size=1>.</style>            	ushort	tag\;
+<style color=#00ffffff size=1>.</style>            	union {
+<style color=#00ffffff size=1>.</style>            		struct {
+<style color=#00ffffff size=1>.</style>            			u32int	msize\;	/* Tversion, Rversion */
+<style color=#00ffffff size=1>.</style>            			char	*version\;	/* Tversion, Rversion */
+<style color=#00ffffff size=1>.</style>            		}\;
+<style color=#00ffffff size=1>.</style>            		struct {
+<style color=#00ffffff size=1>.</style>            			ushort	oldtag\;	/* Tflush */
+<style color=#00ffffff size=1>.</style>            		}\;
+<style color=#00ffffff size=1>.</style>            		struct {
+<style color=#00ffffff size=1>.</style>            			char	*ename\;	/* Rerror */
+<style color=#00ffffff size=1>.</style>            		}\;
+<style color=#00ffffff size=1>.</style>            		struct {
+<style color=#00ffffff size=1>.</style>            			Qid	qid\;	/* Rattach, Ropen, Rcreate */
+<style color=#00ffffff size=1>.</style>            			u32int	iounit\;	/* Ropen, Rcreate */
+<style color=#00ffffff size=1>.</style>            		}\;
+<style color=#00ffffff size=1>.</style>            		struct {
+<style color=#00ffffff size=1>.</style>            			Qid	aqid\;	/* Rauth */
+<style color=#00ffffff size=1>.</style>            		}\;
+<style color=#00ffffff size=1>.</style>            		struct {
+<style color=#00ffffff size=1>.</style>            			u32int	afid\;	/* Tauth, Tattach */
+<style color=#00ffffff size=1>.</style>            			char	*uname\;	/* Tauth, Tattach */
+<style color=#00ffffff size=1>.</style>            			char	*aname\;	/* Tauth, Tattach */
+<style color=#00ffffff size=1>.</style>            		}\;
+<style color=#00ffffff size=1>.</style>            		struct {
+<style color=#00ffffff size=1>.</style>            			u32int	perm\;	/* Tcreate */ 
+<style color=#00ffffff size=1>.</style>            			char	*name\;	/* Tcreate */
+<style color=#00ffffff size=1>.</style>            			uchar	mode\;	/* Tcreate, Topen */
+<style color=#00ffffff size=1>.</style>            		}\;
+<style color=#00ffffff size=1>.</style>            		struct {
+<style color=#00ffffff size=1>.</style>            			u32int	newfid\;	/* Twalk */
+<style color=#00ffffff size=1>.</style>            			ushort	nwname\;	/* Twalk */
+<style color=#00ffffff size=1>.</style>            			char	*wname\[MAXWELEM\]\;	/* Twalk */
+<style color=#00ffffff size=1>.</style>            		}\;
+<style color=#00ffffff size=1>.</style>            		struct {
+<style color=#00ffffff size=1>.</style>            			ushort	nwqid\;	/* Rwalk */
+<style color=#00ffffff size=1>.</style>            			Qid	wqid\[MAXWELEM\]\;	/* Rwalk */
+<style color=#00ffffff size=1>.</style>            		}\;
+<style color=#00ffffff size=1>.</style>            		struct {
+<style color=#00ffffff size=1>.</style>            			vlong	offset\;	/* Tread, Twrite */
+<style color=#00ffffff size=1>.</style>            			u32int	count\;	/* Tread, Twrite, Rread */
+<style color=#00ffffff size=1>.</style>            			char	*data\;	/* Twrite, Rread */
+<style color=#00ffffff size=1>.</style>            		}\;
+<style color=#00ffffff size=1>.</style>            		struct {
+<style color=#00ffffff size=1>.</style>            			ushort	nstat\;	/* Twstat, Rstat */
+<style color=#00ffffff size=1>.</style>            			uchar	*stat\;	/* Twstat, Rstat */
+<style color=#00ffffff size=1>.</style>            		}\;
+<style color=#00ffffff size=1>.</style>            	}\;
+<style color=#00ffffff size=1>.</style>            } Fcall\;
+
+<style color=#00ffffff size=1>.</style>            /* these are implemented as macros */
+
+<style color=#00ffffff size=1>.</style>            uchar	GBIT8(uchar*)
+<style color=#00ffffff size=1>.</style>            ushort	GBIT16(uchar*)
+<style color=#00ffffff size=1>.</style>            ulong	GBIT32(uchar*)
+<style color=#00ffffff size=1>.</style>            vlong	GBIT64(uchar*)
+
+<style color=#00ffffff size=1>.</style>            void	PBIT8(uchar*, uchar)
+<style color=#00ffffff size=1>.</style>            void	PBIT16(uchar*, ushort)
+<style color=#00ffffff size=1>.</style>            void	PBIT32(uchar*, ulong)
+<style color=#00ffffff size=1>.</style>            void	PBIT64(uchar*, vlong)
+
+<style color=#00ffffff size=1>.</style>            #define	BIT8SZ	1
+<style color=#00ffffff size=1>.</style>            #define	BIT16SZ	2
+<style color=#00ffffff size=1>.</style>            #define	BIT32SZ	4
+<style color=#00ffffff size=1>.</style>            #define	BIT64SZ	8
+
+<style color=#00ffffff size=1>.</style>            This structure is defined in <styx.h>. See section 5 for a
+<style color=#00ffffff size=1>.</style>            full description of 9P messages and their encoding. For all
+<style color=#00ffffff size=1>.</style>            message types, the type field of an Fcall holds one of
+<style color=#00ffffff size=1>.</style>            Tversion, Rversion, Tattach, Rattach, etc. (defined in an
+<style color=#00ffffff size=1>.</style>            enumerated type in <styx.h>). Fid is used by most messages,
+<style color=#00ffffff size=1>.</style>            and tag is used by all messages. The other fields are used
+<style color=#00ffffff size=1>.</style>            selectively by the message types given in comments.
+
+<style color=#00ffffff size=1>.</style>            ConvM2S takes a 9P message at ap of length nap, and uses it
+<style color=#00ffffff size=1>.</style>            to fill in Fcall structure f. If the passed message
+<style color=#00ffffff size=1>.</style>            including any data for Twrite and Rread messages is
+<style color=#00ffffff size=1>.</style>            formatted properly, the return value is the number of bytes
+<style color=#00ffffff size=1>.</style>            the message occupied in the buffer ap, which will always be
+<style color=#00ffffff size=1>.</style>            less than or equal to nap\; otherwise it is 0. For Twrite and
+<style color=#00ffffff size=1>.</style>            Tread messages, data is set to a pointer into the argument
+<style color=#00ffffff size=1>.</style>            message, not a copy.
+
+<style color=#00ffffff size=1>.</style>            ConvS2M does the reverse conversion, turning f into a
+<style color=#00ffffff size=1>.</style>            message starting at ap. The length of the resulting message
+<style color=#00ffffff size=1>.</style>            is returned. For Twrite and Rread messages, count bytes
+<style color=#00ffffff size=1>.</style>            starting at data are copied into the message.
+
+<style color=#00ffffff size=1>.</style>            The constant IOHDRSZ is a suitable amount of buffer to
+<style color=#00ffffff size=1>.</style>            reserve for storing the 9P header\; the data portion of a
+<style color=#00ffffff size=1>.</style>            Twrite or Rread will be no more than the buffer size
+<style color=#00ffffff size=1>.</style>            negotiated in the Tversion/Rversion exchange, minus IOHDRSZ.
+
+<style color=#00ffffff size=1>.</style>            The routine sizeS2M returns the number of bytes required to
+<style color=#00ffffff size=1>.</style>            store the machine-independent representation of the Fcall
+<style color=#00ffffff size=1>.</style>            structure f, including its initial 32-bit size field. In
+<style color=#00ffffff size=1>.</style>            other words, it reports the number of bytes produced by a
+<style color=#00ffffff size=1>.</style>            successful call to convS2M.
+
+<style color=#00ffffff size=1>.</style>            Another structure is Dir, used by C functions in much the
+<style color=#00ffffff size=1>.</style>            same way as the Limbo versions described in <action name=sys-stat(2)>sys-stat(2)</action>.
+<style color=#00ffffff size=1>.</style>            ConvM2D converts the machine-independent form starting at ap
+<style color=#00ffffff size=1>.</style>            into d and returns the length of the machine-independent
+<style color=#00ffffff size=1>.</style>            encoding. The strings in the returned Dir structure are
+<style color=#00ffffff size=1>.</style>            stored at successive locations starting at strs. Usually
+<style color=#00ffffff size=1>.</style>            strs will point to storage immediately after the Dir itself.
+<style color=#00ffffff size=1>.</style>            It can also be a nil pointer, in which case the string
+<style color=#00ffffff size=1>.</style>            pointers in the returned Dir are all nil\; however, the
+<style color=#00ffffff size=1>.</style>            return value still includes their length.
+
+<style color=#00ffffff size=1>.</style>            ConvD2M does the reverse translation, also returning the
+<style color=#00ffffff size=1>.</style>            length of the encoding. If the buffer is too short, the
+<style color=#00ffffff size=1>.</style>            return value will be BIT16SZ and the correct size will be
+<style color=#00ffffff size=1>.</style>            returned in the first BIT16SZ bytes. (If the buffer is less
+<style color=#00ffffff size=1>.</style>            than BIT16SZ, the return value is zero\; therefore a correct
+<style color=#00ffffff size=1>.</style>            test for complete packing of the message is that the return
+<style color=#00ffffff size=1>.</style>            value is greater than BIT16SZ). The macro GBIT16 can be used
+<style color=#00ffffff size=1>.</style>            to extract the correct value. The related macros with
+<style color=#00ffffff size=1>.</style>            different sizes retrieve the corresponding-sized quantities.
+<style color=#00ffffff size=1>.</style>            PBIT16 and its brethren place values in messages. With the
+<style color=#00ffffff size=1>.</style>            exception of handling short buffers in convD2M, these macros
+<style color=#00ffffff size=1>.</style>            are not usually needed except by internal routines.
+
+<style color=#00ffffff size=1>.</style>            Analogous to sizeS2M, sizeD2M returns the number of bytes
+<style color=#00ffffff size=1>.</style>            required to store the machine-independent representation of
+<style color=#00ffffff size=1>.</style>            the Dir structure d, including its initial 16-bit size
+<style color=#00ffffff size=1>.</style>            field.
+
+<style color=#00ffffff size=1>.</style>            The routine statcheck checks whether the nbuf bytes of buf
+<style color=#00ffffff size=1>.</style>            contain a validly formatted machine-independent Dir entry.
+<style color=#00ffffff size=1>.</style>            It checks that the sizes of all the elements of the the
+<style color=#00ffffff size=1>.</style>            entry sum to exactly nbuf, which is a simple but effective
+<style color=#00ffffff size=1>.</style>            test of validity. Nbuf and buf should include the second
+<style color=#00ffffff size=1>.</style>            two-byte (16-bit) length field that precedes the entry when
+<style color=#00ffffff size=1>.</style>            formatted in a 9P message (see <action name=stat(5)>stat(5)</action>)\; in other words,
+<style color=#00ffffff size=1>.</style>            nbuf is 2 plus the sum of the sizes of the entry itself.
+<style color=#00ffffff size=1>.</style>            Statcheck also verifies that the length field has the
+<style color=#00ffffff size=1>.</style>            correct value (that is, nbuf-2). It returns 0 for a valid
+<style color=#00ffffff size=1>.</style>            entry and -1 for an incorrectly formatted entry.
+
+<style color=#00ffffff size=1>.</style>            Dirfmt, fcallfmt, and dirmodefmt are formatting routines,
+<style color=#00ffffff size=1>.</style>            suitable for fmtinstall(10.2). They convert Dir*, Fcall*,
+<style color=#00ffffff size=1>.</style>            and long values into string representations of the directory
+<style color=#00ffffff size=1>.</style>            buffer, Fcall buffer, or file mode value. Fcallfmt assumes
+<style color=#00ffffff size=1>.</style>            that dirfmt has been installed with format letter ``D'' and
+<style color=#00ffffff size=1>.</style>            dirmodefmt with format letter `M'. They currently cannot be
+<style color=#00ffffff size=1>.</style>            used in the kernels because they clash with the use of
+<style color=#00ffffff size=1>.</style>            format ``D'' for Dis instructions.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /lib9/convM2D.c
+<style color=#00ffffff size=1>.</style>            /lib9/convM2D.c
+<style color=#00ffffff size=1>.</style>            /lib9/convM2S.c
+<style color=#00ffffff size=1>.</style>            /lib9/convS2M.c
+<style color=#00ffffff size=1>.</style>            /lib9/fcallfmt.c
+<style color=#00ffffff size=1>.</style>            /libkern/convM2D.c
+<style color=#00ffffff size=1>.</style>            /libkern/convM2D.c
+<style color=#00ffffff size=1>.</style>            /libkern/convM2S.c
+<style color=#00ffffff size=1>.</style>            /libkern/convS2M.c
+<style color=#00ffffff size=1>.</style>            /libkern/fcallfmt.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=intro(2)>intro(2)</action>, <action name=styx(2)>styx(2)</action>, <action name=sys-stat(2)>sys-stat(2)</action>, <action name=intro(5)>intro(5)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

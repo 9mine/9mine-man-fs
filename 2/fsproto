@@ -1,0 +1,55 @@
+<action name=FSPROTO(2)>FSPROTO(2)</action>                                             <action name=FSPROTO(2)>FSPROTO(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            FSproto: readprotofile, readprotostring - read file system
+<style color=#00ffffff size=1>.</style>            prototype file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "fsproto.m"\;
+<style color=#00ffffff size=1>.</style>            fsproto := load FSproto FSproto->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Direntry: type (string, string, ref Sys->Dir)\;
+
+<style color=#00ffffff size=1>.</style>            init:   fn(): string\;
+
+<style color=#00ffffff size=1>.</style>            readprotofile: fn(proto: string, root: string,
+<style color=#00ffffff size=1>.</style>                    entries: chan of Direntry,
+<style color=#00ffffff size=1>.</style>                    warnings: chan of (string, string)): string\;
+
+<style color=#00ffffff size=1>.</style>            readprotostring: fn(proto: string, root: string,
+<style color=#00ffffff size=1>.</style>                    entries: chan of Direntry,
+<style color=#00ffffff size=1>.</style>                    warnings: chan of (string, string))\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            FSproto provides an interface to read a file system
+<style color=#00ffffff size=1>.</style>            prototype file, as defined by <action name=proto(6)>proto(6)</action>.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other function in the module.
+
+<style color=#00ffffff size=1>.</style>            Readprotofile reads a file system prototype from the file
+<style color=#00ffffff size=1>.</style>            proto. It traverses the file system, starting at the given
+<style color=#00ffffff size=1>.</style>            root, and each file or directory encountered that is
+<style color=#00ffffff size=1>.</style>            mentioned in the prototype causes readprotofile to send a
+<style color=#00ffffff size=1>.</style>            Direntry tuple on the channel entries. The tuple has the
+<style color=#00ffffff size=1>.</style>            form (old,new,dir) where old is the name of the current file
+<style color=#00ffffff size=1>.</style>            or directory, rooted at root, new is the same file's name
+<style color=#00ffffff size=1>.</style>            relative to root, and dir is a reference to the Sys->Dir
+<style color=#00ffffff size=1>.</style>            directory information for old, as produced by <action name=sys-stat(2)>sys-stat(2)</action>.
+<style color=#00ffffff size=1>.</style>            When all files in root have been examined, readprotofile
+<style color=#00ffffff size=1>.</style>            sends a single tuple with all nil components on entries. For
+<style color=#00ffffff size=1>.</style>            each error that occurs during processing (eg, unable to open
+<style color=#00ffffff size=1>.</style>            a directory) readprotofile sends a tuple (old,diag) on the
+<style color=#00ffffff size=1>.</style>            channel warnings, naming the file and giving a diagnostic
+<style color=#00ffffff size=1>.</style>            string, but processing continues.
+
+<style color=#00ffffff size=1>.</style>            Readprotostring reads a file system prototype from the
+<style color=#00ffffff size=1>.</style>            string proto itself. Otherwise, its operation is the same as
+<style color=#00ffffff size=1>.</style>            readprotofile.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/fsproto.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=fs(1)>fs(1)</action>, <action name=proto(6)>proto(6)</action>, <action name=mkfs(8)>mkfs(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,78 @@
+<action name=LOGIN(6)>LOGIN(6)</action>                                                 <action name=LOGIN(6)>LOGIN(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            login - key exchange protocol
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The following encrypted key exchange protocol is used
+<style color=#00ffffff size=1>.</style>            between a client such as login in <action name=security-login(2)>security-login(2)</action>, and a
+<style color=#00ffffff size=1>.</style>            certificate signing process such as <action name=logind(8)>logind(8)</action>, to justify
+<style color=#00ffffff size=1>.</style>            the latter's issuing a certificate that can later be
+<style color=#00ffffff size=1>.</style>            presented to an Inferno service to establish credentials.
+
+<style color=#00ffffff size=1>.</style>            A shared secret must previously be agreed between user and
+<style color=#00ffffff size=1>.</style>            certifying authority (CA). It is used by the protocol to
+<style color=#00ffffff size=1>.</style>            establish a secure channel between user and CA.
+
+<style color=#00ffffff size=1>.</style>            In the description below:
+
+<style color=#00ffffff size=1>.</style>            ivec    is an 8 byte random number (`initialisation vector')
+<style color=#00ffffff size=1>.</style>                    chosen for this conversation.
+
+<style color=#00ffffff size=1>.</style>            sha     is the 20 byte secure hash (SHA-1) of the password
+
+<style color=#00ffffff size=1>.</style>            key     is an 8 byte secret formed as follows:
+<style color=#00ffffff size=1>.</style>                    key\[0\] = ivec\[0\]^sha\[0\]^sha\[8\]^sha\[16\]
+<style color=#00ffffff size=1>.</style>                    key\[1\] = ivec\[1\]^sha\[1\]^sha\[9\]^sha\[17\]
+<style color=#00ffffff size=1>.</style>                    ...
+<style color=#00ffffff size=1>.</style>                    key\[5\] = ivec\[5\]^sha\[5\]^sha\[13\]\;
+<style color=#00ffffff size=1>.</style>                    key\[6\] = ivec\[6\]^sha\[6\]^sha\[14\]\;
+<style color=#00ffffff size=1>.</style>                    key\[7\] = ivec\[7\]^sha\[7\]^sha\[15\]\;
+
+<style color=#00ffffff size=1>.</style>            alpha   is a Diffie-Hellman base used system wide
+
+<style color=#00ffffff size=1>.</style>            p       is a Diffie-Hellman modulus used system wide
+
+<style color=#00ffffff size=1>.</style>            key(m)  is m encrypted using the RC4 algorithm with key.
+
+<style color=#00ffffff size=1>.</style>            Rx      is a random number of the same order as p.
+
+<style color=#00ffffff size=1>.</style>            secret  is the Diffie-Hellman secret alpha**(r0*r1) mod p.
+
+<style color=#00ffffff size=1>.</style>            The protocol follows.  ``user→CA xxx'' means that the user
+<style color=#00ffffff size=1>.</style>            sends the message ``xxx'' to the certifying authority. Any
+<style color=#00ffffff size=1>.</style>            party can send an error instead of a message at any point to
+<style color=#00ffffff size=1>.</style>            terminate the protocol.
+
+<style color=#00ffffff size=1>.</style>                 user→CA	name
+<style color=#00ffffff size=1>.</style>                 CA→user	ACK
+
+<style color=#00ffffff size=1>.</style>                 user→CA	ivec
+<style color=#00ffffff size=1>.</style>                 CA→user	key(alpha**r0 mod p), alpha, p
+
+<style color=#00ffffff size=1>.</style>                 user→CA	alpha**r1 mod p
+<style color=#00ffffff size=1>.</style>                 CA→user	CA's public key, SHA(CA's public key + secret)
+
+<style color=#00ffffff size=1>.</style>                 user→CA	user's public key, SHA(user's public key + secret)
+<style color=#00ffffff size=1>.</style>                 CA→user	user's public key certificate
+
+<style color=#00ffffff size=1>.</style>            The complexity of this protocol is intended to shield the
+<style color=#00ffffff size=1>.</style>            password. To start a clear text attack against the password,
+<style color=#00ffffff size=1>.</style>            one needs to first attack the Diffie-Hellman exponential to
+<style color=#00ffffff size=1>.</style>            determine alpha**r0 mod p. A possible weakness is that the
+<style color=#00ffffff size=1>.</style>            encrypted quantity is base64 encoded, constraining the
+<style color=#00ffffff size=1>.</style>            possible values of each byte. This could aid a brute force
+<style color=#00ffffff size=1>.</style>            attack.
+
+<style color=#00ffffff size=1>.</style>            Alpha and p are sent unprotected, though the user code does
+<style color=#00ffffff size=1>.</style>            a few sanity checks on the values it receives. This is
+<style color=#00ffffff size=1>.</style>            another likely point of attack. We should like to know about
+<style color=#00ffffff size=1>.</style>            any.
+
+<style color=#00ffffff size=1>.</style>            The role of ivec is to foil any replay attacks by someone
+<style color=#00ffffff size=1>.</style>            spoofing the CA though this is probably overkill.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=security-intro(2)>security-intro(2)</action>, <action name=security-login(2)>security-login(2)</action>, <action name=logind(8)>logind(8)</action>, <action name=signer(8)>signer(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

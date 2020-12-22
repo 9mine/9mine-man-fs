@@ -1,0 +1,56 @@
+<action name=AUTH(6)>AUTH(6)</action>                                                   <action name=AUTH(6)>AUTH(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            auth - authentication using station-to-station protocol
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The following protocol, based on the Station-to-Station
+<style color=#00ffffff size=1>.</style>            protocol, is used for mutual authentication of two parties,
+<style color=#00ffffff size=1>.</style>            each possessing a certificate from the same certifying
+<style color=#00ffffff size=1>.</style>            authority (CA).
+
+<style color=#00ffffff size=1>.</style>            In the description below:
+
+<style color=#00ffffff size=1>.</style>            alpha  is a Diffie-Hellman base used system wide
+
+<style color=#00ffffff size=1>.</style>            p      is a Diffie-Hellman modulus used system wide
+
+<style color=#00ffffff size=1>.</style>            Rx     is a random number of the same order as p.
+
+<style color=#00ffffff size=1>.</style>            PKx    the public key of x
+
+<style color=#00ffffff size=1>.</style>            SKx    the private key of x
+
+<style color=#00ffffff size=1>.</style>            CERTx  the public key of x signed by the certifying
+<style color=#00ffffff size=1>.</style>                   authority
+
+<style color=#00ffffff size=1>.</style>            sign(x)
+<style color=#00ffffff size=1>.</style>                   represents x signed with n's private key
+
+<style color=#00ffffff size=1>.</style>            In the following, the parties are labelled 0 and 1.
+
+<style color=#00ffffff size=1>.</style>            Each sends its public key and certificate to the other
+<style color=#00ffffff size=1>.</style>            together with a computation alpha**r0 mod p (alpha**r1 mod p
+<style color=#00ffffff size=1>.</style>            ) based on the Diffie-Hellman parameters contained in the
+<style color=#00ffffff size=1>.</style>            certificate:
+
+<style color=#00ffffff size=1>.</style>                 0 → 1  alpha**r0 mod p, CERTu0, PKu0
+<style color=#00ffffff size=1>.</style>                 1 → 0  alpha**r1 mod p, CERTu1, PKu1
+
+<style color=#00ffffff size=1>.</style>            Each can now use the CA's public key and the certificate
+<style color=#00ffffff size=1>.</style>            received to check that each has the other's public key.
+
+<style color=#00ffffff size=1>.</style>            Finally, each user signs values known to both that each can
+<style color=#00ffffff size=1>.</style>            then verify:
+
+<style color=#00ffffff size=1>.</style>                 0 → 1  sig0(alpha**r0 mod p, alpha**r1 mod p)
+<style color=#00ffffff size=1>.</style>                 1 → 0  sig1(alpha**r0 mod p, alpha**r1 mod p)
+
+<style color=#00ffffff size=1>.</style>            At this point 0 and 1 can calculate the shared secret
+<style color=#00ffffff size=1>.</style>            alpha**(r0*r1), and can use it to encrypt later
+<style color=#00ffffff size=1>.</style>            communications.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=keyring-auth(2)>keyring-auth(2)</action>, <action name=keytext(6)>keytext(6)</action>, <action name=login(6)>login(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

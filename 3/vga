@@ -1,0 +1,145 @@
+<action name=VGA(3)>VGA(3)</action>                                                     <action name=VGA(3)>VGA(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            vga - VGA controller device
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind #v /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/vgactl
+<style color=#00ffffff size=1>.</style>            /dev/vgaovlctl
+<style color=#00ffffff size=1>.</style>            /dev/vgaovl
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The VGA device allows configuration of a graphics controller
+<style color=#00ffffff size=1>.</style>            on a PC (and any other platform with VGA devices). Vgactl
+<style color=#00ffffff size=1>.</style>            allows control over higher-level settings such as display
+<style color=#00ffffff size=1>.</style>            height, width, depth, controller and hardware-cursor type.
+<style color=#00ffffff size=1>.</style>            Along with the I/O-port registers provided by <action name=arch(3)>arch(3)</action>, it is
+<style color=#00ffffff size=1>.</style>            used to implement configuration and setup of VGA controller
+<style color=#00ffffff size=1>.</style>            cards.
+
+<style color=#00ffffff size=1>.</style>            Writing strings to vgactl configures the VGA device. The
+<style color=#00ffffff size=1>.</style>            following are valid commands.
+
+<style color=#00ffffff size=1>.</style>            size XxYxZ chan
+<style color=#00ffffff size=1>.</style>                 Set the size of the screen image to be X pixels wide
+<style color=#00ffffff size=1>.</style>                 and Y pixels high. Each pixel is Z bits as specified by
+<style color=#00ffffff size=1>.</style>                 chan, whose format is described in <action name=image(6)>image(6)</action>.
+
+<style color=#00ffffff size=1>.</style>            actualsize XxY
+<style color=#00ffffff size=1>.</style>                 Set the physical size of the display to be X pixels
+<style color=#00ffffff size=1>.</style>                 wide by Y pixels high. This message is optional\; it is
+<style color=#00ffffff size=1>.</style>                 used to implement panning and to accommodate displays
+<style color=#00ffffff size=1>.</style>                 that require the in-memory screen image to have certain
+<style color=#00ffffff size=1>.</style>                 alignment properties. For example, a 1400x1050 screen
+<style color=#00ffffff size=1>.</style>                 with a 1408x1050 in-memory image will use size
+<style color=#00ffffff size=1>.</style>                 1408x1050 but actualsize 1400x1050.
+
+<style color=#00ffffff size=1>.</style>            panning mode
+<style color=#00ffffff size=1>.</style>                 Depending on whether mode is on or off, enable or
+<style color=#00ffffff size=1>.</style>                 disable panning in a virtual screen. If panning is on
+<style color=#00ffffff size=1>.</style>                 and the screen's size is larger than its actualsize,
+<style color=#00ffffff size=1>.</style>                 the displayed portion of the screen will pan to follow
+<style color=#00ffffff size=1>.</style>                 the mouse. Setting the panning mode after the first
+<style color=#00ffffff size=1>.</style>                 attach of the #i driver has no effect.
+
+<style color=#00ffffff size=1>.</style>            type ctlr
+<style color=#00ffffff size=1>.</style>                 Set the type of VGA controller being used. Ctlr is one
+<style color=#00ffffff size=1>.</style>                 of ark200pv, clgd542x, clgd546x, ct65545, cyber938x,
+<style color=#00ffffff size=1>.</style>                 hiqvideo, mach64xx, mga2164w, neomagic, s3, and t2r4.
+
+<style color=#00ffffff size=1>.</style>                 Note that this list does not indicate the full set of
+<style color=#00ffffff size=1>.</style>                 VGA chips supported. For example, s3 includes the
+<style color=#00ffffff size=1>.</style>                 86C801/5, 86C928, Vision864, and Vision964. It is the
+<style color=#00ffffff size=1>.</style>                 job of a user-level program to recognise which
+<style color=#00ffffff size=1>.</style>                 particular chip is being used and to initialize it
+<style color=#00ffffff size=1>.</style>                 appropriately.
+
+<style color=#00ffffff size=1>.</style>            hwgc gc
+<style color=#00ffffff size=1>.</style>                 Set the type of hardware graphics cursor being used. Gc
+<style color=#00ffffff size=1>.</style>                 is one of ark200pvhwgc, bt485hwgc, clgd542xhwgc,
+<style color=#00ffffff size=1>.</style>                 clgd546xhwgc, ct65545hwgc, cyber938xhwgc, hiqvideohwgc,
+<style color=#00ffffff size=1>.</style>                 mach64xxhwgc, mga2164whwgc, neomagichwgc, rgb524hwgc,
+<style color=#00ffffff size=1>.</style>                 s3hwgc, t2r4hwgc, tvp3020hwgc, and tvp3026hwgc. A value
+<style color=#00ffffff size=1>.</style>                 of off disables the cursor. There is no software
+<style color=#00ffffff size=1>.</style>                 cursor.
+
+<style color=#00ffffff size=1>.</style>            palettedepth d
+<style color=#00ffffff size=1>.</style>                 Set the number of bits of precision used by the VGA
+<style color=#00ffffff size=1>.</style>                 palette to d, which must be either 6 or 8.
+
+<style color=#00ffffff size=1>.</style>            blank
+<style color=#00ffffff size=1>.</style>                 Blank the screen. This consists of setting the hardware
+<style color=#00ffffff size=1>.</style>                 color map to all black as well as, on some controllers,
+<style color=#00ffffff size=1>.</style>                 setting the VGA hsync and vsync signals so as to turn
+<style color=#00ffffff size=1>.</style>                 off VESA DPMS-compliant monitors. The screen also
+<style color=#00ffffff size=1>.</style>                 blanks after 30 minutes of inactivity. The screen can
+<style color=#00ffffff size=1>.</style>                 be unblanked by moving the mouse.
+
+<style color=#00ffffff size=1>.</style>            blanktime minutes
+<style color=#00ffffff size=1>.</style>                 Set the timeout before the screen blanks\; the default
+<style color=#00ffffff size=1>.</style>                 is 30 minutes. If minutes is zero, blanking is
+<style color=#00ffffff size=1>.</style>                 disabled.
+
+<style color=#00ffffff size=1>.</style>            hwaccel mode
+<style color=#00ffffff size=1>.</style>                 Depending on whether mode is on or off, enable or
+<style color=#00ffffff size=1>.</style>                 disable whether hardware acceleration (currently for
+<style color=#00ffffff size=1>.</style>                 rectangle filling and moving) used by the graphics
+<style color=#00ffffff size=1>.</style>                 engine. The default setting is on.
+
+<style color=#00ffffff size=1>.</style>            hwblank mode
+<style color=#00ffffff size=1>.</style>                 Depending on whether mode is on or off, enable or
+<style color=#00ffffff size=1>.</style>                 disable the use of DPMS blanking (see blank above).
+
+<style color=#00ffffff size=1>.</style>            linear size align
+<style color=#00ffffff size=1>.</style>                 Use a linear screen aperture of size size aligned on an
+<style color=#00ffffff size=1>.</style>                 align-byte boundary.
+
+<style color=#00ffffff size=1>.</style>            drawinit
+<style color=#00ffffff size=1>.</style>                 Initialize the graphics hardware. This must be sent
+<style color=#00ffffff size=1>.</style>                 after setting the type.
+
+<style color=#00ffffff size=1>.</style>            Reading vgactl returns the current settings, one per line.
+
+<style color=#00ffffff size=1>.</style>            Some VGA cards support overlay graphics. Writing strings to
+<style color=#00ffffff size=1>.</style>            vgaovlctl configures such cards. The following are valid
+<style color=#00ffffff size=1>.</style>            overlay control commands:
+
+<style color=#00ffffff size=1>.</style>            openctl
+<style color=#00ffffff size=1>.</style>                 opens the overlay device.
+
+<style color=#00ffffff size=1>.</style>            configure w h format
+<style color=#00ffffff size=1>.</style>                 allocates resources inside the driver to support an
+<style color=#00ffffff size=1>.</style>                 overlay area of width w and height h pixels.
+<style color=#00ffffff size=1>.</style>                 Currently, the only supported format is YUYV packed. In
+<style color=#00ffffff size=1>.</style>                 YUYV two pixels are encoded by their separate Y values
+<style color=#00ffffff size=1>.</style>                 and their combined U and V values. The size of the two
+<style color=#00ffffff size=1>.</style>                 pixels is 32 bits.
+
+<style color=#00ffffff size=1>.</style>            enable x y w h
+<style color=#00ffffff size=1>.</style>                 enables drawing data on the display through the overlay
+<style color=#00ffffff size=1>.</style>                 mode.  The data is drawn at position x,y and has a
+<style color=#00ffffff size=1>.</style>                 width and height of w,h respectively.
+
+<style color=#00ffffff size=1>.</style>            closectl
+<style color=#00ffffff size=1>.</style>                 terminates overlay control.
+
+<style color=#00ffffff size=1>.</style>            Overlay data can be written to vgaovl.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            The following disables hardware acceleration.
+
+<style color=#00ffffff size=1>.</style>                 echo hwaccel off > /dev/vgactl
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/pc/devvga.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=arch(3)>arch(3)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The hardware graphics cursor on the et4000 does not work in
+<style color=#00ffffff size=1>.</style>            2x8-bit mode.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,47 @@
+<action name=DRAW-POINT(2)>DRAW-POINT(2)</action>                                       <action name=DRAW-POINT(2)>DRAW-POINT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Point - coordinate position
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include    "draw.m"\;
+<style color=#00ffffff size=1>.</style>            draw := load Draw Draw->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Point: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                x:    int\;
+<style color=#00ffffff size=1>.</style>                y:    int\;
+
+<style color=#00ffffff size=1>.</style>                add:  fn(p: self Point, q: Point):  Point\;
+<style color=#00ffffff size=1>.</style>                sub:  fn(p: self Point, q: Point):  Point\;
+<style color=#00ffffff size=1>.</style>                mul:  fn(p: self Point, i: int):    Point\;
+<style color=#00ffffff size=1>.</style>                div:  fn(p: self Point, i: int):    Point\;
+<style color=#00ffffff size=1>.</style>                eq:   fn(p: self Point, q: Point):  int\;
+<style color=#00ffffff size=1>.</style>                in:   fn(p: self Point, r: Rect):   int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Point data type specifies a position in the integer
+<style color=#00ffffff size=1>.</style>            grid.
+
+<style color=#00ffffff size=1>.</style>            x, y      The coordinate position. The coordinates increase
+<style color=#00ffffff size=1>.</style>                      to the right (x) and down (y).
+
+<style color=#00ffffff size=1>.</style>            p.add(q)  Returns the point (p.x+q.x, p.y+q.y).
+
+<style color=#00ffffff size=1>.</style>            p.sub(q)  Returns the point (p.x-q.x, p.y-q.y).
+
+<style color=#00ffffff size=1>.</style>            p.mul(i)  Returns the point (p.x*i, p.y*i).
+
+<style color=#00ffffff size=1>.</style>            p.div(i)  Returns the point (p.x/i, p.y/i).
+
+<style color=#00ffffff size=1>.</style>            p.eq(q)   Returns non-zero if the points' coordinates are
+<style color=#00ffffff size=1>.</style>                      equal and zero otherwise.
+
+<style color=#00ffffff size=1>.</style>            p.in(r)   Returns non-zero if point p lies within rectangle
+<style color=#00ffffff size=1>.</style>                      r and zero otherwise.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=draw-intro(2)>draw-intro(2)</action>, <action name=draw-rect(2)>draw-rect(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

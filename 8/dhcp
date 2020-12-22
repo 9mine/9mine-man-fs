@@ -1,0 +1,78 @@
+<action name=DHCP(8)>DHCP(8)</action>                                                   <action name=DHCP(8)>DHCP(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dhcp - configure network interface details using DHCP
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ip/dhcp \[ -bdmpr \] \[ -g gateway \] \[ -h hostname \] \[ -x net \]
+<style color=#00ffffff size=1>.</style>            ifcdir \[ localip \[ localmask \]\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dhcp uses the Dynamic Host Configuration Protocol (DHCP) to
+<style color=#00ffffff size=1>.</style>            configure the <action name=ip(3)>ip(3)</action> interface represented by ifcdir (eg,
+<style color=#00ffffff size=1>.</style>            /net/ipifc/1). The interface must have a device already
+<style color=#00ffffff size=1>.</style>            bound to it. Dhcp uses the MAC address of that device in its
+<style color=#00ffffff size=1>.</style>            requests.
+
+<style color=#00ffffff size=1>.</style>            Dhcp broadcasts a DHCP request for an address and various
+<style color=#00ffffff size=1>.</style>            network parameters. It takes the first acceptable offer,
+<style color=#00ffffff size=1>.</style>            sets the interface to that address, and writes the address
+<style color=#00ffffff size=1>.</style>            and parameter values, in <action name=ndb(6)>ndb(6)</action> format, to /net/ndb, where
+<style color=#00ffffff size=1>.</style>            <action name=cs(8)>cs(8)</action>, <action name=dns(8)>dns(8)</action> and others will find them. If the address is
+<style color=#00ffffff size=1>.</style>            provided with a limited lease, dhcp itself returns, but it
+<style color=#00ffffff size=1>.</style>            leaves a process in the background that periodically renews
+<style color=#00ffffff size=1>.</style>            the lease (or requests a new address if the lease is not
+<style color=#00ffffff size=1>.</style>            renewed).
+
+<style color=#00ffffff size=1>.</style>            If localip is given, dhcp attempts to reacquire that
+<style color=#00ffffff size=1>.</style>            address. If successful, it configures the interface with
+<style color=#00ffffff size=1>.</style>            that address (and mask if supplied), maintaining any lease
+<style color=#00ffffff size=1>.</style>            as before. If it cannot reacquire the address, it broadcasts
+<style color=#00ffffff size=1>.</style>            a request for a new address, as above.
+
+<style color=#00ffffff size=1>.</style>            The options are:
+
+<style color=#00ffffff size=1>.</style>            -b   Use plain BOOTP without the DHCP options
+
+<style color=#00ffffff size=1>.</style>            -d   Enable debugging output on standard output
+
+<style color=#00ffffff size=1>.</style>            -g gateway
+<style color=#00ffffff size=1>.</style>                 Suggest gateway as the default gateway (the server
+<style color=#00ffffff size=1>.</style>                 might change it)
+
+<style color=#00ffffff size=1>.</style>            -h hostname
+<style color=#00ffffff size=1>.</style>                 Use hostname as the current host's name in DHCP
+<style color=#00ffffff size=1>.</style>                 messages
+
+<style color=#00ffffff size=1>.</style>            -m   Monitor the DHCP status and print a summary on standard
+<style color=#00ffffff size=1>.</style>                 output whenever it changes
+
+<style color=#00ffffff size=1>.</style>            -n   Do not configure the interface
+
+<style color=#00ffffff size=1>.</style>            -p   Print the resulting configuration on standard output
+
+<style color=#00ffffff size=1>.</style>            -r   Retry DHCP periodically until it succeeds
+
+<style color=#00ffffff size=1>.</style>            -x net
+<style color=#00ffffff size=1>.</style>                 Use mount point net to access the network, and write
+<style color=#00ffffff size=1>.</style>                 the results to net/ndb (default: /net)
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Allocate a new interface, bind an ether device to it, and
+<style color=#00ffffff size=1>.</style>            configure it with dhcp:
+
+<style color=#00ffffff size=1>.</style>                 x=`{cat /net/ipifc/clone}
+<style color=#00ffffff size=1>.</style>                 echo bind ether /net/ether0 >/net/ipifc/$x/ctl &&
+<style color=#00ffffff size=1>.</style>                 ip/dhcp /net/ipifc/$x
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ip/dhcp.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ip(3)>ip(3)</action>, <action name=ndb(6)>ndb(6)</action>, <action name=cs(8)>cs(8)</action>, <action name=dns(8)>dns(8)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Dhcp returns an error status if it receives no acceptable
+<style color=#00ffffff size=1>.</style>            reply, unless the -r option is given to force retries.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

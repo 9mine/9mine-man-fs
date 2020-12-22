@@ -1,0 +1,40 @@
+<action name=CURSOR(9)>CURSOR(9)</action>                                               <action name=CURSOR(9)>CURSOR(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            cursor - change the current mouse cursor
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            cursor ?options?
+
+INTRODUCTION
+<style color=#00ffffff size=1>.</style>            Cursor changes the image displayed at the current mouse
+<style color=#00ffffff size=1>.</style>            position. The following options are supported:
+
+<style color=#00ffffff size=1>.</style>            -image image
+<style color=#00ffffff size=1>.</style>                 Image gives a name created using the <action name=image(9)>image(9)</action> command\;
+<style color=#00ffffff size=1>.</style>                 the image must conform to the rules given for
+<style color=#00ffffff size=1>.</style>                 Display.cursor (see <action name=draw-display(2)>draw-display(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            -bitmap bitmap
+<style color=#00ffffff size=1>.</style>                 Similar to -image but using the bitmap syntax (see
+<style color=#00ffffff size=1>.</style>                 <action name=types(9)>types(9)</action>).
+
+<style color=#00ffffff size=1>.</style>            -x dist
+<style color=#00ffffff size=1>.</style>                 The cursor will be drawn dist to the right of the
+<style color=#00ffffff size=1>.</style>                 actual position of the mouse.
+
+<style color=#00ffffff size=1>.</style>            -y dist
+<style color=#00ffffff size=1>.</style>                 The cursor will be drawn dist below the actual position
+<style color=#00ffffff size=1>.</style>                 of the mouse.
+
+<style color=#00ffffff size=1>.</style>            -default
+<style color=#00ffffff size=1>.</style>                 Revert the cursor to its default image.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            A cursor image should have some inherent association with
+<style color=#00ffffff size=1>.</style>            its hot-spot offset.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=options(9)>options(9)</action>, <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

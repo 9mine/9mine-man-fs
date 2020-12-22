@@ -1,0 +1,82 @@
+<action name=BLUR(1)>BLUR(1)</action>                                                   <action name=BLUR(1)>BLUR(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            blur - an example program to demonstrate splitting a task
+<style color=#00ffffff size=1>.</style>            over several machines.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            grid/demo/blur \[imagefile\]              - master process
+
+<style color=#00ffffff size=1>.</style>            grid/demo/blur                          - slave process
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Blur is a small program that works in two parts to
+<style color=#00ffffff size=1>.</style>            manipulate an <action name=image(6)>image(6)</action>. The master process takes an image
+<style color=#00ffffff size=1>.</style>            file as an argument and displays the image in a window on
+<style color=#00ffffff size=1>.</style>            screen whilst waiting for and displaying results from the
+<style color=#00ffffff size=1>.</style>            slave processes. Each slave process takes a block of the
+<style color=#00ffffff size=1>.</style>            image at a time and blurs it, reduces the contrast and
+<style color=#00ffffff size=1>.</style>            overlays the result of a simple edge detection analysis.
+
+<style color=#00ffffff size=1>.</style>            The only requirement for a master and slave process to work
+<style color=#00ffffff size=1>.</style>            together is that they both have a common /tmp directory.
+<style color=#00ffffff size=1>.</style>            Within this a /blur directory is created and used by both
+<style color=#00ffffff size=1>.</style>            processes. All communication and synchronisation is done
+<style color=#00ffffff size=1>.</style>            through files in this directory. There can be many slave
+<style color=#00ffffff size=1>.</style>            processes running concurrently in order to improve
+<style color=#00ffffff size=1>.</style>            performance.
+
+COMMUNICATION
+<style color=#00ffffff size=1>.</style>            All the communication takes place through files in the
+<style color=#00ffffff size=1>.</style>            /tmp/blur directory which is common to all the processses.
+<style color=#00ffffff size=1>.</style>            Once the master process has started, it creates:
+
+<style color=#00ffffff size=1>.</style>            image.bit        the image being processed
+
+<style color=#00ffffff size=1>.</style>            data.dat         processing parameters e.g. block size, blur
+<style color=#00ffffff size=1>.</style>                             radius etc
+
+<style color=#00ffffff size=1>.</style>            working          tells slave processes to continue reading
+<style color=#00ffffff size=1>.</style>                             todo/ directory
+
+<style color=#00ffffff size=1>.</style>            todo/            contains files showing which blocks still
+<style color=#00ffffff size=1>.</style>                             need processing
+
+<style color=#00ffffff size=1>.</style>            Within the todo/ directory, the master process creates a
+<style color=#00ffffff size=1>.</style>            file for each block to be processed. Starting at block.0.a,
+<style color=#00ffffff size=1>.</style>            the name of each file denotes the block number and the
+<style color=#00ffffff size=1>.</style>            version id. The version id is used to indicate the current
+<style color=#00ffffff size=1>.</style>            version of a block being worked on. This is to allow the
+<style color=#00ffffff size=1>.</style>            master process to ask another slave process to work on a
+<style color=#00ffffff size=1>.</style>            block if it believes the current one has crashed or is
+<style color=#00ffffff size=1>.</style>            taking too long. Once a block has been processed, the master
+<style color=#00ffffff size=1>.</style>            removes the file from todo/.
+
+<style color=#00ffffff size=1>.</style>            Each slave process reads the list of files in todo/ and for
+<style color=#00ffffff size=1>.</style>            each block in turn, attempts to create a directory with the
+<style color=#00ffffff size=1>.</style>            same name e.g. block.1.a/ in /tmp/blur. It is not possible
+<style color=#00ffffff size=1>.</style>            to create a directory if it already exists and as the slave
+<style color=#00ffffff size=1>.</style>            will only process blocks for which it has been able to
+<style color=#00ffffff size=1>.</style>            create a directory, no two slave processes can be
+<style color=#00ffffff size=1>.</style>            simultaneously working on the same block. Once a slave has
+<style color=#00ffffff size=1>.</style>            managed to create a directory, it processes the relevant
+<style color=#00ffffff size=1>.</style>            block of the image and writes the result to img.bit in the
+<style color=#00ffffff size=1>.</style>            directory. Having completed a block, the slave creates a
+<style color=#00ffffff size=1>.</style>            file called done in order to let the master process know
+<style color=#00ffffff size=1>.</style>            that it can read the completed result.
+
+<style color=#00ffffff size=1>.</style>            The master process keeps track of all the blocks being
+<style color=#00ffffff size=1>.</style>            processed and if any of them have not been completed after a
+<style color=#00ffffff size=1>.</style>            certain time, it creates a new file for that block in todo/
+<style color=#00ffffff size=1>.</style>            with a new version id. This guarantees that all blocks will
+<style color=#00ffffff size=1>.</style>            be processed as long as at least one working slave process
+<style color=#00ffffff size=1>.</style>            remains. Once all the blocks have been processed, the master
+<style color=#00ffffff size=1>.</style>            process removes all the files created in /tmp/blur. Each
+<style color=#00ffffff size=1>.</style>            slave, upon seeing that the working file has gone, will then
+<style color=#00ffffff size=1>.</style>            exit.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/grid/demo/blur.b
+<style color=#00ffffff size=1>.</style>            /appl/grid/demo/block.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

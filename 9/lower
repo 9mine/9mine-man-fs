@@ -1,0 +1,17 @@
+<action name=LOWER(9)>LOWER(9)</action>                                                 <action name=LOWER(9)>LOWER(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            lower - Change a window's position in the stacking order
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            lower window
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Lower lowers window so that it is below all of its siblings
+<style color=#00ffffff size=1>.</style>            in the stacking order (it will be obscured by any siblings
+<style color=#00ffffff size=1>.</style>            that overlap it and will not obscure any siblings).
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=raise(9)>raise(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

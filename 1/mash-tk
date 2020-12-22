@@ -1,0 +1,129 @@
+<action name=MASH-TK(1)>MASH-TK(1)</action>                                             <action name=MASH-TK(1)>MASH-TK(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mash-tk - control visual elements of mash window
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load tk
+<style color=#00ffffff size=1>.</style>            tk clear
+<style color=#00ffffff size=1>.</style>            tk def button name value
+<style color=#00ffffff size=1>.</style>            tk def ibutton name value image
+<style color=#00ffffff size=1>.</style>            tk def menu name
+<style color=#00ffffff size=1>.</style>            tk def item menu name value
+<style color=#00ffffff size=1>.</style>            tk dialog title mesg default label ...
+<style color=#00ffffff size=1>.</style>            tk dump \[ name ... \]
+<style color=#00ffffff size=1>.</style>            tk env
+<style color=#00ffffff size=1>.</style>            tk file title dir pattern ...
+<style color=#00ffffff size=1>.</style>            tk geom
+<style color=#00ffffff size=1>.</style>            tk layout \[ name ... \]
+<style color=#00ffffff size=1>.</style>            tk notice message
+<style color=#00ffffff size=1>.</style>            tk sel
+<style color=#00ffffff size=1>.</style>            tk sget
+<style color=#00ffffff size=1>.</style>            tk sput string
+<style color=#00ffffff size=1>.</style>            tk string mesg
+<style color=#00ffffff size=1>.</style>            tk taskbar string
+<style color=#00ffffff size=1>.</style>            tk text
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Tk is a loadable builtin for mash. It provides a set of
+<style color=#00ffffff size=1>.</style>            primitives for customizing a mash window and building fairly
+<style color=#00ffffff size=1>.</style>            sophisticated graphical functions. It is currently
+<style color=#00ffffff size=1>.</style>            implemented as a single command with a variety of
+<style color=#00ffffff size=1>.</style>            subcommands. For the tk command to work, mash must have been
+<style color=#00ffffff size=1>.</style>            started using wm/wmmash. In the following descriptions,
+<style color=#00ffffff size=1>.</style>            references to return values indicate strings put on a
+<style color=#00ffffff size=1>.</style>            command's standard output.
+
+<style color=#00ffffff size=1>.</style>         Creating a Menu Bar
+<style color=#00ffffff size=1>.</style>            The def subcommand is used to define graphical pushbuttons
+<style color=#00ffffff size=1>.</style>            and menus. The def button and def ibutton commands are used
+<style color=#00ffffff size=1>.</style>            to define pushbuttons labelled with text or graphical icons,
+<style color=#00ffffff size=1>.</style>            respectively. The name parameter is used to label buttons,
+<style color=#00ffffff size=1>.</style>            and to layout both buttons and ibuttons. Value is a command
+<style color=#00ffffff size=1>.</style>            to be executed when the button is clicked, and must be
+<style color=#00ffffff size=1>.</style>            quoted if it contains white space. Image is the name of a
+<style color=#00ffffff size=1>.</style>            bitmap file\; it is looked for in /icon/tk, unless the name
+<style color=#00ffffff size=1>.</style>            begins with @, which suppresses prepending /icon/tk.
+<style color=#00ffffff size=1>.</style>            Def menu is used to name and label menu buttons, and def
+<style color=#00ffffff size=1>.</style>            item specifies items within the corresponding pulldown
+<style color=#00ffffff size=1>.</style>            menus. In def item, menu is a name supplied on a def menu
+<style color=#00ffffff size=1>.</style>            subcommand, name is the label for this menu item, and value
+<style color=#00ffffff size=1>.</style>            is a command to execute when this menu item is selected. All
+<style color=#00ffffff size=1>.</style>            the items in a menu are simple command buttons\; there is no
+<style color=#00ffffff size=1>.</style>            provision for any other kind of control, or for cascading
+<style color=#00ffffff size=1>.</style>            menus.
+<style color=#00ffffff size=1>.</style>            The layout subcommand creates and makes visible a menu bar,
+<style color=#00ffffff size=1>.</style>            using menus and buttons defined with def subcommands. The
+<style color=#00ffffff size=1>.</style>            current components, if any, are removed first, so layout
+<style color=#00ffffff size=1>.</style>            with no parameters just removes all the current buttons and
+<style color=#00ffffff size=1>.</style>            menus from the mash window. The components are laid out from
+<style color=#00ffffff size=1>.</style>            left to right, in the order presented in the layout
+<style color=#00ffffff size=1>.</style>            subcommand. A copy of the current mash environment is made,
+<style color=#00ffffff size=1>.</style>            and commands executed as a result of clicking buttons or
+<style color=#00ffffff size=1>.</style>            selecting menu items are executed in that environment. For
+<style color=#00ffffff size=1>.</style>            example, variables will have the values they had when the
+<style color=#00ffffff size=1>.</style>            layout was done.
+<style color=#00ffffff size=1>.</style>            The env subcommand can be used to make a new copy of the
+<style color=#00ffffff size=1>.</style>            environment for use by button or menu actions.
+
+<style color=#00ffffff size=1>.</style>         Displaying Popup Widgets
+<style color=#00ffffff size=1>.</style>            The notice subcommand pops up a window containing message
+<style color=#00ffffff size=1>.</style>            and a single button to dismiss the window. The icon
+<style color=#00ffffff size=1>.</style>            displayed in the window is /icons/tk/error. No value is
+<style color=#00ffffff size=1>.</style>            returned by notice.
+<style color=#00ffffff size=1>.</style>            The dialog subcommand is more complex\; title is used to name
+<style color=#00ffffff size=1>.</style>            the window, and multiple buttons labelled according to the
+<style color=#00ffffff size=1>.</style>            label parameter(s) are provided. Default is the number of
+<style color=#00ffffff size=1>.</style>            the button which is the default choice. The leftmost button
+<style color=#00ffffff size=1>.</style>            is numbered 0. When the user selects one of the buttons, the
+<style color=#00ffffff size=1>.</style>            dialog box is popped down and the number of the button
+<style color=#00ffffff size=1>.</style>            selected is returned.
+<style color=#00ffffff size=1>.</style>            The file subcommand pops up a standard Inferno file
+<style color=#00ffffff size=1>.</style>            selection box. Dir specifies the initial directory to
+<style color=#00ffffff size=1>.</style>            display, and pattern specifies which non-directory files to
+<style color=#00ffffff size=1>.</style>            include in the list of files. If the Cancel button in the
+<style color=#00ffffff size=1>.</style>            file dialog is clicked, no value is returned. If a file is
+<style color=#00ffffff size=1>.</style>            selected and the Exit button is clicked, the full pathname
+<style color=#00ffffff size=1>.</style>            of the file is returned, complete with final / if the file
+<style color=#00ffffff size=1>.</style>            is a directory. Double clicking on a non-directory file in
+<style color=#00ffffff size=1>.</style>            the list will likewise return that file's path. Double
+<style color=#00ffffff size=1>.</style>            clicking on a directory in the list will display the
+<style color=#00ffffff size=1>.</style>            contents of that directory.
+<style color=#00ffffff size=1>.</style>            The string subcommand pops up a small window with mesg as
+<style color=#00ffffff size=1>.</style>            the label of a text field. Characters typed into the text
+<style color=#00ffffff size=1>.</style>            field, up to but not including ENTER, are returned.
+
+<style color=#00ffffff size=1>.</style>         Dealing With the Selection
+<style color=#00ffffff size=1>.</style>            The sel subcommand returns whatever is currently selected.
+<style color=#00ffffff size=1>.</style>            When typing into the shell's window, nothing is selected, so
+<style color=#00ffffff size=1>.</style>            nothing is returned. However, if invoked via a pushbutton
+<style color=#00ffffff size=1>.</style>            and there is a selection, it is returned.
+<style color=#00ffffff size=1>.</style>            The sput subcommand puts string into the snarf buffer
+<style color=#00ffffff size=1>.</style>            maintained by the window manager, and the sget subcommand
+<style color=#00ffffff size=1>.</style>            retrieves and returns the current contents of the snarf
+<style color=#00ffffff size=1>.</style>            buffer. This provides a way to pass text between the shell
+<style color=#00ffffff size=1>.</style>            and other applications. The Snarf and Paste buttons on the
+<style color=#00ffffff size=1>.</style>            popup menu associated with mouse button two can also be used
+<style color=#00ffffff size=1>.</style>            to do this.
+
+<style color=#00ffffff size=1>.</style>         Miscellaneous Tk Subcommands
+<style color=#00ffffff size=1>.</style>            The taskbar subcommand lets you put string in the title bar
+<style color=#00ffffff size=1>.</style>            of the mash window. The old value is returned.
+<style color=#00ffffff size=1>.</style>            The text subcommand returns the contents of the mash window.
+<style color=#00ffffff size=1>.</style>            The clear subcommand removes all text from the window.
+<style color=#00ffffff size=1>.</style>            The dump subcommand returns the mash-tk commands needed to
+<style color=#00ffffff size=1>.</style>            define the buttons and menus currently defined, and to
+<style color=#00ffffff size=1>.</style>            recreate the currently visible set of buttons and menus, or,
+<style color=#00ffffff size=1>.</style>            if dump has parameters, the commands needed to define the
+<style color=#00ffffff size=1>.</style>            buttons and menus named by the parameters.
+<style color=#00ffffff size=1>.</style>            The geom subcommand returns the position of the upper left
+<style color=#00ffffff size=1>.</style>            corner of the mash window relative to the upper left corner
+<style color=#00ffffff size=1>.</style>            of the Inferno screen.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/mash/tk.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=mash(1)>mash(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

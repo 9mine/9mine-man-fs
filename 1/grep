@@ -1,0 +1,41 @@
+<action name=GREP(1)>GREP(1)</action>                                                   <action name=GREP(1)>GREP(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            grep - pattern matching
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            grep \[ -lnviLs \] pattern \[ file... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Grep prints lines from each file that match the pattern, a
+<style color=#00ffffff size=1>.</style>            regular expression as defined in <action name=regex(2)>regex(2)</action>. If no files are
+<style color=#00ffffff size=1>.</style>            given, standard input is used. If more than one file is
+<style color=#00ffffff size=1>.</style>            given, each line of output is preceded by the name of the
+<style color=#00ffffff size=1>.</style>            file it was found in. The options are:
+
+<style color=#00ffffff size=1>.</style>            -l        Print only the name of each file that contains a
+<style color=#00ffffff size=1>.</style>                      match.
+
+<style color=#00ffffff size=1>.</style>            -L        Print the name of each file that does not contain
+<style color=#00ffffff size=1>.</style>                      a match.
+
+<style color=#00ffffff size=1>.</style>            -n        Precede each line of output with its line number.
+
+<style color=#00ffffff size=1>.</style>            -v        Print only lines that do not match pattern.
+
+<style color=#00ffffff size=1>.</style>            -i        Pattern matching is case insensitive (roman
+<style color=#00ffffff size=1>.</style>                      letters only).
+
+<style color=#00ffffff size=1>.</style>            -s        Do not print anything\; yield only the exit status.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/grep.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=regex(2)>regex(2)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Grep returns a non-nil exit status if no matches have been
+<style color=#00ffffff size=1>.</style>            made, or if an error has occurred.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,168 @@
+C2L(10.1)                                               C2L(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            c2l - C to Limbo translator
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            c2l \[ option ... \] file
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            C2l translates the named C file into Limbo. The translated
+<style color=#00ffffff size=1>.</style>            code should be almost always syntactically correct but will
+<style color=#00ffffff size=1>.</style>            certainly never be semantically correct as certain
+<style color=#00ffffff size=1>.</style>            constructs in C (strings for example) are almost impossible
+<style color=#00ffffff size=1>.</style>            to convert automatically into Limbo. Otherwise it tries to
+<style color=#00ffffff size=1>.</style>            do a good job of translating the C constructs that have some
+<style color=#00ffffff size=1>.</style>            sort of equivalence in Limbo. The C ternary ?: operator is
+<style color=#00ffffff size=1>.</style>            replaced where possible. C library calls are mapped to calls
+<style color=#00ffffff size=1>.</style>            to the Limbo system module, maths module or the provided
+<style color=#00ffffff size=1>.</style>            Limbo libc modules. Some library calls, such as malloc, are
+<style color=#00ffffff size=1>.</style>            instead mapped directly into Limbo wherever possible.
+
+<style color=#00ffffff size=1>.</style>            Once a translation has been made, running the <action name=limbo(1)>limbo(1)</action>
+<style color=#00ffffff size=1>.</style>            compiler on the resulting output should pick out the areas
+<style color=#00ffffff size=1>.</style>            where hand editing is required.
+
+<style color=#00ffffff size=1>.</style>            C2l normally puts all mapped C code (plus that from included
+<style color=#00ffffff size=1>.</style>            files) into a single .b file.
+
+<style color=#00ffffff size=1>.</style>            The options to c2l are:
+
+<style color=#00ffffff size=1>.</style>            -p   Use an ANSI preprocessor in place of the internal one.
+
+<style color=#00ffffff size=1>.</style>            -Dname=def
+
+<style color=#00ffffff size=1>.</style>            -Dname
+<style color=#00ffffff size=1>.</style>                 Define the name to the preprocessor, as if by `#define'
+<style color=#00ffffff size=1>.</style>                 . If no definition is given, the name is defined as `1'
+<style color=#00ffffff size=1>.</style>                 .
+
+<style color=#00ffffff size=1>.</style>            -Idir
+<style color=#00ffffff size=1>.</style>                 An ``#include'' file whose name does not begin with 
+<style color=#00ffffff size=1>.</style>                 slash or is enclosed in double quotes is always sought
+<style color=#00ffffff size=1>.</style>                 first in the directory of the file argument.  If this
+<style color=#00ffffff size=1>.</style>                 fails, or the name is enclosed in <>, it is then sought
+<style color=#00ffffff size=1>.</style>                 in directories named in -I options, then in
+<style color=#00ffffff size=1>.</style>                 /sys/include, and finally in /$objtype/include.
+
+<style color=#00ffffff size=1>.</style>            -m   Put the mapped code of any included .h files into its
+<style color=#00ffffff size=1>.</style>                 corresponding .m file instead of the .b file.
+
+<style color=#00ffffff size=1>.</style>            -i   Send the mapped code of any included .h files to
+<style color=#00ffffff size=1>.</style>                 /dev/null.
+
+<style color=#00ffffff size=1>.</style>            -l   Send the mapped code of any non-local included .h files
+<style color=#00ffffff size=1>.</style>                 to /dev/null.
+
+<style color=#00ffffff size=1>.</style>            -c   Just generate code corresponding to the C code ie don't
+<style color=#00ffffff size=1>.</style>                 include any prologue or epilogue code such as an
+<style color=#00ffffff size=1>.</style>                 implement header, include declarations, module
+<style color=#00ffffff size=1>.</style>                 declarations or an init function.
+
+<style color=#00ffffff size=1>.</style>            -v   Outputs any warnings to standard error as well as
+<style color=#00ffffff size=1>.</style>                 putting them in the output source.
+
+<style color=#00ffffff size=1>.</style>            -s   Map C strings to NUL-terminated arrays of bytes in
+<style color=#00ffffff size=1>.</style>                 Limbo. This just about preserves the semantics of
+<style color=#00ffffff size=1>.</style>                 strings and makes the process of hand editing much
+<style color=#00ffffff size=1>.</style>                 easier. It is useful as a first attempt at translation.
+<style color=#00ffffff size=1>.</style>                 In this case the module /module/libc0.m is used in
+<style color=#00ffffff size=1>.</style>                 place of the standard one /module/libc.m.
+
+<style color=#00ffffff size=1>.</style>            -S   Map char* in C to string in Limbo. Incompatible with
+<style color=#00ffffff size=1>.</style>                 the -s option.
+
+<style color=#00ffffff size=1>.</style>            -M   Indicates this file is the one containing the C main
+<style color=#00ffffff size=1>.</style>                 program. Used with the -q option below when c2l does
+<style color=#00ffffff size=1>.</style>                 not always know this until it's too late.
+
+<style color=#00ffffff size=1>.</style>            -q   This reduces the number of passes that c2l makes over
+<style color=#00ffffff size=1>.</style>                 the C code. It makes it faster but more liable to miss
+<style color=#00ffffff size=1>.</style>                 some transformations. Cyclic data structures might not
+<style color=#00ffffff size=1>.</style>                 be detected.
+
+<style color=#00ffffff size=1>.</style>            -a   For functions which are passed the address of a scalar
+<style color=#00ffffff size=1>.</style>                 typed (ie not a structure or union) expression as a
+<style color=#00ffffff size=1>.</style>                 parameter, pass the expression itself and rewrite the
+<style color=#00ffffff size=1>.</style>                 function and all calls of it to return the expression.
+<style color=#00ffffff size=1>.</style>                 For example :-
+
+<style color=#00ffffff size=1>.</style>            		int
+<style color=#00ffffff size=1>.</style>            		f(int x, int *y)
+<style color=#00ffffff size=1>.</style>            		{
+<style color=#00ffffff size=1>.</style>            			*y = x*x*x\;
+<style color=#00ffffff size=1>.</style>            			return x*(*y)\;
+<style color=#00ffffff size=1>.</style>            		}
+
+<style color=#00ffffff size=1>.</style>            		void
+<style color=#00ffffff size=1>.</style>            		g()
+<style color=#00ffffff size=1>.</style>            		{
+<style color=#00ffffff size=1>.</style>            			int p3, p4\;
+
+<style color=#00ffffff size=1>.</style>            			p4 = f(1729, &p3)\;
+<style color=#00ffffff size=1>.</style>            		}
+
+<style color=#00ffffff size=1>.</style>            		becomes
+
+<style color=#00ffffff size=1>.</style>            		f(x: int, y: int): (int, int)
+<style color=#00ffffff size=1>.</style>            		{
+<style color=#00ffffff size=1>.</style>            			y = x*x*x\;
+<style color=#00ffffff size=1>.</style>            			return (x*y, y)\;
+<style color=#00ffffff size=1>.</style>            		}
+
+<style color=#00ffffff size=1>.</style>            		g()
+<style color=#00ffffff size=1>.</style>            		{
+<style color=#00ffffff size=1>.</style>            			p3, p4: int\;
+
+<style color=#00ffffff size=1>.</style>            			(p4, p3) = f(1729, p3)\;
+<style color=#00ffffff size=1>.</style>            		}
+
+<style color=#00ffffff size=1>.</style>            C2l runs the preprocessor on the C code before starting
+<style color=#00ffffff size=1>.</style>            translation. As a special case it will convert definitions
+<style color=#00ffffff size=1>.</style>            of constants into Limbo constant declarations. It makes no
+<style color=#00ffffff size=1>.</style>            attempt to convert any definitions into function
+<style color=#00ffffff size=1>.</style>            declarations.
+
+<style color=#00ffffff size=1>.</style>            Identifier names that clash with Limbo keywords have letter
+<style color=#00ffffff size=1>.</style>            x appended so, for example, a structure member called type
+<style color=#00ffffff size=1>.</style>            would become typex.
+
+<style color=#00ffffff size=1>.</style>            Warning messages preceded by the acronym TBA (to be
+<style color=#00ffffff size=1>.</style>            addressed) are issued for NUL bytes in strings, ... as an
+<style color=#00ffffff size=1>.</style>            argument, array indices in declarations, use of void type,
+<style color=#00ffffff size=1>.</style>            use of unions, bit fields, use of address operator, negative
+<style color=#00ffffff size=1>.</style>            array indices, element specifiers, initial values in Limbo
+<style color=#00ffffff size=1>.</style>            modules, labels, gotos and case statement fall through.
+
+<style color=#00ffffff size=1>.</style>            The C types char and unsigned char are mapped to the Limbo
+<style color=#00ffffff size=1>.</style>            byte type. The C types short, unsigned short, int, unsigned
+<style color=#00ffffff size=1>.</style>            int, long and unsigned long are mapped to the Limbo int
+<style color=#00ffffff size=1>.</style>            type. The C types long long and unsigned long long are
+<style color=#00ffffff size=1>.</style>            mapped to the Limbo big type. Finally the C types float and
+<style color=#00ffffff size=1>.</style>            double are mapped to the Limbo real type.
+
+<style color=#00ffffff size=1>.</style>            Anonymous C structures and unions map to a name of the form
+<style color=#00ffffff size=1>.</style>            <module>_adt_<num> where module is the name of the module
+<style color=#00ffffff size=1>.</style>            which is, in turn, derived from the file name. Anonymous
+<style color=#00ffffff size=1>.</style>            member names in strucures and unions have a name of the form
+<style color=#00ffffff size=1>.</style>            anon_<num>. Finally,temporary variables generated by c2l
+<style color=#00ffffff size=1>.</style>            have a name of the form tmp_<num>. In all cases <num> is a
+<style color=#00ffffff size=1>.</style>            unique identifier.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /module/libc.m
+<style color=#00ffffff size=1>.</style>            /module/libc0.m
+<style color=#00ffffff size=1>.</style>            /appl/lib/libc.b
+<style color=#00ffffff size=1>.</style>            /appl/lib/libc0.b
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            2c(10.1), <action name=limbo(1)>limbo(1)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            C2l is not a pretty printer. It has its own idea of how
+<style color=#00ffffff size=1>.</style>            Limbo should be laid out.
+
+<style color=#00ffffff size=1>.</style>            C2l may well crash if given invalid C code.
+
+<style color=#00ffffff size=1>.</style>            c2l -a does not always do all possible conversions.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

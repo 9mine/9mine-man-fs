@@ -1,0 +1,52 @@
+<action name=KEYRING-CERTTOSTR(2)>KEYRING-CERTTOSTR(2)</action>                         <action name=KEYRING-CERTTOSTR(2)>KEYRING-CERTTOSTR(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            keyring: certtostr, pktostr, sktostr, strtocert, strtopk,
+<style color=#00ffffff size=1>.</style>            strtosk - encryption key conversion functions
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "keyring.m"
+<style color=#00ffffff size=1>.</style>            keyring:= load Keyring Keyring->PATH\;
+
+<style color=#00ffffff size=1>.</style>            strtocert: fn(s: string)         : ref Certificate\;
+<style color=#00ffffff size=1>.</style>            certtostr: fn(c: ref Certificate): string\;
+<style color=#00ffffff size=1>.</style>            strtopk:   fn(s: string)         : ref PK\;
+<style color=#00ffffff size=1>.</style>            pktostr:   fn(pk: ref PK)        : string\;
+<style color=#00ffffff size=1>.</style>            strtosk:   fn(s: string)         : ref SK\;
+<style color=#00ffffff size=1>.</style>            sktostr:   fn(sk: ref SK)        : string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Certificates, public keys, and private keys are passed over
+<style color=#00ffffff size=1>.</style>            networks and between applications using a Unicode
+<style color=#00ffffff size=1>.</style>            representation. This collection of functions provide a means
+<style color=#00ffffff size=1>.</style>            to convert adts supplied by the system to and from their
+<style color=#00ffffff size=1>.</style>            portable textual representation. These routines are
+<style color=#00ffffff size=1>.</style>            typically used as part of an I/O package for implementing
+<style color=#00ffffff size=1>.</style>            security.
+
+<style color=#00ffffff size=1>.</style>            Strtocert takes a string argument containing a user name, a
+<style color=#00ffffff size=1>.</style>            hash algorithm, a certifying authority and an expiration
+<style color=#00ffffff size=1>.</style>            time. Fields are separated by a newline. The return value is
+<style color=#00ffffff size=1>.</style>            a Certificate. If the string is of improper format, the
+<style color=#00ffffff size=1>.</style>            result is nil.
+
+<style color=#00ffffff size=1>.</style>            Certtostr performs the inverse operation: takes the
+<style color=#00ffffff size=1>.</style>            Certificate c and produces a text string suitable for
+<style color=#00ffffff size=1>.</style>            communication over a network.
+
+<style color=#00ffffff size=1>.</style>            Strtopk and strtosk take as their arguments a string s
+<style color=#00ffffff size=1>.</style>            representing the public and private keys respectively. S
+<style color=#00ffffff size=1>.</style>            must contain an algorithm name, a user name and the key.
+<style color=#00ffffff size=1>.</style>            Fields are separated by a newline. Strtopk returns a
+<style color=#00ffffff size=1>.</style>            reference to the resulting PK\; strtosk returns a reference
+<style color=#00ffffff size=1>.</style>            to the resulting SK. If the format of s is invalid, the
+<style color=#00ffffff size=1>.</style>            result is nil.
+
+<style color=#00ffffff size=1>.</style>            Pktostr and sktostr perform the inverse operations: they
+<style color=#00ffffff size=1>.</style>            take a public key (secret key) and produce a printable
+<style color=#00ffffff size=1>.</style>            representation as a string.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/keyring.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

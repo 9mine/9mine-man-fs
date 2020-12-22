@@ -1,0 +1,28 @@
+<action name=SNTP(8)>SNTP(8)</action>                                                   <action name=SNTP(8)>SNTP(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            sntp - simple network time protocol client
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ip/sntp \[ -di \] \[ server \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Sntp is a simple client for the Simple Network Time Protocol
+<style color=#00ffffff size=1>.</style>            (RFC1361). It requests the time from the SNTP service on
+<style color=#00ffffff size=1>.</style>            server (default: udp!$ntp!ntp), and if it receives a
+<style color=#00ffffff size=1>.</style>            plausible reply, sets the local time accordingly, in both
+<style color=#00ffffff size=1>.</style>            <action name=rtc(3)>rtc(3)</action> and /dev/time. The -d option prints debugging text,
+<style color=#00ffffff size=1>.</style>            including the time received\; the -i option stops sntp from
+<style color=#00ffffff size=1>.</style>            actually updating the local time.
+
+FILES
+<style color=#00ffffff size=1>.</style>            #r/rtc
+<style color=#00ffffff size=1>.</style>            /dev/time
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ip/sntp.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=date(1)>date(1)</action>, <action name=cons(3)>cons(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

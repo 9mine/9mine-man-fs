@@ -1,0 +1,56 @@
+<action name=IOSTATS(4)>IOSTATS(4)</action>                                             <action name=IOSTATS(4)>IOSTATS(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            iostats - file system to measure I/O
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            iostats \[ -d \] \[ -f dbfile \] cmd \[ args... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Iostats is a file server that interposes itself between a
+<style color=#00ffffff size=1>.</style>            program and a copy of the current name space, which allows
+<style color=#00ffffff size=1>.</style>            it to gather statistics of file system use at the level of
+<style color=#00ffffff size=1>.</style>            the file system protocol of <action name=intro(5)>intro(5)</action>. When the program
+<style color=#00ffffff size=1>.</style>            exits, a report is printed on standard error.
+
+<style color=#00ffffff size=1>.</style>            The report consists of three sections. The first section
+<style color=#00ffffff size=1>.</style>            reports the amount of user data in read and write messages
+<style color=#00ffffff size=1>.</style>            sent by the program and the average rate at which the data
+<style color=#00ffffff size=1>.</style>            was transferred. The protocol line reports the amount of
+<style color=#00ffffff size=1>.</style>            data sent as message headers, that is, protocol overhead.
+<style color=#00ffffff size=1>.</style>            The rpc line reports the total number of file system
+<style color=#00ffffff size=1>.</style>            transactions.
+
+<style color=#00ffffff size=1>.</style>            The second section gives the number of messages, the
+<style color=#00ffffff size=1>.</style>            fastest, slowest, and average turn around time and the
+<style color=#00ffffff size=1>.</style>            amount of data involved with each 9P message type. The final
+<style color=#00ffffff size=1>.</style>            section gives an I/O summary for each file used by the
+<style color=#00ffffff size=1>.</style>            program in terms of opens, reads and writes.
+
+<style color=#00ffffff size=1>.</style>            The -d option causes iostats to write a debugging log to
+<style color=#00ffffff size=1>.</style>            dbfile (default: iostats.out) that records all protocol
+<style color=#00ffffff size=1>.</style>            messages.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Display summary of file I/O incurred by <action name=ls(1)>ls(1)</action>:
+
+<style color=#00ffffff size=1>.</style>                 iostats ls
+
+<style color=#00ffffff size=1>.</style>            Start a new shell, displaying all 9P traffic caused by the
+<style color=#00ffffff size=1>.</style>            shell or its children:
+
+<style color=#00ffffff size=1>.</style>                 iostats -df /fd/1 sh
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/iostats.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Poor clock resolution means that large amounts of I/O must
+<style color=#00ffffff size=1>.</style>            be done to get accurate rate figures.
+
+<style color=#00ffffff size=1>.</style>            Can be fooled by programs that do fresh mounts outside its
+<style color=#00ffffff size=1>.</style>            purview.
+
+<style color=#00ffffff size=1>.</style>            Cannot monitor standard input or output.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

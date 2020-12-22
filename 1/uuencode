@@ -1,0 +1,61 @@
+<action name=UUENCODE(1)>UUENCODE(1)</action>                                           <action name=UUENCODE(1)>UUENCODE(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            uuencode, uudecode - encode/decode a file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            uuencode \[ sourcefile \] remotefile
+
+<style color=#00ffffff size=1>.</style>            uudecode \[ -p \] \[ encodedfile ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Uuencode and Uudecode are used to transmit files over
+<style color=#00ffffff size=1>.</style>            transmission mediums that do not support other than simple
+<style color=#00ffffff size=1>.</style>            ASCII data.
+
+<style color=#00ffffff size=1>.</style>            Uuencode converts a file to a purely ASCII based
+<style color=#00ffffff size=1>.</style>            representation. It encodes the contents of sourcefile or the
+<style color=#00ffffff size=1>.</style>            standard input if no source file is given. The remotefile is
+<style color=#00ffffff size=1>.</style>            included in the encoded file's header  as the name of the
+<style color=#00ffffff size=1>.</style>            file into which uudecode should place the decoded data. The
+<style color=#00ffffff size=1>.</style>            header also includes the permission modes of the source file
+<style color=#00ffffff size=1>.</style>            so that these  can be preserved on decoding. The encoded
+<style color=#00ffffff size=1>.</style>            output of uuencode is sent to the standard output.
+
+<style color=#00ffffff size=1>.</style>            Uudecode reads a file, ignoring any leading and trailing
+<style color=#00ffffff size=1>.</style>            lines that are not part of the encoding, and recreates the
+<style color=#00ffffff size=1>.</style>            original file with the filename and mode specified in it's
+<style color=#00ffffff size=1>.</style>            header. The file to decode is encodedfile or standard input
+<style color=#00ffffff size=1>.</style>            if none is given. The -p flag can be used to send the
+<style color=#00ffffff size=1>.</style>            decoded data to standard output rather than saving it in the
+<style color=#00ffffff size=1>.</style>            file whose name is specified in the header.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Encode a dis file limbo.dis so that it can be included in a
+<style color=#00ffffff size=1>.</style>            mail message:
+
+<style color=#00ffffff size=1>.</style>                 uuencode limbo.dis limbo.dis > tmp
+<style color=#00ffffff size=1>.</style>                 <place in mail message and send to recipient>
+
+<style color=#00ffffff size=1>.</style>            Decode the mail message(msg say):
+
+<style color=#00ffffff size=1>.</style>                 cat msg | uudecode
+
+<style color=#00ffffff size=1>.</style>            This creates the file limbo.dis.
+
+<style color=#00ffffff size=1>.</style>            Decode the mail message into a file of your choosing(tmp.dis
+<style color=#00ffffff size=1>.</style>            say):
+
+<style color=#00ffffff size=1>.</style>                 cat msg | uudecode -p > tmp.dis
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/uuencode.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/uudecode.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The encoded file is expanded by at least a third.
+<style color=#00ffffff size=1>.</style>            Decoding a file may overwrite an existing file.
+<style color=#00ffffff size=1>.</style>            Uuencode should take the remote file name to be the same as
+<style color=#00ffffff size=1>.</style>            the source file if one is not given.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

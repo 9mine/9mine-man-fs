@@ -1,0 +1,46 @@
+<action name=SYS-DUP(2)>SYS-DUP(2)</action>                                             <action name=SYS-DUP(2)>SYS-DUP(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dup, fildes - duplicate an open file descriptor
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            dup:    fn(oldfd, newfd: int):  int\;
+<style color=#00ffffff size=1>.</style>            fildes: fn(fd: int):            ref FD\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Limbo programming language and its libraries manage I/O
+<style color=#00ffffff size=1>.</style>            via references to instances of abstract data type, FD,
+<style color=#00ffffff size=1>.</style>            called a Limbo file descriptor, or simply `file descriptor'
+<style color=#00ffffff size=1>.</style>            when the context is understood. FD holds an integer-valued
+<style color=#00ffffff size=1>.</style>            file descriptor, the form used by the operating system, in a
+<style color=#00ffffff size=1>.</style>            structure that can be reference counted and garbage
+<style color=#00ffffff size=1>.</style>            collected. When the FD value is reclaimed, the system
+<style color=#00ffffff size=1>.</style>            automatically closes the associated integer file descriptor.
+<style color=#00ffffff size=1>.</style>            There are occasions when a program must access the
+<style color=#00ffffff size=1>.</style>            underlying integer file descriptor, such as when rearranging
+<style color=#00ffffff size=1>.</style>            the standard input and output for a new subprocess.
+
+<style color=#00ffffff size=1>.</style>            The dup call takes a valid integer file descriptor, oldfd,
+<style color=#00ffffff size=1>.</style>            referring to an open file, and returns a new integer file
+<style color=#00ffffff size=1>.</style>            descriptor referring to the same file. If newfd is in the
+<style color=#00ffffff size=1>.</style>            range of legal file descriptors, dup will use that for the
+<style color=#00ffffff size=1>.</style>            new file descriptor (closing any old file associated with
+<style color=#00ffffff size=1>.</style>            newfd)\; if newfd is -1 the system chooses the lowest
+<style color=#00ffffff size=1>.</style>            available file descriptor. If a suitable file descriptor
+<style color=#00ffffff size=1>.</style>            cannot be found, dup returns -1.
+
+<style color=#00ffffff size=1>.</style>            Fildes duplicates the integer file descriptor fd, as if by
+<style color=#00ffffff size=1>.</style>            sys->dup(fd,-1), and returns a reference to the new
+<style color=#00ffffff size=1>.</style>            descriptor as an FD value, making it usable by other
+<style color=#00ffffff size=1>.</style>            functions in Sys, such as <action name=sys-print(2)>sys-print(2)</action> and <action name=sys-read(2)>sys-read(2)</action>.
+<style color=#00ffffff size=1>.</style>            (Note that as described above, the newly-allocated file
+<style color=#00ffffff size=1>.</style>            descriptor will be closed automatically when the FD value is
+<style color=#00ffffff size=1>.</style>            reclaimed.) Fildes returns nil if it cannot duplicate fd.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-open(2)>sys-open(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

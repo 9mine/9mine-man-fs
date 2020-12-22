@@ -1,0 +1,26 @@
+<action name=UNIQ(1)>UNIQ(1)</action>                                                   <action name=UNIQ(1)>UNIQ(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            uniq - report repeated lines in a file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            uniq \[ -ud \] \[ file \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Uniq copies the input file, or the standard input, to the
+<style color=#00ffffff size=1>.</style>            standard output, comparing adjacent lines. In the normal
+<style color=#00ffffff size=1>.</style>            case, the second and succeeding copies of repeated lines are
+<style color=#00ffffff size=1>.</style>            removed. Repeated lines must be adjacent in order to be
+<style color=#00ffffff size=1>.</style>            found.
+
+<style color=#00ffffff size=1>.</style>            -u   Print unique lines.
+
+<style color=#00ffffff size=1>.</style>            -d   Print (one copy of) duplicated lines.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/uniq.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=comm(1)>comm(1)</action>, <action name=sort(1)>sort(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

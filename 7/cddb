@@ -1,0 +1,30 @@
+<action name=CDDB(7)>CDDB(7)</action>                                                   <action name=CDDB(7)>CDDB(7)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            cddb - CD database
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            cddb \[ -DTt \] \[ -s server \] query diskid ntracks track0id
+<style color=#00ffffff size=1>.</style>            ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Cddb queries an Internet database to get a table of contents
+<style color=#00ffffff size=1>.</style>            and other details for audio CDs. The CD has ntracks tracks,
+<style color=#00ffffff size=1>.</style>            and trackNid is a hash value derived from the N'th track's
+<style color=#00ffffff size=1>.</style>            characteristics\; diskid is a hash of all the track IDs.
+
+<style color=#00ffffff size=1>.</style>            Cddb takes 4 optional arguments. The -s server option causes
+<style color=#00ffffff size=1>.</style>            cddb to use a different server for the query (default is
+<style color=#00ffffff size=1>.</style>            freedb.freedb.org). The -D option causes the raw database
+<style color=#00ffffff size=1>.</style>            response from the server to be dumped to standard output.
+<style color=#00ffffff size=1>.</style>            The -t option causes the time of each track to be appended
+<style color=#00ffffff size=1>.</style>            to the normal output. -T prints track times and adds a line
+<style color=#00ffffff size=1>.</style>            at the end with the total time.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/cddb.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            9660srv (in <action name=dossrv(4)>dossrv(4)</action>)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

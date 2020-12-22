@@ -1,0 +1,45 @@
+MS2(10.1)                                               MS2(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            ms2 - convert executable or raw file to Motorola S record
+<style color=#00ffffff size=1>.</style>            format
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ms2 \[ option ... \] infile
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            ms2 converts the infile onto the standard output in Motorola
+<style color=#00ffffff size=1>.</style>            S record format. If the -b option is not given, the infile
+<style color=#00ffffff size=1>.</style>            is presumed to be an executable, and the header and symbol
+<style color=#00ffffff size=1>.</style>            table stripped. If the -b option is given, the file is
+<style color=#00ffffff size=1>.</style>            treated as raw binary. The options are:
+
+<style color=#00ffffff size=1>.</style>            -d
+<style color=#00ffffff size=1>.</style>             Encode the data segment only.
+
+<style color=#00ffffff size=1>.</style>            -s
+<style color=#00ffffff size=1>.</style>             Omit the end record, presumably to accomodate poorly
+<style color=#00ffffff size=1>.</style>             implemented decoders.
+
+<style color=#00ffffff size=1>.</style>            -Taddr
+
+<style color=#00ffffff size=1>.</style>            -Aaddr
+<style color=#00ffffff size=1>.</style>             Set the address of the text segment, i.e. the first record
+<style color=#00ffffff size=1>.</style>             output. -a is an older, deprecated option.
+
+<style color=#00ffffff size=1>.</style>            -Rn
+
+<style color=#00ffffff size=1>.</style>            -pn
+<style color=#00ffffff size=1>.</style>             Set the page size in use by the linker. -p is an older,
+<style color=#00ffffff size=1>.</style>             deprecated option.
+
+<style color=#00ffffff size=1>.</style>            -b
+<style color=#00ffffff size=1>.</style>             The infile is binary. Ignores the -R and -d options.
+
+<style color=#00ffffff size=1>.</style>            -Saddr
+<style color=#00ffffff size=1>.</style>             Sets the entry address output in the end record.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            5cv(10.1)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

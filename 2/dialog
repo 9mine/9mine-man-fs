@@ -1,0 +1,48 @@
+<action name=DIALOG(2)>DIALOG(2)</action>                                               <action name=DIALOG(2)>DIALOG(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dialog: prompt, getstring - basic dialog boxes
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "dialog.m"\;
+<style color=#00ffffff size=1>.</style>            dialog := load Dialog Dialog->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:        fn()\;
+<style color=#00ffffff size=1>.</style>            prompt:      fn(ctxt: ref Draw->Context, p: ref Draw->Image,
+<style color=#00ffffff size=1>.</style>                           icon, title, msg: string,
+<style color=#00ffffff size=1>.</style>                           dflt: int, labs: list of string): int\;
+<style color=#00ffffff size=1>.</style>            getstring:   fn(ctxt: ref Draw->Context, p: ref Draw->Image,
+<style color=#00ffffff size=1>.</style>                           s: string): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dialog module provides two simple dialog boxes for use by wm
+<style color=#00ffffff size=1>.</style>            (1) applications. Init should be called once to initialise
+<style color=#00ffffff size=1>.</style>            its internal state.
+
+<style color=#00ffffff size=1>.</style>            Prompt uses the graphics context ctxt to pop up a dialog box
+<style color=#00ffffff size=1>.</style>            to prompt the user to choose from a set of alternatives, or
+<style color=#00ffffff size=1>.</style>            to acknowledge a message. The box is created near the
+<style color=#00ffffff size=1>.</style>            northwest corner of the parent window p, represented by the
+<style color=#00ffffff size=1>.</style>            window's image. (If the parent window is a Tk Toplevel t,
+<style color=#00ffffff size=1>.</style>            for instance, the appropriate value is t.image.) If p is
+<style color=#00ffffff size=1>.</style>            nil, the box is centred on the screen. The box has the given
+<style color=#00ffffff size=1>.</style>            title and an optional icon. It displays the given msg and a
+<style color=#00ffffff size=1>.</style>            number of buttons, labelled with the strings in labs. The
+<style color=#00ffffff size=1>.</style>            dialog box waits for the user to push a button, and then
+<style color=#00ffffff size=1>.</style>            returns the index of the button pushed (the first element of
+<style color=#00ffffff size=1>.</style>            labs is index 0). If the user types a newline, the dflt
+<style color=#00ffffff size=1>.</style>            value is returned.  The button with the dflt index is
+<style color=#00ffffff size=1>.</style>            specially outlined in the dialog box.
+
+<style color=#00ffffff size=1>.</style>            Getstring pops up a dialog box near the parent window p. The
+<style color=#00ffffff size=1>.</style>            box contains the msg and an entry widget. It waits for the
+<style color=#00ffffff size=1>.</style>            user to type a string and a newline, and then returns the
+<style color=#00ffffff size=1>.</style>            typed string, without the newline.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/dialog.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=draw-context(2)>draw-context(2)</action>, <action name=tk(2)>tk(2)</action>, <action name=wmlib(2)>wmlib(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

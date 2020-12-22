@@ -1,0 +1,82 @@
+LOCK(10.2)                                             LOCK(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            lock, canlock, ilock, iunlock, unlock - spin locks
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            void    lock(Lock *l)
+
+<style color=#00ffffff size=1>.</style>            int     canlock(Lock *l)
+
+<style color=#00ffffff size=1>.</style>            void    unlock(Lock *l)
+
+<style color=#00ffffff size=1>.</style>            void    ilock(Lock *l)
+
+<style color=#00ffffff size=1>.</style>            void    iunlock(Lock *l)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These primitives control access to shared resources using
+<style color=#00ffffff size=1>.</style>            spin locks. They in turn are used to build higher-level
+<style color=#00ffffff size=1>.</style>            synchronisation mechanisms such as those described in sleep
+<style color=#00ffffff size=1>.</style>            (10.2), qlock(10.2) and qio(10.2). They should be used only
+<style color=#00ffffff size=1>.</style>            to protect short critical sections that update shared data
+<style color=#00ffffff size=1>.</style>            structures.
+
+<style color=#00ffffff size=1>.</style>            Lock loops repeatedly attempting acquire the spin lock l
+<style color=#00ffffff size=1>.</style>            until it succeeds. Lock should not be used to lock a
+<style color=#00ffffff size=1>.</style>            structure shared with an interrupt handler unless interrupts
+<style color=#00ffffff size=1>.</style>            are disabled by splhi(10.2) before attempting the lock\; it
+<style color=#00ffffff size=1>.</style>            is better to use ilock, below.
+
+<style color=#00ffffff size=1>.</style>            Canlock is non-blocking. Only one attempt is made for the
+<style color=#00ffffff size=1>.</style>            lock. It returns non-zero if the lock was successfully
+<style color=#00ffffff size=1>.</style>            acquired\; 0 otherwise.
+
+<style color=#00ffffff size=1>.</style>            Unlock releases the lock l. A lock must be unlocked only by
+<style color=#00ffffff size=1>.</style>            the locking process.
+
+<style color=#00ffffff size=1>.</style>            When called by a process, the functions above temporarily
+<style color=#00ffffff size=1>.</style>            boost its priority to the highest priority, PriLock\; its
+<style color=#00ffffff size=1>.</style>            original priority is restored at the end of the critical
+<style color=#00ffffff size=1>.</style>            section by unlock. On a uniprocessor, if l is unavailable,
+<style color=#00ffffff size=1>.</style>            lock can reschedule unless interrupts are disabled before
+<style color=#00ffffff size=1>.</style>            entering lock or there is no current process (eg, when
+<style color=#00ffffff size=1>.</style>            executing the scheduler).
+
+<style color=#00ffffff size=1>.</style>            Ilock disables interrupts before attempting to acquire the
+<style color=#00ffffff size=1>.</style>            lock. It should be used to lock a resource shared between a
+<style color=#00ffffff size=1>.</style>            process and an interrupt handler. On a uniprocessor,
+<style color=#00ffffff size=1>.</style>            disabling interrupts is sufficient to exclude an interrupt
+<style color=#00ffffff size=1>.</style>            handler from the critical section, and on a multiprocessor
+<style color=#00ffffff size=1>.</style>            the spin lock excludes an interrupt handler running on
+<style color=#00ffffff size=1>.</style>            another processor. Ilock never reschedules the caller, nor
+<style color=#00ffffff size=1>.</style>            must a caller allow itself to be rescheduled (eg, by calling
+<style color=#00ffffff size=1>.</style>            sleep(10.2)) before releasing the lock.
+
+<style color=#00ffffff size=1>.</style>            Iunlock releases a lock previously got by ilock.
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            The lock functions guard against the possibility of never
+<style color=#00ffffff size=1>.</style>            acquiring the lock by capping the number of lock attempts.
+<style color=#00ffffff size=1>.</style>            If the limit is reached, a message of the following form is
+<style color=#00ffffff size=1>.</style>            written on the console:
+
+<style color=#00ffffff size=1>.</style>                 lock loop on lock-address key key-value pc caller-pc held by pc lock-pc
+
+<style color=#00ffffff size=1>.</style>            Most lock loops represent deadlocks caused by failing to
+<style color=#00ffffff size=1>.</style>            unlock a resource, attempting to lock (eg, by recursive
+<style color=#00ffffff size=1>.</style>            call) a resource already held by the process, inconsistent
+<style color=#00ffffff size=1>.</style>            locking and unlocking of nested resources, using a spin-lock
+<style color=#00ffffff size=1>.</style>            to guard code that reschedules, using lock not ilock to
+<style color=#00ffffff size=1>.</style>            interlock with an interrupt routine, and similar blunders.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/taslock.c
+<style color=#00ffffff size=1>.</style>            /os/*/l.s
+<style color=#00ffffff size=1>.</style>            /emu/port/lock.c
+<style color=#00ffffff size=1>.</style>            /emu/*/os.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            qlock(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

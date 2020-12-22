@@ -1,0 +1,56 @@
+MALLOC(10.2)                                         MALLOC(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            malloc, mallocz, smalloc, free, realloc, calloc - kernel
+<style color=#00ffffff size=1>.</style>            memory allocators
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            void*	malloc(ulong size)
+
+<style color=#00ffffff size=1>.</style>            void*	mallocz(ulong size, int clr)
+
+<style color=#00ffffff size=1>.</style>            void*	smalloc(ulong size)
+
+<style color=#00ffffff size=1>.</style>            void*	realloc(void *p, ulong size)
+
+<style color=#00ffffff size=1>.</style>            void*	calloc(ulong n, ulong szelem)
+
+<style color=#00ffffff size=1>.</style>            void	free(void *p)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These functions allocate memory from the mainmem memory
+<style color=#00ffffff size=1>.</style>            pool. All but smalloc (which sleeps) may safely be called by
+<style color=#00ffffff size=1>.</style>            interrupt handlers.
+
+<style color=#00ffffff size=1>.</style>            Malloc returns a pointer to a block of at least size bytes,
+<style color=#00ffffff size=1>.</style>            initialised to zero. The result is aligned on a 32-bit
+<style color=#00ffffff size=1>.</style>            boundary. Mallocz is similar, but only clears the memory if
+<style color=#00ffffff size=1>.</style>            clr is non-zero.
+
+<style color=#00ffffff size=1>.</style>            Smalloc returns a pointer to a block of size bytes,
+<style color=#00ffffff size=1>.</style>            initialised to zero. If the memory is not immediately
+<style color=#00ffffff size=1>.</style>            available, smalloc retries every 100 milliseconds until the
+<style color=#00ffffff size=1>.</style>            memory is acquired.
+
+<style color=#00ffffff size=1>.</style>            Calloc returns a pointer to a block of memory of at least
+<style color=#00ffffff size=1>.</style>            n*szelem bytes, initialised to zero.
+
+<style color=#00ffffff size=1>.</style>            Realloc changes the size of the block pointed to by p to
+<style color=#00ffffff size=1>.</style>            size bytes, if possible without moving the data, and returns
+<style color=#00ffffff size=1>.</style>            a pointer to the block. The contents are unchanged up to the
+<style color=#00ffffff size=1>.</style>            lesser of old and new sizes, and any new space allocated is
+<style color=#00ffffff size=1>.</style>            initialised to zero. If p is a null pointer, realloc returns
+<style color=#00ffffff size=1>.</style>            the equivalent of malloc(size).
+
+<style color=#00ffffff size=1>.</style>            The argument to free is a pointer to a block of memory
+<style color=#00ffffff size=1>.</style>            allocated by one of the routines above, which is returned to
+<style color=#00ffffff size=1>.</style>            the allocation pool, or a null pointer, which is ignored.
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            All functions except smalloc return a null pointer if space
+<style color=#00ffffff size=1>.</style>            is unavailable.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            xalloc(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

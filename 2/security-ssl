@@ -1,0 +1,46 @@
+<action name=SECURITY-SSL(2)>SECURITY-SSL(2)</action>                                   <action name=SECURITY-SSL(2)>SECURITY-SSL(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ssl: connect, secret - interface to the Secure Sockets Layer
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            include "security.m"\;
+<style color=#00ffffff size=1>.</style>            ssl := load SSL SSL->PATH\;
+
+<style color=#00ffffff size=1>.</style>            connect: fn(fd: ref Sys->FD): (string, ref Sys->Connection)\;
+<style color=#00ffffff size=1>.</style>            secret:  fn(c: ref Sys->Connection, secretin,
+<style color=#00ffffff size=1>.</style>                            secretout: array of byte): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            SSL provides an interface to the secure sockets layer device
+<style color=#00ffffff size=1>.</style>            <action name=ssl(3)>ssl(3)</action>.
+
+<style color=#00ffffff size=1>.</style>            Connect allocates a new <action name=ssl(3)>ssl(3)</action> connection directory. It
+<style color=#00ffffff size=1>.</style>            pushes file descriptor fd into the data file of that
+<style color=#00ffffff size=1>.</style>            connection, and if successful, returns a reference to a
+<style color=#00ffffff size=1>.</style>            Connection adt describing the connection. The Connection adt
+<style color=#00ffffff size=1>.</style>            has its members set as follows: dir names the resulting
+<style color=#00ffffff size=1>.</style>            connection directory\; cfd is open on the connection's
+<style color=#00ffffff size=1>.</style>            control file\; and dfd is open on the connection's data file,
+<style color=#00ffffff size=1>.</style>            which is read and written to exchange data on the original
+<style color=#00ffffff size=1>.</style>            fd using SSL.
+
+<style color=#00ffffff size=1>.</style>            Secret sets the secrets for each direction on Connection c \;
+<style color=#00ffffff size=1>.</style>            if a secret is nil, the existing setting for that direction
+<style color=#00ffffff size=1>.</style>            remains unchanged. The string returned describes errors
+<style color=#00ffffff size=1>.</style>            encountered, if any\; otherwise it is nil.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/ssl.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=security-auth(2)>security-auth(2)</action>, <action name=ssl(3)>ssl(3)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Connect returns a tuple containing a string and a Connection
+<style color=#00ffffff size=1>.</style>            reference. On success the string is nil, and the connection
+<style color=#00ffffff size=1>.</style>            reference is not nil\; on error, the string contains a
+<style color=#00ffffff size=1>.</style>            diagnostic, and the connection reference is nil.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

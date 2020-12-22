@@ -1,0 +1,20 @@
+<action name=RUNAS(1)>RUNAS(1)</action>                                                 <action name=RUNAS(1)>RUNAS(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            runas - run command as another user
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            runas user cmd \[ arg... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Runas writes user to /dev/user and invokes cmd with the
+<style color=#00ffffff size=1>.</style>            given arguments. The command is only invoked if setting of
+<style color=#00ffffff size=1>.</style>            the user name succeeds.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/runas.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cons(3)>cons(3)</action>,
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

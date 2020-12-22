@@ -1,0 +1,82 @@
+<action name=SVC(8)>SVC(8)</action>                                                     <action name=SVC(8)>SVC(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            svc: auth, net, registry, rstyx, styx - start Inferno
+<style color=#00ffffff size=1>.</style>            network services
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            svc/net
+<style color=#00ffffff size=1>.</style>            svc/auth \[ -n \]
+<style color=#00ffffff size=1>.</style>            svc/registry
+<style color=#00ffffff size=1>.</style>            svc/rstyx
+<style color=#00ffffff size=1>.</style>            svc/styx
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The directory /dis/svc contains several <action name=sh(1)>sh(1)</action> scripts to
+<style color=#00ffffff size=1>.</style>            start network listeners (see <action name=listen(1)>listen(1)</action>) that give remote
+<style color=#00ffffff size=1>.</style>            hosts access to specific Inferno services on the current
+<style color=#00ffffff size=1>.</style>            host. The scripts can be edited to suit (or configure
+<style color=#00ffffff size=1>.</style>            themselves to suit) the requirements of a particular site.
+
+<style color=#00ffffff size=1>.</style>            A host that is not an authentication server and wishes to
+<style color=#00ffffff size=1>.</style>            start the usual network services can simply invoke svc/net,
+<style color=#00ffffff size=1>.</style>            which runs all the others except authentication.
+<style color=#00ffffff size=1>.</style>            Authentication servers should normally run svc/auth instead,
+<style color=#00ffffff size=1>.</style>            to start local name and authentication services, and a
+<style color=#00ffffff size=1>.</style>            listener for each authentication service but not file
+<style color=#00ffffff size=1>.</style>            service or remote execution.
+
+<style color=#00ffffff size=1>.</style>            Auth must be run (only) on a host that is to act as an
+<style color=#00ffffff size=1>.</style>            authentication server, providing signing and other
+<style color=#00ffffff size=1>.</style>            authentication services to itself and the network. The -n
+<style color=#00ffffff size=1>.</style>            flag tells it not to start <action name=keyfs(4)>keyfs(4)</action>, perhaps because it has
+<style color=#00ffffff size=1>.</style>            been started already. The files /keydb/signerkey, created by
+<style color=#00ffffff size=1>.</style>            <action name=createsignerkey(8)>createsignerkey(8)</action>, and /keydb/keys, managed by changelogin
+<style color=#00ffffff size=1>.</style>            (8), must exist. If so, auth starts <action name=keyfs(4)>keyfs(4)</action>, which prompts
+<style color=#00ffffff size=1>.</style>            for the password that protects /keydb/keys, the file of
+<style color=#00ffffff size=1>.</style>            secrets shared with registered users. If the key file is
+<style color=#00ffffff size=1>.</style>            empty, the confirmed password will be used in future to
+<style color=#00ffffff size=1>.</style>            encrypt and decrypt the file\; otherwise the password must
+<style color=#00ffffff size=1>.</style>            match the one used to encrypt the key file. If the password
+<style color=#00ffffff size=1>.</style>            is valid, listeners are started for <action name=keysrv(4)>keysrv(4)</action>, to allow
+<style color=#00ffffff size=1>.</style>            passwords to be changed remotely, <action name=logind(8)>logind(8)</action>, to provide
+<style color=#00ffffff size=1>.</style>            signed certificates, and <action name=signer(8)>signer(8)</action>. Note that although an
+<style color=#00ffffff size=1>.</style>            authentication server must be present to run <action name=getauthinfo(8)>getauthinfo(8)</action>
+<style color=#00ffffff size=1>.</style>            to obtain credentials to access another service, once those
+<style color=#00ffffff size=1>.</style>            have been issued, the recipient can subsequently present
+<style color=#00ffffff size=1>.</style>            them (if still valid) to access that service without further
+<style color=#00ffffff size=1>.</style>            involvement by the service (ie, it need not then be
+<style color=#00ffffff size=1>.</style>            running). See <action name=changelogin(8)>changelogin(8)</action> for the user registration
+<style color=#00ffffff size=1>.</style>            program, which can be used once auth has started.
+
+<style color=#00ffffff size=1>.</style>            Registry starts the dynamic service registry (see registry
+<style color=#00ffffff size=1>.</style>            (4)) if it is not already running, putting it at the
+<style color=#00ffffff size=1>.</style>            conventional location for the local registry, /mnt/registry.
+<style color=#00ffffff size=1>.</style>            Initial (static) service descriptions are taken from
+<style color=#00ffffff size=1>.</style>            /lib/ndb/registry if it exists. It then starts a listener to
+<style color=#00ffffff size=1>.</style>            give other hosts access to the registry as a 9P service at
+<style color=#00ffffff size=1>.</style>            tcp!*!registry, normally port 6675.
+
+<style color=#00ffffff size=1>.</style>            Rstyx listens for incoming calls to the rstyx service, and
+<style color=#00ffffff size=1>.</style>            invokes <action name=rstyxd(8)>rstyxd(8)</action> to deal with each one.
+
+<style color=#00ffffff size=1>.</style>            Styx listens for incoming calls to the styx service, and for
+<style color=#00ffffff size=1>.</style>            each one, authenticates the caller, then calls <action name=export(4)>export(4)</action> to
+<style color=#00ffffff size=1>.</style>            export the current root.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /keydb/keys       encrypted file containing user secrets
+<style color=#00ffffff size=1>.</style>            /keydb/signerkey  private key of authentication server
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/svc/auth.sh
+<style color=#00ffffff size=1>.</style>            /appl/svc/net.sh
+<style color=#00ffffff size=1>.</style>            /appl/svc/registry.sh
+<style color=#00ffffff size=1>.</style>            /appl/svc/rstyx.sh
+<style color=#00ffffff size=1>.</style>            /appl/svc/styx.sh
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=listen(1)>listen(1)</action>, <action name=export(4)>export(4)</action>, <action name=keyfs(4)>keyfs(4)</action>, <action name=keysrv(4)>keysrv(4)</action>, <action name=registry(4)>registry(4)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=changelogin(8)>changelogin(8)</action>, <action name=createsignerkey(8)>createsignerkey(8)</action>, <action name=cs(8)>cs(8)</action>, <action name=dns(8)>dns(8)</action>, logind
+<style color=#00ffffff size=1>.</style>            (8), <action name=rstyxd(8)>rstyxd(8)</action>, <action name=signer(8)>signer(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

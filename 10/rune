@@ -1,0 +1,90 @@
+RUNE(10.2)                                             RUNE(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            runetochar, chartorune, runelen, runenlen, fullrune,
+<style color=#00ffffff size=1>.</style>            utfecpy, utflen, utfnlen, utfrune, utfrrune, utfutf -
+<style color=#00ffffff size=1>.</style>            rune/UTF conversion
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            int	runetochar(char *s, Rune *r)
+
+<style color=#00ffffff size=1>.</style>            int	chartorune(Rune *r, char *s)
+
+<style color=#00ffffff size=1>.</style>            int	runelen(long r)
+
+<style color=#00ffffff size=1>.</style>            int	runenlen(Rune *r, int n)
+
+<style color=#00ffffff size=1>.</style>            int	fullrune(char *s, int n)
+
+<style color=#00ffffff size=1>.</style>            char*	utfecpy(char *s1, char *es1, char *s2)
+
+<style color=#00ffffff size=1>.</style>            int	utflen(char *s)
+
+<style color=#00ffffff size=1>.</style>            int	utfnlen(char *s, long n)
+
+<style color=#00ffffff size=1>.</style>            char*	utfrune(char *s, long c)
+
+<style color=#00ffffff size=1>.</style>            char*	utfrrune(char *s, long c)
+
+<style color=#00ffffff size=1>.</style>            char*	utfutf(char *s1, char *s2)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These routines convert to and from a UTF byte stream and
+<style color=#00ffffff size=1>.</style>            runes.
+
+<style color=#00ffffff size=1>.</style>            Runetochar copies one rune at r to at most UTFmax bytes
+<style color=#00ffffff size=1>.</style>            starting at s and returns the number of bytes copied. UTFmax
+<style color=#00ffffff size=1>.</style>            , defined as 4 in <libc.h>, is the maximum number of bytes
+<style color=#00ffffff size=1>.</style>            required to represent a rune.
+
+<style color=#00ffffff size=1>.</style>            Chartorune copies at most UTFmax bytes starting at s to one
+<style color=#00ffffff size=1>.</style>            rune at r and returns the number of bytes copied. If the
+<style color=#00ffffff size=1>.</style>            input is not exactly in UTF format, chartorune will convert
+<style color=#00ffffff size=1>.</style>            to Runeerror (0xFFFD) and return 1.
+
+<style color=#00ffffff size=1>.</style>            Runelen returns the number of bytes required to convert r
+<style color=#00ffffff size=1>.</style>            into UTF.
+
+<style color=#00ffffff size=1>.</style>            Runenlen returns the number of bytes required to convert the
+<style color=#00ffffff size=1>.</style>            n runes pointed to by r into UTF.
+
+<style color=#00ffffff size=1>.</style>            Fullrune returns 1 if the string s of length n is long
+<style color=#00ffffff size=1>.</style>            enough to be decoded by chartorune and 0 otherwise. This
+<style color=#00ffffff size=1>.</style>            does not guarantee that the string contains a legal UTF
+<style color=#00ffffff size=1>.</style>            encoding. This routine is used by programs that obtain input
+<style color=#00ffffff size=1>.</style>            a byte at a time and need to know when a full rune has
+<style color=#00ffffff size=1>.</style>            arrived.
+
+<style color=#00ffffff size=1>.</style>            The following routines are analogous to the corresponding
+<style color=#00ffffff size=1>.</style>            string routines with utf substituted for str and rune
+<style color=#00ffffff size=1>.</style>            substituted for chr.
+
+<style color=#00ffffff size=1>.</style>            Utflen returns the number of runes that are represented by
+<style color=#00ffffff size=1>.</style>            the UTF string s.
+
+<style color=#00ffffff size=1>.</style>            Utfnlen returns the number of complete runes that are
+<style color=#00ffffff size=1>.</style>            represented by the first n bytes of UTF string s. If the
+<style color=#00ffffff size=1>.</style>            last few bytes of the string contain an incompletely coded
+<style color=#00ffffff size=1>.</style>            rune, utfnlen will not count them\; in this way, it differs
+<style color=#00ffffff size=1>.</style>            from utflen, which includes every byte of the string.
+
+<style color=#00ffffff size=1>.</style>            Utfrune (utfrrune) returns a pointer to the first (last)
+<style color=#00ffffff size=1>.</style>            occurrence of rune c in the UTF string s, or 0 if c does not
+<style color=#00ffffff size=1>.</style>            occur in the string. The NUL byte terminating a string is
+<style color=#00ffffff size=1>.</style>            considered to be part of the string s.
+
+<style color=#00ffffff size=1>.</style>            Utfutf returns a pointer to the first occurrence of the UTF
+<style color=#00ffffff size=1>.</style>            string s2 as a UTF substring of s1, or 0 if there is none.
+<style color=#00ffffff size=1>.</style>            If s2 is the null string, utfutf returns s1.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libkern/rune.c
+<style color=#00ffffff size=1>.</style>            /libkern/runestrlen.c
+<style color=#00ffffff size=1>.</style>            /libkern/utflen.c
+<style color=#00ffffff size=1>.</style>            /libkern/utfrrune.c
+<style color=#00ffffff size=1>.</style>            /libkern/utfrune.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=convcs(2)>convcs(2)</action>, <action name=utf(6)>utf(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

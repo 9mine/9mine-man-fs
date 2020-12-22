@@ -1,0 +1,147 @@
+<action name=SH-TK(1)>SH-TK(1)</action>                                                 <action name=SH-TK(1)>SH-TK(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tk, chan, send, recv, alt - loadable tk module for sh.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load tk
+
+<style color=#00ffffff size=1>.</style>            chan name...
+<style color=#00ffffff size=1>.</style>            send chan value
+<style color=#00ffffff size=1>.</style>            tk window title \[ args... \]
+<style color=#00ffffff size=1>.</style>            tk winctl winid cmd
+<style color=#00ffffff size=1>.</style>            tk wintitle winid title
+<style color=#00ffffff size=1>.</style>            tk namechan chan \[ name \]
+<style color=#00ffffff size=1>.</style>            tk del name
+<style color=#00ffffff size=1>.</style>            tk winid tkcmd
+<style color=#00ffffff size=1>.</style>            ${tk window title \[ args... \] }
+<style color=#00ffffff size=1>.</style>            ${tk onscreen winid \[ how \] }
+<style color=#00ffffff size=1>.</style>            ${tk winid tkcmd }
+<style color=#00ffffff size=1>.</style>            ${recv chan }
+<style color=#00ffffff size=1>.</style>            ${alt chan  ... }
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Tk is a loadable module for <action name=sh(1)>sh(1)</action> that provides access to
+<style color=#00ffffff size=1>.</style>            Inferno Tk graphics and string channels. Most of the builtin
+<style color=#00ffffff size=1>.</style>            commands that it defines map closely to primitives within
+<style color=#00ffffff size=1>.</style>            <action name=wmlib(2)>wmlib(2)</action> and <action name=tk(2)>tk(2)</action>. Unless otherwise stated, if a command
+<style color=#00ffffff size=1>.</style>            requires a winid argument, if no window with that id is
+<style color=#00ffffff size=1>.</style>            found, a bad win exception is raised. Similarly, a reference
+<style color=#00ffffff size=1>.</style>            to an unknown channel name will raise a bad chan exception.
+<style color=#00ffffff size=1>.</style>            There is no requirement that this module be used in a
+<style color=#00ffffff size=1>.</style>            windowing context: although window creation will fail if
+<style color=#00ffffff size=1>.</style>            there is no context, the channel communication primitives
+<style color=#00ffffff size=1>.</style>            will work regardless.
+
+<style color=#00ffffff size=1>.</style>            chan      For each name in turn, chan creates a new channel
+<style color=#00ffffff size=1>.</style>                      called name within the tk module. Name henceforth
+<style color=#00ffffff size=1>.</style>                      represents a Limbo chan of string and can be used
+<style color=#00ffffff size=1>.</style>                      to send string values between sh processes running
+<style color=#00ffffff size=1>.</style>                      in parallel. A chan is also used to receive events
+<style color=#00ffffff size=1>.</style>                      arriving from the window manager. It is illegal to
+<style color=#00ffffff size=1>.</style>                      create a channel whose name consists entirely of
+<style color=#00ffffff size=1>.</style>                      numeric digits.
+
+<style color=#00ffffff size=1>.</style>            send      Send sends its argument value down the channel
+<style color=#00ffffff size=1>.</style>                      chan, blocking until a corresponding receive
+<style color=#00ffffff size=1>.</style>                      operation takes place on the channel.
+
+<style color=#00ffffff size=1>.</style>            tk window Tk window creates a new top-level window with the
+<style color=#00ffffff size=1>.</style>                      text of title in the titlebar at the top. Each
+<style color=#00ffffff size=1>.</style>                      window created by the tk module is assigned a
+<style color=#00ffffff size=1>.</style>                      unique numeric id. This id is printed by this
+<style color=#00ffffff size=1>.</style>                      command\; to get access to the value of the winid
+<style color=#00ffffff size=1>.</style>                      in a script, use ${tk window}. All the remaining
+<style color=#00ffffff size=1>.</style>                      arguments are joined together by spaces and passed
+<style color=#00ffffff size=1>.</style>                      as the tk options for the window. When a window is
+<style color=#00ffffff size=1>.</style>                      created, a corresponding channel of the same name
+<style color=#00ffffff size=1>.</style>                      is created. Events from the window manager arrive
+<style color=#00ffffff size=1>.</style>                      on this channel, and should be responded to
+<style color=#00ffffff size=1>.</style>                      appropriately using tk winctl.
+
+<style color=#00ffffff size=1>.</style>            tk onscreen
+<style color=#00ffffff size=1>.</style>                      Tk onscreen must be called to make window winid
+<style color=#00ffffff size=1>.</style>                      visible for the first time, the same as onscreen
+<style color=#00ffffff size=1>.</style>                      in <action name=tkclient(2)>tkclient(2)</action>. How is the same as for that call -
+<style color=#00ffffff size=1>.</style>                      if given, it must be one of place, onscreen or
+<style color=#00ffffff size=1>.</style>                      exact.
+
+<style color=#00ffffff size=1>.</style>            tk winctl Tk winctl is used to communicate requests to the
+<style color=#00ffffff size=1>.</style>                      window manager. (see winctl() in <action name=wmlib(2)>wmlib(2)</action>). If an
+<style color=#00ffffff size=1>.</style>                      event arriving on a window's channel is passed to
+<style color=#00ffffff size=1>.</style>                      tk winctl, a suitable default action will take
+<style color=#00ffffff size=1>.</style>                      place. The set of possible actions include:
+
+<style color=#00ffffff size=1>.</style>                      exit A request to close the window.
+
+<style color=#00ffffff size=1>.</style>                      size A request to resize the window.
+
+<style color=#00ffffff size=1>.</style>                      task A request to miniaturise the window.
+
+<style color=#00ffffff size=1>.</style>                      move A request to move the window.
+
+<style color=#00ffffff size=1>.</style>            tk wintitle
+<style color=#00ffffff size=1>.</style>                      Tk wintitle changes the title of the window winid
+<style color=#00ffffff size=1>.</style>                      to title.
+
+<style color=#00ffffff size=1>.</style>            tk del    Tk del deletes a channel or a window. If name is
+<style color=#00ffffff size=1>.</style>                      the winid of an existing window, then both the
+<style color=#00ffffff size=1>.</style>                      window and its associated channel are destroyed. A
+<style color=#00ffffff size=1>.</style>                      del of a non-existent channel or window is
+<style color=#00ffffff size=1>.</style>                      ignored.
+
+<style color=#00ffffff size=1>.</style>            tk namechan
+<style color=#00ffffff size=1>.</style>                      Tk namechan invokes the Tk module's namechan()
+<style color=#00ffffff size=1>.</style>                      function to give a tk name to a channel within the
+<style color=#00ffffff size=1>.</style>                      tk module. If name is omitted, then the tk name
+<style color=#00ffffff size=1>.</style>                      given will be the same as chan.
+
+<style color=#00ffffff size=1>.</style>            tk winid  If winid is the id of an existing window, the rest
+<style color=#00ffffff size=1>.</style>                      of the arguments joined together by spaces and
+<style color=#00ffffff size=1>.</style>                      sent as a tk command to be interpreted in that
+<style color=#00ffffff size=1>.</style>                      window. If the shell is in interactive mode, then
+<style color=#00ffffff size=1>.</style>                      the string returned by tk will be printed. The
+<style color=#00ffffff size=1>.</style>                      exit status of tk is false if the string returned
+<style color=#00ffffff size=1>.</style>                      by tk begins with a bang (!) character.
+
+<style color=#00ffffff size=1>.</style>            ${tk window}
+<style color=#00ffffff size=1>.</style>                      Tk window is the same as its command counterpart,
+<style color=#00ffffff size=1>.</style>                      except that it yields the winid of the newly
+<style color=#00ffffff size=1>.</style>                      created window rather than printing it.
+
+<style color=#00ffffff size=1>.</style>            ${tk winid}
+<style color=#00ffffff size=1>.</style>                      This command is the same as its command
+<style color=#00ffffff size=1>.</style>                      counterpart, except that it yields the return
+<style color=#00ffffff size=1>.</style>                      value from the Tk command as its result.
+
+<style color=#00ffffff size=1>.</style>            ${recv}   Recv receives a string value from chan and yields
+<style color=#00ffffff size=1>.</style>                      that value. It will block until a corresponding
+<style color=#00ffffff size=1>.</style>                      send operation takes place on the channel.
+
+<style color=#00ffffff size=1>.</style>            ${alt}    Alt waits until a value is available on any of the
+<style color=#00ffffff size=1>.</style>                      named chans. It yields a list containing two
+<style color=#00ffffff size=1>.</style>                      elements, the name of the channel from which the
+<style color=#00ffffff size=1>.</style>                      value was received, and the actual value received.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            The following code creates a window and allows normal window
+<style color=#00ffffff size=1>.</style>            manager operations on it. Another shell in a new process
+<style color=#00ffffff size=1>.</style>            group is created in order to prevent the shell window from
+<style color=#00ffffff size=1>.</style>            disappearing when the tk window is deleted.
+
+<style color=#00ffffff size=1>.</style>                 sh
+<style color=#00ffffff size=1>.</style>                 load std tk
+<style color=#00ffffff size=1>.</style>                 pctl newpgrp
+<style color=#00ffffff size=1>.</style>                 wid=${tk window 'My window'}
+<style color=#00ffffff size=1>.</style>                 tk onscreen $wid
+<style color=#00ffffff size=1>.</style>                 tk $wid update
+<style color=#00ffffff size=1>.</style>                 while {} {tk winctl $wid ${recv $wid}} &
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sh/tk.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=sh-std(1)>sh-std(1)</action>, <action name=sh-expr(1)>sh-expr(1)</action>, <action name=tkcmd(1)>tkcmd(1)</action>, <action name=tk(2)>tk(2)</action>, <action name=tkclient(2)>tkclient(2)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=wmlib(2)>wmlib(2)</action>, ``The Tk Reference Manual''
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

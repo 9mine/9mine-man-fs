@@ -1,0 +1,38 @@
+<action name=PALMSRV(4)>PALMSRV(4)</action>                                             <action name=PALMSRV(4)>PALMSRV(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            palmsrv - packet link to Palm device on serial connection
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            palm/palmsrv \[ -D \] \[ -d device \] \[ -s speed \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Palmsrv serves packet link connections to a Palm device
+<style color=#00ffffff size=1>.</style>            connected on the given device (default: /dev/eia0) at the
+<style color=#00ffffff size=1>.</style>            given speed (default: 57600 baud). Client applications open
+<style color=#00ffffff size=1>.</style>            /chan/palmsrv to obtain a connection. Each write must
+<style color=#00ffffff size=1>.</style>            contain the data portion of a single Packet
+<style color=#00ffffff size=1>.</style>            Assembly-Disassembly Protocol message containing a Desklink
+<style color=#00ffffff size=1>.</style>            protocol request. If the device rejects the request, the
+<style color=#00ffffff size=1>.</style>            write returns a diagnostic\; otherwise, a subsequent read
+<style color=#00ffffff size=1>.</style>            will retrieve the reply.
+
+<style color=#00ffffff size=1>.</style>            The server can be shut down by writing the text exit to the
+<style color=#00ffffff size=1>.</style>            file /chan/palmsrv:
+
+<style color=#00ffffff size=1>.</style>                 echo -n exit >/chan/palmsrv
+
+FILES
+<style color=#00ffffff size=1>.</style>            /chan/palmsrv
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/palm/palmsrv.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=palmfile(2)>palmfile(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            It does not yet support USB.
+<style color=#00ffffff size=1>.</style>            It does not tickle the Palm when there are long delays.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

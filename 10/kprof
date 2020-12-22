@@ -1,0 +1,28 @@
+KPROF(10.1)                                           KPROF(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            kprof - display kernel profiling data
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            kprof kernel kpdata
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Kprof presents the data accumulated by the kernel profiling
+<style color=#00ffffff size=1>.</style>            device, <action name=kprof(3)>kprof(3)</action>. The symbol table is taken from the file
+<style color=#00ffffff size=1>.</style>            kernel, the executable file of the operating system kernel
+<style color=#00ffffff size=1>.</style>            that was profiled. The data file kpdata is usually a copy of
+<style color=#00ffffff size=1>.</style>            /dev/kpdata from the device running the profiling kernel.
+
+<style color=#00ffffff size=1>.</style>            The symbol table is read and correlated with the profile
+<style color=#00ffffff size=1>.</style>            data. For each symbol, the time (in milliseconds) spent
+<style color=#00ffffff size=1>.</style>            executing between that symbol and the next is printed (in
+<style color=#00ffffff size=1>.</style>            decreasing order), together with the percentage of the total
+<style color=#00ffffff size=1>.</style>            time.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /utils/kprof
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=kprof(3)>kprof(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

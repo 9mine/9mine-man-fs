@@ -1,0 +1,78 @@
+<action name=SYS-OPEN(2)>SYS-OPEN(2)</action>                                           <action name=SYS-OPEN(2)>SYS-OPEN(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            open, create - open a file for reading or writing, create
+<style color=#00ffffff size=1>.</style>            file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            create: fn(file: string, omode, perm: int): ref FD\;
+<style color=#00ffffff size=1>.</style>            open:   fn(file: string, omode: int):       ref FD\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Open opens the file for I/O and returns an associated file
+<style color=#00ffffff size=1>.</style>            descriptor. Omode is one of Sys->OREAD, Sys->OWRITE, or
+<style color=#00ffffff size=1>.</style>            Sys->ORDWR, asking for permission to read, write, or read
+<style color=#00ffffff size=1>.</style>            and write, respectively. There are two values that can be
+<style color=#00ffffff size=1>.</style>            OR'd with those to form omode: Sys->OTRUNC says to truncate
+<style color=#00ffffff size=1>.</style>            the file before opening it, which requires write permission
+<style color=#00ffffff size=1>.</style>            even if omode is Sys->OREAD\; and Sys->ORCLOSE says to remove
+<style color=#00ffffff size=1>.</style>            the file when it is closed (ie, when the last reference to
+<style color=#00ffffff size=1>.</style>            this file descriptor goes away).
+
+<style color=#00ffffff size=1>.</style>            Open returns nil if the file does not exist, if the file
+<style color=#00ffffff size=1>.</style>            name is unacceptable, if the user does not have permission
+<style color=#00ffffff size=1>.</style>            to open it as requested (see <action name=sys-stat(2)>sys-stat(2)</action> for a description
+<style color=#00ffffff size=1>.</style>            of permissions), or if any other error occurs.
+
+<style color=#00ffffff size=1>.</style>            Create creates a new file or prepares to rewrite an existing
+<style color=#00ffffff size=1>.</style>            file, opens it according to omode (as described for open),
+<style color=#00ffffff size=1>.</style>            and returns an associated file descriptor.
+
+<style color=#00ffffff size=1>.</style>            If the file is new, the owner is set to the user id of the
+<style color=#00ffffff size=1>.</style>            creating process group, the group to that of the containing
+<style color=#00ffffff size=1>.</style>            directory, and the permissions to perm ANDed with the
+<style color=#00ffffff size=1>.</style>            permissions of the containing directory. The bits in perm
+<style color=#00ffffff size=1>.</style>            are the same as those in the file mode returned by sys-stat
+<style color=#00ffffff size=1>.</style>            (2).
+
+<style color=#00ffffff size=1>.</style>            If the file already exists, it is truncated to 0 length, but
+<style color=#00ffffff size=1>.</style>            the permissions, owner, and group remain unchanged.
+
+<style color=#00ffffff size=1>.</style>            The created file will be a directory if the Sys->DMDIR bit
+<style color=#00ffffff size=1>.</style>            is set in perm, and omode is Sys->OREAD. The file will be
+<style color=#00ffffff size=1>.</style>            exclusive-use if the Sys->DMEXCL bit is set in perm and the
+<style color=#00ffffff size=1>.</style>            underlying file server supports it\; see <action name=open(5)>open(5)</action> for details.
+<style color=#00ffffff size=1>.</style>            It will be append-only if the Sys->DMAPPEND bit is set, and
+<style color=#00ffffff size=1>.</style>            the underlying file server supports it.
+
+<style color=#00ffffff size=1>.</style>            Create returns nil if the path up to the last element of
+<style color=#00ffffff size=1>.</style>            file cannot be evaluated, if the file name is unacceptable,
+<style color=#00ffffff size=1>.</style>            if the user does not have write permission in the final
+<style color=#00ffffff size=1>.</style>            directory, if the file already exists and does not permit
+<style color=#00ffffff size=1>.</style>            the access defined by omode, or if any other error occurs.
+
+<style color=#00ffffff size=1>.</style>            If the file is new and the directory in which it is created
+<style color=#00ffffff size=1>.</style>            is a union directory (see <action name=sys-intro(2)>sys-intro(2)</action>) then the constituent
+<style color=#00ffffff size=1>.</style>            directory where the file is created depends on the structure
+<style color=#00ffffff size=1>.</style>            of the union: see <action name=sys-bind(2)>sys-bind(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            Since create may succeed even if the file exists, a special
+<style color=#00ffffff size=1>.</style>            mechanism is necessary for applications that require an
+<style color=#00ffffff size=1>.</style>            atomic create operation. If the Sys->OEXCL bit is set in the
+<style color=#00ffffff size=1>.</style>            mode for a create, the call succeeds only if the file does
+<style color=#00ffffff size=1>.</style>            not already exist\; see <action name=open(5)>open(5)</action> for details.
+
+<style color=#00ffffff size=1>.</style>            There is no explicit ``close'' routine: when the last
+<style color=#00ffffff size=1>.</style>            reference to the file descriptor is released, the system
+<style color=#00ffffff size=1>.</style>            closes the associated file. For devices and network
+<style color=#00ffffff size=1>.</style>            protocols where shutdown must be guaranteed, write a hangup
+<style color=#00ffffff size=1>.</style>            message to the associated control file and use the return
+<style color=#00ffffff size=1>.</style>            value of the write to verify closure.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-bind(2)>sys-bind(2)</action>, <action name=sys-stat(2)>sys-stat(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

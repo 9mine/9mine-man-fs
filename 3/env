@@ -1,0 +1,40 @@
+<action name=ENV(3)>ENV(3)</action>                                                     <action name=ENV(3)>ENV(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            env - environment device
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind #e /env
+
+<style color=#00ffffff size=1>.</style>            /env/name
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The environment device serves a one-level directory giving
+<style color=#00ffffff size=1>.</style>            access to environment variables and their values. It is
+<style color=#00ffffff size=1>.</style>            conventionally bound to /env. The value of an environment
+<style color=#00ffffff size=1>.</style>            variable name may be obtained by reading the file /env/name.
+<style color=#00ffffff size=1>.</style>            If the file does not exist, the variable is unset and has
+<style color=#00ffffff size=1>.</style>            the value nil. The maximum length of a variable name is 127
+<style color=#00ffffff size=1>.</style>            bytes.
+
+<style color=#00ffffff size=1>.</style>            New environment variables are set by creating the
+<style color=#00ffffff size=1>.</style>            corresponding file in /env and writing the required value to
+<style color=#00ffffff size=1>.</style>            that file. Similarly environment variables are destroyed
+<style color=#00ffffff size=1>.</style>            (unset) by removing the corresponding file.
+
+<style color=#00ffffff size=1>.</style>            Processes sharing an `environment group' see the same files
+<style color=#00ffffff size=1>.</style>            and contents\; changes made by one process are seen by the
+<style color=#00ffffff size=1>.</style>            others. A process can insulate itself from further changes
+<style color=#00ffffff size=1>.</style>            using the ``FORKENV'' option to <action name=sys-pctl(2)>sys-pctl(2)</action>, which creates a
+<style color=#00ffffff size=1>.</style>            new environment group that is a copy of the old, but further
+<style color=#00ffffff size=1>.</style>            changes in each are independent. A new empty environment
+<style color=#00ffffff size=1>.</style>            group is created by the ``NEWENV'' option to <action name=sys-pctl(2)>sys-pctl(2)</action>.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/devenv.c
+<style color=#00ffffff size=1>.</style>            /emu/port/devenv.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=env(1)>env(1)</action>, <action name=sh(1)>sh(1)</action>, <action name=env(2)>env(2)</action>, <action name=sys-pctl(2)>sys-pctl(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

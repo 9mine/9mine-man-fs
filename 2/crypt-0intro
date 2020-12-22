@@ -1,0 +1,75 @@
+<action name=CRYPT-INTRO(2)>CRYPT-INTRO(2)</action>                                     <action name=CRYPT-INTRO(2)>CRYPT-INTRO(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Crypt intro - introduction to the Crypt cryptography module
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "ipints.m"\;
+<style color=#00ffffff size=1>.</style>            ipints := load IPints IPints->PATH\;
+<style color=#00ffffff size=1>.</style>            IPint: import ipints\;
+
+<style color=#00ffffff size=1>.</style>            include "crypt.m"\;
+<style color=#00ffffff size=1>.</style>            crypt := load Crypt Crypt->PATH\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Crypt contains a mixed set of functions that variously:
+
+<style color=#00ffffff size=1>.</style>            •    form cryptographically secure digests\; see crypt-sha1
+<style color=#00ffffff size=1>.</style>                 (2)
+
+<style color=#00ffffff size=1>.</style>            •    generate public/private key pairs\; see <action name=crypt-gensk(2)>crypt-gensk(2)</action>
+
+<style color=#00ffffff size=1>.</style>            •    encrypt data, using AES, DES, or IDEA\; see crypt-crypt
+<style color=#00ffffff size=1>.</style>                 (2)
+
+<style color=#00ffffff size=1>.</style>            •    create and verify cryptographic signatures using the
+<style color=#00ffffff size=1>.</style>                 public keys\; see <action name=crypt-sign(2)>crypt-sign(2)</action>
+
+<style color=#00ffffff size=1>.</style>         Public Key Cryptography
+<style color=#00ffffff size=1>.</style>            Public key cryptography has many uses. Inferno relies on it
+<style color=#00ffffff size=1>.</style>            only for digital signatures. The private key may be used to
+<style color=#00ffffff size=1>.</style>            digitally sign data, the public one to verify the signature.
+
+<style color=#00ffffff size=1>.</style>            Inferno provides three data types to represent the different
+<style color=#00ffffff size=1>.</style>            components of the public key signature scheme. The PK adt
+<style color=#00ffffff size=1>.</style>            contains the data necessary to construct a public key\; the
+<style color=#00ffffff size=1>.</style>            SK adt contains the data necessary to construct a secret
+<style color=#00ffffff size=1>.</style>            key. A key contains the public or secret parameters for the
+<style color=#00ffffff size=1>.</style>            signature algorithm specified by the adt's pick tag.
+<style color=#00ffffff size=1>.</style>            Ownership of a key is not recorded in the key value itself
+<style color=#00ffffff size=1>.</style>            but in a separate certificate. Finally, the PKsig adt
+<style color=#00ffffff size=1>.</style>            contains one or more values representing a given form of
+<style color=#00ffffff size=1>.</style>            digital signature.
+
+<style color=#00ffffff size=1>.</style>            Certificates and indeed signature representations are
+<style color=#00ffffff size=1>.</style>            varied, and implemented by other modules.
+
+<style color=#00ffffff size=1>.</style>         Large Precision Arithmetic
+<style color=#00ffffff size=1>.</style>            Many Crypt operations require integers much larger than int
+<style color=#00ffffff size=1>.</style>            or big. It therefore uses the multiple-precision package
+<style color=#00ffffff size=1>.</style>            <action name=ipints(2)>ipints(2)</action>. That module's IPint adt stands for infinite
+<style color=#00ffffff size=1>.</style>            precision integer, though, for space considerations, our
+<style color=#00ffffff size=1>.</style>            implementation limits the maximum integer to
+<style color=#00ffffff size=1>.</style>            2\u\s-28192\s0\d-1.
+
+<style color=#00ffffff size=1>.</style>            An IPint can be converted into two external formats. The
+<style color=#00ffffff size=1>.</style>            first is an array of bytes in which the first byte is the
+<style color=#00ffffff size=1>.</style>            highest order byte of the integer.  This format is useful
+<style color=#00ffffff size=1>.</style>            when communicating with the <action name=ssl(3)>ssl(3)</action> device. The second is
+<style color=#00ffffff size=1>.</style>            similar but represents the array of bytes as text, using
+<style color=#00ffffff size=1>.</style>            either base 16 or a MIME base 64 format, allowing IPints to
+<style color=#00ffffff size=1>.</style>            be stored in files or transmitted across networks in a human
+<style color=#00ffffff size=1>.</style>            readable form.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/crypt.c
+<style color=#00ffffff size=1>.</style>            /libinterp/ipint.c
+<style color=#00ffffff size=1>.</style>            /libmp
+<style color=#00ffffff size=1>.</style>            /libsec
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=security-intro(2)>security-intro(2)</action>
+<style color=#00ffffff size=1>.</style>            B. Schneier, Applied Cryptography, 1996, J. Wiley & Sons,
+<style color=#00ffffff size=1>.</style>            Inc.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

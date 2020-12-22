@@ -1,0 +1,89 @@
+<action name=UBFA(6)>UBFA(6)</action>                                                   <action name=UBFA(6)>UBFA(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ubfa - universal binary format for data transport
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            UBF(A) is the data transport encoding for Armstrong's
+<style color=#00ffffff size=1>.</style>            Universal Binary Format. It provides four primitive types:
+<style color=#00ffffff size=1>.</style>            atoms (symbolic constants), integers, strings, and binary
+<style color=#00ffffff size=1>.</style>            data. There are two compound types: fixed-length tuples and
+<style color=#00ffffff size=1>.</style>            variable-length lists. <action name=Ubfa(2)>Ubfa(2)</action> provides basic support in
+<style color=#00ffffff size=1>.</style>            Limbo for reading and writing streams of UBF(A)-encoded
+<style color=#00ffffff size=1>.</style>            data.
+
+<style color=#00ffffff size=1>.</style>            The input syntax is defined by the following rules:
+
+<style color=#00ffffff size=1>.</style>                 input	::=	item* '$'
+<style color=#00ffffff size=1>.</style>                 item	::=	integer | atom | string | binary | tuple | list | store | push | comment | tag
+
+<style color=#00ffffff size=1>.</style>                 integer	::=	'-'?\[0-9\]+
+<style color=#00ffffff size=1>.</style>                 atom	::=	"'" (\[^\'\] | '\\' | "\'")* "'"
+<style color=#00ffffff size=1>.</style>                 string	::=	'"' (\[^\"\] | '\\' | '\"')* '"'
+<style color=#00ffffff size=1>.</style>                 binary	::=	'~' byte* '~'      # preceded by integer byte count
+
+<style color=#00ffffff size=1>.</style>                 tuple	::=	'{' item* '}'
+<style color=#00ffffff size=1>.</style>                 list	::=	'#' (item '&')*
+
+<style color=#00ffffff size=1>.</style>                 store	::=	'>' reg
+<style color=#00ffffff size=1>.</style>                 push	::=	reg
+<style color=#00ffffff size=1>.</style>                 reg	::=	\[^-%"~'`{}#& \n\r\t,0-9\]
+<style color=#00ffffff size=1>.</style>                 comment	::=	'%' (\[^\%\] | '\\' | '\%')* '%'
+<style color=#00ffffff size=1>.</style>                 tag	::=	'`' (\[^\`\] | '\\' | '\`')* '`'
+
+<style color=#00ffffff size=1>.</style>            White space is any sequence of blank, tab, newline or
+<style color=#00ffffff size=1>.</style>            carriage-return characters, and can appear before or after
+<style color=#00ffffff size=1>.</style>            any instance of item in the grammar.
+
+<style color=#00ffffff size=1>.</style>            The input data is interpreted by a simple virtual machine.
+<style color=#00ffffff size=1>.</style>            The machine contains a stack of values of primitive and
+<style color=#00ffffff size=1>.</style>            compound types, and a set of registers also containing
+<style color=#00ffffff size=1>.</style>            values of those types. White space and comments are ignored.
+<style color=#00ffffff size=1>.</style>            Primitive integer, atom and string values are pushed onto
+<style color=#00ffffff size=1>.</style>            the stack as they are recognised. Certain input bytes
+<style color=#00ffffff size=1>.</style>            outside any value act as operators:
+
+<style color=#00ffffff size=1>.</style>            {    Note the current stack depth.
+
+<style color=#00ffffff size=1>.</style>            }    Pop stack values to restore the most recently noted
+<style color=#00ffffff size=1>.</style>                 stack depth. Push a single value representing a tuple
+<style color=#00ffffff size=1>.</style>                 of those items\; the left-most value in the tuple is the
+<style color=#00ffffff size=1>.</style>                 last one popped (the first in the original input
+<style color=#00ffffff size=1>.</style>                 stream).
+
+<style color=#00ffffff size=1>.</style>            ~    Pop an integer value n from the stack. Read n bytes
+<style color=#00ffffff size=1>.</style>                 from the input stream and push a value onto the stack
+<style color=#00ffffff size=1>.</style>                 that represents them. The next byte must be the
+<style color=#00ffffff size=1>.</style>                 character ~, which is discarded.
+
+<style color=#00ffffff size=1>.</style>            #    Push a value representing an empty list onto the stack.
+
+<style color=#00ffffff size=1>.</style>            &    Pop a value v. Pop another value l, which must
+<style color=#00ffffff size=1>.</style>                 represent a list. Push a value that represents the list
+<style color=#00ffffff size=1>.</style>                 v::l. (Note that the items in a list therefore appear
+<style color=#00ffffff size=1>.</style>                 in reverse order in the input stream.)
+
+<style color=#00ffffff size=1>.</style>            >reg Pop the top value from the stack and store it in a
+<style color=#00ffffff size=1>.</style>                 register labelled by the byte reg.
+
+<style color=#00ffffff size=1>.</style>            reg  Push the value of register reg (which must be non-null)
+<style color=#00ffffff size=1>.</style>                 onto the stack.
+
+<style color=#00ffffff size=1>.</style>            tag  Associate the tag string with the value on top of the
+<style color=#00ffffff size=1>.</style>                 stack. The <action name=ubfa(2)>ubfa(2)</action> implementation does so by replacing
+<style color=#00ffffff size=1>.</style>                 it by a special Tag tuple.
+
+<style color=#00ffffff size=1>.</style>            $    End-of-input: there must be exactly one value on the
+<style color=#00ffffff size=1>.</style>                 stack, which is the result.
+
+<style color=#00ffffff size=1>.</style>            Applications using UBF(A) typically take turns to exchange
+<style color=#00ffffff size=1>.</style>            input values on a communication channel.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ubfa(2)>ubfa(2)</action>, <action name=json(6)>json(6)</action>, <action name=sexprs(6)>sexprs(6)</action>
+<style color=#00ffffff size=1>.</style>            J L Armstrong, ``Getting Erlang to talk to the outside
+<style color=#00ffffff size=1>.</style>            world'', ACM SIGPLAN Erlang workshop 2002 , Pittsburg, PA
+<style color=#00ffffff size=1>.</style>            USA
+<style color=#00ffffff size=1>.</style>            UBF web page, http://www.sics.se/~joe/ubf/
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

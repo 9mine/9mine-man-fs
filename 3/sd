@@ -1,0 +1,129 @@
+<action name=SD(3)>SD(3)</action>                                                       <action name=SD(3)>SD(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            sd - storage device interface
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind #S /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/sdCu/ctl
+<style color=#00ffffff size=1>.</style>            /dev/sdCu/raw
+<style color=#00ffffff size=1>.</style>            /dev/sdCu/data
+<style color=#00ffffff size=1>.</style>            ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The storage device interface serves a two-level directory
+<style color=#00ffffff size=1>.</style>            giving access to multiple storage units, typically ATA(PI)
+<style color=#00ffffff size=1>.</style>            or SCSI discs. Each unit is accessed via files in the
+<style color=#00ffffff size=1>.</style>            directory named by the controller to which it is attached, C
+<style color=#00ffffff size=1>.</style>            , and by its unit number u. The controller naming convention
+<style color=#00ffffff size=1>.</style>            for ATA(PI) units starts with the first controller being
+<style color=#00ffffff size=1>.</style>            named `C', the second `D', etc. up to a maximum of 4
+<style color=#00ffffff size=1>.</style>            controllers (\[C-F\])\; legacy controllers are always 'C' and
+<style color=#00ffffff size=1>.</style>            'D'. There can be a maximum of 2 units per ATA(PI)
+<style color=#00ffffff size=1>.</style>            controller (\[01\]). The controller naming convention for SCSI
+<style color=#00ffffff size=1>.</style>            units starts with the first controller being named `0', the
+<style color=#00ffffff size=1>.</style>            second `1', etc. up to a maximum of 16 controllers (\[0-9a-f
+<style color=#00ffffff size=1>.</style>            \]). There can be a maximum of 16 units per SCSI controller
+<style color=#00ffffff size=1>.</style>            (\[0-9a-f\]).
+
+<style color=#00ffffff size=1>.</style>            Units are not accessed before the first attach. Units may be
+<style color=#00ffffff size=1>.</style>            individually attached using the attach specifier, for
+<style color=#00ffffff size=1>.</style>            example
+
+<style color=#00ffffff size=1>.</style>                 bind -a '#SsdD0' /dev
+
+<style color=#00ffffff size=1>.</style>            An attach without a specifier will cause the driver to scan
+<style color=#00ffffff size=1>.</style>            for all possible units before processing the rest of the
+<style color=#00ffffff size=1>.</style>            name.
+
+<style color=#00ffffff size=1>.</style>            The subdirectory for each unit contains two files, ctl and
+<style color=#00ffffff size=1>.</style>            raw. In addition, if the unit is a direct-access disc of
+<style color=#00ffffff size=1>.</style>            some type it may be split into partitions and the
+<style color=#00ffffff size=1>.</style>            subdirectory may contain a file per partition. By default,
+<style color=#00ffffff size=1>.</style>            the partition data will exist for such media.
+
+<style color=#00ffffff size=1>.</style>            Partitions are added and deleted by writing to the ctl file
+
+<style color=#00ffffff size=1>.</style>                 part name start-sector end-sector
+<style color=#00ffffff size=1>.</style>                 delpart name
+
+<style color=#00ffffff size=1>.</style>            The default data partition may be deleted. A partition
+<style color=#00ffffff size=1>.</style>            cannot be deleted if a process has it open. If a change of
+<style color=#00ffffff size=1>.</style>            removable media is detected, the new media cannot be opened
+<style color=#00ffffff size=1>.</style>            until all open partitions on the old media are closed.
+
+<style color=#00ffffff size=1>.</style>            Reading the ctl file returns at least one line of textual
+<style color=#00ffffff size=1>.</style>            information about the unit. The first line will always be
+<style color=#00ffffff size=1>.</style>            prefixed by inquiry and will give a manufacturer and model
+<style color=#00ffffff size=1>.</style>            number if possible. A line prefixed by config will be
+<style color=#00ffffff size=1>.</style>            returned for appropriate media, e.g. for ATA(PI) units the
+<style color=#00ffffff size=1>.</style>            remainder of the line contains configuration information
+<style color=#00ffffff size=1>.</style>            from the device's identify command (config and capabilities)
+<style color=#00ffffff size=1>.</style>            and also the available I/O transfer options\; this is a
+<style color=#00ffffff size=1>.</style>            diagnostic aid. A line prefixed by geometry will be returned
+<style color=#00ffffff size=1>.</style>            for appropriate media\; at least two numbers will follow, the
+<style color=#00ffffff size=1>.</style>            first being the number of sectors contained in the unit and
+<style color=#00ffffff size=1>.</style>            the second the sector size in bytes. Any remaining
+<style color=#00ffffff size=1>.</style>            information on the geometry line is unit-dependent, for
+<style color=#00ffffff size=1>.</style>            instance, head, cylinder and sector counts for ATA discs. If
+<style color=#00ffffff size=1>.</style>            any partitions are defined for the media, their name,
+<style color=#00ffffff size=1>.</style>            start-sector and end-sector will be returned, prefixed by
+<style color=#00ffffff size=1>.</style>            part.
+
+<style color=#00ffffff size=1>.</style>                 % cat /dev/sdD0/ctl
+<style color=#00ffffff size=1>.</style>                 inquiry KENWOOD CD-ROM UCR-421  208E10/20/99  7.39  2 M0
+<style color=#00ffffff size=1>.</style>                 config 85C0 capabilities 0F00 dma 00550004 dmactl 00000000
+<style color=#00ffffff size=1>.</style>                 geometry 242725 2352
+<style color=#00ffffff size=1>.</style>                 part data 0 242725
+<style color=#00ffffff size=1>.</style>                 % 
+
+<style color=#00ffffff size=1>.</style>            The use of DMA and multi-sector read/write commands may be
+<style color=#00ffffff size=1>.</style>            enabled and disabled on ATA(PI) units by writing to the ctl
+<style color=#00ffffff size=1>.</style>            file dma and rwm respectively followed by on or off. For
+<style color=#00ffffff size=1>.</style>            example, to enable DMA on a unit that supports it:
+
+<style color=#00ffffff size=1>.</style>                 % echo 'dma on'>/dev/sd00/ctl
+
+<style color=#00ffffff size=1>.</style>            If supported by the unit, the standby timer may be enabled:
+
+<style color=#00ffffff size=1>.</style>                 % echo 'standby T'>/dev/sdC0/ctl
+
+<style color=#00ffffff size=1>.</style>            where T is the standby timer period in seconds. T must be
+<style color=#00ffffff size=1>.</style>            between 30 and 1200, or can be 0 to disable the timer.
+
+<style color=#00ffffff size=1>.</style>            The raw file is used to execute an arbitrary command on the
+<style color=#00ffffff size=1>.</style>            unit at a low level. This is used by programs to manipulate
+<style color=#00ffffff size=1>.</style>            devices that do not fit the simple storage model or using
+<style color=#00ffffff size=1>.</style>            special commands for maintenance purposes. The following
+<style color=#00ffffff size=1>.</style>            steps may be used to execute a command
+
+<style color=#00ffffff size=1>.</style>                 - Write the command to the raw file\;
+
+<style color=#00ffffff size=1>.</style>                 - Read or write data associated with the command,
+<style color=#00ffffff size=1>.</style>                 according to the direction of the transfer.
+
+<style color=#00ffffff size=1>.</style>                 - Read the raw file to retrieve the status of the
+<style color=#00ffffff size=1>.</style>                 command, returned as a text integer.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/devsd.c
+<style color=#00ffffff size=1>.</style>            /os/*/sd*.\[hc\]
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ds(3)>ds(3)</action>, <action name=floppy(3)>floppy(3)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Still in development.
+
+<style color=#00ffffff size=1>.</style>            No LUNs.
+
+<style color=#00ffffff size=1>.</style>            The 4 controller limit for ATA(PI) is not enforced.
+
+<style color=#00ffffff size=1>.</style>            No account is taken of some buggy ATA PCI controllers such
+<style color=#00ffffff size=1>.</style>            as the CMD640.
+
+<style color=#00ffffff size=1>.</style>            ATA(PI) units come up with DMA and multi-sector read/write
+<style color=#00ffffff size=1>.</style>            capability disabled.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

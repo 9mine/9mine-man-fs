@@ -1,0 +1,181 @@
+<action name=CPROF(1)>CPROF(1)</action>                                                 <action name=CPROF(1)>CPROF(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            cprof - coverage profiling of limbo programs
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            cprof \[ -nfer \] \[ -m modname \] ... \[ cmd arg ... \]
+
+<style color=#00ffffff size=1>.</style>            wm/cprof \[ -efr \] \[ -m modname \] ... \[ cmd arg ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Cprof is a coverage profiling tool which shows whether lines
+<style color=#00ffffff size=1>.</style>            of limbo source have been executed or not. It can also show
+<style color=#00ffffff size=1>.</style>            the number of times a line of code has been executed and can
+<style color=#00ffffff size=1>.</style>            accumulate results over a series of runs if so desired. The
+<style color=#00ffffff size=1>.</style>            source in question should be compiled with the -g flag so
+<style color=#00ffffff size=1>.</style>            that the relevant symbol table files exist.
+
+<style color=#00ffffff size=1>.</style>            The -n option lists the name of the file along with the line
+<style color=#00ffffff size=1>.</style>            number.
+
+<style color=#00ffffff size=1>.</style>            The -f option shows the number of times source code is
+<style color=#00ffffff size=1>.</style>            executed rather than simply indicating coverage.
+
+<style color=#00ffffff size=1>.</style>            The -r options indicates that the profiling results should
+<style color=#00ffffff size=1>.</style>            be recorded. Any profiled dis file of the form <name>.dis
+<style color=#00ffffff size=1>.</style>            will have the raw profiling results stored in a file named
+<style color=#00ffffff size=1>.</style>            <name>.prf. If this file already existed before the run, the
+<style color=#00ffffff size=1>.</style>            results will be added to this file. The profiling results
+<style color=#00ffffff size=1>.</style>            are not shown when this option is given.
+
+<style color=#00ffffff size=1>.</style>            The -m option lists the module names which are to be
+<style color=#00ffffff size=1>.</style>            profiled. If none are given, all the modules loaded by the
+<style color=#00ffffff size=1>.</style>            kernel will be profiled. The name may be the actual name of
+<style color=#00ffffff size=1>.</style>            the module or its path name.
+
+<style color=#00ffffff size=1>.</style>            The -e option profiles the module that is loaded first in
+<style color=#00ffffff size=1>.</style>            any following command. In this case there is no need to give
+<style color=#00ffffff size=1>.</style>            a -m option as this is added automatically.
+
+<style color=#00ffffff size=1>.</style>            Any remaining arguments are assumed to specify a command and
+<style color=#00ffffff size=1>.</style>            set of arguments to the command. If this is the case, cprof
+<style color=#00ffffff size=1>.</style>            will automatically start profiling, run the command to
+<style color=#00ffffff size=1>.</style>            completion and then stop profiling before either recording
+<style color=#00ffffff size=1>.</style>            the results or showing the profile statistics.
+
+<style color=#00ffffff size=1>.</style>            If no command is given to profile, then cprof will show the
+<style color=#00ffffff size=1>.</style>            profile statistics from any existing recorded results in
+<style color=#00ffffff size=1>.</style>            .prf files instead.
+
+<style color=#00ffffff size=1>.</style>            Cprof discriminates between different sections of code on
+<style color=#00ffffff size=1>.</style>            the same line. A limbo for statement, for example,
+<style color=#00ffffff size=1>.</style>            consisting of initialization, condition and step all on the
+<style color=#00ffffff size=1>.</style>            same line of source code will be dealt with as three
+<style color=#00ffffff size=1>.</style>            separate sections.
+
+<style color=#00ffffff size=1>.</style>            Cprof displays the profile statistics as a list of the limbo
+<style color=#00ffffff size=1>.</style>            source preceded by a line number and an indication of
+<style color=#00ffffff size=1>.</style>            whether the line was executed or not. For each section of
+<style color=#00ffffff size=1>.</style>            code on each line, a plus sign indicates that it was
+<style color=#00ffffff size=1>.</style>            executed, a minus sign that it was not and a question mark
+<style color=#00ffffff size=1>.</style>            indicates that some of the dis instructions associated with
+<style color=#00ffffff size=1>.</style>            the section of code were executed but some were not. Lines
+<style color=#00ffffff size=1>.</style>            with no associated dis code do not have an indication. Of
+<style color=#00ffffff size=1>.</style>            course, given the -f option, the number of times each
+<style color=#00ffffff size=1>.</style>            section is executed is shown instead.
+
+<style color=#00ffffff size=1>.</style>            Wm/cprof is a graphical coverage profiling tool which shows
+<style color=#00ffffff size=1>.</style>            which lines of limbo source have not been executed. It can
+<style color=#00ffffff size=1>.</style>            accumulate results over a series of runs if so desired.
+
+<style color=#00ffffff size=1>.</style>            The -r options indicates that the profiling results should
+<style color=#00ffffff size=1>.</style>            be recorded. Any profiled dis file of the form <name>.dis
+<style color=#00ffffff size=1>.</style>            will have the raw profiling results stored in a file named
+<style color=#00ffffff size=1>.</style>            <name>.prf. If this file already existed before the run, the
+<style color=#00ffffff size=1>.</style>            results will be added to this file.
+
+<style color=#00ffffff size=1>.</style>            The -m option lists the module names which are to be
+<style color=#00ffffff size=1>.</style>            profiled. If none are given, all the modules loaded by the
+<style color=#00ffffff size=1>.</style>            kernel will be profiled. The name may be the actual name of
+<style color=#00ffffff size=1>.</style>            the module or its path name.
+
+<style color=#00ffffff size=1>.</style>            The -e option profiles the module that is loaded first in
+<style color=#00ffffff size=1>.</style>            any following command. In this case there is no need to give
+<style color=#00ffffff size=1>.</style>            a -m option as this is added automatically.
+
+<style color=#00ffffff size=1>.</style>            The -f option allows a view of the execution profile rather
+<style color=#00ffffff size=1>.</style>            than coverage profile. Each source line is preceded by the
+<style color=#00ffffff size=1>.</style>            number of times it was executed and the text is coloured
+<style color=#00ffffff size=1>.</style>            according to this: the darker the colour the more times the
+<style color=#00ffffff size=1>.</style>            section of code was executed.
+
+<style color=#00ffffff size=1>.</style>            Any remaining arguments are assumed to specify a command and
+<style color=#00ffffff size=1>.</style>            set of arguments to the command. If this is the case,
+<style color=#00ffffff size=1>.</style>            wm/cprof will automatically start profiling, run the command
+<style color=#00ffffff size=1>.</style>            to completion and then stop profiling before optionally
+<style color=#00ffffff size=1>.</style>            recording the results and showing the profile statistics.
+
+<style color=#00ffffff size=1>.</style>            If no command is given to profile, then wm/cprof will show
+<style color=#00ffffff size=1>.</style>            the profile statistics from any existing recorded results in
+<style color=#00ffffff size=1>.</style>            .prf files instead.
+
+<style color=#00ffffff size=1>.</style>            Wm/cprof displays the profile statistics graphically. When
+<style color=#00ffffff size=1>.</style>            the -f option is not present, code that has not been
+<style color=#00ffffff size=1>.</style>            executed is shown in white against a red background. Code
+<style color=#00ffffff size=1>.</style>            whose corresponding dis instructions have not been wholly
+<style color=#00ffffff size=1>.</style>            executed are shown in red against a white background.
+<style color=#00ffffff size=1>.</style>            Typically a line of code such as
+<style color=#00ffffff size=1>.</style>            	x = !x\;
+<style color=#00ffffff size=1>.</style>            might show only partial execution if x has changed value
+<style color=#00ffffff size=1>.</style>            from 1 to 0 but not vice-verse.
+
+<style color=#00ffffff size=1>.</style>            The top of the text window names the module along with any
+<style color=#00ffffff size=1>.</style>            modules before and after it in the list. If a module has
+<style color=#00ffffff size=1>.</style>            100% coverage this is stated as well. To help find
+<style color=#00ffffff size=1>.</style>            unexecuted code, use the find icon in the menu bar. To move
+<style color=#00ffffff size=1>.</style>            to the next or go back to any other profiled modules, use
+<style color=#00ffffff size=1>.</style>            the arrow icons in the menu bar. The last icon, the reload 
+<style color=#00ffffff size=1>.</style>            icon, pops up a menu of profiled modules to choose from.
+
+<style color=#00ffffff size=1>.</style>            wm/cprof calls cprof to do the actual work.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            To profile a particular command
+
+<style color=#00ffffff size=1>.</style>                 cprof /dis/math/sieve 100
+
+<style color=#00ffffff size=1>.</style>            To profile the same command but restrict attention to its
+<style color=#00ffffff size=1>.</style>            own module (Sieve).
+
+<style color=#00ffffff size=1>.</style>                 cprof -m Sieve /dis/math/sieve 100
+
+<style color=#00ffffff size=1>.</style>            A shorter version of the above:
+
+<style color=#00ffffff size=1>.</style>                 cprof -e /dis/math/sieve 100
+
+<style color=#00ffffff size=1>.</style>            Make 3 runs recording results as we go:
+
+<style color=#00ffffff size=1>.</style>                 cprof -e -r /dis/math/sieve 100
+<style color=#00ffffff size=1>.</style>                 cprof -e -r /dis/math/sieve 1000
+<style color=#00ffffff size=1>.</style>                 cprof -e -r /dis/math/sieve 10000
+
+<style color=#00ffffff size=1>.</style>            Now look at the cumulative results:
+
+<style color=#00ffffff size=1>.</style>                 cprof -m /dis/math/sieve.dis
+
+<style color=#00ffffff size=1>.</style>            To profile a particular command:
+
+<style color=#00ffffff size=1>.</style>                 wm/cprof /dis/math/sieve 100
+
+<style color=#00ffffff size=1>.</style>            To profile the same command but restrict attention to its
+<style color=#00ffffff size=1>.</style>            own module (Partitions).
+
+<style color=#00ffffff size=1>.</style>                 wm/cprof -m Sieve /dis/math/sieve 100
+
+<style color=#00ffffff size=1>.</style>            A shorter version of the above:
+
+<style color=#00ffffff size=1>.</style>                 wm/cprof -e /dis/math/sieve 100
+
+<style color=#00ffffff size=1>.</style>            Make 3 runs recording results as we go using cprof for
+<style color=#00ffffff size=1>.</style>            simplicity:
+
+<style color=#00ffffff size=1>.</style>                 cprof -e -r /dis/math/sieve 100
+<style color=#00ffffff size=1>.</style>                 cprof -e -r /dis/math/sieve 1000
+<style color=#00ffffff size=1>.</style>                 cprof -e -r /dis/math/sieve 10000
+
+<style color=#00ffffff size=1>.</style>            Now look at the cumulative results graphically:
+
+<style color=#00ffffff size=1>.</style>                 wm/cprof -m /dis/math/sieve.dis
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/cprof.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/cprof.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=m<action name=prof(1)>prof(1)</action>>m<action name=prof(1)>prof(1)</action></action>, <action name=prof(1)>prof(1)</action>, <action name=prof(2)>prof(2)</action>, <action name=prof(3)>prof(3)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Neither command can profile compiled limbo programs.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

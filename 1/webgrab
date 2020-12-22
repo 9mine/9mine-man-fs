@@ -1,0 +1,80 @@
+<action name=WEBGRAB(1)>WEBGRAB(1)</action>                                             <action name=WEBGRAB(1)>WEBGRAB(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            webgrab - fetch web page content as files
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            webgrab \[ -r \] \[ -v \] \[ -o stem \] \[ -p body \] url
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Webgrab connects to the web server named in the url. It
+<style color=#00ffffff size=1>.</style>            fetches the content of the web page also determined by the
+<style color=#00ffffff size=1>.</style>            url, and stores it locally in a file. If the page is written
+<style color=#00ffffff size=1>.</style>            in HTML, webgrab reads it to build a list of sub-component
+<style color=#00ffffff size=1>.</style>            pages (eg, frames) and images. It fetches those, saving the
+<style color=#00ffffff size=1>.</style>            content in separate files. It adds a comment to the end of
+<style color=#00ffffff size=1>.</style>            each HTML file giving the time, and the file's origin. It
+<style color=#00ffffff size=1>.</style>            automatically follows redirections offered by the server.
+
+<style color=#00ffffff size=1>.</style>            The stem of the names of the output files is normally
+<style color=#00ffffff size=1>.</style>            derived from a component of the url. If the url contains a
+<style color=#00ffffff size=1>.</style>            path name, the stem is the component of that path, less any
+<style color=#00ffffff size=1>.</style>            dot-separated suffix and prefix. For example, given
+
+<style color=#00ffffff size=1>.</style>                 http://www.vitanuova.com/inferno/old.index.html
+
+<style color=#00ffffff size=1>.</style>            the stem would be index. If there is no path name, but the
+<style color=#00ffffff size=1>.</style>            url contains a domain name, the stem is the penultimate
+<style color=#00ffffff size=1>.</style>            component of the domain name (eg, excluding trailing .com,
+<style color=#00ffffff size=1>.</style>            and initial www, etc). For example, given
+
+<style color=#00ffffff size=1>.</style>                 www.innerhost.vitanuova.com
+
+<style color=#00ffffff size=1>.</style>            the stem would be vitanuova. If all else fails, webgrab uses
+<style color=#00ffffff size=1>.</style>            the stem webgrab.
+
+<style color=#00ffffff size=1>.</style>            Given a stem, the initial page is stored in stem.suffix
+<style color=#00ffffff size=1>.</style>            where suffix is the suffix (eg, .html) of the name of the
+<style color=#00ffffff size=1>.</style>            original page. Subordinate pages are saved in a similar way
+<style color=#00ffffff size=1>.</style>            in files named stem_1.suffix1, stem_2.suffix2, ... .
+
+<style color=#00ffffff size=1>.</style>            The options are:
+
+<style color=#00ffffff size=1>.</style>            -r   do not fetch subcomponents (just the `raw' source of
+<style color=#00ffffff size=1>.</style>                 url itself)
+
+<style color=#00ffffff size=1>.</style>            -v   print a progress report
+
+<style color=#00ffffff size=1>.</style>            -vv  print a chatty progress report
+
+<style color=#00ffffff size=1>.</style>            -o stem
+<style color=#00ffffff size=1>.</style>                 use the stem as given
+
+<style color=#00ffffff size=1>.</style>            -p body
+<style color=#00ffffff size=1>.</style>                 Use HTTP POST instead of GET, posting body as the data
+
+<style color=#00ffffff size=1>.</style>            Webgrab reads the configuration file /services/webget/config
+<style color=#00ffffff size=1>.</style>            (if it exists), to look for the address of an optional HTTP
+<style color=#00ffffff size=1>.</style>            proxy (in the ``httpproxy'' entry), and list of domains for
+<style color=#00ffffff size=1>.</style>            which a proxy should not be used (in the noproxy or
+<style color=#00ffffff size=1>.</style>            noproxydoms entry). If symbolic network and service names
+<style color=#00ffffff size=1>.</style>            might be involved, the connection server lib/cs needs to be
+<style color=#00ffffff size=1>.</style>            already running.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /services/webget/config
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/webgrab.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            It should read the proxy name from the <action name=charon(1)>charon(1)</action>
+<style color=#00ffffff size=1>.</style>            configuration file and not the webget configuration file.
+<style color=#00ffffff size=1>.</style>            It cannot do `secure' transfers (https).
+<style color=#00ffffff size=1>.</style>            Its HTML parsing is naive, but on the other hand, it is less
+<style color=#00ffffff size=1>.</style>            likely to trip over HTML novelties.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cs(8)>cs(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

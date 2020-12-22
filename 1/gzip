@@ -1,0 +1,36 @@
+<action name=GZIP(1)>GZIP(1)</action>                                                   <action name=GZIP(1)>GZIP(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            gzip, gunzip - compression and decompression utilities
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            gzip \[ -v \] \[ -level \] \[ file... \]
+<style color=#00ffffff size=1>.</style>            gunzip \[ file... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Gzip and gunzip perform data compression and decompression
+<style color=#00ffffff size=1>.</style>            compatible with the Unix gzip file format, which uses a
+<style color=#00ffffff size=1>.</style>            hybrid Lempel-Ziv 1977 and Huffman compression algorithm
+<style color=#00ffffff size=1>.</style>            called `deflate'. If no arguments are given gzip compresses
+<style color=#00ffffff size=1>.</style>            each file replacing it by a file of the same name with the a
+<style color=#00ffffff size=1>.</style>            .gz suffix appended. If no files are given, standard input
+<style color=#00ffffff size=1>.</style>            and standard output are used. Level is a single decimal
+<style color=#00ffffff size=1>.</style>            digit between 1 and 9\; higher numbers give better
+<style color=#00ffffff size=1>.</style>            compression. The default level is 6. The -v option causes
+<style color=#00ffffff size=1>.</style>            gzip to report the compression ratio of each file that it
+<style color=#00ffffff size=1>.</style>            compresses.
+
+<style color=#00ffffff size=1>.</style>            Gunzip performs the opposite operation to gzip\; each file
+<style color=#00ffffff size=1>.</style>            (which must have a .gz suffix) is uncompressed, and replaced
+<style color=#00ffffff size=1>.</style>            by a file of the same name with the .gz suffix removed. If
+<style color=#00ffffff size=1>.</style>            no files are given, standard input and standard output are
+<style color=#00ffffff size=1>.</style>            used.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/gzip.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/gunzip.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=filter(2)>filter(2)</action>, <action name=filter-deflate(2)>filter-deflate(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

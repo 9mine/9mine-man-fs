@@ -1,0 +1,235 @@
+<action name=SH-STD(1)>SH-STD(1)</action>                                               <action name=SH-STD(1)>SH-STD(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            std, if, while, ~, no, !, apply, getlines, status, pctl, fn,
+<style color=#00ffffff size=1>.</style>            and, or, raise, rescue, hd, tl, index, split, join, pid,
+<style color=#00ffffff size=1>.</style>            parse, pipe, env - standard shell builtins module.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load std
+
+<style color=#00ffffff size=1>.</style>            ! command
+<style color=#00ffffff size=1>.</style>            ~ value \[ pattern... \]
+<style color=#00ffffff size=1>.</style>            no \[ arg... \]
+<style color=#00ffffff size=1>.</style>            and command...
+<style color=#00ffffff size=1>.</style>            apply command \[ arg... \]
+<style color=#00ffffff size=1>.</style>            getlines \[ separators \] command
+<style color=#00ffffff size=1>.</style>            flag f \[ +- \]
+<style color=#00ffffff size=1>.</style>            for var in \[ arg... \] command
+<style color=#00ffffff size=1>.</style>            fn name command
+<style color=#00ffffff size=1>.</style>            if condition action \[ condition action \]... \[ elseaction \]
+<style color=#00ffffff size=1>.</style>            or command...
+<style color=#00ffffff size=1>.</style>            pctl flag...
+<style color=#00ffffff size=1>.</style>            raise name
+<style color=#00ffffff size=1>.</style>            rescue pattern rescueblock command
+<style color=#00ffffff size=1>.</style>            status value
+<style color=#00ffffff size=1>.</style>            subfn name command
+<style color=#00ffffff size=1>.</style>            while condition command
+<style color=#00ffffff size=1>.</style>            ${hd list}
+<style color=#00ffffff size=1>.</style>            ${index number list}
+<style color=#00ffffff size=1>.</style>            ${pid}
+<style color=#00ffffff size=1>.</style>            ${split \[ separators \] arg}
+<style color=#00ffffff size=1>.</style>            ${join separator list}
+<style color=#00ffffff size=1>.</style>            ${tl list}
+<style color=#00ffffff size=1>.</style>            ${parse arg\]
+<style color=#00ffffff size=1>.</style>            ${pipe ( from | to | fdnum ) command}
+<style color=#00ffffff size=1>.</style>            ${env}
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Std is a loadable module for <action name=sh(1)>sh(1)</action> that provides the
+<style color=#00ffffff size=1>.</style>            equivalent of a ``standard library'' for the shell,
+<style color=#00ffffff size=1>.</style>            including a set of control-flow constructs and some other
+<style color=#00ffffff size=1>.</style>            miscellaneous commands. In the following descriptions, if an
+<style color=#00ffffff size=1>.</style>            argument is executed, then it should be a braced block
+<style color=#00ffffff size=1>.</style>            suitable for executing by sh. A true exit status is defined
+<style color=#00ffffff size=1>.</style>            to be nil\; any non-nil exit status is false. Unless
+<style color=#00ffffff size=1>.</style>            otherwise stated, the return value of a command is that of
+<style color=#00ffffff size=1>.</style>            the last command that it executed. If invalid arguments are
+<style color=#00ffffff size=1>.</style>            passed to any command, a usage exception is raised, and a
+<style color=#00ffffff size=1>.</style>            message printed to stderr.
+
+<style color=#00ffffff size=1>.</style>            Each of the looping commands for, apply, while, and getlines
+<style color=#00ffffff size=1>.</style>            installs an exception handler for the duration of the loop
+<style color=#00ffffff size=1>.</style>            to catch the exceptions break and continue. If a break
+<style color=#00ffffff size=1>.</style>            exception is caught, the loop is terminated\; if a continue
+<style color=#00ffffff size=1>.</style>            exception is caught, the loop will continue executing as
+<style color=#00ffffff size=1>.</style>            usual. The commands are as follows:
+
+<style color=#00ffffff size=1>.</style>            !         ! inverts the exit status of a command (non-null
+<style color=#00ffffff size=1>.</style>                      is changed to null, null is changed to non-null).
+
+<style color=#00ffffff size=1>.</style>            ~         ~ matches value against each pattern in turn,
+<style color=#00ffffff size=1>.</style>                      returning true if any of them match and false
+<style color=#00ffffff size=1>.</style>                      otherwise. The patterns are of the same form as
+<style color=#00ffffff size=1>.</style>                      those accepted by the shell for filename pattern
+<style color=#00ffffff size=1>.</style>                      matching except that / is not treated specially.
+<style color=#00ffffff size=1>.</style>                      (see <action name=filepat(2)>filepat(2)</action>). Patterns must be quoted to stop
+<style color=#00ffffff size=1>.</style>                      the shell from interpreting them.
+
+<style color=#00ffffff size=1>.</style>            no        True if there are no arguments. Useful for testing
+<style color=#00ffffff size=1>.</style>                      if there are any items in a list without counting
+<style color=#00ffffff size=1>.</style>                      the items with $#.
+
+<style color=#00ffffff size=1>.</style>            and       And evaluates each command in turn until one
+<style color=#00ffffff size=1>.</style>                      returns false.
+
+<style color=#00ffffff size=1>.</style>            apply     Apply evaluates command once for each arg, passing
+<style color=#00ffffff size=1>.</style>                      it in the variable $1.
+
+<style color=#00ffffff size=1>.</style>            getlines  Getlines reads lines from the standard input,
+<style color=#00ffffff size=1>.</style>                      executing command for each line, setting the
+<style color=#00ffffff size=1>.</style>                      environment variable $line to the line read, with
+<style color=#00ffffff size=1>.</style>                      any terminating character removed. If separators
+<style color=#00ffffff size=1>.</style>                      is given, a line is terminated when any character
+<style color=#00ffffff size=1>.</style>                      in separators is found\; the default separator
+<style color=#00ffffff size=1>.</style>                      string is a single newline character.
+
+<style color=#00ffffff size=1>.</style>            flag      Either set (+), clear (-), or test (neither + or -
+<style color=#00ffffff size=1>.</style>                      ) the flag f, where f is a single character, one
+<style color=#00ffffff size=1>.</style>                      of the command line flags to sh (see <action name=sh(1)>sh(1)</action>).
+
+<style color=#00ffffff size=1>.</style>            fn        Fn defines a new builtin command named name\; when
+<style color=#00ffffff size=1>.</style>                      run, this command evaluates command. The command
+<style color=#00ffffff size=1>.</style>                      is stored in the environment variable fn-name\; any
+<style color=#00ffffff size=1>.</style>                      variables of this form found when when std is
+<style color=#00ffffff size=1>.</style>                      loaded will be defined in this way. If command is
+<style color=#00ffffff size=1>.</style>                      not given, then the builtin will be removed.
+
+<style color=#00ffffff size=1>.</style>            subfn     Subfn is similar to fn except that it defines a
+<style color=#00ffffff size=1>.</style>                      new substitution builtin name. When name is
+<style color=#00ffffff size=1>.</style>                      invoked, it creates a new local variable result
+<style color=#00ffffff size=1>.</style>                      and executes command. The value of $result when
+<style color=#00ffffff size=1>.</style>                      command has terminated is the value yielded by the
+<style color=#00ffffff size=1>.</style>                      substitution builtin name. Command is stored in
+<style color=#00ffffff size=1>.</style>                      and restored from the environment in a similar way
+<style color=#00ffffff size=1>.</style>                      to fn, except that sfn-name is used as the name of
+<style color=#00ffffff size=1>.</style>                      the environment variable.
+
+<style color=#00ffffff size=1>.</style>            if        If executes condition\; if it returns true, then
+<style color=#00ffffff size=1>.</style>                      action is executed, otherwise each of the next
+<style color=#00ffffff size=1>.</style>                      condition-action pairs is evaluated in the same
+<style color=#00ffffff size=1>.</style>                      way\; if no condition is satisfied, then elseaction
+<style color=#00ffffff size=1>.</style>                      will be executed, if present.
+
+<style color=#00ffffff size=1>.</style>            for       For is similar to apply\; it runs command once for
+<style color=#00ffffff size=1>.</style>                      each arg, but it performs a local assignment of
+<style color=#00ffffff size=1>.</style>                      arg to var each time.
+
+<style color=#00ffffff size=1>.</style>            or        Or evaluates each command in turn until one
+<style color=#00ffffff size=1>.</style>                      returns true.
+
+<style color=#00ffffff size=1>.</style>            pctl      Pctl is an interface to the Inferno system call
+<style color=#00ffffff size=1>.</style>                      <action name=sys-pctl(2)>sys-pctl(2)</action>\; each argument specifies one bit in
+<style color=#00ffffff size=1>.</style>                      the bitmask passed to that function. The possible
+<style color=#00ffffff size=1>.</style>                      flags are newfd, forkfd, newns, forkns, newpgrp
+<style color=#00ffffff size=1>.</style>                      and nodevs. See <action name=sys-pctl(2)>sys-pctl(2)</action> for details of the
+<style color=#00ffffff size=1>.</style>                      meaning of these flags. Pctl returns true.
+
+<style color=#00ffffff size=1>.</style>            raise     Raise raises the exception name\; name will be
+<style color=#00ffffff size=1>.</style>                      truncated if it is longer than that allowed by
+<style color=#00ffffff size=1>.</style>                      raise (128 bytes in <action name=utf(6)>utf(6)</action> representation).
+<style color=#00ffffff size=1>.</style>                      Control will be transferred to the innermost
+<style color=#00ffffff size=1>.</style>                      rescue block in the same process that matches name
+<style color=#00ffffff size=1>.</style>                      . If there is no rescue block in place, the
+<style color=#00ffffff size=1>.</style>                      current process will exit, yielding name as its
+<style color=#00ffffff size=1>.</style>                      exit status. If no name is given, the exception
+<style color=#00ffffff size=1>.</style>                      named in $exception is raised\; if this is null, a
+<style color=#00ffffff size=1>.</style>                      bad raise context exception is raised. The default
+<style color=#00ffffff size=1>.</style>                      command prompt catches all exceptions.
+
+<style color=#00ffffff size=1>.</style>            rescue    Rescue executes command with an exception handler
+<style color=#00ffffff size=1>.</style>                      installed for the duration of the call. It will
+<style color=#00ffffff size=1>.</style>                      catch all exceptions with a name matching pattern,
+<style color=#00ffffff size=1>.</style>                      where pattern is of the same form accepted by
+<style color=#00ffffff size=1>.</style>                      Limbo's exception handling statement.
+<style color=#00ffffff size=1>.</style>                      Specifically, the pattern is a string that matches
+<style color=#00ffffff size=1>.</style>                      literally, except that a trailing `*' character
+<style color=#00ffffff size=1>.</style>                      will match any sequence of characters. If an
+<style color=#00ffffff size=1>.</style>                      exception is caught, rescue executes rescueblock,
+<style color=#00ffffff size=1>.</style>                      setting $exception to the name of the exception
+<style color=#00ffffff size=1>.</style>                      raised.
+
+<style color=#00ffffff size=1>.</style>            status    returns its first argument word as its exit
+<style color=#00ffffff size=1>.</style>                      status, or nil if none is given.
+
+<style color=#00ffffff size=1>.</style>            while     While repeatedly executes condition and then
+<style color=#00ffffff size=1>.</style>                      action until condition does not return true.
+
+<style color=#00ffffff size=1>.</style>            ${env}    Env yields a list of the names of all currently
+<style color=#00ffffff size=1>.</style>                      set non-nil environment variables.
+
+<style color=#00ffffff size=1>.</style>            ${hd}     Hd yields the first of its arguments, or nil if
+<style color=#00ffffff size=1>.</style>                      there are no arguments.
+
+<style color=#00ffffff size=1>.</style>            ${index}  Index yields the n'th element in its argument
+<style color=#00ffffff size=1>.</style>                      list, indexed from 1. N must be a decimal integer.
+
+<style color=#00ffffff size=1>.</style>            ${join}   Join yields a single element which is the
+<style color=#00ffffff size=1>.</style>                      concatenation of all the elements in list
+<style color=#00ffffff size=1>.</style>                      separated by separator. If there are no elements
+<style color=#00ffffff size=1>.</style>                      in list, it yields an empty string. The shell
+<style color=#00ffffff size=1>.</style>                      operator $"var is exactly equivalent to ${join ' '
+<style color=#00ffffff size=1>.</style>                      $var}.
+
+<style color=#00ffffff size=1>.</style>            ${parse}  Parse parses arg according to the usual syntax
+<style color=#00ffffff size=1>.</style>                      rules, raising a parse error exception if it
+<style color=#00ffffff size=1>.</style>                      fails. Arg must be a well-formed command block
+<style color=#00ffffff size=1>.</style>                      surrounded by braces. Parse yields a functionally
+<style color=#00ffffff size=1>.</style>                      equivalent version of arg.
+
+<style color=#00ffffff size=1>.</style>            ${pid}    Pid yields the process id of the current process.
+
+<style color=#00ffffff size=1>.</style>            ${pipe}   Pipe runs command asynchronously, with one of its
+<style color=#00ffffff size=1>.</style>                      file descriptors connected to a bidirectional
+<style color=#00ffffff size=1>.</style>                      pipe. The first argument to pipe determines which
+<style color=#00ffffff size=1>.</style>                      file descriptor is connected: if the argument is
+<style color=#00ffffff size=1>.</style>                      from, its standard output is connected\; if the
+<style color=#00ffffff size=1>.</style>                      argument is to, its standard input is connected\;
+<style color=#00ffffff size=1>.</style>                      otherwise file descriptor fdnum is connected. Pipe
+<style color=#00ffffff size=1>.</style>                      yields the name of a file that can be opened to
+<style color=#00ffffff size=1>.</style>                      access the other end of the pipe. Note that this
+<style color=#00ffffff size=1>.</style>                      command is now deprecated in favour of the <{}
+<style color=#00ffffff size=1>.</style>                      redirection operator built in to the shell.
+
+<style color=#00ffffff size=1>.</style>            ${split}  Split splits arg into list elements at every point
+<style color=#00ffffff size=1>.</style>                      where one or more characters in separators appear.
+<style color=#00ffffff size=1>.</style>                      If separators is not given, the value of $ifs is
+<style color=#00ffffff size=1>.</style>                      used.
+
+<style color=#00ffffff size=1>.</style>            ${tl}     Tl yields all but the first of its arguments, or
+<style color=#00ffffff size=1>.</style>                      nil if there are no arguments.
+
+<style color=#00ffffff size=1>.</style>         Syntactic considerations
+<style color=#00ffffff size=1>.</style>            It is worth being aware of a few pitfalls that await the
+<style color=#00ffffff size=1>.</style>            user of some of these commands. Unlike other shells, the
+<style color=#00ffffff size=1>.</style>            syntax of sh does not include the syntax of the control flow
+<style color=#00ffffff size=1>.</style>            commands, so it is important to be aware of the rules that
+<style color=#00ffffff size=1>.</style>            govern the gathering of the arguments for a command. In
+<style color=#00ffffff size=1>.</style>            particular, the following code, written to print a message a
+<style color=#00ffffff size=1>.</style>            filename ends in .b will not work: it will always print
+<style color=#00ffffff size=1>.</style>            ``file is Limbo source''.
+<style color=#00ffffff size=1>.</style>            	and
+<style color=#00ffffff size=1>.</style>            		{~ $filename '*.b'}
+<style color=#00ffffff size=1>.</style>            		{echo file is Limbo source}
+<style color=#00ffffff size=1>.</style>            This is because newlines separate shell commands, so the
+<style color=#00ffffff size=1>.</style>            above code first invokes and with no arguments, and then
+<style color=#00ffffff size=1>.</style>            each of the braced block commands on each subsequent line.
+<style color=#00ffffff size=1>.</style>            It is usual to use round brackets in order to group together
+<style color=#00ffffff size=1>.</style>            arguments on separate lines, e.g.
+<style color=#00ffffff size=1>.</style>            	and (
+<style color=#00ffffff size=1>.</style>            		{~ $filename '*.b'}
+<style color=#00ffffff size=1>.</style>            		{echo file is Limbo source}
+<style color=#00ffffff size=1>.</style>            	)
+<style color=#00ffffff size=1>.</style>            This has the originally intended meaning.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /tmp/pipe.*d  Temporary placeholder directory for named
+<style color=#00ffffff size=1>.</style>                          pipes.
+<style color=#00ffffff size=1>.</style>            /tmp/pipes/*  Mount point for named pipes.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sh/std.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=sh-expr(1)>sh-expr(1)</action>, <action name=sh-tk(1)>sh-tk(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

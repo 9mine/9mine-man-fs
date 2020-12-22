@@ -1,0 +1,36 @@
+<action name=PSLIB(2)>PSLIB(2)</action>                                                 <action name=PSLIB(2)>PSLIB(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            pslib - postscript generation
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "pslib.m"\;
+<style color=#00ffffff size=1>.</style>            pslib := load Pslib Pslib->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init: fn(bufio: Bufio)\;
+<style color=#00ffffff size=1>.</style>            writeimage: fn(f: ref Bufio->Iobuf,
+<style color=#00ffffff size=1>.</style>            			img: ref Draw->Image, dpi: int): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Pslib must first be initialised by calling Init with a
+<style color=#00ffffff size=1>.</style>            loaded Bufio module. Writeimage writes a Postscript file
+<style color=#00ffffff size=1>.</style>            containing the data within img to f, which should first have
+<style color=#00ffffff size=1>.</style>            been opened for writing by bufio. Dpi is a value specifying
+<style color=#00ffffff size=1>.</style>            the pixel width of pixels in img\; the width (and height) of
+<style color=#00ffffff size=1>.</style>            dpi dots in img will be one inch when the Postscript is
+<style color=#00ffffff size=1>.</style>            rendered.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/pslib.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bufio(2)>bufio(2)</action>, <action name=draw-image(2)>draw-image(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The resulting Postscript is really only suitable for use as
+<style color=#00ffffff size=1>.</style>            encapsulated Postscript, as there's no way to set the
+<style color=#00ffffff size=1>.</style>            destination paper size.
+
+<style color=#00ffffff size=1>.</style>            There should be many more useful functions in this module.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

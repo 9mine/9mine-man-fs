@@ -1,0 +1,145 @@
+<action name=REGISTRY(4)>REGISTRY(4)</action>                                           <action name=REGISTRY(4)>REGISTRY(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            registry, regquery - registration of services dynamically
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ndb/registry \[ -f dbfile \]
+
+<style color=#00ffffff size=1>.</style>            ndb/regquery \[ -m mntpt \] \[ -n \] \[ attr value \] ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Registry is a file server that provides registration and
+<style color=#00ffffff size=1>.</style>            location of services by their attributes where services come
+<style color=#00ffffff size=1>.</style>            and go. It was originally intended to register Grid
+<style color=#00ffffff size=1>.</style>            resources but has much wider use. Registry serves 9P on its
+<style color=#00ffffff size=1>.</style>            standard input. That can be mounted in the local name space
+<style color=#00ffffff size=1>.</style>            (see below for an example), or served over a connection (eg,
+<style color=#00ffffff size=1>.</style>            via <action name=listen(1)>listen(1)</action>). The conventional local mount point is
+<style color=#00ffffff size=1>.</style>            /mnt/registry, which is where <action name=registries(2)>registries(2)</action> expects to find
+<style color=#00ffffff size=1>.</style>            the local registry by default. There can, however, be any
+<style color=#00ffffff size=1>.</style>            number of registries active, each supporting a different
+<style color=#00ffffff size=1>.</style>            group of users and services, in different authentication
+<style color=#00ffffff size=1>.</style>            domains.
+
+<style color=#00ffffff size=1>.</style>            Registry serves a one-level directory containing a few
+<style color=#00ffffff size=1>.</style>            control files and one file per registered service. All the
+<style color=#00ffffff size=1>.</style>            files are text files with similar format: zero or more lines
+<style color=#00ffffff size=1>.</style>            of one or more words, separated by white space (blank or
+<style color=#00ffffff size=1>.</style>            tab). A word can be quoted, using single quotes in the style
+<style color=#00ffffff size=1>.</style>            of <action name=sh(1)>sh(1)</action>, allowing it to contain white space or represent
+<style color=#00ffffff size=1>.</style>            the empty string ''. Within a quoted word, a single quote
+<style color=#00ffffff size=1>.</style>            character is represented by two adjacent ones. (In programs,
+<style color=#00ffffff size=1>.</style>            use String->quoted from <action name=string(2)>string(2)</action>, or more simply the %q
+<style color=#00ffffff size=1>.</style>            string format of <action name=sys-print(2)>sys-print(2)</action> to quote strings
+<style color=#00ffffff size=1>.</style>            appropriately.)
+
+<style color=#00ffffff size=1>.</style>            The control files are:
+
+<style color=#00ffffff size=1>.</style>            new    A text file that is opened and written to register a
+<style color=#00ffffff size=1>.</style>                   new service. Opening new returns a file descriptor to
+<style color=#00ffffff size=1>.</style>                   a new but anonymous service file. It must be written
+<style color=#00ffffff size=1>.</style>                   to set its name and initial description. The first
+<style color=#00ffffff size=1>.</style>                   write contains one or more words:
+
+<style color=#00ffffff size=1>.</style>                        svcname \[ attr value \]...
+
+<style color=#00ffffff size=1>.</style>                   The first word, svcname, is the proposed service
+<style color=#00ffffff size=1>.</style>                   name. The write returns an error if the name
+<style color=#00ffffff size=1>.</style>                   duplicates any existing name. Otherwise, a new file
+<style color=#00ffffff size=1>.</style>                   svcname will appear in the directory. The optional
+<style color=#00ffffff size=1>.</style>                   attribute value pairs form the initial service
+<style color=#00ffffff size=1>.</style>                   description. The service is removed from the register
+<style color=#00ffffff size=1>.</style>                   by default when the file is closed. To advertise a
+<style color=#00ffffff size=1>.</style>                   service without having to hold open a file
+<style color=#00ffffff size=1>.</style>                   descriptor, include an attr named persist with
+<style color=#00ffffff size=1>.</style>                   non-zero value\; the service will then remain
+<style color=#00ffffff size=1>.</style>                   registered until explicitly removed (see below).
+
+<style color=#00ffffff size=1>.</style>            index  A read-only text file containing a list of all the
+<style color=#00ffffff size=1>.</style>                   currently-registered services, one per line. Each
+<style color=#00ffffff size=1>.</style>                   line contains a sequence of words. The first word is
+<style color=#00ffffff size=1>.</style>                   the service name and the remaining ones are paired:
+<style color=#00ffffff size=1>.</style>                   attribute name then value.
+
+<style color=#00ffffff size=1>.</style>            find   A text file which should be opened for reading and
+<style color=#00ffffff size=1>.</style>                   writing. Each write provides a set of attribute/value
+<style color=#00ffffff size=1>.</style>                   pairs that acts as a filter, selecting only those
+<style color=#00ffffff size=1>.</style>                   services that possess all the given attributes with
+<style color=#00ffffff size=1>.</style>                   the given values\; the value * matches any value.
+<style color=#00ffffff size=1>.</style>                   Subsequent reads return a list of services, in the
+<style color=#00ffffff size=1>.</style>                   same format as index, but listing only the selected
+<style color=#00ffffff size=1>.</style>                   services. The selection is made from those available
+<style color=#00ffffff size=1>.</style>                   at the time of the write. There is a separate filter
+<style color=#00ffffff size=1>.</style>                   for each open instance of find, so that several
+<style color=#00ffffff size=1>.</style>                   processes can set different filters simultaneously.
+<style color=#00ffffff size=1>.</style>                   (Note that after the write, the file offset must be
+<style color=#00ffffff size=1>.</style>                   set to zero using <action name=sys-seek(2)>sys-seek(2)</action> before reading.)
+
+<style color=#00ffffff size=1>.</style>            event  A read-only text file that can be used to detect when
+<style color=#00ffffff size=1>.</style>                   changes are made to the registry. Reading from it
+<style color=#00ffffff size=1>.</style>                   blocks until a change is made. At that point, the
+<style color=#00ffffff size=1>.</style>                   read completes and returns a string with a newline
+<style color=#00ffffff size=1>.</style>                   terminated decimal version number representing the
+<style color=#00ffffff size=1>.</style>                   number of changes made to the registry, which matches
+<style color=#00ffffff size=1>.</style>                   Qid.vers for the registry directory. Multiple changes
+<style color=#00ffffff size=1>.</style>                   are coalesced into one report.
+
+<style color=#00ffffff size=1>.</style>            A service file created by new may be read by anyone, but may
+<style color=#00ffffff size=1>.</style>            be written only by its owner. Each write must contain a set
+<style color=#00ffffff size=1>.</style>            of attribute/value pairs, formatted as above, which adds new
+<style color=#00ffffff size=1>.</style>            attributes to the service description and changes the value
+<style color=#00ffffff size=1>.</style>            of existing attributes. The file remains until the service
+<style color=#00ffffff size=1>.</style>            is struck off the register. The owner of a service can
+<style color=#00ffffff size=1>.</style>            remove its registration at any time by removing the
+<style color=#00ffffff size=1>.</style>            corresponding service file (eg, using <action name=rm(1)>rm(1)</action> or sys-remove
+<style color=#00ffffff size=1>.</style>            (2)).
+
+<style color=#00ffffff size=1>.</style>            Typically, most services register themselves dynamically,
+<style color=#00ffffff size=1>.</style>            perhaps using their locations (eg, network address) as their
+<style color=#00ffffff size=1>.</style>            service names. (Registry itself does not interpret the
+<style color=#00ffffff size=1>.</style>            name.) The -f option causes registry to load initially a set
+<style color=#00ffffff size=1>.</style>            of static service descriptions from dbfile, which is in
+<style color=#00ffffff size=1>.</style>            <action name=attrdb(6)>attrdb(6)</action> format. The database entry for each service
+<style color=#00ffffff size=1>.</style>            contains the pair service=svcname, causing registry to make
+<style color=#00ffffff size=1>.</style>            an entry for the given svcname with attribute/value pairs
+<style color=#00ffffff size=1>.</style>            initialised from the rest of that database entry. For
+<style color=#00ffffff size=1>.</style>            example:
+
+<style color=#00ffffff size=1>.</style>                 service=net!click!1234
+<style color=#00ffffff size=1>.</style>                 	description='snapshot service' auth=none
+
+<style color=#00ffffff size=1>.</style>            Static entries are regarded as persistent but can be removed
+<style color=#00ffffff size=1>.</style>            explicitly by the registry owner.
+
+<style color=#00ffffff size=1>.</style>            Regquery looks for services in the registry mounted at mntpt
+<style color=#00ffffff size=1>.</style>            (default: /mnt/registry) that match all the given
+<style color=#00ffffff size=1>.</style>            attribute/value pairs. It prints the resulting list of
+<style color=#00ffffff size=1>.</style>            services, one per line. If the -n option is given, regquery
+<style color=#00ffffff size=1>.</style>            prints only the service name(s)\; otherwise it prints the
+<style color=#00ffffff size=1>.</style>            service description as well. If no attributes are given on
+<style color=#00ffffff size=1>.</style>            the command line, regquery prompts for successive queries,
+<style color=#00ffffff size=1>.</style>            one per line, and prints each result.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Start a registry that appears at the standard location for
+<style color=#00ffffff size=1>.</style>            local registries, /mnt/registry:
+
+<style color=#00ffffff size=1>.</style>                 mount {ndb/registry} /mnt/registry
+
+<style color=#00ffffff size=1>.</style>            Make that registry available to the network on authenticated
+<style color=#00ffffff size=1>.</style>            connections:
+
+<style color=#00ffffff size=1>.</style>                 listen -v 'tcp!*!registry' {export /mnt/registry&}
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ndb/registry.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=attrdb(2)>attrdb(2)</action>, <action name=registries(2)>registries(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            It is not currently possible to have two values with the
+<style color=#00ffffff size=1>.</style>            same attribute name in the same service description.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

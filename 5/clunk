@@ -1,0 +1,30 @@
+<action name=CLUNK(5)>CLUNK(5)</action>                                                 <action name=CLUNK(5)>CLUNK(5)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            clunk - forget about a fid
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            size\[4\] Tclunk tag\[2\] fid\[4\]
+<style color=#00ffffff size=1>.</style>            size\[4\] Rclunk tag\[2\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The clunk request informs the file server that the current
+<style color=#00ffffff size=1>.</style>            file represented by fid is no longer needed by the client.
+<style color=#00ffffff size=1>.</style>            The actual file is not removed on the server unless the fid
+<style color=#00ffffff size=1>.</style>            had been opened with ORCLOSE.
+
+<style color=#00ffffff size=1>.</style>            Once a fid has been clunked, the same fid can be reused in a
+<style color=#00ffffff size=1>.</style>            new walk or attach request.
+
+<style color=#00ffffff size=1>.</style>            Even if the clunk returns an error, the fid is no longer
+<style color=#00ffffff size=1>.</style>            valid.
+
+ENTRY POINTS
+<style color=#00ffffff size=1>.</style>            A clunk message is generated when a file descriptor is
+<style color=#00ffffff size=1>.</style>            closed (usually by the garbage collector) and indirectly by
+<style color=#00ffffff size=1>.</style>            other actions such as failed open calls.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-open(2)>sys-open(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

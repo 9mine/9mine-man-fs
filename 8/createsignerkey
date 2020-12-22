@@ -1,0 +1,42 @@
+<action name=CREATESIGNERKEY(8)>CREATESIGNERKEY(8)</action>                             <action name=CREATESIGNERKEY(8)>CREATESIGNERKEY(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            createsignerkey - create signer key on authentication server
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            auth/createsignerkey \[ -a alg \] \[ -f keyfile \] \[ -e expiry \]
+<style color=#00ffffff size=1>.</style>            \[ -b bitsize \] name
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Createsignerkey creates public and private keys that are
+<style color=#00ffffff size=1>.</style>            used by a server acting as `signer' to generate certificates
+<style color=#00ffffff size=1>.</style>            for users. Name appears as signer in each certificate. The
+<style color=#00ffffff size=1>.</style>            expiry date has the form ddmmyyyy, is converted to seconds
+<style color=#00ffffff size=1>.</style>            since the epoch (see <action name=daytime(2)>daytime(2)</action>) and stored in the keyfile\;
+<style color=#00ffffff size=1>.</style>            by default the server's certificate never expires.
+
+<style color=#00ffffff size=1>.</style>            The key will be bitsize long (default: 512 bits) with a
+<style color=#00ffffff size=1>.</style>            minimum of 32 bits and a maximum of 4096 bits. Keyfile is
+<style color=#00ffffff size=1>.</style>            the file in which the server stores its keys\; the default is
+<style color=#00ffffff size=1>.</style>            /keydb/signerkey, and many authentication programs such as
+<style color=#00ffffff size=1>.</style>            <action name=logind(8)>logind(8)</action> by default expect to find their server key there.
+<style color=#00ffffff size=1>.</style>            Creating a signer's default key afresh typically invalidates
+<style color=#00ffffff size=1>.</style>            all certificates previously issued by that signer, because
+<style color=#00ffffff size=1>.</style>            their signatures will not verify. The mode of the keyfile
+<style color=#00ffffff size=1>.</style>            should be set to be readable only by the user running those
+<style color=#00ffffff size=1>.</style>            programs.
+
+<style color=#00ffffff size=1>.</style>            The -a option specifies the signature algorithm. Currently
+<style color=#00ffffff size=1>.</style>            alg can be either elgamal or rsa. RSA keys are now used by
+<style color=#00ffffff size=1>.</style>            default.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /keydb/signerkey
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auth/createsignerkey.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=security-auth(2)>security-auth(2)</action>, <action name=keyring-gensk(2)>keyring-gensk(2)</action>, <action name=logind(8)>logind(8)</action>, <action name=signer(8)>signer(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

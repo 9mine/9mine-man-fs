@@ -1,0 +1,27 @@
+<action name=ECHO(1)>ECHO(1)</action>                                                   <action name=ECHO(1)>ECHO(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            echo - print arguments
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            echo \[-n\] \[arg ...\]
+
+<style color=#00ffffff size=1>.</style>            load echo
+<style color=#00ffffff size=1>.</style>            echo \[-n\] \[arg ...\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Echo writes its arguments separated by blanks and terminated
+<style color=#00ffffff size=1>.</style>            by a newline on the standard output. Option -n suppresses
+<style color=#00ffffff size=1>.</style>            the newline.
+
+<style color=#00ffffff size=1>.</style>            A version of echo can optionally be loaded into the Shell sh
+<style color=#00ffffff size=1>.</style>            (1) if need be, to make shell scripts a little faster.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/echo.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sh/echo.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,134 @@
+<action name=WM(1)>WM(1)</action>                                                       <action name=WM(1)>WM(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            wm - window manager
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wm/wm \[ command \[ arg... \] \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Wm is an inferno window manager, providing the control
+<style color=#00ffffff size=1>.</style>            mechanism for the user to manage to order and position of a
+<style color=#00ffffff size=1>.</style>            dynamic collection of application windows. When started, it
+<style color=#00ffffff size=1>.</style>            runs command, (by default wm/toolbar, see <action name=toolbar(1)>toolbar(1)</action>) By
+<style color=#00ffffff size=1>.</style>            itself, wm does not provide any means for starting new
+<style color=#00ffffff size=1>.</style>            applications\; that facility must be provided by an
+<style color=#00ffffff size=1>.</style>            auxilliary program, wm/toolbar being one such example.
+
+<style color=#00ffffff size=1>.</style>         Control Interface
+<style color=#00ffffff size=1>.</style>            Wm provides a control interface to programs running inside
+<style color=#00ffffff size=1>.</style>            it through the Wmcontext adt that can be obtained from the
+<style color=#00ffffff size=1>.</style>            Draw->Context that it passes to applications that it starts
+<style color=#00ffffff size=1>.</style>            (see <action name=draw-context(2)>draw-context(2)</action>). Control messages it understands
+<style color=#00ffffff size=1>.</style>            include:
+
+<style color=#00ffffff size=1>.</style>            start what
+<style color=#00ffffff size=1>.</style>                 Start input on what. What can be ptr (pointer events),
+<style color=#00ffffff size=1>.</style>                 kbd (keyboard events) and control (window manager
+<style color=#00ffffff size=1>.</style>                 control events, see below).
+
+<style color=#00ffffff size=1>.</style>            key charval
+<style color=#00ffffff size=1>.</style>                 Simulate a key event. Charval is the decimal value of
+<style color=#00ffffff size=1>.</style>                 the character that has been pressed. The character will
+<style color=#00ffffff size=1>.</style>                 be sent exactly as if it had been typed on the
+<style color=#00ffffff size=1>.</style>                 keyboard. This facility is used by <action name=keyboard(1)>keyboard(1)</action>.
+
+<style color=#00ffffff size=1>.</style>            !reshape tag reqid minx miny maxx maxy \[ how \]
+<style color=#00ffffff size=1>.</style>                 Reshape or create the window named tag. Reqid is
+<style color=#00ffffff size=1>.</style>                 ignored\; minx..maxy give the desired bounding rectangle
+<style color=#00ffffff size=1>.</style>                 of the new window. If how is not given, or is exact,
+<style color=#00ffffff size=1>.</style>                 then wm will attempt to satisfy the request exactly.
+<style color=#00ffffff size=1>.</style>                 Otherwise, how tells wm how to determine the rectangle
+<style color=#00ffffff size=1>.</style>                 of the resulting image\; it can be one of place (choose
+<style color=#00ffffff size=1>.</style>                 some appropriate position and size on screen), onscreen
+<style color=#00ffffff size=1>.</style>                 (modify the requested rectangle only so as to bring it
+<style color=#00ffffff size=1>.</style>                 on screen), or max (request the maximum available
+<style color=#00ffffff size=1>.</style>                 rectangle).
+
+<style color=#00ffffff size=1>.</style>            delete tag
+<style color=#00ffffff size=1>.</style>                 Delete the window named by tag.
+
+<style color=#00ffffff size=1>.</style>            raise
+<style color=#00ffffff size=1>.</style>                 Raise all windows for the current context above the
+<style color=#00ffffff size=1>.</style>                 others.
+
+<style color=#00ffffff size=1>.</style>            lower
+<style color=#00ffffff size=1>.</style>                 Send all windows for the current context to the bottom.
+
+<style color=#00ffffff size=1>.</style>            !move tag reqid startx starty
+<style color=#00ffffff size=1>.</style>                 Drag window tag interactively. Reqid is ignored. Startx
+<style color=#00ffffff size=1>.</style>                 and starty give the location of the pointer when the
+<style color=#00ffffff size=1>.</style>                 drag was initiated.
+
+<style color=#00ffffff size=1>.</style>            !size tag reqid
+<style color=#00ffffff size=1>.</style>                 Interactively resize window tag.
+
+<style color=#00ffffff size=1>.</style>            fixedorigin
+<style color=#00ffffff size=1>.</style>                 By default, if a window changes position but not size,
+<style color=#00ffffff size=1>.</style>                 wm changes the origin of the window without creating a
+<style color=#00ffffff size=1>.</style>                 new image. Sending fixedorigin caused wm always to
+<style color=#00ffffff size=1>.</style>                 create a new image in that case.
+
+<style color=#00ffffff size=1>.</style>            kbdfocus \[ in \]
+<style color=#00ffffff size=1>.</style>                 If the decimal integer in is non-zero, request the
+<style color=#00ffffff size=1>.</style>                 keyboard focus, otherwise lose the keyboard focus.
+
+<style color=#00ffffff size=1>.</style>            Wm generates control messages to inform applications of
+<style color=#00ffffff size=1>.</style>            things that have happened. These include:
+
+<style color=#00ffffff size=1>.</style>            rect minx miny maxx maxy
+<style color=#00ffffff size=1>.</style>                 The screen rectangle has changed. minx..maxy gives the
+<style color=#00ffffff size=1>.</style>                 new bounding box of the screen.
+
+<style color=#00ffffff size=1>.</style>            haskbdfocus in
+<style color=#00ffffff size=1>.</style>                 Informs an application of its current keyboard focus
+<style color=#00ffffff size=1>.</style>                 state. This message is generated in response to pointer
+<style color=#00ffffff size=1>.</style>                 events, and due to kbdfocus requests.
+
+<style color=#00ffffff size=1>.</style>            exit The window manager is closing down.
+
+<style color=#00ffffff size=1>.</style>         Controlling Application
+<style color=#00ffffff size=1>.</style>            The first application that starts under wm is given the
+<style color=#00ffffff size=1>.</style>            privilege of being able to control other applications
+<style color=#00ffffff size=1>.</style>            running under the same wm. If it sends a start control
+<style color=#00ffffff size=1>.</style>            message, then it will also see any control requests sent by
+<style color=#00ffffff size=1>.</style>            applications that wm itself does not understand and
+<style color=#00ffffff size=1>.</style>            information about applications starting and leaving. Wm
+<style color=#00ffffff size=1>.</style>            accepts several other control messages from its controlling
+<style color=#00ffffff size=1>.</style>            application:
+
+<style color=#00ffffff size=1>.</style>            ctl id msg
+<style color=#00ffffff size=1>.</style>                 Send message msg to application id.
+
+<style color=#00ffffff size=1>.</style>            endcontrol
+<style color=#00ffffff size=1>.</style>                 Relinquish controller status. The next application that
+<style color=#00ffffff size=1>.</style>                 starts will get control status. This is used, for
+<style color=#00ffffff size=1>.</style>                 instance, to segue smoothly between <action name=logon(1)>logon(1)</action> and
+<style color=#00ffffff size=1>.</style>                 <action name=toolbar(1)>toolbar(1)</action>.
+
+<style color=#00ffffff size=1>.</style>            If the controlling application has started control messages,
+<style color=#00ffffff size=1>.</style>            wm sends it the following messages:
+
+<style color=#00ffffff size=1>.</style>            newclient id
+<style color=#00ffffff size=1>.</style>                 A new client has connected, identified by id.
+
+<style color=#00ffffff size=1>.</style>            delclient id
+<style color=#00ffffff size=1>.</style>                 Client id has left.
+
+<style color=#00ffffff size=1>.</style>            request id msg
+<style color=#00ffffff size=1>.</style>                 Client id sent the request msg to the window manager,
+<style color=#00ffffff size=1>.</style>                 which it did not understand. This facility is used, for
+<style color=#00ffffff size=1>.</style>                 instance, by <action name=toolbar(1)>toolbar(1)</action> to implement the task and
+<style color=#00ffffff size=1>.</style>                 untask requests.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /chan/wmrect
+<style color=#00ffffff size=1>.</style>                 File holding current screen rectangle.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/wm.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=toolbar(1)>toolbar(1)</action>, <action name=logon(1)>logon(1)</action>, <action name=tkclient(2)>tkclient(2)</action>, <action name=wmclient(2)>wmclient(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

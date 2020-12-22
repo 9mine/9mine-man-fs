@@ -1,0 +1,104 @@
+<action name=TOUCH(3)>TOUCH(3)</action>                                                 <action name=TOUCH(3)>TOUCH(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            touch - touch screen
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a '#T' /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/touchcal
+<style color=#00ffffff size=1>.</style>            /dev/touchctl
+<style color=#00ffffff size=1>.</style>            /dev/touchstat
+<style color=#00ffffff size=1>.</style>            /dev/touch
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The touch screen driver serves a one-level directory giving
+<style color=#00ffffff size=1>.</style>            access to a touch panel. The driver attempts to compensate
+<style color=#00ffffff size=1>.</style>            for the warped nature of the panels we have used: amongst
+<style color=#00ffffff size=1>.</style>            other things, it repeatedly samples the panel to obtain a
+<style color=#00ffffff size=1>.</style>            stable reading, and applies a transformation to the (x, y)
+<style color=#00ffffff size=1>.</style>            coordinates obtained to account for the peculiar distortions
+<style color=#00ffffff size=1>.</style>            of individual panels. A panel should be calibrated by
+<style color=#00ffffff size=1>.</style>            <action name=touchcal(8)>touchcal(8)</action> before use.
+
+<style color=#00ffffff size=1>.</style>            There are two variants of the driver. One drives a DynaPro
+<style color=#00ffffff size=1>.</style>            touch panel on a York Electronics Centre BRD/98/024
+<style color=#00ffffff size=1>.</style>            interface (Version A) accessed via the Motorola MPC8xx SPI
+<style color=#00ffffff size=1>.</style>            interface. The other drives a different pressure-sensitive
+<style color=#00ffffff size=1>.</style>            touch panel on a webphone reference design.
+
+<style color=#00ffffff size=1>.</style>            The driver initialisation starts a kernel process to read
+<style color=#00ffffff size=1>.</style>            samples from the touch screen and provide them to the system
+<style color=#00ffffff size=1>.</style>            through the interface used for mouse events. The events
+<style color=#00ffffff size=1>.</style>            generated mark `mouse button' 1 as down as long as the panel
+<style color=#00ffffff size=1>.</style>            is touched and up otherwise. Other `mouse buttons' are
+<style color=#00ffffff size=1>.</style>            always up. This is adequate for many applications (but not
+<style color=#00ffffff size=1>.</style>            <action name=acme(1)>acme(1)</action>).
+
+<style color=#00ffffff size=1>.</style>            The data file touch is read-only. Each read samples the
+<style color=#00ffffff size=1>.</style>            touch panel and returns two decimal numbers, separated by a
+<style color=#00ffffff size=1>.</style>            space, giving the x and y coordinates read. The values are
+<style color=#00ffffff size=1>.</style>            both -1 if a consistent reading could not be made. This file
+<style color=#00ffffff size=1>.</style>            is used only for debugging\; the window system should not be
+<style color=#00ffffff size=1>.</style>            running.
+
+<style color=#00ffffff size=1>.</style>            The control file touchctl accepts commands to set driver
+<style color=#00ffffff size=1>.</style>            parameters:
+
+<style color=#00ffffff size=1>.</style>            X a b c  (MPC8xx only) Set the parameters for a
+<style color=#00ffffff size=1>.</style>                     transformation of the X-coordinates received from
+<style color=#00ffffff size=1>.</style>                     the panel:
+
+<style color=#00ffffff size=1>.</style>                          x' = a*x+b*y+c
+
+<style color=#00ffffff size=1>.</style>                     The values are fixed-point: 1.0 is represented by
+<style color=#00ffffff size=1>.</style>                     2\u\s-216\s0\d.
+
+<style color=#00ffffff size=1>.</style>            Y d e f  (MPC8xx only) Set the parameters for a similar
+<style color=#00ffffff size=1>.</style>                     transformation of Y-coordinates:
+
+<style color=#00ffffff size=1>.</style>                          y' = d*x+e*y+f
+
+<style color=#00ffffff size=1>.</style>            sn       Sample every n milliseconds.
+
+<style color=#00ffffff size=1>.</style>            cp sx sy (SA1100) Wait for the screen to be touched and
+<style color=#00ffffff size=1>.</style>                     sample parameters for point p, 0≤p≤3, corresponding
+<style color=#00ffffff size=1>.</style>                     to one of the four corners of the screen. Save the
+<style color=#00ffffff size=1>.</style>                     sample parameters for calibration.
+
+<style color=#00ffffff size=1>.</style>            C        (SA1100) Compute calibration parameters based on
+<style color=#00ffffff size=1>.</style>                     previously stored samples.
+
+<style color=#00ffffff size=1>.</style>            rn       Sets delay between touch reads.
+
+<style color=#00ffffff size=1>.</style>            Rn       Average 2^n readings each sample.
+
+<style color=#00ffffff size=1>.</style>            fn       Set the filter level (-1024 ≤n≤1024).
+
+<style color=#00ffffff size=1>.</style>            ex y     Set error term for x and y\; normally calculated by
+<style color=#00ffffff size=1>.</style>                     C.
+
+<style color=#00ffffff size=1>.</style>            tp r     Set pressure threshold for press and release
+
+<style color=#00ffffff size=1>.</style>            Reads of touchctl return all current parameters in the same
+<style color=#00ffffff size=1>.</style>            form as the commands (allowing settings to be read from the
+<style color=#00ffffff size=1>.</style>            file and later restored by simply writing them back).
+
+<style color=#00ffffff size=1>.</style>            The read-only file touchstat contains four decimal values
+<style color=#00ffffff size=1>.</style>            separated by spaces or newlines: the number of raw samples,
+<style color=#00ffffff size=1>.</style>            the number of valid samples, microseconds waiting for
+<style color=#00ffffff size=1>.</style>            samples, and microseconds spent processing samples.
+
+<style color=#00ffffff size=1>.</style>            The SA1100 driver provides a file /dev/touchcal that holds
+<style color=#00ffffff size=1>.</style>            the calibration results as a set of decimal numbers for each
+<style color=#00ffffff size=1>.</style>            of the four sample points, one set per line. The results can
+<style color=#00ffffff size=1>.</style>            be saved and written back to restore the same calibration.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/mpc/devtouch.c
+<style color=#00ffffff size=1>.</style>            /os/sa1100/devtouch.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=touchcal(8)>touchcal(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,70 @@
+<action name=KEYRING-AUTH(2)>KEYRING-AUTH(2)</action>                                   <action name=KEYRING-AUTH(2)>KEYRING-AUTH(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            keyring: auth, readauthinfo, writeauthinfo - authenticate a
+<style color=#00ffffff size=1>.</style>            connection
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "keyring.m"\;
+<style color=#00ffffff size=1>.</style>            keyring := load Keyring Keyring->PATH\;
+<style color=#00ffffff size=1>.</style>            auth:           fn(fd: ref Sys->FD, info: ref Authinfo, setid: int)
+<style color=#00ffffff size=1>.</style>                            : (string, array of byte)\;
+<style color=#00ffffff size=1>.</style>            readauthinfo:   fn(filename: string): ref Authinfo\;
+<style color=#00ffffff size=1>.</style>            writeauthinfo:  fn(filename: string, info: ref Authinfo): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Auth performs mutual authentication over a network
+<style color=#00ffffff size=1>.</style>            connection, usually between a client and a server. The
+<style color=#00ffffff size=1>.</style>            function is symmetric: each party runs it on their end of
+<style color=#00ffffff size=1>.</style>            the connection. Info holds the public key of a certifying
+<style color=#00ffffff size=1>.</style>            authority (PKca), the private key of the user (SKu), the
+<style color=#00ffffff size=1>.</style>            public key (PKu) of the user signed by the certifying
+<style color=#00ffffff size=1>.</style>            authority (CERTu), and Diffie-Hellman parameters (alpha, p).
+
+<style color=#00ffffff size=1>.</style>            Auth returns a string and a byte array. If the byte array is
+<style color=#00ffffff size=1>.</style>            nil then the authentication has failed and the string is an
+<style color=#00ffffff size=1>.</style>            error message. If the byte array is non-nil, it represents a
+<style color=#00ffffff size=1>.</style>            secret shared by the two communicating parties, and the
+<style color=#00ffffff size=1>.</style>            string names the party at the other end of the connection.
+
+<style color=#00ffffff size=1>.</style>            If the authentication is successful and setid is non-zero
+<style color=#00ffffff size=1>.</style>            then auth attempts to write the name of the party at the
+<style color=#00ffffff size=1>.</style>            other end of the connection into /dev/user (see <action name=cons(3)>cons(3)</action>)\; no
+<style color=#00ffffff size=1>.</style>            error is generated if that does not succeed. If the
+<style color=#00ffffff size=1>.</style>            authentication is not successful and setid is non-zero, auth
+<style color=#00ffffff size=1>.</style>            writes the name nobody into /dev/user.
+
+<style color=#00ffffff size=1>.</style>            The authentication protocol is based on the
+<style color=#00ffffff size=1>.</style>            Station-to-Station protocol. In the following, the parties
+<style color=#00ffffff size=1>.</style>            are labelled 0 and 1. Sig0(x) is x signed with 0's private
+<style color=#00ffffff size=1>.</style>            key.
+
+<style color=#00ffffff size=1>.</style>                 0 → 1  alpha**r0 mod p, CERTu0, PKu0
+<style color=#00ffffff size=1>.</style>                 1 → 0  alpha**r1 mod p, CERTu1, PKu1
+<style color=#00ffffff size=1>.</style>                 0 → 1  sig0(alpha**r0 mod p, alpha**r1 mod p)
+<style color=#00ffffff size=1>.</style>                 1 → 0  sig1(alpha**r0 mod p, alpha**r1 mod p)
+
+<style color=#00ffffff size=1>.</style>            At this point both 0 and 1 share the secret alpha**(r0*r1)
+<style color=#00ffffff size=1>.</style>            which is returned in the byte array. Amongst other things,
+<style color=#00ffffff size=1>.</style>            it can be the secret to digest or encrypt a conversation
+<style color=#00ffffff size=1>.</style>            (see <action name=security-ssl(2)>security-ssl(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            Readauthinfo reads a representation of an Authinfo from a
+<style color=#00ffffff size=1>.</style>            file. It returns nil if there is a read error or a
+<style color=#00ffffff size=1>.</style>            conversion error\; it returns a reference to the Authinfo
+<style color=#00ffffff size=1>.</style>            otherwise.
+
+<style color=#00ffffff size=1>.</style>            Writeauthinfo writes a representation of info to a file. It
+<style color=#00ffffff size=1>.</style>            returns -1 if the write operation fails, 0 otherwise.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /usr/user/keyring             The conventional directory for
+<style color=#00ffffff size=1>.</style>                                          storing Authinfo files
+<style color=#00ffffff size=1>.</style>            /usr/user/keyring/default     The key file normally used by
+<style color=#00ffffff size=1>.</style>                                          server programs
+<style color=#00ffffff size=1>.</style>            /usr/user/keyring/net!server  The key file normally used by
+<style color=#00ffffff size=1>.</style>                                          clients for a given server
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/keyring.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

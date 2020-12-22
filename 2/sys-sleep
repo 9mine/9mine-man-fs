@@ -1,0 +1,26 @@
+<action name=SYS-SLEEP(2)>SYS-SLEEP(2)</action>                                         <action name=SYS-SLEEP(2)>SYS-SLEEP(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            sleep - delay
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            sleep:	fn(period: int): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Sleep suspends the current thread for period milliseconds.
+<style color=#00ffffff size=1>.</style>            The actual suspension time may be a little more or less than
+<style color=#00ffffff size=1>.</style>            the requested time. If period is 0, the process gives up the
+<style color=#00ffffff size=1>.</style>            CPU if another process is waiting to run, returning
+<style color=#00ffffff size=1>.</style>            immediately if not.
+
+<style color=#00ffffff size=1>.</style>            Sleep normally returns 0. In hosted Inferno it may return -1
+<style color=#00ffffff size=1>.</style>            to indicate that it was not possible to sleep (eg if no more
+<style color=#00ffffff size=1>.</style>            threads are available).
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-millisec(2)>sys-millisec(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

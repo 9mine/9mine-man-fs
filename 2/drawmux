@@ -1,0 +1,45 @@
+<action name=DRAWMUX(2)>DRAWMUX(2)</action>                                             <action name=DRAWMUX(2)>DRAWMUX(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            drawmux - multiplex stream of draw requests
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "drawmux.m"\;
+<style color=#00ffffff size=1>.</style>            drawmux := load Drawmux Drawmux->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:	    fn(): (string, ref Draw->Display)\;
+<style color=#00ffffff size=1>.</style>            newviewer:  fn(fd: ref Sys->FD)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Drawmux puts itself between the invoking application and
+<style color=#00ffffff size=1>.</style>            /dev/draw (see <action name=draw(3)>draw(3)</action>), so that the contents of the current
+<style color=#00ffffff size=1>.</style>            display can be replicated elsewhere.
+
+<style color=#00ffffff size=1>.</style>            Init returns a new Display (see <action name=draw-display(2)>draw-display(2)</action>)
+<style color=#00ffffff size=1>.</style>            representing a connection to a virtual display device.
+<style color=#00ffffff size=1>.</style>            Subsequent Draw requests to that display (see <action name=draw-intro(2)>draw-intro(2)</action>)
+<style color=#00ffffff size=1>.</style>            are forwarded to the underlying <action name=draw(3)>draw(3)</action> device to appear on
+<style color=#00ffffff size=1>.</style>            the physical display, but can also replicated elsewhere,
+<style color=#00ffffff size=1>.</style>            typically in a window on a remote display.
+
+<style color=#00ffffff size=1>.</style>            Newviewer prepares the virtual display end of a Drawmux
+<style color=#00ffffff size=1>.</style>            connection for each new viewer of the display created by a
+<style color=#00ffffff size=1>.</style>            previous call to init. The file descriptor fd is a
+<style color=#00ffffff size=1>.</style>            connection to the viewer. The remote viewer must first write
+<style color=#00ffffff size=1>.</style>            24 bytes on that connection, containing two decimal numbers
+<style color=#00ffffff size=1>.</style>            (each 11 digits and a space), giving the identifier of a
+<style color=#00ffffff size=1>.</style>            public screen on the viewer's display, on which newviewer
+<style color=#00ffffff size=1>.</style>            will replicate the Drawmux display, and the log (base 2) of
+<style color=#00ffffff size=1>.</style>            the number of bits per pixel for windows created on that
+<style color=#00ffffff size=1>.</style>            screen. The remote viewer must then use Sys->export (see
+<style color=#00ffffff size=1>.</style>            <action name=sys-export(2)>sys-export(2)</action>) to export its /dev/draw, which newviewer
+<style color=#00ffffff size=1>.</style>            expects to find as the root of the exported hierarchy.
+<style color=#00ffffff size=1>.</style>            Subsequent draw operations on the Drawmux display will be
+<style color=#00ffffff size=1>.</style>            replicated on the public screen exported by the viewer.
+<style color=#00ffffff size=1>.</style>            Shutting down the connection shuts down the multiplexor for
+<style color=#00ffffff size=1>.</style>            that viewer.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=wm-dmview(1)>wm-dmview(1)</action>, <action name=draw-intro(2)>draw-intro(2)</action>, <action name=draw(3)>draw(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

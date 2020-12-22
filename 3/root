@@ -1,0 +1,47 @@
+<action name=ROOT(3)>ROOT(3)</action>                                                   <action name=ROOT(3)>ROOT(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            root - the root file system
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            /
+<style color=#00ffffff size=1>.</style>            /chan
+<style color=#00ffffff size=1>.</style>            /dev
+<style color=#00ffffff size=1>.</style>            /env
+<style color=#00ffffff size=1>.</style>            /fd
+<style color=#00ffffff size=1>.</style>            /net
+<style color=#00ffffff size=1>.</style>            /net.alt
+<style color=#00ffffff size=1>.</style>            /nvfs
+<style color=#00ffffff size=1>.</style>            /prog
+<style color=#00ffffff size=1>.</style>            /root
+<style color=#00ffffff size=1>.</style>            /srv
+<style color=#00ffffff size=1>.</style>            /osinit.dis
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This device is set up by the kernel to be the initial root
+<style color=#00ffffff size=1>.</style>            of the name space. In the emulation environment, the names
+<style color=#00ffffff size=1>.</style>            in the one-level tree shown above are mostly just
+<style color=#00ffffff size=1>.</style>            place-holders, to allow a place on which to bind (see
+<style color=#00ffffff size=1>.</style>            <action name=sys-bind(2)>sys-bind(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            In the native environment, an arbitrary initial directory
+<style color=#00ffffff size=1>.</style>            structure and file content can be built-in when the kernel
+<style color=#00ffffff size=1>.</style>            is configured, but it will typically include at least the
+<style color=#00ffffff size=1>.</style>            names above, to act as mount points. (See the discussion of
+<style color=#00ffffff size=1>.</style>            the `root section' in conf(10.6).) The required file
+<style color=#00ffffff size=1>.</style>            /osinit.dis (not present in the emulation environment)
+<style color=#00ffffff size=1>.</style>            provides an executable Dis binary when read, and is the
+<style color=#00ffffff size=1>.</style>            first program invoked when initialising the system. Other
+<style color=#00ffffff size=1>.</style>            files needed for bootstrap might also reside in this device.
+
+<style color=#00ffffff size=1>.</style>            Its local name #/ can be used by programs outside the
+<style color=#00ffffff size=1>.</style>            kernel, for instance to implement newns in <action name=newns(2)>newns(2)</action>.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/devroot.c
+<style color=#00ffffff size=1>.</style>            /os/port/devroot.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=init(8)>init(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

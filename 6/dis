@@ -1,0 +1,344 @@
+<action name=DIS(6)>DIS(6)</action>                                                     <action name=DIS(6)>DIS(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dis - Dis object file
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A Dis object file contains the executable form of a single
+<style color=#00ffffff size=1>.</style>            module, and conventionally uses the file suffix .dis.
+
+<style color=#00ffffff size=1>.</style>            The following names are used in the description of the file
+<style color=#00ffffff size=1>.</style>            encoding.
+
+<style color=#00ffffff size=1>.</style>            byte      An unsigned 8-bit byte.
+
+<style color=#00ffffff size=1>.</style>            word      A 32-bit integer value represented in exactly 4
+<style color=#00ffffff size=1>.</style>                      bytes.
+
+<style color=#00ffffff size=1>.</style>            long      A 64-bit integer value represented in exactly 8
+<style color=#00ffffff size=1>.</style>                      bytes.
+
+<style color=#00ffffff size=1>.</style>            operand   An integer stored in a compact variable-length
+<style color=#00ffffff size=1>.</style>                      encoding selected by the two most significant bits
+<style color=#00ffffff size=1>.</style>                      as follows:
+
+<style color=#00ffffff size=1>.</style>                 0x	signed 7 bits, 1 byte
+<style color=#00ffffff size=1>.</style>                 10	signed 14 bits, 2 bytes
+<style color=#00ffffff size=1>.</style>                 11	signed 30 bits, 4 bytes
+
+<style color=#00ffffff size=1>.</style>            string
+<style color=#00ffffff size=1>.</style>                 A variable length sequence of bytes terminated by a
+<style color=#00ffffff size=1>.</style>                 zero byte. Names thus represented are in <action name=utf(6)>utf(6)</action> format.
+
+<style color=#00ffffff size=1>.</style>            All integers are encoded in two's complement format, most
+<style color=#00ffffff size=1>.</style>            significant byte first.
+
+<style color=#00ffffff size=1>.</style>            Every object file has a header followed by five sections
+<style color=#00ffffff size=1>.</style>            containing code, data, and several sorts of descriptors:
+
+<style color=#00ffffff size=1>.</style>                 header code-section type-section data-section
+<style color=#00ffffff size=1>.</style>                 module-name link-section
+
+<style color=#00ffffff size=1>.</style>            Each section is described in turn below.
+
+<style color=#00ffffff size=1>.</style>         Header
+<style color=#00ffffff size=1>.</style>            The header contains a magic number, a digital signature, a
+<style color=#00ffffff size=1>.</style>            flag word, sizes of the other sections, and a description of
+<style color=#00ffffff size=1>.</style>            the entry point. It has the following format:
+
+<style color=#00ffffff size=1>.</style>                 header:
+<style color=#00ffffff size=1>.</style>                 	magic signature runflag stack-extent
+<style color=#00ffffff size=1>.</style>                 		code-size data-size type-size link-size entry-pc entry-type
+<style color=#00ffffff size=1>.</style>                 magic, runflag:
+<style color=#00ffffff size=1>.</style>                 	operand
+<style color=#00ffffff size=1>.</style>                 stack-extent, code-size, data-size, type-size, link-size:
+<style color=#00ffffff size=1>.</style>                 	operand
+<style color=#00ffffff size=1>.</style>                 entry-pc, entry-type:
+<style color=#00ffffff size=1>.</style>                 	operand
+
+<style color=#00ffffff size=1>.</style>            The magic number is defined as 819248 (symbolically XMAGIC),
+<style color=#00ffffff size=1>.</style>            for modules that have not been signed cryptographically, and
+<style color=#00ffffff size=1>.</style>            923426 (symbolically SMAGIC), for modules that contain a
+<style color=#00ffffff size=1>.</style>            signature. The symbolic names XMAGIC and SMAGIC are defined
+<style color=#00ffffff size=1>.</style>            by the C include file /include/isa.h and by the Limbo module
+<style color=#00ffffff size=1>.</style>            <action name=dis(2)>dis(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            The signature is present only if the magic number is SMAGIC.
+<style color=#00ffffff size=1>.</style>            It has the form:
+
+<style color=#00ffffff size=1>.</style>                 signature:
+<style color=#00ffffff size=1>.</style>                 	length signature-data
+<style color=#00ffffff size=1>.</style>                 length:
+<style color=#00ffffff size=1>.</style>                 	operand
+<style color=#00ffffff size=1>.</style>                 signature-data:
+<style color=#00ffffff size=1>.</style>                 	byte ...
+
+<style color=#00ffffff size=1>.</style>            A digital signature is defined by a length, followed by an
+<style color=#00ffffff size=1>.</style>            array of bytes of that length that contain the signature in
+<style color=#00ffffff size=1>.</style>            some unspecified format. Data within the signature should
+<style color=#00ffffff size=1>.</style>            identify the signing authority, algorithm, and data to be
+<style color=#00ffffff size=1>.</style>            signed.
+
+<style color=#00ffffff size=1>.</style>            Runflag is a bit mask that selects various execution options
+<style color=#00ffffff size=1>.</style>            for a Dis module. The flags currently defined are:
+
+<style color=#00ffffff size=1>.</style>                 MUSTCOMPILE (1<<0)
+<style color=#00ffffff size=1>.</style>                      The module must be compiled into native
+<style color=#00ffffff size=1>.</style>                      instructions for execution (using a just-in-time
+<style color=#00ffffff size=1>.</style>                      compiler)\; if the implementation cannot do that,
+<style color=#00ffffff size=1>.</style>                      the load instruction should given an error.
+
+<style color=#00ffffff size=1>.</style>                 DONTCOMPILE (1<<1)
+<style color=#00ffffff size=1>.</style>                      The module should not be compiled into native
+<style color=#00ffffff size=1>.</style>                      instructions, when that is the default for the
+<style color=#00ffffff size=1>.</style>                      runtime environment, but should be interpreted.
+<style color=#00ffffff size=1>.</style>                      This flag may be set to allow debugging or to save
+<style color=#00ffffff size=1>.</style>                      memory.
+
+<style color=#00ffffff size=1>.</style>                 SHAREMP (1<<2)
+<style color=#00ffffff size=1>.</style>                      Each instance of the module should use the same
+<style color=#00ffffff size=1>.</style>                      module data for all instances of the module. There
+<style color=#00ffffff size=1>.</style>                      is no implicit synchronisation between threads
+<style color=#00ffffff size=1>.</style>                      using the shared data.
+
+<style color=#00ffffff size=1>.</style>                 HASLDT (1<<4)
+<style color=#00ffffff size=1>.</style>                      The dis file contains a separate import section.
+<style color=#00ffffff size=1>.</style>                      On older versions of the system, this section was
+<style color=#00ffffff size=1>.</style>                      within the data section.
+
+<style color=#00ffffff size=1>.</style>                 HASEXCEPT (1<<5)
+<style color=#00ffffff size=1>.</style>                      The dis file contains an exception handler
+<style color=#00ffffff size=1>.</style>                      section.
+
+<style color=#00ffffff size=1>.</style>            Stack-extent, if non-zero, gives the number of bytes by
+<style color=#00ffffff size=1>.</style>            which the thread stack of this module should be extended in
+<style color=#00ffffff size=1>.</style>            the event that procedure calls exhaust the allocated stack.
+<style color=#00ffffff size=1>.</style>            While stack extension is transparent to programs, increasing
+<style color=#00ffffff size=1>.</style>            this value may improve the efficiency of execution at the
+<style color=#00ffffff size=1>.</style>            expense of using more memory.
+
+<style color=#00ffffff size=1>.</style>            Code-size, type-size and link-size give the number of
+<style color=#00ffffff size=1>.</style>            entries (instructions, type descriptors, linkage directives)
+<style color=#00ffffff size=1>.</style>            in the corresponding sections.
+
+<style color=#00ffffff size=1>.</style>            Data-size is the size in bytes of the module's global data
+<style color=#00ffffff size=1>.</style>            area (not the number of items in data-section).
+
+<style color=#00ffffff size=1>.</style>            Entry-pc is an integer index into the instruction stream
+<style color=#00ffffff size=1>.</style>            that is the default entry point for this module. It should
+<style color=#00ffffff size=1>.</style>            point to the first instruction of a function. Instructions
+<style color=#00ffffff size=1>.</style>            are numbered from a program counter value of zero.
+
+<style color=#00ffffff size=1>.</style>            Entry-type is the index of the type descriptor in the type
+<style color=#00ffffff size=1>.</style>            section that corresponds to the function entry point set by
+<style color=#00ffffff size=1>.</style>            entry-pc.
+
+<style color=#00ffffff size=1>.</style>         Code Section
+<style color=#00ffffff size=1>.</style>            The code section describes a sequence of instructions for
+<style color=#00ffffff size=1>.</style>            the virtual machine. There are code-size instructions. An
+<style color=#00ffffff size=1>.</style>            instruction is encoded as follows:
+
+<style color=#00ffffff size=1>.</style>                 instruction:
+<style color=#00ffffff size=1>.</style>                 	opcode address-mode middle-data source-data dest-data
+<style color=#00ffffff size=1>.</style>                 opcode, address-mode:
+<style color=#00ffffff size=1>.</style>                 	byte
+<style color=#00ffffff size=1>.</style>                 middle-data:
+<style color=#00ffffff size=1>.</style>                 	operand
+<style color=#00ffffff size=1>.</style>                 source-data, dest-data:
+<style color=#00ffffff size=1>.</style>                 	operand operand
+
+<style color=#00ffffff size=1>.</style>            The one byte opcode specifies the instruction to execute\;
+<style color=#00ffffff size=1>.</style>            opcodes are defined by the virtual machine specification.
+
+<style color=#00ffffff size=1>.</style>            The address-mode byte specifies the addressing mode of each
+<style color=#00ffffff size=1>.</style>            of the three operands: middle, source and destination. The
+<style color=#00ffffff size=1>.</style>            source and destination operands are encoded by three bits
+<style color=#00ffffff size=1>.</style>            and the middle operand by two bits. The bits are packed as
+<style color=#00ffffff size=1>.</style>            follows:
+
+<style color=#00ffffff size=1>.</style>                 bit  7  6  5  4  3  2  1  0
+<style color=#00ffffff size=1>.</style>                     m1 m0 s2 s1 s0 d2 d1 d0
+
+<style color=#00ffffff size=1>.</style>            The following definitions are used in the description of
+<style color=#00ffffff size=1>.</style>            addressing modes:
+
+<style color=#00ffffff size=1>.</style>                 OP   30 bit integer operand
+<style color=#00ffffff size=1>.</style>                 SO   16 bit unsigned small offset from register
+<style color=#00ffffff size=1>.</style>                 SI   16 bit signed immediate value
+<style color=#00ffffff size=1>.</style>                 LO   30 bit signed large offset from register
+
+<style color=#00ffffff size=1>.</style>            The middle operand is encoded as follows:
+
+<style color=#00ffffff size=1>.</style>                 00    none    no middle operand	
+<style color=#00ffffff size=1>.</style>                 01    $SI     small immediate
+<style color=#00ffffff size=1>.</style>                 10    SO(FP)  small offset indirect from FP
+<style color=#00ffffff size=1>.</style>                 11    SO(MP)  small offset indirect from MP
+
+<style color=#00ffffff size=1>.</style>            The middle-data field is present only if the middle operand
+<style color=#00ffffff size=1>.</style>            specifier of the address-mode is not `none'. If the field is
+<style color=#00ffffff size=1>.</style>            present it is encoded as an operand.
+
+<style color=#00ffffff size=1>.</style>            The source and destination operands are encoded as follows:
+
+<style color=#00ffffff size=1>.</style>                 000   LO(MP)     offset indirect from MP
+<style color=#00ffffff size=1>.</style>                 001   LO(FP)     offset indirect from FP
+<style color=#00ffffff size=1>.</style>                 010   $OP        30 bit immediate
+<style color=#00ffffff size=1>.</style>                 011   none       no operand
+<style color=#00ffffff size=1>.</style>                 100   SO(SO(MP)) double indirect from MP
+<style color=#00ffffff size=1>.</style>                 101   SO(SO(FP)) double indirect from FP
+<style color=#00ffffff size=1>.</style>                 110              reserved
+<style color=#00ffffff size=1>.</style>                 111              reserved
+
+<style color=#00ffffff size=1>.</style>            The source-data and dest-data fields are present only when
+<style color=#00ffffff size=1>.</style>            the corresponding address-mode field is not `none'. For
+<style color=#00ffffff size=1>.</style>            offset indirect and immediate modes the field contains a
+<style color=#00ffffff size=1>.</style>            single operand value. For double indirect modes the values
+<style color=#00ffffff size=1>.</style>            are encoded as two operands: the first is the register
+<style color=#00ffffff size=1>.</style>            indirect offset, and the second is the final indirect
+<style color=#00ffffff size=1>.</style>            offset. The offsets for double indirect addressing cannot be
+<style color=#00ffffff size=1>.</style>            larger than 16 bits.
+
+<style color=#00ffffff size=1>.</style>         Type Section
+<style color=#00ffffff size=1>.</style>            The type section contains type-size type descriptors
+<style color=#00ffffff size=1>.</style>            describing the layout of pointers within data types. The
+<style color=#00ffffff size=1>.</style>            format of each descriptor is:
+
+<style color=#00ffffff size=1>.</style>                 type-descriptor:
+<style color=#00ffffff size=1>.</style>                 	desc-number memsize mapsize map
+<style color=#00ffffff size=1>.</style>                 desc-number, memsize, mapsize:
+<style color=#00ffffff size=1>.</style>                 	operand
+<style color=#00ffffff size=1>.</style>                 map:
+<style color=#00ffffff size=1>.</style>                 	byte ...
+
+<style color=#00ffffff size=1>.</style>            The desc-number is a small integer index used to identify
+<style color=#00ffffff size=1>.</style>            the descriptor to instructions such as new. Memsize is the
+<style color=#00ffffff size=1>.</style>            size in bytes of the memory described by this type.
+
+<style color=#00ffffff size=1>.</style>            The mapsize field gives the size in bytes of the following
+<style color=#00ffffff size=1>.</style>            map array. Map is an array of bytes representing a bit map
+<style color=#00ffffff size=1>.</style>            where each bit corresponds to a word in memory. The most
+<style color=#00ffffff size=1>.</style>            significant bit corresponds to the lowest address. For each
+<style color=#00ffffff size=1>.</style>            bit in the map, the word at the corresponding offset in the
+<style color=#00ffffff size=1>.</style>            type is a pointer iff the bit is set to 1.
+
+<style color=#00ffffff size=1>.</style>         Data Section
+<style color=#00ffffff size=1>.</style>            The data section encodes the contents of the data segment
+<style color=#00ffffff size=1>.</style>            for the module, addressed by MP at run-time. The section
+<style color=#00ffffff size=1>.</style>            contains a sequence of items of the following form:
+
+<style color=#00ffffff size=1>.</style>                 data-item:
+<style color=#00ffffff size=1>.</style>                 	code count offset data-value ...
+<style color=#00ffffff size=1>.</style>                 code:
+<style color=#00ffffff size=1>.</style>                 	byte
+<style color=#00ffffff size=1>.</style>                 count, offset:
+<style color=#00ffffff size=1>.</style>                 	operand
+
+<style color=#00ffffff size=1>.</style>            Each item contains an offset into the section, followed by
+<style color=#00ffffff size=1>.</style>            one or more data values in a machine-independent encoding.
+<style color=#00ffffff size=1>.</style>            As each value is placed in the data segment, the offset is
+<style color=#00ffffff size=1>.</style>            incremented by the size of the datum.
+
+<style color=#00ffffff size=1>.</style>            The code byte has two 4-bit fields. The bottom 4 bits of
+<style color=#00ffffff size=1>.</style>            code gives the number of data-values if there are between 1
+<style color=#00ffffff size=1>.</style>            and 15\; if there are more than 15, the low-order field is
+<style color=#00ffffff size=1>.</style>            zero, and a following operand gives the count.
+
+<style color=#00ffffff size=1>.</style>            The top 4 bits of code encode the type of each data-value in
+<style color=#00ffffff size=1>.</style>            the item, which determines its encoding. The defined values
+<style color=#00ffffff size=1>.</style>            are:
+
+<style color=#00ffffff size=1>.</style>                 0001  8 bit bytes
+<style color=#00ffffff size=1>.</style>                 0010  32 bit integers, one word each
+<style color=#00ffffff size=1>.</style>                 0011  string value encoded by <action name=utf(6)>utf(6)</action> in count bytes
+<style color=#00ffffff size=1>.</style>                 0100  real values in IEEE754 canonical representation,
+<style color=#00ffffff size=1>.</style>                       8 bytes each
+<style color=#00ffffff size=1>.</style>                 0101  Array, represented by two words giving type and
+<style color=#00ffffff size=1>.</style>                       length
+<style color=#00ffffff size=1>.</style>                 0110  Set base for data items: one word giving an array
+<style color=#00ffffff size=1>.</style>                       index
+<style color=#00ffffff size=1>.</style>                 0111  Restore base for data items: no operands
+<style color=#00ffffff size=1>.</style>                 1000  64 bit big, 8 bytes each
+
+<style color=#00ffffff size=1>.</style>            The loader maintains a current base address and a stack of
+<style color=#00ffffff size=1>.</style>            addresses. Each item's value is stored at the address formed
+<style color=#00ffffff size=1>.</style>            by adding the current offset to the current base address.
+<style color=#00ffffff size=1>.</style>            That address initially is the base of the module's data
+<style color=#00ffffff size=1>.</style>            segment. The `set base' operation immediately follows an
+<style color=#00ffffff size=1>.</style>            `array' data-item. It stacks the current base address and
+<style color=#00ffffff size=1>.</style>            sets the current base address to the address of the array
+<style color=#00ffffff size=1>.</style>            element selected by its operand. The `restore base'
+<style color=#00ffffff size=1>.</style>            operation sets the current base address to the address on
+<style color=#00ffffff size=1>.</style>            the top of the stack, and pops the stack.
+
+<style color=#00ffffff size=1>.</style>         Module name
+<style color=#00ffffff size=1>.</style>            The module name immediately follows the data section. It
+<style color=#00ffffff size=1>.</style>            contains the name of the module implemented by the object
+<style color=#00ffffff size=1>.</style>            file, as a sequence of bytes in UTF encoding, terminated by
+<style color=#00ffffff size=1>.</style>            a zero byte.
+
+<style color=#00ffffff size=1>.</style>         Link Section
+<style color=#00ffffff size=1>.</style>            The link section contains an array of link-size external
+<style color=#00ffffff size=1>.</style>            linkage items, listing the functions exported by this
+<style color=#00ffffff size=1>.</style>            module. Each variable-length item contains the following:
+
+<style color=#00ffffff size=1>.</style>                 link-item:
+<style color=#00ffffff size=1>.</style>                 	pc desc sig fn-name
+<style color=#00ffffff size=1>.</style>                 pc, desc:
+<style color=#00ffffff size=1>.</style>                 	operand
+<style color=#00ffffff size=1>.</style>                 sig:
+<style color=#00ffffff size=1>.</style>                 	word
+<style color=#00ffffff size=1>.</style>                 fn-name:
+<style color=#00ffffff size=1>.</style>                 	string
+
+<style color=#00ffffff size=1>.</style>            Fn-name is the name of an exported function. Adt member
+<style color=#00ffffff size=1>.</style>            functions appear with their full names: the member name
+<style color=#00ffffff size=1>.</style>            qualified by the adt name, in the form adt-name.member-name,
+<style color=#00ffffff size=1>.</style>            for instance Iobuf.gets.
+
+<style color=#00ffffff size=1>.</style>            Pc is the instruction number of its entry point. Desc is an
+<style color=#00ffffff size=1>.</style>            index value that selects a type descriptor in the type
+<style color=#00ffffff size=1>.</style>            section, which gives the type of the function's stack frame.
+<style color=#00ffffff size=1>.</style>            Sig is an integer hash of the type signature of the
+<style color=#00ffffff size=1>.</style>            function, used in type checking.
+
+<style color=#00ffffff size=1>.</style>         Import Section
+<style color=#00ffffff size=1>.</style>            The optional import section lists all those functions
+<style color=#00ffffff size=1>.</style>            imported from other modules. This allows type checking at
+<style color=#00ffffff size=1>.</style>            load time. The size of the section in bytes is given at the
+<style color=#00ffffff size=1>.</style>            start in operand form. For each module imported there is a
+<style color=#00ffffff size=1>.</style>            list of functions imported from that module. For each
+<style color=#00ffffff size=1>.</style>            function, its type signature (a word) is followed by a 0
+<style color=#00ffffff size=1>.</style>            terminated list of bytes representing its name.
+
+<style color=#00ffffff size=1>.</style>         Handler Section
+<style color=#00ffffff size=1>.</style>            The final optional section lists all exception handlers
+<style color=#00ffffff size=1>.</style>            declared in the module. The number of such handlers is given
+<style color=#00ffffff size=1>.</style>            at the start of the section in operand form. For each one,
+<style color=#00ffffff size=1>.</style>            its format is:
+
+<style color=#00ffffff size=1>.</style>                 handler:
+<style color=#00ffffff size=1>.</style>                 	offset pc1 pc2 desc nlab exc-tab
+<style color=#00ffffff size=1>.</style>                 offset, pc1, pc2, desc, nlab:
+<style color=#00ffffff size=1>.</style>                 	operand
+<style color=#00ffffff size=1>.</style>                 exc-tab:
+<style color=#00ffffff size=1>.</style>                 	exc-name pc ... exc-name pc pc
+<style color=#00ffffff size=1>.</style>                 exc-name:
+<style color=#00ffffff size=1>.</style>                 	string
+<style color=#00ffffff size=1>.</style>                 pc:
+<style color=#00ffffff size=1>.</style>                 	operand
+
+<style color=#00ffffff size=1>.</style>            Each handler specifies the frame offset of its exception
+<style color=#00ffffff size=1>.</style>            structure, the range of pc values it covers (from pc1 up to
+<style color=#00ffffff size=1>.</style>            but not including pc2), the type descriptor of any memory
+<style color=#00ffffff size=1>.</style>            that needs destroying by the handler (or -1 if none), the
+<style color=#00ffffff size=1>.</style>            number of exceptions in the handler and then the exception
+<style color=#00ffffff size=1>.</style>            table itself. The latter consists of a list of exception
+<style color=#00ffffff size=1>.</style>            names and the corresponding pc to jump to when this
+<style color=#00ffffff size=1>.</style>            exception is raised. This is then followed by the pc to jump
+<style color=#00ffffff size=1>.</style>            to in any wildcard (*) case or -1 if this is not applicable.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=asm(1)>asm(1)</action>, <action name=dis(2)>dis(2)</action>, <action name=sbl(6)>sbl(6)</action>
+<style color=#00ffffff size=1>.</style>            ``The Dis Virtual Machine Specification'', Volume 2
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

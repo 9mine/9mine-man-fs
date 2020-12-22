@@ -1,0 +1,17 @@
+intro 0intro ai2key ai2key dsagen ai2key rsagen ai2key applylog
+<style color=#00ffffff size=1>.</style>            applylog updatelog applylog bootpd bootpd tftpd bootpd
+<style color=#00ffffff size=1>.</style>            changelogin changelogin convpasswd changelogin collabsrv
+<style color=#00ffffff size=1>.</style>            collabsrv create create info create inst create
+<style color=#00ffffff size=1>.</style>            createsignerkey createsignerkey cs cs csquery cs dhcp dhcp
+<style color=#00ffffff size=1>.</style>            dns dns dnsquery dns fpgaload fpgaload ftl ftl getauthinfo
+<style color=#00ffffff size=1>.</style>            getauthinfo echo httpd httpd httpd stats httpd emuinit init
+<style color=#00ffffff size=1>.</style>            init init osinit init kfscmd kfscmd logind logind mangaload
+<style color=#00ffffff size=1>.</style>            mangaload manufacture manufacture mkext mkfs mkfs mkfs ping
+<style color=#00ffffff size=1>.</style>            ping plumber plumber fdisk prep format prep mbr prep prep
+<style color=#00ffffff size=1>.</style>            prep rdbgsrv rdbgsrv register register rip rip rstyxd rstyxd
+<style color=#00ffffff size=1>.</style>            shutdown shutdown countersigner signer signer signer verify
+<style color=#00ffffff size=1>.</style>            signer sntp sntp styxchat styxchat styxmon styxmon auth svc
+<style color=#00ffffff size=1>.</style>            net svc registry svc rstyx svc styx svc svc svc touchcal
+<style color=#00ffffff size=1>.</style>            touchcal virgild virgild
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

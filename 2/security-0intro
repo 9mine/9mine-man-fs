@@ -1,0 +1,305 @@
+<action name=SECURITY-INTRO(2)>SECURITY-INTRO(2)</action>                               <action name=SECURITY-INTRO(2)>SECURITY-INTRO(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            intro - introduction to security
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "keyring.m"\;
+<style color=#00ffffff size=1>.</style>            include "security.m"\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This is an introduction to some of the principals behind
+<style color=#00ffffff size=1>.</style>            computer security as well as a description of how these
+<style color=#00ffffff size=1>.</style>            principals are used in Inferno. More detailed descriptions
+<style color=#00ffffff size=1>.</style>            of the methods and principals for ensuring secure
+<style color=#00ffffff size=1>.</style>            communications on computers can be found in texts such as
+<style color=#00ffffff size=1>.</style>            Applied Cryptography by Bruce Schneier (published 1996, J.
+<style color=#00ffffff size=1>.</style>            Wiley & Sons, Inc.).
+
+<style color=#00ffffff size=1>.</style>            Inferno provides several levels of security:
+
+<style color=#00ffffff size=1>.</style>            •    Mutual authentication means that two users or
+<style color=#00ffffff size=1>.</style>                 applications that want to communicate can establish
+<style color=#00ffffff size=1>.</style>                 that they are who they say they are. It is the basic
+<style color=#00ffffff size=1>.</style>                 level of security provided by Inferno. Thus, for
+<style color=#00ffffff size=1>.</style>                 example, when a user connects to an Inferno service,
+<style color=#00ffffff size=1>.</style>                 they can and must establish that they are a legitimate
+<style color=#00ffffff size=1>.</style>                 user.
+
+<style color=#00ffffff size=1>.</style>            •    Message digesting is a technique to ensure that an
+<style color=#00ffffff size=1>.</style>                 interloper cannot modify messages sent between users.
+
+<style color=#00ffffff size=1>.</style>            •    Encryption protects the confidentiality of messages so
+<style color=#00ffffff size=1>.</style>                 that only the party or parties for whom the messages
+<style color=#00ffffff size=1>.</style>                 are intended can decrypt and read them. Inferno makes
+<style color=#00ffffff size=1>.</style>                 it easy to enforce any one or all of these levels of
+<style color=#00ffffff size=1>.</style>                 security.
+
+<style color=#00ffffff size=1>.</style>         Mutual Authentication
+<style color=#00ffffff size=1>.</style>            Authentication requires a combination of elements: a third
+<style color=#00ffffff size=1>.</style>            party that each user can trust, an algorithm or mathematical
+<style color=#00ffffff size=1>.</style>            method to secure messages between users, and a protocol for
+<style color=#00ffffff size=1>.</style>            exchanging messages that ensures that a third party or
+<style color=#00ffffff size=1>.</style>            intruder cannot pretend to be one of the users, or use some
+<style color=#00ffffff size=1>.</style>            other method to undermine their communication.
+
+<style color=#00ffffff size=1>.</style>            One important method for authenticating users in Inferno is
+<style color=#00ffffff size=1>.</style>            the use of digital signatures. Like signing a letter a
+<style color=#00ffffff size=1>.</style>            digital signature testifies to the identity of the sender.
+<style color=#00ffffff size=1>.</style>            Fortunately, it is much more difficult to forge a digital
+<style color=#00ffffff size=1>.</style>            signature. 
+
+<style color=#00ffffff size=1>.</style>            Even after users are authenticated to each other, it is
+<style color=#00ffffff size=1>.</style>            possible for someone `listening' to their communication to
+<style color=#00ffffff size=1>.</style>            read and possibly modify their messages without the users
+<style color=#00ffffff size=1>.</style>            knowing it. So authentication solves one security
+<style color=#00ffffff size=1>.</style>            requirement, but not all of them.
+
+<style color=#00ffffff size=1>.</style>         Message Digesting
+<style color=#00ffffff size=1>.</style>            Message digesting uses a mathematical hashing algorithm to
+<style color=#00ffffff size=1>.</style>            convert a message into an indecipherable string of fixed
+<style color=#00ffffff size=1>.</style>            length (a digest). By appending the hashed value to the
+<style color=#00ffffff size=1>.</style>            message, the authenticity of the message can be verified.
+<style color=#00ffffff size=1>.</style>            The recipient takes the message, applies the same hashing
+<style color=#00ffffff size=1>.</style>            algorithm used by the sender, and compares the value to the
+<style color=#00ffffff size=1>.</style>            one sent. If the values are the same, then the message
+<style color=#00ffffff size=1>.</style>            received must be the same as the one that was sent.
+
+<style color=#00ffffff size=1>.</style>            Inferno includes a counter in the digest to check that
+<style color=#00ffffff size=1>.</style>            messages were received in the correct order and that no
+<style color=#00ffffff size=1>.</style>            messages were inserted by a third party listening in on the
+<style color=#00ffffff size=1>.</style>            line. A secret key is also included in the digest to verify
+<style color=#00ffffff size=1>.</style>            the identity of the sender.
+
+<style color=#00ffffff size=1>.</style>            A message digest ensures that no one has tampered with a
+<style color=#00ffffff size=1>.</style>            message. It does not prevent someone from reading it.
+
+<style color=#00ffffff size=1>.</style>         Message Encryption
+<style color=#00ffffff size=1>.</style>            The traditional notion of encryption is translating a
+<style color=#00ffffff size=1>.</style>            message, called a plaintext in cryptography, into something
+<style color=#00ffffff size=1>.</style>            unreadable, called a ciphertext. Its most obvious use is to
+<style color=#00ffffff size=1>.</style>            provide confidentiality. Only someone able to decrypt the
+<style color=#00ffffff size=1>.</style>            message, or translate it back to its original form, can
+<style color=#00ffffff size=1>.</style>            interpret it.
+
+<style color=#00ffffff size=1>.</style>            A mathematical algorithm is used to both encrypt and decrypt
+<style color=#00ffffff size=1>.</style>            a message. Encryption algorithms depend on keys or bit
+<style color=#00ffffff size=1>.</style>            strings of a specified length for encryption and decryption.
+<style color=#00ffffff size=1>.</style>            The nature of an algorithm and the size of the key determine
+<style color=#00ffffff size=1>.</style>            the degree of security.
+
+<style color=#00ffffff size=1>.</style>            Two basic types of algorithms are used in cryptography:
+<style color=#00ffffff size=1>.</style>            private key (or symmetric key) and public key algorithms.
+<style color=#00ffffff size=1>.</style>            With symmetric algorithms the same key is used to encrypt
+<style color=#00ffffff size=1>.</style>            and decrypt a message. This key must be a secret, known only
+<style color=#00ffffff size=1>.</style>            to the users who want to communicate. It is often called a
+<style color=#00ffffff size=1>.</style>            private or secret key. 
+
+<style color=#00ffffff size=1>.</style>            A public key algorithm may use a private or secret key to
+<style color=#00ffffff size=1>.</style>            encrypt a message and a public key to decrypt it, or
+<style color=#00ffffff size=1>.</style>            vice-versa. The private or secret key is known only to one
+<style color=#00ffffff size=1>.</style>            user. The public key, however, does not have to be kept
+<style color=#00ffffff size=1>.</style>            secret and may be distributed to anyone the user wishes to
+<style color=#00ffffff size=1>.</style>            communicate with. 
+
+<style color=#00ffffff size=1>.</style>            Inferno uses a public key algorithm for digital signatures
+<style color=#00ffffff size=1>.</style>            and symmetric key algorithms for encryption.
+
+<style color=#00ffffff size=1>.</style>            A user can encrypt a message with or without appending a
+<style color=#00ffffff size=1>.</style>            message digest.
+
+<style color=#00ffffff size=1>.</style>         Algorithms Supplied With Inferno
+<style color=#00ffffff size=1>.</style>            Some of the considerations when choosing algorithms are
+<style color=#00ffffff size=1>.</style>            speed, degree of security, and political restrictions on
+<style color=#00ffffff size=1>.</style>            export. The algorithms used in Inferno are well known and
+<style color=#00ffffff size=1>.</style>            rigorously tested.
+
+<style color=#00ffffff size=1>.</style>            One-way hashing algorithms
+<style color=#00ffffff size=1>.</style>                 SHA1 and MD5 are well known (in cryptographic circles)
+<style color=#00ffffff size=1>.</style>                 one-way hashing algorithms. MD5 is a high-speed,
+<style color=#00ffffff size=1>.</style>                 128-bit hash. SHA1 is a somewhat slower but more secure
+<style color=#00ffffff size=1>.</style>                 160-bit hash.
+
+<style color=#00ffffff size=1>.</style>            Elgamal and RSA public key signature algorithms
+<style color=#00ffffff size=1>.</style>                 Elgamal is a public key system widely used for creating
+<style color=#00ffffff size=1>.</style>                 digital signatures. It uses a private key for signing a
+<style color=#00ffffff size=1>.</style>                 message and a public key for verifying it. Inferno also
+<style color=#00ffffff size=1>.</style>                 supports the widely-used RSA and DSS-1 signature
+<style color=#00ffffff size=1>.</style>                 algorithms. Because Inferno initially used Elgamal
+<style color=#00ffffff size=1>.</style>                 keys, it does not assume that either a private or
+<style color=#00ffffff size=1>.</style>                 public key can be used for encryption or decryption.
+<style color=#00ffffff size=1>.</style>                 With constant advances in the field of cryptography,
+<style color=#00ffffff size=1>.</style>                 one of the design goals of Inferno is to create a
+<style color=#00ffffff size=1>.</style>                 security component that will be easy to enhance as new
+<style color=#00ffffff size=1>.</style>                 algorithms are developed.
+
+<style color=#00ffffff size=1>.</style>            Encryption algorithms
+<style color=#00ffffff size=1>.</style>                 DES (the Data Encryption Standard) was adopted by the
+<style color=#00ffffff size=1>.</style>                 US government in 1976 as a standard
+<style color=#00ffffff size=1>.</style>                 encryption/decryption system for unclassified data in
+<style color=#00ffffff size=1>.</style>                 the United States. It is widely used, especially by the
+<style color=#00ffffff size=1>.</style>                 financial services industry. Two types of DES are
+<style color=#00ffffff size=1>.</style>                 offered: DES-ECB and DES-CBC. ECB or Electronic Code
+<style color=#00ffffff size=1>.</style>                 Book and CBC or Chain Block Coding are part of the ANSI
+<style color=#00ffffff size=1>.</style>                 Banking Standard. CBC is more complex and less
+<style color=#00ffffff size=1>.</style>                 vulnerable than ECB. Both versions of DES provide
+<style color=#00ffffff size=1>.</style>                 56-bit keys.
+
+<style color=#00ffffff size=1>.</style>                 RC4 is a symmetric or private key system that is about
+<style color=#00ffffff size=1>.</style>                 10 times faster than DES.
+
+<style color=#00ffffff size=1>.</style>            Diffie-Hellman key exchange algorithm
+<style color=#00ffffff size=1>.</style>                 Diffie-Hellman is an algorithm for creating a secret
+<style color=#00ffffff size=1>.</style>                 key to be shared by users for encrypting messages
+<style color=#00ffffff size=1>.</style>                 (sometimes called a shared secret). It requires each
+<style color=#00ffffff size=1>.</style>                 user to exchange certain information with the other.
+<style color=#00ffffff size=1>.</style>                 This information can be exchanged in the open, that is,
+<style color=#00ffffff size=1>.</style>                 without encryption. Each user is able to create the
+<style color=#00ffffff size=1>.</style>                 same, secret key from this information. However, no one
+<style color=#00ffffff size=1>.</style>                 else listening to their exchange would be able to
+<style color=#00ffffff size=1>.</style>                 create or determine the secret key.
+
+<style color=#00ffffff size=1>.</style>         Security Protocols
+<style color=#00ffffff size=1>.</style>            Cryptanalysis is the study of how to break cryptographic
+<style color=#00ffffff size=1>.</style>            systems. Attempts to disrupt or listen to confidential
+<style color=#00ffffff size=1>.</style>            communications are called attacks. Usually the objective of
+<style color=#00ffffff size=1>.</style>            an attack is to figure out the secret key, decrypt a
+<style color=#00ffffff size=1>.</style>            message, or add or modify messages in some way. 
+
+<style color=#00ffffff size=1>.</style>            There are many methods or strategies for attacking a
+<style color=#00ffffff size=1>.</style>            confidential communication. One method is called a
+<style color=#00ffffff size=1>.</style>            man-in-the-middle attack, where someone listening to a
+<style color=#00ffffff size=1>.</style>            communication pretends to be one of the parties\; another is
+<style color=#00ffffff size=1>.</style>            a replay attack, where an interloper reuses messages that
+<style color=#00ffffff size=1>.</style>            have already been exchanged in an attempt to discover a
+<style color=#00ffffff size=1>.</style>            pattern. 
+
+<style color=#00ffffff size=1>.</style>            In order to thwart such attacks and establish some level of
+<style color=#00ffffff size=1>.</style>            trust between communicating parties, it is necessary to
+<style color=#00ffffff size=1>.</style>            employ certain protocols. Inferno uses two well-established
+<style color=#00ffffff size=1>.</style>            protocols to permit keys to be exchanged and to permit
+<style color=#00ffffff size=1>.</style>            mutual authentication of the identities of two communicating
+<style color=#00ffffff size=1>.</style>            parties.
+
+<style color=#00ffffff size=1>.</style>            A digital signature is one way to guarantee that a message
+<style color=#00ffffff size=1>.</style>            sent by a user is indeed from that user and not someone
+<style color=#00ffffff size=1>.</style>            else. A signature does not require that a message be
+<style color=#00ffffff size=1>.</style>            encrypted. It can be appended to a message in order to
+<style color=#00ffffff size=1>.</style>            guarantee the identity of the sender. With Elgamal, creating
+<style color=#00ffffff size=1>.</style>            a signature requires that the user have a secret or private
+<style color=#00ffffff size=1>.</style>            key. Uniquely associated with the private key is another key
+<style color=#00ffffff size=1>.</style>            that can be distributed publicly. This public key is used
+<style color=#00ffffff size=1>.</style>            along with the private key to create a signature, and is
+<style color=#00ffffff size=1>.</style>            used by others to verify the signature.
+
+<style color=#00ffffff size=1>.</style>            To create a signature the Elgamal algorithm is applied to a
+<style color=#00ffffff size=1>.</style>            combination of the private key, the public key, and the
+<style color=#00ffffff size=1>.</style>            message to be signed. The output of the algorithm is the
+<style color=#00ffffff size=1>.</style>            signature. 
+
+<style color=#00ffffff size=1>.</style>            To verify the signature the receiver applies the Elgamal
+<style color=#00ffffff size=1>.</style>            algorithm to the public key and the signature. If the output
+<style color=#00ffffff size=1>.</style>            is the same message that was sent with the signature, then
+<style color=#00ffffff size=1>.</style>            the signature is valid. This method ensures that the user
+<style color=#00ffffff size=1>.</style>            receiving a message is indeed communicating with someone who
+<style color=#00ffffff size=1>.</style>            owns the public key. 
+
+<style color=#00ffffff size=1>.</style>            The next step is to determine who the owner of the public
+<style color=#00ffffff size=1>.</style>            key is, and to ensure that it belongs to the user that the
+<style color=#00ffffff size=1>.</style>            receiver wants to communicate with. This is accomplished by
+<style color=#00ffffff size=1>.</style>            having a third party create a certificate testifying to the
+<style color=#00ffffff size=1>.</style>            identity of the owner of the public key. This third party is
+<style color=#00ffffff size=1>.</style>            called a certifying authority (CA). If a user trusts the
+<style color=#00ffffff size=1>.</style>            certifying authority, a copy of a certificate is sufficient
+<style color=#00ffffff size=1>.</style>            to determine the ownership of a public key, and therefore,
+<style color=#00ffffff size=1>.</style>            the signature and identity of the user sending a message.
+
+<style color=#00ffffff size=1>.</style>            A certificate includes a variety of information: a user's
+<style color=#00ffffff size=1>.</style>            public key, the identity of the user, Diffie-Hellman
+<style color=#00ffffff size=1>.</style>            parameters, an expiration time for the certificate, and the
+<style color=#00ffffff size=1>.</style>            signature of the CA. The CA's public key is sent to the user
+<style color=#00ffffff size=1>.</style>            along with the certificate to verify the CA's signature.
+
+<style color=#00ffffff size=1>.</style>            Inferno provides two different methods for obtaining a
+<style color=#00ffffff size=1>.</style>            certificate depending on whether a user has access to a
+<style color=#00ffffff size=1>.</style>            keyboard or not. For users with a keyboard, Inferno offers a
+<style color=#00ffffff size=1>.</style>            variation of the Encrypted-Key-Exchange (EKE) protocol,
+<style color=#00ffffff size=1>.</style>            described in <action name=login(6)>login(6)</action>. The protocol depends on establishing
+<style color=#00ffffff size=1>.</style>            trust between a user and a CA using a shared secret
+<style color=#00ffffff size=1>.</style>            (password). The secret must initially be established at the
+<style color=#00ffffff size=1>.</style>            CA by some secure means: typing a password on a secure
+<style color=#00ffffff size=1>.</style>            console at the CA, or transmitting the password securely
+<style color=#00ffffff size=1>.</style>            off-line, perhaps by unintercepted letter or untapped phone
+<style color=#00ffffff size=1>.</style>            call. To obtain a certificate, a user can subsequently enter
+<style color=#00ffffff size=1>.</style>            the secret on the client machine's keyboard\; the protocol
+<style color=#00ffffff size=1>.</style>            obtains a certificate without revealing the secret.
+
+<style color=#00ffffff size=1>.</style>            For an application or user on a set-top box, which normally
+<style color=#00ffffff size=1>.</style>            does not have a keyboard, entering a password would be
+<style color=#00ffffff size=1>.</style>            difficult. Therefore, Inferno provides a different method to
+<style color=#00ffffff size=1>.</style>            establish trust. When the set-top box is turned on, it
+<style color=#00ffffff size=1>.</style>            creates a private/public key pair and dials the service
+<style color=#00ffffff size=1>.</style>            provider's CA to get a certificate. The CA returns a
+<style color=#00ffffff size=1>.</style>            certificate blinded or scrambled with a random bit string
+<style color=#00ffffff size=1>.</style>            known only to the CA. A hashed version of the string is
+<style color=#00ffffff size=1>.</style>            displayed on the user's screen. The user telephones the CA
+<style color=#00ffffff size=1>.</style>            and compares what is displayed with what the CA has sent. If
+<style color=#00ffffff size=1>.</style>            they match, and the user can prove his or her identity, the
+<style color=#00ffffff size=1>.</style>            CA makes the random bit string known to the user, so the
+<style color=#00ffffff size=1>.</style>            certificate can be unscrambled.
+
+<style color=#00ffffff size=1>.</style>         Authentication
+<style color=#00ffffff size=1>.</style>            Mutual authentication in Inferno requires that two parties
+<style color=#00ffffff size=1>.</style>            who want to communicate must have a certificate from the
+<style color=#00ffffff size=1>.</style>            same CA. As described above, the public key of the CA is
+<style color=#00ffffff size=1>.</style>            used to check the certificate sent by the other user. The
+<style color=#00ffffff size=1>.</style>            certificate is used to verify that the public key belongs to
+<style color=#00ffffff size=1>.</style>            the party that the user wants to communicate with.
+
+<style color=#00ffffff size=1>.</style>            If a user can trust the public key, then the key can be used
+<style color=#00ffffff size=1>.</style>            to check the signature sent by the other party. If the
+<style color=#00ffffff size=1>.</style>            public key unlocks the signature, then whoever sent the
+<style color=#00ffffff size=1>.</style>            signature must have the corresponding secret key, and
+<style color=#00ffffff size=1>.</style>            therefore, must be the owner of the public key.
+
+<style color=#00ffffff size=1>.</style>            The default protocol provided by Inferno for mutual
+<style color=#00ffffff size=1>.</style>            authentication is the station-to-station protocol described
+<style color=#00ffffff size=1>.</style>            in <action name=auth(6)>auth(6)</action>. It has the property that both parties can derive
+<style color=#00ffffff size=1>.</style>            the same key from exchanged and validated data but no
+<style color=#00ffffff size=1>.</style>            eavesdropper can determine the key.
+
+<style color=#00ffffff size=1>.</style>         Security at the Application Layer
+<style color=#00ffffff size=1>.</style>            An application can make use of the algorithms and protocols
+<style color=#00ffffff size=1>.</style>            described previously by using only a few library routines
+<style color=#00ffffff size=1>.</style>            such as: <action name=security-login(2)>security-login(2)</action>, <action name=security-auth(2)>security-auth(2)</action> and connect
+<style color=#00ffffff size=1>.</style>            (see <action name=security-ssl(2)>security-ssl(2)</action>). The Login module enables an
+<style color=#00ffffff size=1>.</style>            application that shares a password with a server acting as
+<style color=#00ffffff size=1>.</style>            the CA to obtain a certificate. After obtaining
+<style color=#00ffffff size=1>.</style>            certificates, two applications establish a mutually
+<style color=#00ffffff size=1>.</style>            authenticated connection by calling auth. Auth performs the
+<style color=#00ffffff size=1>.</style>            entire STS protocol. Connect connects an application to an
+<style color=#00ffffff size=1>.</style>            SSL (security sockets layer) device. Each application can
+<style color=#00ffffff size=1>.</style>            create message digests or encrypt messages by writing to
+<style color=#00ffffff size=1>.</style>            this device. Messages are received and decrypted by reading
+<style color=#00ffffff size=1>.</style>            from the SSL device.
+
+<style color=#00ffffff size=1>.</style>            Although Inferno provides these routines to make it easy to
+<style color=#00ffffff size=1>.</style>            establish secure communications, an application is not
+<style color=#00ffffff size=1>.</style>            restricted to their use. Lower-level routines used by login
+<style color=#00ffffff size=1>.</style>            and auth are also available to an application. These
+<style color=#00ffffff size=1>.</style>            routines enable an application to create alternate methods
+<style color=#00ffffff size=1>.</style>            for establishing security, or to perform specialized
+<style color=#00ffffff size=1>.</style>            functions like signing files.
+
+<style color=#00ffffff size=1>.</style>            Inferno also provides security routines tailored for set-top
+<style color=#00ffffff size=1>.</style>            boxes. For example, a set-top-box can use <action name=register(8)>register(8)</action>
+<style color=#00ffffff size=1>.</style>            instead of login (see <action name=security-login(2)>security-login(2)</action>). Register obtains a
+<style color=#00ffffff size=1>.</style>            certificate without requiring a user to enter a password.
+
+<style color=#00ffffff size=1>.</style>            There are also commands in section 8 that establish a server
+<style color=#00ffffff size=1>.</style>            as a Certifying Authority or `signer'. For example, a CA
+<style color=#00ffffff size=1>.</style>            needs a key and password to create a certificate. These can
+<style color=#00ffffff size=1>.</style>            be created on the server using the commands <action name=changelogin(8)>changelogin(8)</action>
+<style color=#00ffffff size=1>.</style>            and <action name=createsignerkey(8)>createsignerkey(8)</action>.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

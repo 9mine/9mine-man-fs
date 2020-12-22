@@ -1,0 +1,105 @@
+<action name=PANEL(9)>PANEL(9)</action>                                                 <action name=PANEL(9)>PANEL(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            panel - embedded graphics
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            panel pathName ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -anchor       -borderwidth  -background   -relief
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -height dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired height for the panel. If this
+<style color=#00ffffff size=1>.</style>                 option isn't specified, the panel's desired height is
+<style color=#00ffffff size=1>.</style>                 computed from the image and mask images. If these are
+<style color=#00ffffff size=1>.</style>                 replicated, the default is zero.
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired width for the panel. If this option
+<style color=#00ffffff size=1>.</style>                 isn't specified, the panel's desired height is computed
+<style color=#00ffffff size=1>.</style>                 from the image and mask images. If these are
+<style color=#00ffffff size=1>.</style>                 replicated, the default is zero.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The panel command creates a new window (given by the 
+<style color=#00ffffff size=1>.</style>            pathName argument) and makes it into a panel widget.
+<style color=#00ffffff size=1>.</style>            Additional options, described above, may be specified on the
+<style color=#00ffffff size=1>.</style>            command line to configure aspects of the panel such as its
+<style color=#00ffffff size=1>.</style>            background colour and 3-D relief. The panel command returns
+<style color=#00ffffff size=1>.</style>            its pathName argument.  At the time this command is invoked,
+<style color=#00ffffff size=1>.</style>            there must not exist a window named pathName.
+
+<style color=#00ffffff size=1>.</style>            A panel is a widget that displays arbitrary graphics drawn
+<style color=#00ffffff size=1>.</style>            outside of Tk. An application is free to use any image or
+<style color=#00ffffff size=1>.</style>            mask that it chooses to create\; the panel will display the
+<style color=#00ffffff size=1>.</style>            contents of the image through the mask (see <action name=draw(2)>draw(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            A panel widget will not display anything until its image has
+<style color=#00ffffff size=1>.</style>            been set using putimage (see <action name=tk(2)>tk(2)</action>).
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The panel command creates a new Tk command whose name is 
+<style color=#00ffffff size=1>.</style>            pathName. This command may be used to invoke various
+<style color=#00ffffff size=1>.</style>            operations on the widget: It has the following general form:
+<style color=#00ffffff size=1>.</style>                 pathName option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            Option and the args determine the exact behaviour of the
+<style color=#00ffffff size=1>.</style>            command.  The following commands are possible for panel
+<style color=#00ffffff size=1>.</style>            widgets:
+
+<style color=#00ffffff size=1>.</style>            pathName cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the panel function.
+
+<style color=#00ffffff size=1>.</style>            pathName configure ?option? ?value option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathName.  If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, then the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the panel function
+
+<style color=#00ffffff size=1>.</style>            pathName dirty ?minx miny maxx maxy?
+<style color=#00ffffff size=1>.</style>                 Mark the area inside the given rectangle ((minx, miny),
+<style color=#00ffffff size=1>.</style>                 (maxx, maxy)) to be flushed to the screen. If the
+<style color=#00ffffff size=1>.</style>                 rectangle is not given, the whole area will be marked.
+<style color=#00ffffff size=1>.</style>                 The coordinates are relative to the image's origin.
+
+<style color=#00ffffff size=1>.</style>            pathName origin ?x y?
+<style color=#00ffffff size=1>.</style>                 Set the point within the image that will be displayed
+<style color=#00ffffff size=1>.</style>                 at the top left of the panel's rectangle. If the area
+<style color=#00ffffff size=1>.</style>                 allocated to the panel is more than the area drawn by
+<style color=#00ffffff size=1>.</style>                 the image, the ``top left'' will positioned with
+<style color=#00ffffff size=1>.</style>                 respect to the value of the -anchor option. If the
+<style color=#00ffffff size=1>.</style>                 point is not given, the current origin is returned.
+
+<style color=#00ffffff size=1>.</style>            pathName panelx ?screenx?
+<style color=#00ffffff size=1>.</style>                 Given a screen x-coordinate, screenx, this command
+<style color=#00ffffff size=1>.</style>                 returns the image x-coordinate displayed at that
+<style color=#00ffffff size=1>.</style>                 location.
+
+<style color=#00ffffff size=1>.</style>            pathName panely ?screeny?
+<style color=#00ffffff size=1>.</style>                 Given a screen y-coordinate, screeny, this command
+<style color=#00ffffff size=1>.</style>                 returns the image y-coordinate displayed at that
+<style color=#00ffffff size=1>.</style>                 location.
+
+<style color=#00ffffff size=1>.</style>            pathName screenx ?panelx?
+<style color=#00ffffff size=1>.</style>                 Given an image x-coordinate, panelx, this command
+<style color=#00ffffff size=1>.</style>                 returns the equivalent screen x-coordinate.
+
+<style color=#00ffffff size=1>.</style>            pathName screeny ?panely?
+<style color=#00ffffff size=1>.</style>                 Given an image y-coordinate, panely, this command
+<style color=#00ffffff size=1>.</style>                 returns the equivalent screen y-coordinate.
+
+BINDINGS
+<style color=#00ffffff size=1>.</style>            When a new panel is created, it has no default event
+<style color=#00ffffff size=1>.</style>            bindings.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=draw(2)>draw(2)</action>, <action name=tk(2)>tk(2)</action>, <action name=options(9)>options(9)</action>, <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

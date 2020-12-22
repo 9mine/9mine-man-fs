@@ -1,0 +1,60 @@
+<action name=GRAB(9)>GRAB(9)</action>                                                   <action name=GRAB(9)>GRAB(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            grab - Confine pointer and keyboard events to a window
+<style color=#00ffffff size=1>.</style>            sub-tree
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            grab what ?arg arg ...?
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This command implements simple pointer grabbing for Tk. When
+<style color=#00ffffff size=1>.</style>            a grab is set for a particular window, Tk restricts all
+<style color=#00ffffff size=1>.</style>            pointer events to the grab window and its descendants in
+<style color=#00ffffff size=1>.</style>            Tk's window hierarchy. Whenever the pointer is within the
+<style color=#00ffffff size=1>.</style>            grab window's subtree, the pointer will behave exactly the
+<style color=#00ffffff size=1>.</style>            same as if there had been no grab at all and all events will
+<style color=#00ffffff size=1>.</style>            be reported in the normal fashion. When the pointer is
+<style color=#00ffffff size=1>.</style>            outside window's tree, button presses and releases and mouse
+<style color=#00ffffff size=1>.</style>            motion events are reported to window, and window entry and
+<style color=#00ffffff size=1>.</style>            window exit events are ignored. The grab subtree ``owns''
+<style color=#00ffffff size=1>.</style>            the pointer: windows outside the grab subtree will be
+<style color=#00ffffff size=1>.</style>            visible on the screen but they will be insensitive until the
+<style color=#00ffffff size=1>.</style>            grab is released. The tree of windows underneath the grab
+<style color=#00ffffff size=1>.</style>            window can include top-level windows, in which case all of
+<style color=#00ffffff size=1>.</style>            those top-level windows and their descendants will continue
+<style color=#00ffffff size=1>.</style>            to receive mouse events during the grab.
+
+<style color=#00ffffff size=1>.</style>            A grab locks out all applications on the screen, so that
+<style color=#00ffffff size=1>.</style>            only the given subtree of the grabbing application will be
+<style color=#00ffffff size=1>.</style>            sensitive to pointer events (mouse button presses, mouse
+<style color=#00ffffff size=1>.</style>            button releases, pointer motions, window entries, and window
+<style color=#00ffffff size=1>.</style>            exits). During grabs the window manager will not receive
+<style color=#00ffffff size=1>.</style>            pointer events either (which means that if the grab is not
+<style color=#00ffffff size=1>.</style>            released the whole GUI will freeze, so be careful!).
+
+<style color=#00ffffff size=1>.</style>            The grab command can take any of the following forms:
+
+<style color=#00ffffff size=1>.</style>            grab release window
+<style color=#00ffffff size=1>.</style>                 Releases the grab on window if there is one, otherwise
+<style color=#00ffffff size=1>.</style>                 does nothing.  Returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            grab set window
+<style color=#00ffffff size=1>.</style>                 If a grab was already in effect for this application on
+<style color=#00ffffff size=1>.</style>                 window's display then it is automatically released. If
+<style color=#00ffffff size=1>.</style>                 there is already a grab on window then the command does
+<style color=#00ffffff size=1>.</style>                 nothing.  Returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            grab ifunset window
+<style color=#00ffffff size=1>.</style>                 Same as grab set except that window is only grabbed if
+<style color=#00ffffff size=1>.</style>                 there is no other grab currently in effect.
+
+<style color=#00ffffff size=1>.</style>            grab status window
+<style color=#00ffffff size=1>.</style>                 Returns none if no grab is currently set on window, or
+<style color=#00ffffff size=1>.</style>                 window if it has the grab.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The current application-exclusive nature of grab is a
+<style color=#00ffffff size=1>.</style>            problem which will be adressed in the future.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

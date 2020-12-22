@@ -1,0 +1,59 @@
+<action name=STYXPERSIST(2)>STYXPERSIST(2)</action>                                     <action name=STYXPERSIST(2)>STYXPERSIST(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            styxpersist - persistent 9P (Styx) connection
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            include "styxpersist.m"\;
+<style color=#00ffffff size=1>.</style>            styxpersist := load Styxpersist Styxpersist->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init: fn(clientfd: ref Sys->FD, usefac: int, keyspec: string):
+<style color=#00ffffff size=1>.</style>                    (chan of chan of ref Sys->FD, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Styxpersist tries to maintain a persistent 9P (Styx)
+<style color=#00ffffff size=1>.</style>            connection for its client. Init starts a process to serve 9P
+<style color=#00ffffff size=1>.</style>            for the client on clientfd. If usefac is non-zero,
+<style color=#00ffffff size=1>.</style>            styxpersist will use <action name=factotum(2)>factotum(2)</action> to do plan 9-style
+<style color=#00ffffff size=1>.</style>            authentication if necessary, and keyspec gives
+<style color=#00ffffff size=1>.</style>            attribute-value pairs to pass to factotum's proxy function.
+
+<style color=#00ffffff size=1>.</style>            Init returns a tuple, say (c, err). If things have started
+<style color=#00ffffff size=1>.</style>            successfully, c holds a channel that styxpersist uses to
+<style color=#00ffffff size=1>.</style>            request a new connection to the server. The caller of init
+<style color=#00ffffff size=1>.</style>            should arrange that a process is ready to repeatedly receive
+<style color=#00ffffff size=1>.</style>            on this channel, dial the server, and send the resulting
+<style color=#00ffffff size=1>.</style>            file descriptor (or nil if the connection was unsuccessful)
+<style color=#00ffffff size=1>.</style>            on the channel received, 
+
+<style color=#00ffffff size=1>.</style>            If init failed, c will be nil and err describes the error.
+
+<style color=#00ffffff size=1>.</style>            If the server goes down, it redials as above, and tries to
+<style color=#00ffffff size=1>.</style>            re-open all the files that were open in the previous
+<style color=#00ffffff size=1>.</style>            connection. In the meantime all client access to the
+<style color=#00ffffff size=1>.</style>            namespace is blocked.
+
+<style color=#00ffffff size=1>.</style>            Note that this service should only be used on conventional
+<style color=#00ffffff size=1>.</style>            file servers, where most reads and writes are idempotent.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/styxpersist.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Even on a conventional fileserver, some operations are
+<style color=#00ffffff size=1>.</style>            non-idempotent\; namely create, rename, remove, and write to
+<style color=#00ffffff size=1>.</style>            an append-only file. If a fileserver dies while such a
+<style color=#00ffffff size=1>.</style>            request is outstanding, it is unclear what it should do.
+<style color=#00ffffff size=1>.</style>            Currently it returns an error to the client if such a
+<style color=#00ffffff size=1>.</style>            sitution occurs.
+
+<style color=#00ffffff size=1>.</style>            Styxpersist is dependent on the capabilities of the local
+<style color=#00ffffff size=1>.</style>            factotum to re-authenticate Plan 9 style. If a client uses
+<style color=#00ffffff size=1>.</style>            an external factotum with different keys, styxpersist may be
+<style color=#00ffffff size=1>.</style>            unable to re-authenticate.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=mount(1)>mount(1)</action>, <action name=dial(2)>dial(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

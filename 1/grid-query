@@ -1,0 +1,48 @@
+<action name=GRID-QUERY(1)>GRID-QUERY(1)</action>                                       <action name=GRID-QUERY(1)>GRID-QUERY(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            grid: query - graphical interface to view resources
+<style color=#00ffffff size=1>.</style>            registered with a known <action name=registry(4)>registry(4)</action>
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            grid/query
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Query displays the resources currently registered with a
+<style color=#00ffffff size=1>.</style>            given <action name=registry(4)>registry(4)</action> and allows the user to mount and browse
+<style color=#00ffffff size=1>.</style>            through the namespaces they provide. 
+
+<style color=#00ffffff size=1>.</style>            Resource categories are displayed in the main window,
+<style color=#00ffffff size=1>.</style>            opening any of these (by clicking on the '+' next to the
+<style color=#00ffffff size=1>.</style>            name) will reveal the names of the individual resources
+<style color=#00ffffff size=1>.</style>            within that category. Each resource has a set of attributes
+<style color=#00ffffff size=1>.</style>            which may be viewed at the lowest level of the displayed
+<style color=#00ffffff size=1>.</style>            tree. Clicking on a specific resource and clicking the Mount
+<style color=#00ffffff size=1>.</style>            button that appears will mount that resource (if possible)
+<style color=#00ffffff size=1>.</style>            and display the imported namespace in a new window. From
+<style color=#00ffffff size=1>.</style>            this window, the user can then browse this namespace as well
+<style color=#00ffffff size=1>.</style>            as opening and running files. A shell window may also be
+<style color=#00ffffff size=1>.</style>            opened to allow more complicated tasks to be performed.
+
+<style color=#00ffffff size=1>.</style>            Clicking Search brings up a search window. Here, the current
+<style color=#00ffffff size=1>.</style>            <action name=registry(4)>registry(4)</action> may be searched for a resource containing the
+<style color=#00ffffff size=1>.</style>            specified attribute names and values. Refresh updates the
+<style color=#00ffffff size=1>.</style>            list of resources in the main window in case any have been
+<style color=#00ffffff size=1>.</style>            added or removed.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/grid/query.b
+<style color=#00ffffff size=1>.</style>            /appl/grid/lib/browse.b
+<style color=#00ffffff size=1>.</style>            /appl/grid/lib/srvbrowse.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Currently, searching for a resource on a <action name=registry(4)>registry(4)</action> is only
+<style color=#00ffffff size=1>.</style>            implemented in a very simple way. Given the attribute (name,
+<style color=#00ffffff size=1>.</style>            value) pairs, the search will return all resources whose
+<style color=#00ffffff size=1>.</style>            attributes exactly match the specified values. * may be used
+<style color=#00ffffff size=1>.</style>            to match any attribute value but not name.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=grid-localreg(1)>grid-localreg(1)</action>, <action name=registries(2)>registries(2)</action>, <action name=registry(4)>registry(4)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

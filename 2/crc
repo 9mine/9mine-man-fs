@@ -1,0 +1,54 @@
+<action name=CRC(2)>CRC(2)</action>                                                     <action name=CRC(2)>CRC(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            crc - Crc module
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "crc.m"\;
+<style color=#00ffffff size=1>.</style>            crc := load Crc Crc->PATH\;
+
+<style color=#00ffffff size=1>.</style>            CRCstate: adt {
+<style color=#00ffffff size=1>.</style>            	crc: int\;
+<style color=#00ffffff size=1>.</style>            	crctab: array of int\;
+<style color=#00ffffff size=1>.</style>            	reg: int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init: fn(poly: int, reg: int): ref CRCstate\;
+<style color=#00ffffff size=1>.</style>            crc: fn(state: ref CRCstate, buf: array of byte, nb: int): int\;
+<style color=#00ffffff size=1>.</style>            reset: fn(state: ref CRCstate)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Crc provides the routines to calculate the CRC (cyclic
+<style color=#00ffffff size=1>.</style>            redundancy check) over blocks of data.
+
+<style color=#00ffffff size=1>.</style>            Init initializes the module and must be called first. The
+<style color=#00ffffff size=1>.</style>            parameter poly is the polynomial to use when calculating the
+<style color=#00ffffff size=1>.</style>            CRC value. If a value of 0 is given, the default polynomial
+<style color=#00ffffff size=1>.</style>            16redb88320 (8r035556101440) is used. The polynomial has its
+<style color=#00ffffff size=1>.</style>            implicit top bit set. The second parameter reg is the number
+<style color=#00ffffff size=1>.</style>            with which to initialize the CRC register. This is commonly
+<style color=#00ffffff size=1>.</style>            0 but, for example, is 16rffffffff in the CRC32 algorithm.
+<style color=#00ffffff size=1>.</style>            The final CRC value is also XORed with this number. The
+<style color=#00ffffff size=1>.</style>            function returns a pointer to an adt that holds the current
+<style color=#00ffffff size=1>.</style>            CRC value, the auxiliary table the algorithm uses and the
+<style color=#00ffffff size=1>.</style>            initial register value. These fields should not be accessed
+<style color=#00ffffff size=1>.</style>            directly - they are only for internal use.
+
+<style color=#00ffffff size=1>.</style>            Crc calculates the CRC value of the first nb bytes of the
+<style color=#00ffffff size=1>.</style>            array buf given the CRC state state as returned by the init
+<style color=#00ffffff size=1>.</style>            function. It returns the current CRC value. It may be called
+<style color=#00ffffff size=1>.</style>            repeatedly to calculate the CRC of a series of arrays of
+<style color=#00ffffff size=1>.</style>            bytes, for example, when calculating the CRC value for the
+<style color=#00ffffff size=1>.</style>            bytes in a file.
+
+<style color=#00ffffff size=1>.</style>            Reset sets the CRC state to its initial value in readiness
+<style color=#00ffffff size=1>.</style>            for a new CRC calculation. It avoids the need to call init
+<style color=#00ffffff size=1>.</style>            again.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/crc.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sum(1)>sum(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

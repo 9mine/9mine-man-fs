@@ -1,0 +1,219 @@
+<action name=REGISTRIES(2)>REGISTRIES(2)</action>                                       <action name=REGISTRIES(2)>REGISTRIES(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            registries - access services registry
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "registries.m"\;
+<style color=#00ffffff size=1>.</style>            registries := load Registries Registries->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init: fn()\;
+
+<style color=#00ffffff size=1>.</style>            Attributes: adt {
+<style color=#00ffffff size=1>.</style>               attrs: list of (string, string)\;
+
+<style color=#00ffffff size=1>.</style>               get:   fn(a: self ref Attributes, attr: string): string\;
+<style color=#00ffffff size=1>.</style>               set:   fn(a: self ref Attributes, attr, val: string)\;
+<style color=#00ffffff size=1>.</style>               new:   fn(attrs: list of (string, string)): ref Attributes\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Attached: adt {
+<style color=#00ffffff size=1>.</style>               fd:           ref Sys->FD\;  # connection to the service
+<style color=#00ffffff size=1>.</style>               signerpkhash: string\;     # hash of signer's key
+<style color=#00ffffff size=1>.</style>               localuser:    string\;     # user name here
+<style color=#00ffffff size=1>.</style>               remoteuser:   string\;     # user name there
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Service: adt {
+<style color=#00ffffff size=1>.</style>               addr:    string\;          # dial this to connect to the service
+<style color=#00ffffff size=1>.</style>               attrs:   ref Attributes\;  # service description
+
+<style color=#00ffffff size=1>.</style>               attach:  fn(s: self ref Service, user: string,
+<style color=#00ffffff size=1>.</style>                           keydir: string): ref Attached\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Registered: adt {
+<style color=#00ffffff size=1>.</style>               addr:    string\;          # address where registered
+<style color=#00ffffff size=1>.</style>               reg:     ref Registry\;    # registry where registered
+<style color=#00ffffff size=1>.</style>               fd:      ref Sys->FD\;     # file representing registration entry
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Registry: adt {
+<style color=#00ffffff size=1>.</style>               dir:     string\;
+
+<style color=#00ffffff size=1>.</style>               new:        fn(dir: string): ref Registry\;
+<style color=#00ffffff size=1>.</style>               connect:    fn(svc: ref Service, user: string, keydir: string):
+<style color=#00ffffff size=1>.</style>                              ref Registry\;
+<style color=#00ffffff size=1>.</style>               services:   fn(r: self ref Registry):
+<style color=#00ffffff size=1>.</style>                              (list of ref Service, string)\;
+<style color=#00ffffff size=1>.</style>               find:       fn(r: self ref Registry, a: list of (string, string)):
+<style color=#00ffffff size=1>.</style>                              (list of ref Service, string)\;
+<style color=#00ffffff size=1>.</style>               register:   fn(r: self ref Registry, addr: string,
+<style color=#00ffffff size=1>.</style>                              attrs: ref Attributes, persist: int):
+<style color=#00ffffff size=1>.</style>                              (ref Registered, string)\;
+<style color=#00ffffff size=1>.</style>               unregister: fn(r: self ref Registry, addr: string): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Registries helps access and update the contents of one or
+<style color=#00ffffff size=1>.</style>            more registry (4) servers. Each registry lists services,
+<style color=#00ffffff size=1>.</style>            each described by a set of attribute/value pairs. The
+<style color=#00ffffff size=1>.</style>            attributes need not identify the service uniquely.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other function in the module.
+
+<style color=#00ffffff size=1>.</style>            Attributes represents a set of attribute/value pairs\; a
+<style color=#00ffffff size=1>.</style>            given attribute name cannot appear more than once. It
+<style color=#00ffffff size=1>.</style>            provides the following members and operations:
+
+<style color=#00ffffff size=1>.</style>            attrs  The current value of the set, as a list of (attr,
+<style color=#00ffffff size=1>.</style>                   value) tuples.
+
+<style color=#00ffffff size=1>.</style>            Attributes.new(attrs)
+<style color=#00ffffff size=1>.</style>                   Return a new Attributes value given attrs, a list of
+<style color=#00ffffff size=1>.</style>                   (attr,value) tuples.
+
+<style color=#00ffffff size=1>.</style>            a.get(attr)
+<style color=#00ffffff size=1>.</style>                   Return the value of attr in attribute set a.
+
+<style color=#00ffffff size=1>.</style>            a.set(attr, value)
+<style color=#00ffffff size=1>.</style>                   Set the value of attr in attribute set a.
+
+<style color=#00ffffff size=1>.</style>            A Service value represents a service registered in some
+<style color=#00ffffff size=1>.</style>            registry. It has the following members and operations:
+
+<style color=#00ffffff size=1>.</style>            addr   A string that represents where the service can be
+<style color=#00ffffff size=1>.</style>                   reached: it is often a <action name=dial(2)>dial(2)</action> address string, but
+<style color=#00ffffff size=1>.</style>                   might be a name in the name space\; the interpretation
+<style color=#00ffffff size=1>.</style>                   is internal to Registries.
+
+<style color=#00ffffff size=1>.</style>            attrs  The service's attributes (complete service
+<style color=#00ffffff size=1>.</style>                   description).
+
+<style color=#00ffffff size=1>.</style>            svc.attach(user,keydir)
+<style color=#00ffffff size=1>.</style>                   Attempts to attach to the service svc, and if
+<style color=#00ffffff size=1>.</style>                   successful returns an Attached value to represent the
+<style color=#00ffffff size=1>.</style>                   connection\; otherwise returns nil and sets the system
+<style color=#00ffffff size=1>.</style>                   error string. User is the local name of the user
+<style color=#00ffffff size=1>.</style>                   making the connection\; if nil, the contents of
+<style color=#00ffffff size=1>.</style>                   /dev/user are used by default. Keydir is the name of
+<style color=#00ffffff size=1>.</style>                   a directory containing the user's certified keys for
+<style color=#00ffffff size=1>.</style>                   authentication\; if nil, the default is /usr/user
+<style color=#00ffffff size=1>.</style>                   /keyring. If an error occurs, the return value is nil
+<style color=#00ffffff size=1>.</style>                   and the system error string contains a diagnostic.
+<style color=#00ffffff size=1>.</style>                   Not all services demand authentication, and either or
+<style color=#00ffffff size=1>.</style>                   both values can be nil to select suitable defaults.
+<style color=#00ffffff size=1>.</style>                   If authentication is done, the certified data
+<style color=#00ffffff size=1>.</style>                   determines the remote identity, not user, which is
+<style color=#00ffffff size=1>.</style>                   used only to help find a suitable set of keys and has
+<style color=#00ffffff size=1>.</style>                   no effect on security.
+
+<style color=#00ffffff size=1>.</style>            Attached holds data about an active connection to a
+<style color=#00ffffff size=1>.</style>            particular service. (There can be several distinct
+<style color=#00ffffff size=1>.</style>            connections to the same Service.) It provides the following
+<style color=#00ffffff size=1>.</style>            members:
+
+<style color=#00ffffff size=1>.</style>            fd     A file descriptor that can be read and written to
+<style color=#00ffffff size=1>.</style>                   exchange data with the service. The meaning of the
+<style color=#00ffffff size=1>.</style>                   data depends on the service (eg, it might be a 9P
+<style color=#00ffffff size=1>.</style>                   connection or a SOAP implementation). Typically an
+<style color=#00ffffff size=1>.</style>                   attribute of the service description hints at the
+<style color=#00ffffff size=1>.</style>                   protocol.
+
+<style color=#00ffffff size=1>.</style>            signerpkhash
+<style color=#00ffffff size=1>.</style>                   A hexadecimal string giving the SHA-1 hash of the key
+<style color=#00ffffff size=1>.</style>                   of the signer used for mutual authentication (ie, its
+<style color=#00ffffff size=1>.</style>                   thumbprint)\; if no authentication was needed or did
+<style color=#00ffffff size=1>.</style>                   not use public key methods, it is nil.
+
+<style color=#00ffffff size=1>.</style>            localuser
+<style color=#00ffffff size=1>.</style>                   If authentication was required, the name used as the
+<style color=#00ffffff size=1>.</style>                   local name for authentication\; otherwise nil.
+
+<style color=#00ffffff size=1>.</style>            remoteuser
+<style color=#00ffffff size=1>.</style>                   If authentication was required, the remote identity
+<style color=#00ffffff size=1>.</style>                   for this connection\; otherwise nil.
+
+<style color=#00ffffff size=1>.</style>            A service provider registers using one of the Registry
+<style color=#00ffffff size=1>.</style>            functions listed below. An active registration is
+<style color=#00ffffff size=1>.</style>            represented by a value of type Registered:
+
+<style color=#00ffffff size=1>.</style>            addr   Location of service, as registered.
+
+<style color=#00ffffff size=1>.</style>            reg    The registry that registered the service.
+
+<style color=#00ffffff size=1>.</style>            fd     File descriptor open for on the service file in
+<style color=#00ffffff size=1>.</style>                   <action name=registry(4)>registry(4)</action> that holds the service description.
+<style color=#00ffffff size=1>.</style>                   Unless the service has a non-zero persist attribute,
+<style color=#00ffffff size=1>.</style>                   the service registration will be removed when this
+<style color=#00ffffff size=1>.</style>                   file is closed (eg, when this Registration value is
+<style color=#00ffffff size=1>.</style>                   freed by the garbage collector if there is no other
+<style color=#00ffffff size=1>.</style>                   copy of fd). The file can be written as described in
+<style color=#00ffffff size=1>.</style>                   <action name=registry(4)>registry(4)</action> to change the some or all of current set
+<style color=#00ffffff size=1>.</style>                   of attributes and/or values in the service
+<style color=#00ffffff size=1>.</style>                   description.
+
+<style color=#00ffffff size=1>.</style>            A Registry represents a connection to a single <action name=registry(4)>registry(4)</action>
+<style color=#00ffffff size=1>.</style>            instance. It provides the following members and operations:
+
+<style color=#00ffffff size=1>.</style>            dir    Location of the registry in the name space.
+
+<style color=#00ffffff size=1>.</style>            Registry.new(dir)
+<style color=#00ffffff size=1>.</style>                   Return a new Registry value for the registry located
+<style color=#00ffffff size=1>.</style>                   at dir in the name space\; if dir is nil, the default
+<style color=#00ffffff size=1>.</style>                   is /mnt/registry.
+
+<style color=#00ffffff size=1>.</style>            Registry.connect(svc, user, keydir)
+<style color=#00ffffff size=1>.</style>                   Connect to the registry at the location determined by
+<style color=#00ffffff size=1>.</style>                   the service description svc\; if svc is nil, the
+<style color=#00ffffff size=1>.</style>                   default is to try <action name=dial(2)>dial(2)</action> to net!$registry!registry,
+<style color=#00ffffff size=1>.</style>                   the symbolic name of the default registry for the
+<style color=#00ffffff size=1>.</style>                   current host. (The registry might or might not be
+<style color=#00ffffff size=1>.</style>                   local.) Attributes of svc determine the method used
+<style color=#00ffffff size=1>.</style>                   to connect to the registry and whether authentication
+<style color=#00ffffff size=1>.</style>                   is required. User and keydir provide user name and
+<style color=#00ffffff size=1>.</style>                   certificate directory (see <action name=getauthinfo(8)>getauthinfo(8)</action>) if
+<style color=#00ffffff size=1>.</style>                   authentication is required\; either or both can be nil
+<style color=#00ffffff size=1>.</style>                   to select the defaults for the given authentication
+<style color=#00ffffff size=1>.</style>                   method. On successful connection, connect returns a
+<style color=#00ffffff size=1>.</style>                   Registry value that can subsequently be used to
+<style color=#00ffffff size=1>.</style>                   access that registry and its services. It returns nil
+<style color=#00ffffff size=1>.</style>                   on an error and sets the system error string.
+
+<style color=#00ffffff size=1>.</style>            reg.services()
+<style color=#00ffffff size=1>.</style>                   Returns a tuple (svcs,err) where svcs is a list of
+<style color=#00ffffff size=1>.</style>                   Service values, one for each service registered by
+<style color=#00ffffff size=1>.</style>                   reg at time of asking. If no services are registered,
+<style color=#00ffffff size=1>.</style>                   both values are nil. If an error occurred, svcs is
+<style color=#00ffffff size=1>.</style>                   nil but err is a diagnostic string.
+
+<style color=#00ffffff size=1>.</style>            reg.find(attrs)
+<style color=#00ffffff size=1>.</style>                   Return a tuple (svcs,err) where svcs is a list of
+<style color=#00ffffff size=1>.</style>                   Service values, one for each service registered by
+<style color=#00ffffff size=1>.</style>                   reg that (at time of asking) matched all of the
+<style color=#00ffffff size=1>.</style>                   attribute/value pairs in attrs. A value of * matches
+<style color=#00ffffff size=1>.</style>                   any value. If no services matched, both values are
+<style color=#00ffffff size=1>.</style>                   nil. If an error occurred, svcs is nil but err is a
+<style color=#00ffffff size=1>.</style>                   diagnostic string.
+
+<style color=#00ffffff size=1>.</style>            reg.register(addr, attrs, persist)
+<style color=#00ffffff size=1>.</style>                   Attempts to register with reg a service named addr
+<style color=#00ffffff size=1>.</style>                   and the given attributes attrs, and returns a tuple (
+<style color=#00ffffff size=1>.</style>                   r,err) where r is a non-nil Registration value for
+<style color=#00ffffff size=1>.</style>                   the entry if successful, and err is a diagnostic
+<style color=#00ffffff size=1>.</style>                   otherwise. Persist is non-zero if the service
+<style color=#00ffffff size=1>.</style>                   registration should survive the Registration value
+<style color=#00ffffff size=1>.</style>                   (connection)\; normally it is zero and the registry
+<style color=#00ffffff size=1>.</style>                   entry vanishes when the service frees the
+<style color=#00ffffff size=1>.</style>                   Registration value.
+
+<style color=#00ffffff size=1>.</style>            reg.unregister(addr)
+<style color=#00ffffff size=1>.</style>                   Attempt to remove the registration entry at reg for
+<style color=#00ffffff size=1>.</style>                   the service named addr. Only the service owner can do
+<style color=#00ffffff size=1>.</style>                   so. Returns nil on success and a diagnostic
+<style color=#00ffffff size=1>.</style>                   otherwise.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=attrdb(2)>attrdb(2)</action>, <action name=registry(4)>registry(4)</action>, <action name=svc(8)>svc(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

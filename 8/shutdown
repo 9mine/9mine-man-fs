@@ -1,0 +1,24 @@
+<action name=SHUTDOWN(8)>SHUTDOWN(8)</action>                                           <action name=SHUTDOWN(8)>SHUTDOWN(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            shutdown - shut down system/emulator
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            shutdown -h
+
+<style color=#00ffffff size=1>.</style>            shutdown -r
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Shutdown halts (-h) or restarts (-r) <action name=emu(1)>emu(1)</action> or a native
+<style color=#00ffffff size=1>.</style>            kernel. If restarted, <action name=emu(1)>emu(1)</action> will be given the same options
+<style color=#00ffffff size=1>.</style>            as were given it when it started.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /dev/sysctl
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /dis/shutdown  <action name=sh(1)>sh(1)</action> script
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cons(3)>cons(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

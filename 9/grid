@@ -1,0 +1,339 @@
+<action name=GRID(9)>GRID(9)</action>                                                   <action name=GRID(9)>GRID(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            grid - Geometry manager that arranges widgets in a grid
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            grid option arg ?arg ...?
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The grid command is used to communicate with the grid
+<style color=#00ffffff size=1>.</style>            geometry manager that arranges widgets in rows and columns
+<style color=#00ffffff size=1>.</style>            inside of another window, called the geometry master (or
+<style color=#00ffffff size=1>.</style>            master window). The grid command can have any of several
+<style color=#00ffffff size=1>.</style>            forms, depending on the option argument:
+
+<style color=#00ffffff size=1>.</style>            grid bbox master ?column row? ?column2 row2?
+<style color=#00ffffff size=1>.</style>                 With no arguments, the bounding box (in pixels) of the
+<style color=#00ffffff size=1>.</style>                 grid is returned. The return value consists of 4
+<style color=#00ffffff size=1>.</style>                 integers.  The first two are the pixel offset from the
+<style color=#00ffffff size=1>.</style>                 master window (x then y) of the top-left corner of the
+<style color=#00ffffff size=1>.</style>                 grid, and the second two integers are the bottom-right
+<style color=#00ffffff size=1>.</style>                 corner of the grid, also in pixels.  If a single column
+<style color=#00ffffff size=1>.</style>                 and row is specified on the command line, then the
+<style color=#00ffffff size=1>.</style>                 bounding box for that cell is returned, where the top
+<style color=#00ffffff size=1>.</style>                 left cell is numbered from zero.  If both column and 
+<style color=#00ffffff size=1>.</style>                 row arguments are specified, then the bounding box
+<style color=#00ffffff size=1>.</style>                 spanning the rows and columns indicated is returned.
+
+<style color=#00ffffff size=1>.</style>            grid cellinfo master column row
+<style color=#00ffffff size=1>.</style>                 Returns a list giving information about the slave
+<style color=#00ffffff size=1>.</style>                 currently held in the grid cell specified by column and
+<style color=#00ffffff size=1>.</style>                 row. The first element of the list is the name of the
+<style color=#00ffffff size=1>.</style>                 slave, and the rest have the same option-value form
+<style color=#00ffffff size=1>.</style>                 that might be specified to grid configure (the same
+<style color=#00ffffff size=1>.</style>                 form as returned by grid info).
+
+<style color=#00ffffff size=1>.</style>            grid columnconfigure master index ?-option value...?
+<style color=#00ffffff size=1>.</style>                 Set the column properties of the index column of the 
+<style color=#00ffffff size=1>.</style>                 geometry master, master. The valid options are -minsize
+<style color=#00ffffff size=1>.</style>                 , -weight, -pad and -name. If one or more options are
+<style color=#00ffffff size=1>.</style>                 provided, then index may be given as a list of column
+<style color=#00ffffff size=1>.</style>                 indices to which the configuration options will operate
+<style color=#00ffffff size=1>.</style>                 on. The -minsize option sets the minimum size, in
+<style color=#00ffffff size=1>.</style>                 screen units, that will be permitted for this column.
+<style color=#00ffffff size=1>.</style>                 The -weight option (an integer value) sets the relative
+<style color=#00ffffff size=1>.</style>                 weight for apportioning any extra spaces among columns.
+<style color=#00ffffff size=1>.</style>                 A weight of zero (0) indicates the column will not
+<style color=#00ffffff size=1>.</style>                 deviate from its requested size.  A column whose weight
+<style color=#00ffffff size=1>.</style>                 is two will grow at twice the rate as a column of
+<style color=#00ffffff size=1>.</style>                 weight one when extra space is allocated to the layout.
+<style color=#00ffffff size=1>.</style>                 The -pad option specifies a pad distance that will be
+<style color=#00ffffff size=1>.</style>                 added either side of the column\; adjacent columns merge
+<style color=#00ffffff size=1>.</style>                 their padding, creating a pad sized to the larger of
+<style color=#00ffffff size=1>.</style>                 the pads on either column. The -name option associates
+<style color=#00ffffff size=1>.</style>                 a name with the column, which can then be used as an
+<style color=#00ffffff size=1>.</style>                 index to refer to that column.
+
+<style color=#00ffffff size=1>.</style>            grid slave ?slave ...? ?options?
+<style color=#00ffffff size=1>.</style>                 The arguments consist of the names of one or more slave
+<style color=#00ffffff size=1>.</style>                 windows followed by pairs of arguments that specify how
+<style color=#00ffffff size=1>.</style>                 to manage the slaves. The characters -,  x and ^, can
+<style color=#00ffffff size=1>.</style>                 be specified instead of a window name to alter the
+<style color=#00ffffff size=1>.</style>                 default location of a slave, as described in the
+<style color=#00ffffff size=1>.</style>                 ``RELATIVE PLACEMENT'' section, below. The following
+<style color=#00ffffff size=1>.</style>                 options are supported:
+
+<style color=#00ffffff size=1>.</style>                 -column index
+<style color=#00ffffff size=1>.</style>                      Insert the slave so that it occupies the indexth
+<style color=#00ffffff size=1>.</style>                      column in the grid. Column numbers start with 0.
+<style color=#00ffffff size=1>.</style>                      If this option is not supplied, then the slave is
+<style color=#00ffffff size=1>.</style>                      arranged just to the right of previous slave
+<style color=#00ffffff size=1>.</style>                      specified on this call to grid, or column "0" if
+<style color=#00ffffff size=1>.</style>                      it is the first slave.  For each x that
+<style color=#00ffffff size=1>.</style>                      immediately precedes the slave, the column
+<style color=#00ffffff size=1>.</style>                      position is incremented by one.  Thus the x
+<style color=#00ffffff size=1>.</style>                      represents a blank column for this row in the
+<style color=#00ffffff size=1>.</style>                      grid.
+
+<style color=#00ffffff size=1>.</style>                 -columnspan n
+<style color=#00ffffff size=1>.</style>                      Insert the slave so that it occupies n columns in
+<style color=#00ffffff size=1>.</style>                      the grid. The default is one column, unless the
+<style color=#00ffffff size=1>.</style>                      window name is followed by a -, in which case the
+<style color=#00ffffff size=1>.</style>                      columnspan is incremented once for each
+<style color=#00ffffff size=1>.</style>                      immediately following -.
+
+<style color=#00ffffff size=1>.</style>                 -in other
+<style color=#00ffffff size=1>.</style>                      Insert the slave(s) in the master window given by 
+<style color=#00ffffff size=1>.</style>                      other.  The default is the first slave's parent
+<style color=#00ffffff size=1>.</style>                      window.
+
+<style color=#00ffffff size=1>.</style>                 -ipadx amount
+<style color=#00ffffff size=1>.</style>                      The amount specifies how much horizontal internal
+<style color=#00ffffff size=1>.</style>                      padding to leave on each side of the slave(s).
+<style color=#00ffffff size=1>.</style>                      This is space is added inside the slave(s) border.
+<style color=#00ffffff size=1>.</style>                      The amount must be a valid screen distance, such
+<style color=#00ffffff size=1>.</style>                      as 2 or .5c. It defaults to 0.
+
+<style color=#00ffffff size=1>.</style>                 -ipady amount
+<style color=#00ffffff size=1>.</style>                      The amount specifies how much vertical internal
+<style color=#00ffffff size=1>.</style>                      padding to leave on on the top and bottom of the
+<style color=#00ffffff size=1>.</style>                      slave(s). This space is added inside the slave(s)
+<style color=#00ffffff size=1>.</style>                      border. The amount  defaults to 0.
+
+<style color=#00ffffff size=1>.</style>                 -padx amount
+<style color=#00ffffff size=1>.</style>                      The amount specifies how much horizontal external
+<style color=#00ffffff size=1>.</style>                      padding to leave on each side of the slave(s), in
+<style color=#00ffffff size=1>.</style>                      screen units. The amount defaults to 0. This space
+<style color=#00ffffff size=1>.</style>                      is added outside the slave(s) border.
+
+<style color=#00ffffff size=1>.</style>                 -pady amount
+<style color=#00ffffff size=1>.</style>                      The amount specifies how much vertical external
+<style color=#00ffffff size=1>.</style>                      padding to leave on the top and bottom of the
+<style color=#00ffffff size=1>.</style>                      slave(s), in screen units. The amount defaults to
+<style color=#00ffffff size=1>.</style>                      0. This space is added outside the slave(s)
+<style color=#00ffffff size=1>.</style>                      border.
+
+<style color=#00ffffff size=1>.</style>                 -row index
+<style color=#00ffffff size=1>.</style>                      Insert the slave so that it occupies the indexth
+<style color=#00ffffff size=1>.</style>                      row in the grid. Row numbers start with 0.  If
+<style color=#00ffffff size=1>.</style>                      this option is not supplied, then the slave is
+<style color=#00ffffff size=1>.</style>                      arranged on the same row as the previous slave
+<style color=#00ffffff size=1>.</style>                      specified on this call to grid, or the first
+<style color=#00ffffff size=1>.</style>                      unoccupied row if this is the first slave.
+
+<style color=#00ffffff size=1>.</style>                 -rowspan n
+<style color=#00ffffff size=1>.</style>                      Insert the slave so that it occupies n rows in the
+<style color=#00ffffff size=1>.</style>                      grid. The default is one row.  If the next grid
+<style color=#00ffffff size=1>.</style>                      command contains ^ characters instead of slaves
+<style color=#00ffffff size=1>.</style>                      that line up with the columns of this slave, then
+<style color=#00ffffff size=1>.</style>                      the rowspan of this slave is extended by one.
+
+<style color=#00ffffff size=1>.</style>                 -sticky style
+<style color=#00ffffff size=1>.</style>                      If a slave's cell is larger than its requested
+<style color=#00ffffff size=1>.</style>                      dimensions, this option may be used to position
+<style color=#00ffffff size=1>.</style>                      (or stretch) the slave within its cell. Style  is
+<style color=#00ffffff size=1>.</style>                      a string that contains zero or more of the
+<style color=#00ffffff size=1>.</style>                      characters n, s, e or w. The string can optionally
+<style color=#00ffffff size=1>.</style>                      contains spaces or commas, but they are ignored.
+<style color=#00ffffff size=1>.</style>                      Each letter refers to a side (north, south, east,
+<style color=#00ffffff size=1>.</style>                      or west) that the slave will "stick" to.  If both 
+<style color=#00ffffff size=1>.</style>                      n and s (or e and w) are specified, the slave will
+<style color=#00ffffff size=1>.</style>                      be stretched to fill the entire height (or width)
+<style color=#00ffffff size=1>.</style>                      of its cavity.  The sticky option subsumes the
+<style color=#00ffffff size=1>.</style>                      combination of -anchor and -fill that is used by 
+<style color=#00ffffff size=1>.</style>                      pack. The default is {}, which causes the slave to
+<style color=#00ffffff size=1>.</style>                      be centered in its cavity, at its requested size.
+
+<style color=#00ffffff size=1>.</style>                 If any of the slaves are already managed by the
+<style color=#00ffffff size=1>.</style>                 geometry manager then any unspecified options for them
+<style color=#00ffffff size=1>.</style>                 retain their previous values rather than receiving
+<style color=#00ffffff size=1>.</style>                 default values.
+
+<style color=#00ffffff size=1>.</style>                 It is an error if any slave covers an area already
+<style color=#00ffffff size=1>.</style>                 covered by an existing slave of the grid.
+
+<style color=#00ffffff size=1>.</style>            grid columndelete master index0 ?index1?
+<style color=#00ffffff size=1>.</style>                 Deletes columns from index0 up to but not including 
+<style color=#00ffffff size=1>.</style>                 index1, If index1 is not given, it defaults to index0
+<style color=#00ffffff size=1>.</style>                 +1. The deleted columns may not contain cells spanned
+<style color=#00ffffff size=1>.</style>                 by slaves outside the deleted columns.
+
+<style color=#00ffffff size=1>.</style>            grid columnindex master index
+<style color=#00ffffff size=1>.</style>                 Returns index as a numerical index into the column.
+
+<style color=#00ffffff size=1>.</style>            grid columninsert master index ?count?
+<style color=#00ffffff size=1>.</style>                 Inserts count (default 1) new columns just before index
+<style color=#00ffffff size=1>.</style>                 . The inserted rows may not split a spanning cell.
+
+<style color=#00ffffff size=1>.</style>            grid forget slave ?slave ...?
+<style color=#00ffffff size=1>.</style>                 Removes each of the slaves from grid for its master and
+<style color=#00ffffff size=1>.</style>                 unmaps their windows. The slaves will no longer be
+<style color=#00ffffff size=1>.</style>                 managed by the grid geometry manager. The configuration
+<style color=#00ffffff size=1>.</style>                 options for that window are forgotten, so that if the
+<style color=#00ffffff size=1>.</style>                 slave is managed once more by the grid geometry
+<style color=#00ffffff size=1>.</style>                 manager, the initial default settings are used.
+
+<style color=#00ffffff size=1>.</style>            grid info slave
+<style color=#00ffffff size=1>.</style>                 Returns a list whose elements are the current
+<style color=#00ffffff size=1>.</style>                 configuration state of the slave given by slave in the
+<style color=#00ffffff size=1>.</style>                 same option-value form that might be specified to grid
+<style color=#00ffffff size=1>.</style>                 configure. The first two elements of the list are ``-in
+<style color=#00ffffff size=1>.</style>                 master'' where master is the slave's master.
+
+<style color=#00ffffff size=1>.</style>            grid location master x y
+<style color=#00ffffff size=1>.</style>                 Given  x and y values in screen units relative to the
+<style color=#00ffffff size=1>.</style>                 master window, the column and row number at that x and 
+<style color=#00ffffff size=1>.</style>                 y location is returned. For locations that are above or
+<style color=#00ffffff size=1>.</style>                 to the left of the grid, -1 is returned.
+
+<style color=#00ffffff size=1>.</style>            grid propagate master ?boolean?
+<style color=#00ffffff size=1>.</style>                 If boolean has a true boolean value such as 1 or on
+<style color=#00ffffff size=1>.</style>                 then propagation is enabled for master, which must be a
+<style color=#00ffffff size=1>.</style>                 window name (see ``GEOMETRY PROPAGATION'' below). If 
+<style color=#00ffffff size=1>.</style>                 boolean has a false boolean value then propagation is
+<style color=#00ffffff size=1>.</style>                 disabled for master. In either of these cases an empty
+<style color=#00ffffff size=1>.</style>                 string is returned. If boolean is omitted then the
+<style color=#00ffffff size=1>.</style>                 command returns 0 or 1 to indicate whether propagation
+<style color=#00ffffff size=1>.</style>                 is currently enabled for master. Propagation is enabled
+<style color=#00ffffff size=1>.</style>                 by default.
+
+<style color=#00ffffff size=1>.</style>            grid rowconfigure master index ?-option value...?
+<style color=#00ffffff size=1>.</style>                 Set the row properties of the index row of the geometry
+<style color=#00ffffff size=1>.</style>                 master, master. The valid options are -minsize, -weight
+<style color=#00ffffff size=1>.</style>                 , -pad and -name. If one or more options are provided,
+<style color=#00ffffff size=1>.</style>                 then index may be given as a list of row indices to
+<style color=#00ffffff size=1>.</style>                 which the configuration options will operate on. The 
+<style color=#00ffffff size=1>.</style>                 -minsize option sets the minimum size, in screen units,
+<style color=#00ffffff size=1>.</style>                 that will be permitted for this row. The -weight option
+<style color=#00ffffff size=1>.</style>                 (an integer value) sets the relative weight for
+<style color=#00ffffff size=1>.</style>                 apportioning any extra spaces among rows. A weight of
+<style color=#00ffffff size=1>.</style>                 zero (0) indicates the row will not deviate from its
+<style color=#00ffffff size=1>.</style>                 requested size.  A row whose weight is two will grow at
+<style color=#00ffffff size=1>.</style>                 twice the rate as a row of weight one when extra space
+<style color=#00ffffff size=1>.</style>                 is allocated to the layout. The -pad option specifies a
+<style color=#00ffffff size=1>.</style>                 pad distance that will be added either side of the row\;
+<style color=#00ffffff size=1>.</style>                 adjacent rows merge their padding, creating a pad sized
+<style color=#00ffffff size=1>.</style>                 to the larger of the pads on either row. The -name
+<style color=#00ffffff size=1>.</style>                 option associates a name with the row, which can then
+<style color=#00ffffff size=1>.</style>                 be used as an index to refer to that row.
+
+<style color=#00ffffff size=1>.</style>            grid rowdelete master index0 ?index1?
+<style color=#00ffffff size=1>.</style>                 Deletes rows from index0 up to but not including index1
+<style color=#00ffffff size=1>.</style>                 , If index1 is not given, it defaults to index0+1. The
+<style color=#00ffffff size=1>.</style>                 deleted rows may not contain cells spanned by slaves
+<style color=#00ffffff size=1>.</style>                 outside the deleted columns.
+
+<style color=#00ffffff size=1>.</style>            grid rowindex master index
+<style color=#00ffffff size=1>.</style>                 Returns index as a numerical index into the row.
+
+<style color=#00ffffff size=1>.</style>            grid rowinsert master index ?count?
+<style color=#00ffffff size=1>.</style>                 Inserts count (default 1) new rows just before index.
+<style color=#00ffffff size=1>.</style>                 The inserted rows may not split a spanning cell.
+
+<style color=#00ffffff size=1>.</style>            grid size master
+<style color=#00ffffff size=1>.</style>                 Returns the size of the grid (in columns then rows) for
+<style color=#00ffffff size=1>.</style>                 master. The size is determined either by the largest
+<style color=#00ffffff size=1>.</style>                 row or column that has been occupied by a slave, or the
+<style color=#00ffffff size=1>.</style>                 largest column or row that has been explicitly
+<style color=#00ffffff size=1>.</style>                 configured.
+
+<style color=#00ffffff size=1>.</style>            grid slaves master ?-option value?
+<style color=#00ffffff size=1>.</style>                 If no options are supplied, a list of all of the slaves
+<style color=#00ffffff size=1>.</style>                 in master are returned, most recently manages first.
+<style color=#00ffffff size=1>.</style>                 Option can be either -row or -column which causes only
+<style color=#00ffffff size=1>.</style>                 the slaves in the row (or column) specified by value to
+<style color=#00ffffff size=1>.</style>                 be returned.
+
+<style color=#00ffffff size=1>.</style>         INDICES
+<style color=#00ffffff size=1>.</style>            An index is either a non-negative integer value, the string
+<style color=#00ffffff size=1>.</style>            end, (one beyond the last index in the row or column in
+<style color=#00ffffff size=1>.</style>            question), or a name identifying a row or column previously
+<style color=#00ffffff size=1>.</style>            named with the -name option to rowconfigure or 
+<style color=#00ffffff size=1>.</style>            columnconfigure.
+
+<style color=#00ffffff size=1>.</style>         RELATIVE PLACEMENT
+<style color=#00ffffff size=1>.</style>            The grid command contains a limited set of capabilities that
+<style color=#00ffffff size=1>.</style>            permit layouts to be created without specifying the row and
+<style color=#00ffffff size=1>.</style>            column information for each slave.  This permits slaves to
+<style color=#00ffffff size=1>.</style>            be rearranged, added, or removed without the need to
+<style color=#00ffffff size=1>.</style>            explicitly specify row and column information. When no
+<style color=#00ffffff size=1>.</style>            column or row information is specified for a slave, default
+<style color=#00ffffff size=1>.</style>            values are chosen for column, row, columnspan and rowspan at
+<style color=#00ffffff size=1>.</style>            the time the slave is managed. The values are chosen based
+<style color=#00ffffff size=1>.</style>            upon the current layout of the grid, the position of the 
+<style color=#00ffffff size=1>.</style>            slave relative to other slaves in the same grid command, and
+<style color=#00ffffff size=1>.</style>            the presence of the characters -, ^, and ^ in grid command
+<style color=#00ffffff size=1>.</style>            where slave names are normally expected.
+
+<style color=#00ffffff size=1>.</style>            -    This increases the columnspan of the slave to the left.
+<style color=#00ffffff size=1>.</style>                 Several -'s in a row will successively increase the
+<style color=#00ffffff size=1>.</style>                 columnspan. A - may not follow a ^ or a x.
+
+<style color=#00ffffff size=1>.</style>            x    This leaves an empty column between the slave on the
+<style color=#00ffffff size=1>.</style>                 left and the slave on the right.
+
+<style color=#00ffffff size=1>.</style>            ^    This extends the rowspan of the slave above the ^'s in
+<style color=#00ffffff size=1>.</style>                 the grid.  The number of ^'s in a row must match the
+<style color=#00ffffff size=1>.</style>                 number of columns spanned by the slave above it.
+
+<style color=#00ffffff size=1>.</style>         THE GRID ALGORITHM
+<style color=#00ffffff size=1>.</style>            The grid geometry manager lays out its slaves in three
+<style color=#00ffffff size=1>.</style>            steps. In the first step, the minimum size needed to fit all
+<style color=#00ffffff size=1>.</style>            of the slaves is computed, then (if propagation is turned
+<style color=#00ffffff size=1>.</style>            on), a request is made of the master window to become that
+<style color=#00ffffff size=1>.</style>            size. In the second step, the requested size is compared
+<style color=#00ffffff size=1>.</style>            against the actual size of the master.  If the sizes are
+<style color=#00ffffff size=1>.</style>            different, then spaces is added to or taken away from the
+<style color=#00ffffff size=1>.</style>            layout as needed. For the final step, each slave is
+<style color=#00ffffff size=1>.</style>            positioned in its row(s) and column(s) based on the setting
+<style color=#00ffffff size=1>.</style>            of its sticky flag.
+
+<style color=#00ffffff size=1>.</style>            To compute the minimum size of a layout, the grid geometry
+<style color=#00ffffff size=1>.</style>            manager first looks at all slaves whose columnspan and
+<style color=#00ffffff size=1>.</style>            rowspan values are one, and computes the nominal size of
+<style color=#00ffffff size=1>.</style>            each row or column to be either the minsize for that row or
+<style color=#00ffffff size=1>.</style>            column, or the sum of the padding plus the size of the
+<style color=#00ffffff size=1>.</style>            largest slave, whichever is greater.  Then the slaves whose
+<style color=#00ffffff size=1>.</style>            rowspans or columnspans are greater than one are examined.
+<style color=#00ffffff size=1>.</style>            If a group of rows or columns need to be increased in size
+<style color=#00ffffff size=1>.</style>            in order to accommodate these slaves, then extra space is
+<style color=#00ffffff size=1>.</style>            added to each row or column in the group according to its 
+<style color=#00ffffff size=1>.</style>            weight.  For each group whose weights are all zero, the
+<style color=#00ffffff size=1>.</style>            additional space is apportioned equally.
+
+<style color=#00ffffff size=1>.</style>            For masters whose size is larger than the requested layout,
+<style color=#00ffffff size=1>.</style>            the additional space is apportioned according to the row and
+<style color=#00ffffff size=1>.</style>            column weights.  If all of the weights are zero, the layout
+<style color=#00ffffff size=1>.</style>            is centered within its master. For masters whose size is
+<style color=#00ffffff size=1>.</style>            smaller than the requested layout, space is taken away from
+<style color=#00ffffff size=1>.</style>            columns and rows according to their weights.  However, once
+<style color=#00ffffff size=1>.</style>            a column or row shrinks to its minsize, its weight is taken
+<style color=#00ffffff size=1>.</style>            to be zero. If more space needs to be removed from a layout
+<style color=#00ffffff size=1>.</style>            than would be permitted, as when all the rows or columns are
+<style color=#00ffffff size=1>.</style>            at their minimum sizes, the layout is clipped on the bottom
+<style color=#00ffffff size=1>.</style>            and right.
+
+<style color=#00ffffff size=1>.</style>         GEOMETRY PROPAGATION
+<style color=#00ffffff size=1>.</style>            The grid geometry manager normally computes how large a
+<style color=#00ffffff size=1>.</style>            master must be to just exactly meet the needs of its slaves,
+<style color=#00ffffff size=1>.</style>            and it sets the requested width and height of the master to
+<style color=#00ffffff size=1>.</style>            these dimensions. This causes geometry information to
+<style color=#00ffffff size=1>.</style>            propagate up through a window hierarchy to a top-level
+<style color=#00ffffff size=1>.</style>            window so that the entire sub-tree sizes itself to fit the
+<style color=#00ffffff size=1>.</style>            needs of the leaf windows. However, the grid propagate
+<style color=#00ffffff size=1>.</style>            command may be used to turn off propagation for one or more
+<style color=#00ffffff size=1>.</style>            masters. If propagation is disabled then grid will not set
+<style color=#00ffffff size=1>.</style>            the requested width and height of the master window. This
+<style color=#00ffffff size=1>.</style>            may be useful if, for example, you wish for a master window
+<style color=#00ffffff size=1>.</style>            to have a fixed size that you specify.
+
+<style color=#00ffffff size=1>.</style>         CREDITS
+<style color=#00ffffff size=1>.</style>            The grid command is based on ideas taken from the GridBag
+<style color=#00ffffff size=1>.</style>            geometry manager written by Doug. Stein, and the blt_table
+<style color=#00ffffff size=1>.</style>            geometry manager, written by George Howlett.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=pack(9)>pack(9)</action>, <action name=types(9)>types(9)</action>, <action name=options(9)>options(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,65 @@
+<action name=POP3(2)>POP3(2)</action>                                                   <action name=POP3(2)>POP3(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            pop3 - Post Office Protocol
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "pop3.m"\;
+<style color=#00ffffff size=1>.</style>            pop3 := load Pop3 Pop3->PATH\;
+
+<style color=#00ffffff size=1>.</style>            open:       fn(user, password, server: string): (int, string)\;
+<style color=#00ffffff size=1>.</style>            stat:       fn(): (int, string, int, int)\;
+<style color=#00ffffff size=1>.</style>            msglist:    fn(): (int, string, list of (int, int))\;
+<style color=#00ffffff size=1>.</style>            msgnolist:  fn(): (int, string, list of int)\;
+<style color=#00ffffff size=1>.</style>            top:        fn(m: int): (int, string, string)\;
+<style color=#00ffffff size=1>.</style>            get:        fn(m: int): (int, string, string)\;
+<style color=#00ffffff size=1>.</style>            delete:     fn(m: int): (int, string)\;
+<style color=#00ffffff size=1>.</style>            close:      fn(): (int, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Pop3 provides an interface to the Post Office Protocol POP3
+<style color=#00ffffff size=1>.</style>            through a set of functions.
+
+<style color=#00ffffff size=1>.</style>            Open opens a connection to a POP3 server, logging in as the
+<style color=#00ffffff size=1>.</style>            specified user with the given password. If server is nil,
+<style color=#00ffffff size=1>.</style>            open uses $pop3, which must be defined in <action name=ndb(6)>ndb(6)</action>. The
+<style color=#00ffffff size=1>.</style>            remaining functions assume a successfully opened connection.
+
+<style color=#00ffffff size=1>.</style>            Stat returns the status of the user's mailbox. The third
+<style color=#00ffffff size=1>.</style>            element of its return tuple is the number of messages and
+<style color=#00ffffff size=1>.</style>            the fourth is the total number of bytes in the messages.
+
+<style color=#00ffffff size=1>.</style>            Msglist lists the user's mailbox. The third element in its
+<style color=#00ffffff size=1>.</style>            return tuple gives a list of pairs of numbers comprising (
+<style color=#00ffffff size=1>.</style>            message number, bytes in message).
+
+<style color=#00ffffff size=1>.</style>            Msgnolist lists the user's mailbox as above but omits the
+<style color=#00ffffff size=1>.</style>            bytes in each message.
+
+<style color=#00ffffff size=1>.</style>            Top returns the top of message m.
+
+<style color=#00ffffff size=1>.</style>            Get returns the full text of message m.
+
+<style color=#00ffffff size=1>.</style>            Delete deletes message m.
+
+<style color=#00ffffff size=1>.</style>            Close closes the connection to the POP3 server. Note that
+<style color=#00ffffff size=1>.</style>            subsequent reconnections to the server may renumber the
+<style color=#00ffffff size=1>.</style>            messages in the mail box and will certainly do so if the
+<style color=#00ffffff size=1>.</style>            last connection deleted messages.
+
+<style color=#00ffffff size=1>.</style>            Note also that a connection is static in the sense that mail
+<style color=#00ffffff size=1>.</style>            messages entering the server during a connection will not be
+<style color=#00ffffff size=1>.</style>            accessible. A reconnection is needed to see newly arrived
+<style color=#00ffffff size=1>.</style>            messages.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/pop3.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=acme(1)>acme(1)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            All these functions return -1 and an error message on
+<style color=#00ffffff size=1>.</style>            failure as the first two entries in their return tuples.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

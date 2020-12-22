@@ -1,0 +1,30 @@
+<action name=CHGRP(1)>CHGRP(1)</action>                                                 <action name=CHGRP(1)>CHGRP(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            chgrp - change file's group or owner
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            chgrp \[ -uo \] id file ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Chgrp changes the group ownership of each file to the given
+<style color=#00ffffff size=1>.</style>            id, if the file's server permits it. The -u and -o options
+<style color=#00ffffff size=1>.</style>            are equivalent and cause chgrp to change file ownership
+<style color=#00ffffff size=1>.</style>            instead, if the file's server permits it.
+
+<style color=#00ffffff size=1>.</style>            Normally, a file's group can be changed by the file's owner,
+<style color=#00ffffff size=1>.</style>            if the owner is a member of the new group, or by the leader
+<style color=#00ffffff size=1>.</style>            of both the file's current group and the new group, but
+<style color=#00ffffff size=1>.</style>            various underlying devices, file servers and host operating
+<style color=#00ffffff size=1>.</style>            systems might not permit the operation at all. Group and
+<style color=#00ffffff size=1>.</style>            ownership changes allowed by a given device are documented
+<style color=#00ffffff size=1>.</style>            by the device's manual page. See <action name=sys-stat(2)>sys-stat(2)</action> for the
+<style color=#00ffffff size=1>.</style>            variations amongst host operating systems.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/chgrp.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=chmod(1)>chmod(1)</action>, <action name=ls(1)>ls(1)</action> <action name=sys-stat(2)>sys-stat(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

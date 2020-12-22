@@ -1,0 +1,121 @@
+<action name=STYXFLUSH(2)>STYXFLUSH(2)</action>                                         <action name=STYXFLUSH(2)>STYXFLUSH(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            styxflush - handler for 9P (Styx) flush protocol
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            include "styx.m"\;
+<style color=#00ffffff size=1>.</style>            include "styxflush.m"\;
+
+<style color=#00ffffff size=1>.</style>            styxflush := load Styxflush Styxflush->PATH\;
+<style color=#00ffffff size=1>.</style>            init: fn()\;
+<style color=#00ffffff size=1>.</style>            tmsg: fn(m: ref Styx->Tmsg,
+<style color=#00ffffff size=1>.</style>            	flushc: chan of (int, chan of int),
+<style color=#00ffffff size=1>.</style>            	reply: chan of ref Styx->Rmsg): (int, ref Styx->Rmsg)\;
+<style color=#00ffffff size=1>.</style>            rmsg: fn(m: ref Styx->Rmsg): int\;
+<style color=#00ffffff size=1>.</style>            Einterrupted: con "interrupted"\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Getting the semantics of the 9P <action name=flush(5)>flush(5)</action> protocol correct
+<style color=#00ffffff size=1>.</style>            when handling requests concurrently is surprisingly hard to
+<style color=#00ffffff size=1>.</style>            do. Styxflush is designed to help get it right. It deals
+<style color=#00ffffff size=1>.</style>            with 9P messages for a single 9P session - if a server needs
+<style color=#00ffffff size=1>.</style>            to deal with multiple sessions, then multiple instances of
+<style color=#00ffffff size=1>.</style>            styxflush should be loaded. It assumes there is a loop in a
+<style color=#00ffffff size=1>.</style>            central process that both reads T-messages and sends their
+<style color=#00ffffff size=1>.</style>            R-message replies. Styxflush handles the flushing of
+<style color=#00ffffff size=1>.</style>            requests that are being run outside the central process.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before anything else in styxflush to
+<style color=#00ffffff size=1>.</style>            intialise its internal data structures.
+
+<style color=#00ffffff size=1>.</style>            When a T-message request arrives that will be dealt with
+<style color=#00ffffff size=1>.</style>            concurrently, tmsg( m , flushc , reply ) should be called to
+<style color=#00ffffff size=1>.</style>            inform styxflush of the new request. M gives the T-message\;
+<style color=#00ffffff size=1>.</style>            flushc gives a channel that will be used if the request is
+<style color=#00ffffff size=1>.</style>            flushed (see below), and reply should hold an unbuffered
+<style color=#00ffffff size=1>.</style>            channel that can be used to send a reply to the central
+<style color=#00ffffff size=1>.</style>            loop. Flushc will usually be a fresh channel for each
+<style color=#00ffffff size=1>.</style>            request, but several requests may share the same flushc if,
+<style color=#00ffffff size=1>.</style>            for instance, one process is managing several requests. Tmsg
+<style color=#00ffffff size=1>.</style>            returns a tuple (handled, rm), where handled is non-zero if
+<style color=#00ffffff size=1>.</style>            styxflush has dealt with the request itself. If it has, then
+<style color=#00ffffff size=1>.</style>            the caller must not handle the request\; it must send rm as a
+<style color=#00ffffff size=1>.</style>            reply if it is not nil.
+
+<style color=#00ffffff size=1>.</style>            Rmsg should be called when a reply message arrives at the
+<style color=#00ffffff size=1>.</style>            central process (the same process that has called tmsg). It
+<style color=#00ffffff size=1>.</style>            returns non-zero if the reply message should actually be
+<style color=#00ffffff size=1>.</style>            sent to the client - otherwise it should be discarded.
+
+<style color=#00ffffff size=1>.</style>         Flush Channel
+<style color=#00ffffff size=1>.</style>            Styxflush notifies a request that it has been flushed by
+<style color=#00ffffff size=1>.</style>            sending a tuple, say (tag, rc) on its flush channel. Tag
+<style color=#00ffffff size=1>.</style>            gives the tag of the message that has been flushed, and rc
+<style color=#00ffffff size=1>.</style>            is a channel that should be replied on when the request has
+<style color=#00ffffff size=1>.</style>            been dealt with. There is no requirement that a request read
+<style color=#00ffffff size=1>.</style>            on its flush channel - if it does not, then the replies to
+<style color=#00ffffff size=1>.</style>            any flushes of that request will be delayed until the
+<style color=#00ffffff size=1>.</style>            request is replied to. If it does read a flush request,
+<style color=#00ffffff size=1>.</style>            however, it must reply to the original request before
+<style color=#00ffffff size=1>.</style>            sending on rc. If it has succeeded in aborting the request,
+<style color=#00ffffff size=1>.</style>            it should send an <action name=error(5)>error(5)</action> R-message with the message
+<style color=#00ffffff size=1>.</style>            interrupted (defined as Einterrupted)\; otherwise it should
+<style color=#00ffffff size=1>.</style>            send its reply as usual.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/styxflush.b
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            This is a skeleton of a prototypical structure of a program
+<style color=#00ffffff size=1>.</style>            that uses styxflush.
+<style color=#00ffffff size=1>.</style>            replyc: chan of ref Rmsg\;
+<style color=#00ffffff size=1>.</style>            centralloop(tm: chan of ref Tmsg, fd: ref Sys->FD)
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	replyc = chan of Rmsg\;
+<style color=#00ffffff size=1>.</style>            	for(\;\;)alt{
+<style color=#00ffffff size=1>.</style>            	m := <-tm =>
+<style color=#00ffffff size=1>.</style>            		if(m == nil || tagof m == tagof Tmsg.Readerror){
+<style color=#00ffffff size=1>.</style>            			cleanup()\;		# kill outstanding processes, etc.
+<style color=#00ffffff size=1>.</style>            			return\;
+<style color=#00ffffff size=1>.</style>            		}
+<style color=#00ffffff size=1>.</style>            		flushc := chan of (int, chan of int)\;
+<style color=#00ffffff size=1>.</style>            		(handled, rm) := styxflush->tmsg(m, flushc, replyc)\;
+<style color=#00ffffff size=1>.</style>            		if(!handled)
+<style color=#00ffffff size=1>.</style>            			spawn request(m, flushc)\;
+<style color=#00ffffff size=1>.</style>            		else if(rm != nil)
+<style color=#00ffffff size=1>.</style>            			sendreply(rm)\;
+<style color=#00ffffff size=1>.</style>            	rm := <- replyc =>
+<style color=#00ffffff size=1>.</style>            		if(styxflush->rmsg(rm))
+<style color=#00ffffff size=1>.</style>            			sendreply(rm)\;
+<style color=#00ffffff size=1>.</style>            	}
+<style color=#00ffffff size=1>.</style>            }
+<style color=#00ffffff size=1>.</style>            		
+<style color=#00ffffff size=1>.</style>            sendreply(fd: ref Sys->FD, rm: ref Rmsg)
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	d := rm.pack()\;
+<style color=#00ffffff size=1>.</style>            	sys->write(fd, d, len d)\;
+<style color=#00ffffff size=1>.</style>            }
+
+<style color=#00ffffff size=1>.</style>            request(tm: ref Tmsg, flushc: chan of (int, chan of int))
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	pick m := tm {
+<style color=#00ffffff size=1>.</style>            	Open =>
+<style color=#00ffffff size=1>.</style>            		replyc <-= ref Rmsg.Open(m.tag, ...)\;
+<style color=#00ffffff size=1>.</style>            	Read =>
+<style color=#00ffffff size=1>.</style>            		\[...\]
+<style color=#00ffffff size=1>.</style>            		alt{
+<style color=#00ffffff size=1>.</style>            		x := <-readc =>
+<style color=#00ffffff size=1>.</style>            			# read from data produced on readc
+<style color=#00ffffff size=1>.</style>            			replyc <-= ref Rmsg.Read(m.tag, ...)\;
+<style color=#00ffffff size=1>.</style>            		(nil, rc) := <-flushc =>
+<style color=#00ffffff size=1>.</style>            			# read request has been flushed.
+<style color=#00ffffff size=1>.</style>            			replyc <-= ref Rmsg.Error(m.tag, Einterrupted)\;
+<style color=#00ffffff size=1>.</style>            			rc <-= 1\;
+<style color=#00ffffff size=1>.</style>            		}
+<style color=#00ffffff size=1>.</style>            	etc ...
+<style color=#00ffffff size=1>.</style>            	}
+<style color=#00ffffff size=1>.</style>            }
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

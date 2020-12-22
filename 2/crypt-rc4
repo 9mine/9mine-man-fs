@@ -1,0 +1,39 @@
+<action name=CRYPT-RC4(2)>CRYPT-RC4(2)</action>                                         <action name=CRYPT-RC4(2)>CRYPT-RC4(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            crypt: rc4setup, rc4, rc4skip, rc4back - RC4 encryption
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "ipints.m"\;
+<style color=#00ffffff size=1>.</style>            ipints := load IPints IPints->PATH\;
+<style color=#00ffffff size=1>.</style>            IPint: import ipints\;
+
+<style color=#00ffffff size=1>.</style>            include "crypt.m"\;
+<style color=#00ffffff size=1>.</style>            crypt := load Crypt Crypt->PATH\;
+
+<style color=#00ffffff size=1>.</style>            rc4setup: fn(seed: array of byte): ref RC4state\;
+<style color=#00ffffff size=1>.</style>            rc4:      fn(state: ref RC4state, buf: array of byte, n: int)\;
+<style color=#00ffffff size=1>.</style>            rc4skip:  fn(state: ref RC4state, n: int)\;
+<style color=#00ffffff size=1>.</style>            rc4back:  fn(state: ref RC4state, n: int)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These functions implement the stream encryption algorithm
+<style color=#00ffffff size=1>.</style>            that is claimed to be equivalent to RSA Security's RC4. It
+<style color=#00ffffff size=1>.</style>            is a pseudo-random number generator with a 256 byte state
+<style color=#00ffffff size=1>.</style>            and a long cycle.
+
+<style color=#00ffffff size=1>.</style>            Rc4setup sets the initial seed, which can be any non-zero
+<style color=#00ffffff size=1>.</style>            length, and returns a representation of the initial state of
+<style color=#00ffffff size=1>.</style>            the algorithm, which is used in subsequent calls.
+
+<style color=#00ffffff size=1>.</style>            Rc4 runs the generator starting with the given state, and
+<style color=#00ffffff size=1>.</style>            XORs the output of the generator with the first n bytes of
+<style color=#00ffffff size=1>.</style>            buf, updating the state. Rc4 is symmetric and is used both
+<style color=#00ffffff size=1>.</style>            to encrypt and decrypt. Rc4skip skips over bytes (eg, to
+<style color=#00ffffff size=1>.</style>            account for lost transmissions)\; rc4back runs the generator
+<style color=#00ffffff size=1>.</style>            backwards (eg, to account for retransmissions).
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=crypt-intro(2)>crypt-intro(2)</action>, <action name=crypt-crypt(2)>crypt-crypt(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

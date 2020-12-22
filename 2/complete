@@ -1,0 +1,62 @@
+<action name=COMPLETE(2)>COMPLETE(2)</action>                                           <action name=COMPLETE(2)>COMPLETE(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            complete - file name completion
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "complete.m"\;
+<style color=#00ffffff size=1>.</style>            complete := load Complete Complete->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Completion: adt {
+<style color=#00ffffff size=1>.</style>                advance:  int\;    # whether forward progress has been made
+<style color=#00ffffff size=1>.</style>                complete: int\;    # whether the completion now represents a file or directory
+<style color=#00ffffff size=1>.</style>                str:      string\; # string to advance, suffixed " " (file) or "/" (directory)
+<style color=#00ffffff size=1>.</style>                nmatch:   int\;    # number of files that matched
+<style color=#00ffffff size=1>.</style>                filename: array of string\;    # their names
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:     fn()\;
+<style color=#00ffffff size=1>.</style>            complete: fn(dir, s: string): (ref Completion, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Complete implements file name completion.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other operation of the
+<style color=#00ffffff size=1>.</style>            module.
+
+<style color=#00ffffff size=1>.</style>            Given a directory dir and a string s, complete returns a
+<style color=#00ffffff size=1>.</style>            tuple (c, err), where c is an analysis of the file names in
+<style color=#00ffffff size=1>.</style>            that directory that begin with the string s. The field
+<style color=#00ffffff size=1>.</style>            nmatch will be set to the number of files that match the
+<style color=#00ffffff size=1>.</style>            prefix and filename will be filled in with their names. If
+<style color=#00ffffff size=1>.</style>            the file named is a directory, a slash character will be
+<style color=#00ffffff size=1>.</style>            appended to it. On an error, c is nil and err is a
+<style color=#00ffffff size=1>.</style>            diagnostic string.
+
+<style color=#00ffffff size=1>.</style>            If no files match the string, nmatch will be zero, but
+<style color=#00ffffff size=1>.</style>            complete will return the full set of files in the directory.
+
+<style color=#00ffffff size=1>.</style>            The flag advance reports whether the string s can be
+<style color=#00ffffff size=1>.</style>            extended without changing the set of files that match.  If
+<style color=#00ffffff size=1>.</style>            true, str will be set to the extension\; that is, the value
+<style color=#00ffffff size=1>.</style>            of str may be appended to s by the caller to extend the
+<style color=#00ffffff size=1>.</style>            embryonic file name unambiguously.
+
+<style color=#00ffffff size=1>.</style>            The flag complete reports whether the extended file name
+<style color=#00ffffff size=1>.</style>            uniquely identifies a file. If true, str will be suffixed
+<style color=#00ffffff size=1>.</style>            with a blank, or a slash and a blank, depending on whether
+<style color=#00ffffff size=1>.</style>            the resulting file name identifies a plain file or a
+<style color=#00ffffff size=1>.</style>            directory.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/complete.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=names(2)>names(2)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            The complete function returns a nil reference and a
+<style color=#00ffffff size=1>.</style>            diagnostic string if the directory is unreadable or there is
+<style color=#00ffffff size=1>.</style>            some other error.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

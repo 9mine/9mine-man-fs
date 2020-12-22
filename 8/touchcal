@@ -1,0 +1,35 @@
+<action name=TOUCHCAL(8)>TOUCHCAL(8)</action>                                           <action name=TOUCHCAL(8)>TOUCHCAL(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            touchcal - touch screen calibration
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            touchcal
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Touchcal draws a cross-hair in each corner of the screen in
+<style color=#00ffffff size=1>.</style>            turn (clockwise from the lower left hand corner), and waits
+<style color=#00ffffff size=1>.</style>            each time for the user to touch the centre of the cross-hair
+<style color=#00ffffff size=1>.</style>            with the stylus. It then prompts with a final cross-hair in
+<style color=#00ffffff size=1>.</style>            the centre of the screen, and waits once more for the user
+<style color=#00ffffff size=1>.</style>            to touch its centre with the stylus. The process is repeated
+<style color=#00ffffff size=1>.</style>            until touchcal can calculate a transformation matrix that
+<style color=#00ffffff size=1>.</style>            consistently maps the touch panel to screen coordinates. It
+<style color=#00ffffff size=1>.</style>            then writes corresponding calibration commands for <action name=touch(3)>touch(3)</action>
+<style color=#00ffffff size=1>.</style>            on its standard output, which can be saved in a file on the
+<style color=#00ffffff size=1>.</style>            device, perhaps provided in NVRAM by <action name=tinyfs(3)>tinyfs(3)</action> or a file
+<style color=#00ffffff size=1>.</style>            system in <action name=ftl(3)>ftl(3)</action>.
+
+<style color=#00ffffff size=1>.</style>            Touchcal can be used both inside and outside the <action name=wm(1)>wm(1)</action>
+<style color=#00ffffff size=1>.</style>            environment, allowing calibration when the system is
+<style color=#00ffffff size=1>.</style>            initialised, and whilst the window system is running.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /dev/touchctl      reset or read existing settings
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/touchcal.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=touch(3)>touch(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

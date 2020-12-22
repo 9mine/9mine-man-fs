@@ -1,0 +1,252 @@
+2C(10.1)                                                 2C(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            0c, 1c, 2c, 5c, 6c, 7c, 8c, kc, qc, vc - C compilers
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            2c \[ option ... \] \[ file ... \]
+<style color=#00ffffff size=1>.</style>            etc.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These commands compile the named C files into object files
+<style color=#00ffffff size=1>.</style>            for the corresponding architecture. Associated with each
+<style color=#00ffffff size=1>.</style>            compiler is a string objtype, for example
+
+<style color=#00ffffff size=1>.</style>            0c spim
+<style color=#00ffffff size=1>.</style>              Little-endian MIPS
+
+<style color=#00ffffff size=1>.</style>            1c 68000
+<style color=#00ffffff size=1>.</style>              Motorola MC68000
+
+<style color=#00ffffff size=1>.</style>            2c 68020
+<style color=#00ffffff size=1>.</style>              Motorola MC68020
+
+<style color=#00ffffff size=1>.</style>            5c arm
+<style color=#00ffffff size=1>.</style>              ARM 7500
+
+<style color=#00ffffff size=1>.</style>            6c amd64
+<style color=#00ffffff size=1>.</style>              AMD64 extension to x86
+
+<style color=#00ffffff size=1>.</style>            7c alpha
+<style color=#00ffffff size=1>.</style>              Digital Alpha APX
+
+<style color=#00ffffff size=1>.</style>            8c 386
+<style color=#00ffffff size=1>.</style>              Intel i386, i486, Pentium, etc.
+
+<style color=#00ffffff size=1>.</style>            kc sparc
+<style color=#00ffffff size=1>.</style>              Sun SPARC
+
+<style color=#00ffffff size=1>.</style>            qc power
+<style color=#00ffffff size=1>.</style>              Power PC,
+
+<style color=#00ffffff size=1>.</style>            vc mips
+<style color=#00ffffff size=1>.</style>              big-endian MIPS 3000 family
+
+<style color=#00ffffff size=1>.</style>            Let the first letter of the compiler name be O= 0, 1, 2, 5,
+<style color=#00ffffff size=1>.</style>            6, 7, 8, k, q, or v. The output object files end in .O. The
+<style color=#00ffffff size=1>.</style>            letter is also the prefix of related programs: Oa is the
+<style color=#00ffffff size=1>.</style>            assembler, Ol is the loader.
+
+<style color=#00ffffff size=1>.</style>            Plan 9 conventionally sets the $objtype environment variable
+<style color=#00ffffff size=1>.</style>            to the objtype string appropriate to the current machine's
+<style color=#00ffffff size=1>.</style>            type. Plan 9 also conventionally has /objtype directories,
+<style color=#00ffffff size=1>.</style>            which contain among other things: include, for
+<style color=#00ffffff size=1>.</style>            machine-dependent include files\; lib, for public object code
+<style color=#00ffffff size=1>.</style>            libraries\; bin, for public programs\; and mkfile, for
+<style color=#00ffffff size=1>.</style>            preconditioning mk(10.1).
+
+<style color=#00ffffff size=1>.</style>            For Inferno cross-compilation on all platforms, not just
+<style color=#00ffffff size=1>.</style>            Plan 9, both $objtype and $OBJTYPE are set by every native
+<style color=#00ffffff size=1>.</style>            kernel mkfile to correspond to the target processor type.
+<style color=#00ffffff size=1>.</style>            The Inferno mkfiles also set the -I option appropriately to
+<style color=#00ffffff size=1>.</style>            search the Inferno include directories, since the Plan 9
+<style color=#00ffffff size=1>.</style>            defaults are inappropriate.
+
+<style color=#00ffffff size=1>.</style>            The compiler options are:
+
+<style color=#00ffffff size=1>.</style>            -o obj
+<style color=#00ffffff size=1>.</style>             Place output in file obj (allowed only if there is just one
+<style color=#00ffffff size=1>.</style>             input file). Default is to take the last element of the
+<style color=#00ffffff size=1>.</style>             input file name, strip any trailing .c, and append .O.
+
+<style color=#00ffffff size=1>.</style>            -w
+<style color=#00ffffff size=1>.</style>             Print warning messages about unused variables, etc.
+
+<style color=#00ffffff size=1>.</style>            -B
+<style color=#00ffffff size=1>.</style>             Accept functions without a new-style ANSI C function
+<style color=#00ffffff size=1>.</style>             prototype. By default, the compilers reject functions used
+<style color=#00ffffff size=1>.</style>             without a defined prototype, although ANSI C permits them.
+
+<style color=#00ffffff size=1>.</style>            -D\Sname=def
+
+<style color=#00ffffff size=1>.</style>            -D\Sname
+<style color=#00ffffff size=1>.</style>             Define the name to the preprocessor, as if by `#define'. If
+<style color=#00ffffff size=1>.</style>             no definition is given, the name is defined as `1'.
+
+<style color=#00ffffff size=1>.</style>            -F
+<style color=#00ffffff size=1>.</style>             Warn when the elements of a format (eg, those used by print
+<style color=#00ffffff size=1>.</style>             ) disagree with in type or size with the corresponding
+<style color=#00ffffff size=1>.</style>             parameter, or there is a mismatch in number. See the
+<style color=#00ffffff size=1>.</style>             discussion of extensions, below.
+
+<style color=#00ffffff size=1>.</style>            -I\Sdir
+<style color=#00ffffff size=1>.</style>             An ``#include'' file whose name does not begin with slash
+<style color=#00ffffff size=1>.</style>             or is enclosed in double quotes is always sought first in
+<style color=#00ffffff size=1>.</style>             the directory of the file argument.  If this fails, the -.
+<style color=#00ffffff size=1>.</style>             flag is given or the name is enclosed in <>, it is then
+<style color=#00ffffff size=1>.</style>             sought in directories named in -I options, then in
+<style color=#00ffffff size=1>.</style>             /sys/include, and finally in /$objtype/include.
+
+<style color=#00ffffff size=1>.</style>            -.
+<style color=#00ffffff size=1>.</style>             Suppress the automatic searching for include files in the
+<style color=#00ffffff size=1>.</style>             directory of the file argument.
+
+<style color=#00ffffff size=1>.</style>            -N
+<style color=#00ffffff size=1>.</style>             Suppress automatic registerization and optimization.
+
+<style color=#00ffffff size=1>.</style>            -S
+<style color=#00ffffff size=1>.</style>             Print an assembly language version of the object code on
+<style color=#00ffffff size=1>.</style>             standard output as well as generating the .O file.
+
+<style color=#00ffffff size=1>.</style>            -T
+<style color=#00ffffff size=1>.</style>             Pass type signatures on all external and global entities.
+<style color=#00ffffff size=1>.</style>             The signature is based on the C signof operator, an
+<style color=#00ffffff size=1>.</style>             extension in this compiler. See dynld(10.2).
+
+<style color=#00ffffff size=1>.</style>            -V
+<style color=#00ffffff size=1>.</style>             By default, the compilers are non-standardly lax about type
+<style color=#00ffffff size=1>.</style>             equality between void* values and other pointers\; this flag
+<style color=#00ffffff size=1>.</style>             requires ANSI C conformance.
+
+<style color=#00ffffff size=1>.</style>            -a
+<style color=#00ffffff size=1>.</style>             Instead of compiling, print on standard output acid
+<style color=#00ffffff size=1>.</style>             functions (see acid(10.1)) for examining structures
+<style color=#00ffffff size=1>.</style>             declared in the source files.
+
+<style color=#00ffffff size=1>.</style>            -aa
+<style color=#00ffffff size=1>.</style>             Like -a except suppress information about structures
+<style color=#00ffffff size=1>.</style>             declared in included header files.
+
+<style color=#00ffffff size=1>.</style>            The compilers handle most preprocessing directives
+<style color=#00ffffff size=1>.</style>            themselves, but support excludes the #if and #elif
+<style color=#00ffffff size=1>.</style>            directives, and the ## preprocessor operation.
+
+<style color=#00ffffff size=1>.</style>            The compilers support several extensions to ANSI C:
+
+<style color=#00ffffff size=1>.</style>            -    A structure or union may contain unnamed substructures
+<style color=#00ffffff size=1>.</style>                 and subunions. The fields of the substructures or
+<style color=#00ffffff size=1>.</style>                 subunions can then be used as if they were members of
+<style color=#00ffffff size=1>.</style>                 the parent structure or union (the resolution of a name
+<style color=#00ffffff size=1>.</style>                 conflict is unspecified). When a pointer to the outer
+<style color=#00ffffff size=1>.</style>                 structure or union is used in a context that is only
+<style color=#00ffffff size=1>.</style>                 legal for the unnamed substructure, the compiler
+<style color=#00ffffff size=1>.</style>                 promotes the type and adjusts the pointer value to
+<style color=#00ffffff size=1>.</style>                 point at the substructure. If the unnamed structure or
+<style color=#00ffffff size=1>.</style>                 union is of a type with a tag name specified by a
+<style color=#00ffffff size=1>.</style>                 typedef statement, the unnamed structure or union can
+<style color=#00ffffff size=1>.</style>                 be explicitly referenced by <struct
+<style color=#00ffffff size=1>.</style>                 variable>.<tagname>.
+
+<style color=#00ffffff size=1>.</style>            -    A structure value can be formed with an expression such
+<style color=#00ffffff size=1>.</style>                 as
+<style color=#00ffffff size=1>.</style>                     (struct S){v1, v2, v3}
+<style color=#00ffffff size=1>.</style>                 where the list elements are values for the fields of
+<style color=#00ffffff size=1>.</style>                 struct S.
+
+<style color=#00ffffff size=1>.</style>            -    Array initializers can specify the indices of the array
+<style color=#00ffffff size=1>.</style>                 in square brackets, as
+<style color=#00ffffff size=1>.</style>                     int a\[\] = { \[3\] 1, \[10\] 5 }\;
+<style color=#00ffffff size=1>.</style>                 which initializes the third and tenth elements of the
+<style color=#00ffffff size=1>.</style>                 eleven-element array a.
+
+<style color=#00ffffff size=1>.</style>            -    Structure initializers can specify the structure
+<style color=#00ffffff size=1>.</style>                 element by using the name following a period, as
+<style color=#00ffffff size=1>.</style>                     struct { int x\; int y\; } s = { .y 1, .x 5 }\;
+<style color=#00ffffff size=1>.</style>                 which initializes elements y and then x of the
+<style color=#00ffffff size=1>.</style>                 structure s. These forms also accept the new ANSI C
+<style color=#00ffffff size=1>.</style>                 notation, which includes an equal sign:
+<style color=#00ffffff size=1>.</style>                     int a\[\] = { \[3\] = 1, \[10\] = 5 }\;
+<style color=#00ffffff size=1>.</style>                     struct { int x\; int y\; } s = { .y = 1, .x = 5 }\;
+
+<style color=#00ffffff size=1>.</style>            -    A global variable can be dedicated to a register by
+<style color=#00ffffff size=1>.</style>                 declaring it extern register in all modules and
+<style color=#00ffffff size=1>.</style>                 libraries.
+
+<style color=#00ffffff size=1>.</style>            -    A #pragma of the form
+<style color=#00ffffff size=1>.</style>                     #pragma lib "libbio.a"
+<style color=#00ffffff size=1>.</style>                 records that the program needs to be loaded with file
+<style color=#00ffffff size=1>.</style>                 /$objtype/lib/libbio.a\; such lines, typically placed in
+<style color=#00ffffff size=1>.</style>                 library header files, obviate the -l option of the
+<style color=#00ffffff size=1>.</style>                 loaders.  To help identify files in non-standard
+<style color=#00ffffff size=1>.</style>                 directories, within the file names in the #pragmas the
+<style color=#00ffffff size=1>.</style>                 string $M represents the name of the architecture
+<style color=#00ffffff size=1>.</style>                 (e.g., mips) and $O represents its identifying
+<style color=#00ffffff size=1>.</style>                 character (e.g., v).
+
+<style color=#00ffffff size=1>.</style>            -    Two #pragma requests to define rules for checking print
+<style color=#00ffffff size=1>.</style>                 -like formats (see the -F option above). One #pragma
+<style color=#00ffffff size=1>.</style>                 tells for a given routine which argument is the format.
+<style color=#00ffffff size=1>.</style>                 For example:
+<style color=#00ffffff size=1>.</style>                     #pragma varargck argpos print 1
+<style color=#00ffffff size=1>.</style>                     #pragma varargck argpos sprint 2
+<style color=#00ffffff size=1>.</style>                 say that print has a format as its first argument, and
+<style color=#00ffffff size=1>.</style>                 sprint has one as its second. Another #pragma
+<style color=#00ffffff size=1>.</style>                 associates format character sequences and types:
+<style color=#00ffffff size=1>.</style>                    #pragma varargck type "lld" vlong
+<style color=#00ffffff size=1>.</style>                    #pragma varargck type "lx" void*
+<style color=#00ffffff size=1>.</style>                    #pragma varargck type "S" Rune*
+<style color=#00ffffff size=1>.</style>                 where the format characters are those following the %
+<style color=#00ffffff size=1>.</style>                 in the format (ignoring any preceding formatting
+<style color=#00ffffff size=1>.</style>                 flags). Note the assumption that all formats arguments
+<style color=#00ffffff size=1>.</style>                 are compatible. The system include files have
+<style color=#00ffffff size=1>.</style>                 appropriate #pragma lines for the standard format
+<style color=#00ffffff size=1>.</style>                 elements and formatting functions.
+
+<style color=#00ffffff size=1>.</style>            -    A #pragma of the form
+<style color=#00ffffff size=1>.</style>                     #pragma incomplete type
+<style color=#00ffffff size=1>.</style>                 tells the compiler that type should have its signature
+<style color=#00ffffff size=1>.</style>                 calculated as an incomplete type even when it is fully
+<style color=#00ffffff size=1>.</style>                 defined. This allows the type signature mechanism to
+<style color=#00ffffff size=1>.</style>                 work in the presence of opaque types declared in header
+<style color=#00ffffff size=1>.</style>                 files, with their full definitions visible only to the
+<style color=#00ffffff size=1>.</style>                 code which manipulates them. With some imported
+<style color=#00ffffff size=1>.</style>                 software it might be necessary to turn off the
+<style color=#00ffffff size=1>.</style>                 signature generation completely for a large body of
+<style color=#00ffffff size=1>.</style>                 code (typically at the start and end of a particular
+<style color=#00ffffff size=1>.</style>                 include file). If type is the word _off_, signature
+<style color=#00ffffff size=1>.</style>                 generation is turned off\; if type is the word _on_, the
+<style color=#00ffffff size=1>.</style>                 compiler will generate signatures.
+
+<style color=#00ffffff size=1>.</style>            -    The C++ comment (// to end of line) is accepted as well
+<style color=#00ffffff size=1>.</style>                 as the normal convention of /* */.
+
+<style color=#00ffffff size=1>.</style>            -    The compilers accept long long variables as a 64-bit
+<style color=#00ffffff size=1>.</style>                 type. The standard header typedefs this to vlong.
+<style color=#00ffffff size=1>.</style>                 Arithmetic on vlong values is usually emulated by a
+<style color=#00ffffff size=1>.</style>                 run-time library.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            For the 68020, produce a program prog from C files main.c
+<style color=#00ffffff size=1>.</style>            and sub.c:
+
+<style color=#00ffffff size=1>.</style>                 2c -FVw main.c sub.c
+<style color=#00ffffff size=1>.</style>                 2l -o prog main.2 sub.2
+
+FILES
+<style color=#00ffffff size=1>.</style>            /sys/include       host system area for machine-independent
+<style color=#00ffffff size=1>.</style>                               #include directives.
+<style color=#00ffffff size=1>.</style>            /$objtype/include  host system area for machine-dependent
+<style color=#00ffffff size=1>.</style>                               #include directives.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /utils/cc         machine-independent part
+<style color=#00ffffff size=1>.</style>            /utils/2c, etc.   machine-dependent part
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            2a(10.1), 2l(10.1), mk(10.1), inm(10.1), acid(10.1),
+
+<style color=#00ffffff size=1>.</style>            Rob Pike, ``How to Use the Plan 9 C Compiler''
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The preprocessor only handles `#define', `#include',
+<style color=#00ffffff size=1>.</style>            `#undef', `#ifdef', `#line', and `#ifndef'.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

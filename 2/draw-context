@@ -1,0 +1,116 @@
+<action name=DRAW-CONTEXT(2)>DRAW-CONTEXT(2)</action>                                   <action name=DRAW-CONTEXT(2)>DRAW-CONTEXT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Context - graphics environment
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            draw := load Draw Draw->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Context: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>               display: ref Display\;      # frame buffer on which windows reside
+<style color=#00ffffff size=1>.</style>               wm:      chan of (string,
+<style color=#00ffffff size=1>.</style>                           chan of (string, ref Wmcontext))\; # wmgr connection
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            # connection to window manager for one or more windows (as Images)
+<style color=#00ffffff size=1>.</style>            Wmcontext: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>               kbd:     chan of int\;         # incoming characters from keyboard
+<style color=#00ffffff size=1>.</style>               ptr:     chan of ref Pointer\; # incoming stream of mouse positions
+<style color=#00ffffff size=1>.</style>               ctl:     chan of string\;      # commands from wm to application
+<style color=#00ffffff size=1>.</style>               wctl:    chan of string\;      # commands from application to wm
+<style color=#00ffffff size=1>.</style>               images:  chan of ref Image\;   # exchange of images
+<style color=#00ffffff size=1>.</style>               connfd:  ref Sys->FD\;         # connection control
+<style color=#00ffffff size=1>.</style>               ctxt:    ref Draw->Context\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Context type encapsulates the data types and channels
+<style color=#00ffffff size=1>.</style>            used by an interactive application, and establishes a
+<style color=#00ffffff size=1>.</style>            context for graphics output and window management. A
+<style color=#00ffffff size=1>.</style>            reference to the Context is passed as the first argument to
+<style color=#00ffffff size=1>.</style>            an application when it begins execution:
+
+<style color=#00ffffff size=1>.</style>            include "draw.m"
+
+<style color=#00ffffff size=1>.</style>            Command: module
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	init: fn(nil: ref Draw->Context\; nil: list of string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Most programs do not create Contexts but instead inherit one
+<style color=#00ffffff size=1>.</style>            from their parent, typically a shell or window system.
+
+<style color=#00ffffff size=1>.</style>         Context interface
+<style color=#00ffffff size=1>.</style>            The following elements of Context are used by wm:
+
+<style color=#00ffffff size=1>.</style>            display  The Display adt to which the application is
+<style color=#00ffffff size=1>.</style>                     connected\; may be nil. See <action name=draw-display(2)>draw-display(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            wm       A shared channel through which a private channel
+<style color=#00ffffff size=1>.</style>                     can be set up with a window manager. A client
+<style color=#00ffffff size=1>.</style>                     application sends a tuple containing a request
+<style color=#00ffffff size=1>.</style>                     string (of a format defined by the window manager)
+<style color=#00ffffff size=1>.</style>                     and a private reply channel. It receives a tuple in
+<style color=#00ffffff size=1>.</style>                     reply on that channel\; the tuple contains a string
+<style color=#00ffffff size=1>.</style>                     (eg, an acknowledgement or diagnostic) and a
+<style color=#00ffffff size=1>.</style>                     reference to a Wmcontext value containing channels
+<style color=#00ffffff size=1>.</style>                     by which the application can interact with the
+<style color=#00ffffff size=1>.</style>                     window manager.
+
+<style color=#00ffffff size=1>.</style>         Wmcontext interface
+<style color=#00ffffff size=1>.</style>            The Wmcontext provides a set of channels and file
+<style color=#00ffffff size=1>.</style>            descriptors through which the window manager and application
+<style color=#00ffffff size=1>.</style>            interact. The elements of the adt are used as follows:
+
+<style color=#00ffffff size=1>.</style>            kbd     A channel of type int that delivers keystrokes from
+<style color=#00ffffff size=1>.</style>                    a keyboard.
+
+<style color=#00ffffff size=1>.</style>            ptr     A channel of type ref Pointer that delivers events
+<style color=#00ffffff size=1>.</style>                    from a pointing device such as a mouse. See
+<style color=#00ffffff size=1>.</style>                    <action name=devpointer(2)>devpointer(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            ctl     A channel of type string that delivers control
+<style color=#00ffffff size=1>.</style>                    messages from the window manager to the application.
+
+<style color=#00ffffff size=1>.</style>            wctl    A channel of type string, which if initialised is
+<style color=#00ffffff size=1>.</style>                    used by the application to send control messages to
+<style color=#00ffffff size=1>.</style>                    the window manager. It is not used by the current wm
+<style color=#00ffffff size=1>.</style>                    (1) or <action name=tkclient(2)>tkclient(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            images  A channel of type ref Image that allows the window
+<style color=#00ffffff size=1>.</style>                    manager and application to exchange images (eg, when
+<style color=#00ffffff size=1>.</style>                    resizing, or to supply a cursor image).
+
+<style color=#00ffffff size=1>.</style>            connfd  A file descriptor that can be used to provide
+<style color=#00ffffff size=1>.</style>                    per-client connection control. For instance, a
+<style color=#00ffffff size=1>.</style>                    client can store a file descriptor open on a
+<style color=#00ffffff size=1>.</style>                    <action name=sys-file2chan(2)>sys-file2chan(2)</action> provided by the window manager, and
+<style color=#00ffffff size=1>.</style>                    the window manager will shut down input to the
+<style color=#00ffffff size=1>.</style>                    application when the connection closes (eg, if the
+<style color=#00ffffff size=1>.</style>                    application exits unexpectedly). Connfd is also used
+<style color=#00ffffff size=1>.</style>                    to write requests to the window manager.
+<style color=#00ffffff size=1>.</style>                    Conventionally a request is a list of words
+<style color=#00ffffff size=1>.</style>                    formatted as by quoted in <action name=string(2)>string(2)</action>. A request
+<style color=#00ffffff size=1>.</style>                    starting with an exclamation mark (!) if successful
+<style color=#00ffffff size=1>.</style>                    will result in an image being sent down the image
+<style color=#00ffffff size=1>.</style>                    channel\; the rectangle of the image indicates the
+<style color=#00ffffff size=1>.</style>                    rectangle that has been allocated on the screen. If
+<style color=#00ffffff size=1>.</style>                    only the origin is to be changed by the window
+<style color=#00ffffff size=1>.</style>                    manager, a nil image is sent first (giving the
+<style color=#00ffffff size=1>.</style>                    application a chance to suspend operations on the
+<style color=#00ffffff size=1>.</style>                    window), and then the original image, with its
+<style color=#00ffffff size=1>.</style>                    origin set appropriately.
+
+<style color=#00ffffff size=1>.</style>            image   This is used as described above.
+
+<style color=#00ffffff size=1>.</style>            ctxt    Initialised with the ctxt value that provided the
+<style color=#00ffffff size=1>.</style>                    initial connection on the wm channel.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=wm(1)>wm(1)</action>, <action name=wmlib(2)>wmlib(2)</action>, <action name=mux(1)>mux(1)</action>, <action name=draw-intro(2)>draw-intro(2)</action>, <action name=ir(2)>ir(2)</action>, prefab-intro
+<style color=#00ffffff size=1>.</style>            (2), <action name=tk(2)>tk(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

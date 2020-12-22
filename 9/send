@@ -1,0 +1,31 @@
+<action name=SEND(9)>SEND(9)</action>                                                   <action name=SEND(9)>SEND(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            send - send a value down a Tk channel
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            send chan string
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Send is the gateway from the Tk world into the Limbo world.
+<style color=#00ffffff size=1>.</style>            It sends string down chan, which should previously have been
+<style color=#00ffffff size=1>.</style>            named with a call to namechan (see <action name=tk(2)>tk(2)</action>). Tk channels are
+<style color=#00ffffff size=1>.</style>            non blocking, so the call will return immediately, whether
+<style color=#00ffffff size=1>.</style>            the message has been sent or not. If too many messages have
+<style color=#00ffffff size=1>.</style>            been queued on the chan, then the message will be discarded,
+<style color=#00ffffff size=1>.</style>            and a warning printed on the console. String is not subject
+<style color=#00ffffff size=1>.</style>            to interpretation by the usual Tk quoting rules.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            String is not subject to interpretation by the usual Tk
+<style color=#00ffffff size=1>.</style>            quoting rules. This means, for example that:
+<style color=#00ffffff size=1>.</style>            	radiobutton .x -text X -variable x -value x
+<style color=#00ffffff size=1>.</style>            	radiobutton .y -text Y -variable y -value y
+<style color=#00ffffff size=1>.</style>            	button .z -text Submit {send chan submit \[variable X\]}
+<style color=#00ffffff size=1>.</style>            will not work as expected. Instead, one must interrogate
+<style color=#00ffffff size=1>.</style>            values directly in Limbo.
+
+<style color=#00ffffff size=1>.</style>            The specialised queued channels will be replaced by buffered
+<style color=#00ffffff size=1>.</style>            channels in Limbo in a future edition of Inferno.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

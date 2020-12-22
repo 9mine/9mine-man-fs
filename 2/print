@@ -1,0 +1,306 @@
+<action name=PRINT(2)>PRINT(2)</action>                                                 <action name=PRINT(2)>PRINT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Print - printing system
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "print.m"\;
+<style color=#00ffffff size=1>.</style>            print := load Print Print->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Print: module
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	PATH: con "/dis/lib/print/print.dis"\;
+<style color=#00ffffff size=1>.</style>            	CONFIG_PATH: con "/lib/print/"\;
+
+<style color=#00ffffff size=1>.</style>            	init: fn(): int\;
+<style color=#00ffffff size=1>.</style>            	set_printfd: fn(fd: ref Sys->FD)\;
+<style color=#00ffffff size=1>.</style>            	print_image: fn(p: ref Printer, display: ref Draw->Display, im: ref Draw->Image, pcwidth: int): int\;
+<style color=#00ffffff size=1>.</style>            	print_textfd: fn(p: ref Printer, fd: ref Sys->FD, ps: real, pr: int, wrap: int): int\;
+<style color=#00ffffff size=1>.</style>            	get_defprinter: fn(): ref Printer\;
+<style color=#00ffffff size=1>.</style>            	set_defprinter: fn(p: ref Printer)\;
+<style color=#00ffffff size=1>.</style>            	get_size: fn(p: ref Printer): (int, real, real)\;	# dpi, xinches, yinches
+<style color=#00ffffff size=1>.</style>            	get_printers: fn(): list of ref Printer\;
+<style color=#00ffffff size=1>.</style>            	get_papers: fn(): list of ref Paper\;
+<style color=#00ffffff size=1>.</style>            	save_settings: fn(): int\;
+
+<style color=#00ffffff size=1>.</style>            # Printer types
+
+<style color=#00ffffff size=1>.</style>            Ptype: adt {
+<style color=#00ffffff size=1>.</style>            	name: string\;
+<style color=#00ffffff size=1>.</style>            	modes: list of ref Pmode\;
+<style color=#00ffffff size=1>.</style>            	driver: string\;
+<style color=#00ffffff size=1>.</style>            	hpmapfile: string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            # Paper sizes
+
+<style color=#00ffffff size=1>.</style>            Paper: adt {
+<style color=#00ffffff size=1>.</style>            	name: string\;
+<style color=#00ffffff size=1>.</style>            	hpcode: string\;
+<style color=#00ffffff size=1>.</style>            	width_inches: real\;
+<style color=#00ffffff size=1>.</style>            	height_inches: real\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+
+
+<style color=#00ffffff size=1>.</style>            # Print modes
+
+<style color=#00ffffff size=1>.</style>            Pmode: adt {
+<style color=#00ffffff size=1>.</style>            	name: string\;
+<style color=#00ffffff size=1>.</style>            	desc: string\;
+<style color=#00ffffff size=1>.</style>            	resx: int\;
+<style color=#00ffffff size=1>.</style>            	resy: int\;
+<style color=#00ffffff size=1>.</style>            	blackdepth: int\;
+<style color=#00ffffff size=1>.</style>            	coldepth: int\;
+<style color=#00ffffff size=1>.</style>            	blackresmult: int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            # Print options
+
+<style color=#00ffffff size=1>.</style>            Popt: adt {
+<style color=#00ffffff size=1>.</style>            	name: string\;
+<style color=#00ffffff size=1>.</style>            	mode: ref Pmode\;
+<style color=#00ffffff size=1>.</style>            	paper: ref Paper\;
+<style color=#00ffffff size=1>.</style>            	orientation: int\;
+<style color=#00ffffff size=1>.</style>            	duplex: int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            # Printer instance
+
+<style color=#00ffffff size=1>.</style>            PORTRAIT: con 0\;
+<style color=#00ffffff size=1>.</style>            LANDSCAPE: con 1\;
+
+<style color=#00ffffff size=1>.</style>            DUPLEX_OFF: con 0\;
+<style color=#00ffffff size=1>.</style>            DUPLEX_LONG: con 1\;
+<style color=#00ffffff size=1>.</style>            DUPLEX_SHORT: con 2\;
+
+<style color=#00ffffff size=1>.</style>            Printer: adt {
+<style color=#00ffffff size=1>.</style>            	name: string\;
+<style color=#00ffffff size=1>.</style>            	ptype: ref Ptype\;
+<style color=#00ffffff size=1>.</style>            	device: string\;
+<style color=#00ffffff size=1>.</style>            	popt: ref Popt\;
+<style color=#00ffffff size=1>.</style>            	pdriver: Pdriver\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            }\;
+
+
+<style color=#00ffffff size=1>.</style>            Pdriver: module
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	PATHPREFIX: con "/dis/lib/print/"\;
+<style color=#00ffffff size=1>.</style>            	DATAPREFIX: con "/lib/print/"\;
+
+<style color=#00ffffff size=1>.</style>            	init: fn(debug: int)\;
+<style color=#00ffffff size=1>.</style>            	sendimage: fn(p: ref Print->Printer, tfd: ref Sys->FD, display: ref Draw->Display, im: ref Draw->Image, width: int, lmargin: int): int\;
+<style color=#00ffffff size=1>.</style>            	sendtextfd: fn(p: ref Print->Printer, pfd, tfd: ref Sys->FD, ps: real, pr: int, wrap: int): int\;
+<style color=#00ffffff size=1>.</style>            	printable_pixels: fn(p: ref Print->Printer): (int, int)\;
+
+<style color=#00ffffff size=1>.</style>            }\;
+
+
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Print module provides an interface to one or more
+<style color=#00ffffff size=1>.</style>            printers.
+
+<style color=#00ffffff size=1>.</style>         The Print module
+<style color=#00ffffff size=1>.</style>            init()
+<style color=#00ffffff size=1>.</style>                 Init must be called once to initialise the internal
+<style color=#00ffffff size=1>.</style>                 state of Print.
+
+<style color=#00ffffff size=1>.</style>            set_printfd(fd)
+<style color=#00ffffff size=1>.</style>                 set_printfd provides a file descriptor to be used for
+<style color=#00ffffff size=1>.</style>                 output. By default, output is sent to the file or
+<style color=#00ffffff size=1>.</style>                 device specified in the Printer adt.
+
+<style color=#00ffffff size=1>.</style>            print_image(p,display,im,pcwidth)
+<style color=#00ffffff size=1>.</style>                 print_image prints a page containing a single image.
+<style color=#00ffffff size=1>.</style>                 The image is centred horizontally, and is scaled up to
+<style color=#00ffffff size=1>.</style>                 fill the percentage of the available width specified by
+<style color=#00ffffff size=1>.</style>                 pcwidth.
+
+<style color=#00ffffff size=1>.</style>            print_textfd(p,fd,ps,pr,wrap)
+<style color=#00ffffff size=1>.</style>                 print_textfd prints one or more pages of text on
+<style color=#00ffffff size=1>.</style>                 printer p from the file open for reading on fd. The
+<style color=#00ffffff size=1>.</style>                 point size is controlled by p. If the printer does not
+<style color=#00ffffff size=1>.</style>                 support the specified point size an alternative size
+<style color=#00ffffff size=1>.</style>                 will be used. A point size of 0.0 can be used to select
+<style color=#00ffffff size=1>.</style>                 the printer's default size (usually 12 point). If pr is
+<style color=#00ffffff size=1>.</style>                 non-zero, a proportionally-spaced font will be used (if
+<style color=#00ffffff size=1>.</style>                 available). If wrap is non-zero, lines will be wrapped
+<style color=#00ffffff size=1>.</style>                 if they overflow the page width (if this feature is
+<style color=#00ffffff size=1>.</style>                 supported by the printer).
+
+<style color=#00ffffff size=1>.</style>            get_defprinter()
+<style color=#00ffffff size=1>.</style>                 get_defprinter returns the default printer (in
+<style color=#00ffffff size=1>.</style>                 /lib/print/defprinter).
+
+<style color=#00ffffff size=1>.</style>            set_defprinter(p)
+<style color=#00ffffff size=1>.</style>                 set_defprinter sets the default printer (in
+<style color=#00ffffff size=1>.</style>                 /lib/print/defprinter).
+
+<style color=#00ffffff size=1>.</style>            get_size(p)
+<style color=#00ffffff size=1>.</style>                 get_size returns the resolution in dots per inch and
+<style color=#00ffffff size=1>.</style>                 the total number of pixels available for printing in
+<style color=#00ffffff size=1>.</style>                 the x and y direction. Before calling this function the
+<style color=#00ffffff size=1>.</style>                 orientation should be set if required.
+
+<style color=#00ffffff size=1>.</style>            get_printers()
+<style color=#00ffffff size=1>.</style>                 get_printers returns a list of all available printers
+<style color=#00ffffff size=1>.</style>                 (in /lib/print/printer.cfg).
+
+<style color=#00ffffff size=1>.</style>            get_papers()
+<style color=#00ffffff size=1>.</style>                 get_papers returns a list of all available paper sizes
+<style color=#00ffffff size=1>.</style>                 (in /lib/print/paper.cfg).
+
+<style color=#00ffffff size=1>.</style>         Data Structures
+<style color=#00ffffff size=1>.</style>            Ptype
+<style color=#00ffffff size=1>.</style>                 - specifies a Printer Type, with fields:
+
+<style color=#00ffffff size=1>.</style>                 name:
+<style color=#00ffffff size=1>.</style>                      Name used to refer to this printer type
+
+<style color=#00ffffff size=1>.</style>                 desc Description
+
+<style color=#00ffffff size=1>.</style>                 modes
+<style color=#00ffffff size=1>.</style>                      List of supported print modes
+
+<style color=#00ffffff size=1>.</style>                 driver:
+<style color=#00ffffff size=1>.</style>                      The .dis file specification of the printer driver
+
+<style color=#00ffffff size=1>.</style>                 hpmapfile:
+<style color=#00ffffff size=1>.</style>                      For HP printers, the name of the color map file
+
+<style color=#00ffffff size=1>.</style>            Paper
+<style color=#00ffffff size=1>.</style>                 - specifies the dimensions of a type of paper
+
+<style color=#00ffffff size=1>.</style>                 name:
+<style color=#00ffffff size=1>.</style>                      Name used to refer to this paper size
+
+<style color=#00ffffff size=1>.</style>                 hpcode:
+<style color=#00ffffff size=1>.</style>                      For HP printers, PCL code used for this paper size
+
+<style color=#00ffffff size=1>.</style>                 width_inches:
+<style color=#00ffffff size=1>.</style>                      Width of paper in inches
+
+<style color=#00ffffff size=1>.</style>                 height_inches:
+<style color=#00ffffff size=1>.</style>                      Height of paper in inches
+
+<style color=#00ffffff size=1>.</style>            Pmode
+<style color=#00ffffff size=1>.</style>                 - specifies a print mode
+
+<style color=#00ffffff size=1>.</style>                 name:
+<style color=#00ffffff size=1>.</style>                      Name used to refer to this print mode
+
+<style color=#00ffffff size=1>.</style>                 desc:
+<style color=#00ffffff size=1>.</style>                      Description
+
+<style color=#00ffffff size=1>.</style>                 resx:
+<style color=#00ffffff size=1>.</style>                      X resolution in dots per inch
+
+<style color=#00ffffff size=1>.</style>                 resx:
+<style color=#00ffffff size=1>.</style>                      Y resolution in dots per inch
+
+<style color=#00ffffff size=1>.</style>                 blackdepth:
+<style color=#00ffffff size=1>.</style>                      Depth of black component in bytes
+
+<style color=#00ffffff size=1>.</style>                 coldepth:
+<style color=#00ffffff size=1>.</style>                      Depth of color components in bytes
+
+<style color=#00ffffff size=1>.</style>                 blackresmult:
+<style color=#00ffffff size=1>.</style>                      Resolution multiplier of black component (1 means
+<style color=#00ffffff size=1>.</style>                      same as base x resolution)
+
+<style color=#00ffffff size=1>.</style>            Popt - specifies a set of Print Options
+
+<style color=#00ffffff size=1>.</style>                 name:
+<style color=#00ffffff size=1>.</style>                      Name of a Printer to which these print options
+<style color=#00ffffff size=1>.</style>                      apply
+
+<style color=#00ffffff size=1>.</style>                 mode:
+<style color=#00ffffff size=1>.</style>                      The name of a print mode
+
+<style color=#00ffffff size=1>.</style>                 paper:
+<style color=#00ffffff size=1>.</style>                      The name of a paper size
+
+<style color=#00ffffff size=1>.</style>                 orientation:
+<style color=#00ffffff size=1>.</style>                      Paper orientation - either PORTRAIT or LANDSCAPE
+
+<style color=#00ffffff size=1>.</style>                 duplex (NB DUPLEX IS NOT CURRENTLY SUPPORTED):
+<style color=#00ffffff size=1>.</style>                      Duplex setting - DUPLEX_OFF or DUPLEX_SHORT or
+<style color=#00ffffff size=1>.</style>                      DUPLEX_LONG 
+
+<style color=#00ffffff size=1>.</style>            Printer
+<style color=#00ffffff size=1>.</style>                 - specifies a printer instance
+
+<style color=#00ffffff size=1>.</style>                 name:
+<style color=#00ffffff size=1>.</style>                      Name used to refer to this printer
+
+<style color=#00ffffff size=1>.</style>                 ptype:
+<style color=#00ffffff size=1>.</style>                      The printer type
+
+<style color=#00ffffff size=1>.</style>                 device:
+<style color=#00ffffff size=1>.</style>                      The name of the file to be used for output (eg
+<style color=#00ffffff size=1>.</style>                      /dev/lpt1data)
+
+<style color=#00ffffff size=1>.</style>                 popt:
+<style color=#00ffffff size=1>.</style>                      The print options
+
+<style color=#00ffffff size=1>.</style>                 driver:
+<style color=#00ffffff size=1>.</style>                      The printer driver module handle
+
+<style color=#00ffffff size=1>.</style>         Configuration Files
+<style color=#00ffffff size=1>.</style>            There are configuration files to initialize the Printer
+<style color=#00ffffff size=1>.</style>            Types, Print Modes, Paper Sizes Printers and Print Modes.
+<style color=#00ffffff size=1>.</style>            They all have a similar format, with fields corresponding to
+<style color=#00ffffff size=1>.</style>            the relevant adt. Here is an extract from the paper.cfg
+<style color=#00ffffff size=1>.</style>            file:
+
+<style color=#00ffffff size=1>.</style>            A4=
+<style color=#00ffffff size=1>.</style>            	hpcode=26
+<style color=#00ffffff size=1>.</style>            	width_inches=8.3
+<style color=#00ffffff size=1>.</style>            	height_inches=11.7
+<style color=#00ffffff size=1>.</style>            A5=
+<style color=#00ffffff size=1>.</style>            	hpcode=25
+<style color=#00ffffff size=1>.</style>            	width_inches=4.15
+<style color=#00ffffff size=1>.</style>            	height_inches=5.85
+
+<style color=#00ffffff size=1>.</style>            Aliases can also be defined, such as
+
+<style color=#00ffffff size=1>.</style>            myA4=A4
+
+<style color=#00ffffff size=1>.</style>            The final configuration file, defprinter, just contains the
+<style color=#00ffffff size=1>.</style>            name of the default printer.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/print/*.map
+<style color=#00ffffff size=1>.</style>                 HP color maps.
+
+<style color=#00ffffff size=1>.</style>            /lib/print/ptype.cfg
+<style color=#00ffffff size=1>.</style>                 Print Type configuration file.
+
+<style color=#00ffffff size=1>.</style>            /lib/print/pmode.cfg
+<style color=#00ffffff size=1>.</style>                 Print Mode configuration file.
+
+<style color=#00ffffff size=1>.</style>            /lib/print/paper.cfg
+<style color=#00ffffff size=1>.</style>                 Paper Size configuration file.
+
+<style color=#00ffffff size=1>.</style>            /lib/print/printer.cfg
+<style color=#00ffffff size=1>.</style>                 Printer Instance configuration file.
+
+<style color=#00ffffff size=1>.</style>            /lib/print/popts.cfg
+<style color=#00ffffff size=1>.</style>                 Print options configuration file.
+
+<style color=#00ffffff size=1>.</style>            /lib/print/defprinter
+<style color=#00ffffff size=1>.</style>                 Holds the name of the default printer. Not needed if
+<style color=#00ffffff size=1>.</style>                 there is only one printer available.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/print/print.b  Implementation of the Print module.
+<style color=#00ffffff size=1>.</style>            /appl/lib/print/*_driver.b
+<style color=#00ffffff size=1>.</style>                                     Printer-specific driver modules
+<style color=#00ffffff size=1>.</style>            /appl/lib/print/scaler.b Scaler module
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=draw-image(2)>draw-image(2)</action>, <action name=image(6)>image(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

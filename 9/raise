@@ -1,0 +1,17 @@
+<action name=RAISE(9)>RAISE(9)</action>                                                 <action name=RAISE(9)>RAISE(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            raise - Change a window's position in the stacking order
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            raise window
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Raise raises window so that it is above all of its siblings
+<style color=#00ffffff size=1>.</style>            in the stacking order (it will not be obscured by any
+<style color=#00ffffff size=1>.</style>            siblings and will obscure any siblings that overlap it).
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=lower(9)>lower(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,60 @@
+KBDPUTC(10.2)                                       KBDPUTC(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            kbdputc, kbdrepeat, kbdclock, kbdq - keyboard interface to 
+<style color=#00ffffff size=1>.</style>            <action name=cons(3)>cons(3)</action>
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            #include "keyboard.h"
+
+<style color=#00ffffff size=1>.</style>            void	kbdputc(Queue *q, int c)
+
+<style color=#00ffffff size=1>.</style>            void	kbdrepeat(int on)
+
+<style color=#00ffffff size=1>.</style>            void	kbdclock(void)
+
+<style color=#00ffffff size=1>.</style>            extern	Queue *kbdq\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This is the internal interface between /dev/keyboard of cons
+<style color=#00ffffff size=1>.</style>            (3) and the architecture-dependent keyboard driver. Before
+<style color=#00ffffff size=1>.</style>            calling any of these functions, the global variable kbdq
+<style color=#00ffffff size=1>.</style>            must be initialised\; <action name=cons(3)>cons(3)</action> does not initialise it. This is
+<style color=#00ffffff size=1>.</style>            usually done during system initialisation by the keyboard
+<style color=#00ffffff size=1>.</style>            driver's kbdinit function , as follows:
+
+<style color=#00ffffff size=1>.</style>                 kbdq = qopen(4*1024, 0, 0, 0)\;
+<style color=#00ffffff size=1>.</style>                 qnoblock(kbdq, 1)\;
+
+<style color=#00ffffff size=1>.</style>            Kbdputc puts a 16-bit Unicode character c (ie, a `rune') on
+<style color=#00ffffff size=1>.</style>            the given q, as a sequence of bytes in UTF-8 encoding (see
+<style color=#00ffffff size=1>.</style>            <action name=utf(6)>utf(6)</action>). If c is the special value Latin (defined by
+<style color=#00ffffff size=1>.</style>            keyboard.h), kbdputc starts collecting characters, looking
+<style color=#00ffffff size=1>.</style>            for the typeable representations of Unicode characters
+<style color=#00ffffff size=1>.</style>            defined by <action name=keyboard(6)>keyboard(6)</action>\; at the end of a complete such
+<style color=#00ffffff size=1>.</style>            sequence, kbdputc queues the UTF-8 encoding of the
+<style color=#00ffffff size=1>.</style>            corresponding Unicode character. It is up to the keyboard
+<style color=#00ffffff size=1>.</style>            driver to map a suitable physical keyboard character (or
+<style color=#00ffffff size=1>.</style>            combination of characters) to the code Latin.
+
+<style color=#00ffffff size=1>.</style>            Drivers that need to implement repeat of keypresses in
+<style color=#00ffffff size=1>.</style>            software should call
+
+<style color=#00ffffff size=1>.</style>                 addclock0link(kbdclock)\;
+
+<style color=#00ffffff size=1>.</style>            at the end of kbdinit, to cause kbdclock to be called each
+<style color=#00ffffff size=1>.</style>            clock tick. Kbdrepeat can then be called to enable (on is
+<style color=#00ffffff size=1>.</style>            non-zero) or disable it (on is zero). When repeat is on,
+<style color=#00ffffff size=1>.</style>            kbdclock (when called) will periodically call kbdputc(kbdq,c
+<style color=#00ffffff size=1>.</style>            ) where c is the last rune given to kbdputc. The driver is
+<style color=#00ffffff size=1>.</style>            responsible for enabling and disabling repeat appropriately\;
+<style color=#00ffffff size=1>.</style>            for instance, function keys and certainly Latin should
+<style color=#00ffffff size=1>.</style>            typically not be repeated.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/*/kbd*.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cons(3)>cons(3)</action>, <action name=utf(6)>utf(6)</action>, qio(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,143 @@
+<action name=ATTRDB(2)>ATTRDB(2)</action>                                               <action name=ATTRDB(2)>ATTRDB(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            attrdb - database of attribute-value pairs
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "bufio.m"\;
+<style color=#00ffffff size=1>.</style>            include "attrdb.m"\;
+<style color=#00ffffff size=1>.</style>            attrdb := load Attrdb Attrdb->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Attr: adt {
+<style color=#00ffffff size=1>.</style>                attr:   string\;
+<style color=#00ffffff size=1>.</style>                val:    string\;
+<style color=#00ffffff size=1>.</style>                tag:    int\;        # application-defined data, initially 0
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Tuples: adt {
+<style color=#00ffffff size=1>.</style>                n:  int\;
+<style color=#00ffffff size=1>.</style>                pairs:  list of ref Attr\;
+
+<style color=#00ffffff size=1>.</style>                hasattr:    fn(t: self ref Tuples, attr: string): int\;
+<style color=#00ffffff size=1>.</style>                haspair:    fn(t: self ref Tuples,
+<style color=#00ffffff size=1>.</style>                               attr: string, value: string): int\;
+<style color=#00ffffff size=1>.</style>                find:       fn(t: self ref Tuples, attr: string): list of ref Attr\;
+<style color=#00ffffff size=1>.</style>                findbyattr: fn(t: self ref Tuples,
+<style color=#00ffffff size=1>.</style>                               attr: string, value: string, rattr: string):
+<style color=#00ffffff size=1>.</style>                               list of ref Attr\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Dbentry: adt {
+<style color=#00ffffff size=1>.</style>                n:  int\;
+<style color=#00ffffff size=1>.</style>                lines:  list of ref Tuples\;
+
+<style color=#00ffffff size=1>.</style>                find:       fn(e: self ref Dbentry, attr: string):
+<style color=#00ffffff size=1>.</style>                              list of (ref Tuples, list of ref Attr)\;
+<style color=#00ffffff size=1>.</style>                findfirst:  fn(e: self ref Dbentry, attr: string): string\;
+<style color=#00ffffff size=1>.</style>                findpair:   fn(e: self ref Dbentry,
+<style color=#00ffffff size=1>.</style>                              attr: string, value: string):
+<style color=#00ffffff size=1>.</style>                              list of ref Tuples\;
+<style color=#00ffffff size=1>.</style>                findbyattr: fn(e: self ref Dbentry,
+<style color=#00ffffff size=1>.</style>                              attr: string, value: string, rattr: string):
+<style color=#00ffffff size=1>.</style>                              list of (ref Tuples, list of ref Attr)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Db: adt {
+<style color=#00ffffff size=1>.</style>                open:    fn(path: string): ref Db\;
+<style color=#00ffffff size=1>.</style>                sopen:   fn(data: string): ref Db\;
+<style color=#00ffffff size=1>.</style>                changed: fn(db: self ref Db): int\;
+<style color=#00ffffff size=1>.</style>                reopen:  fn(db: self ref Db): int\;
+<style color=#00ffffff size=1>.</style>                append:  fn(db1: self ref Db, db2: ref Db): ref Db\;
+
+<style color=#00ffffff size=1>.</style>                find:       fn(db: self ref Db, start: ref Dbptr,
+<style color=#00ffffff size=1>.</style>                              attr: string): (ref Dbentry, ref Dbptr)\;
+<style color=#00ffffff size=1>.</style>                findpair:   fn(db: self ref Db, start: ref Dbptr,
+<style color=#00ffffff size=1>.</style>                              attr: string, value: string):
+<style color=#00ffffff size=1>.</style>                              (ref Dbentry, ref Dbptr)\;
+<style color=#00ffffff size=1>.</style>                findbyattr: fn(db: self ref Db, start: ref Dbptr,
+<style color=#00ffffff size=1>.</style>                              attr: string, value: string, rattr: string):
+<style color=#00ffffff size=1>.</style>                              (ref Dbentry, ref Dbptr)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:   fn(): string\;
+
+<style color=#00ffffff size=1>.</style>            parseentry: fn(s: string, lno: int): (ref Dbentry, int, string)\;
+<style color=#00ffffff size=1>.</style>            parseline:  fn(s: string, lno: int): (ref Tuples, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Attrdb fetches data from textual databases that contain
+<style color=#00ffffff size=1>.</style>            groups of attribute-value pairs. The format is defined by
+<style color=#00ffffff size=1>.</style>            <action name=attrdb(6)>attrdb(6)</action>.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other function in the module.
+
+<style color=#00ffffff size=1>.</style>            Each logical database is represented by a Db value. It can
+<style color=#00ffffff size=1>.</style>            span several physical files, named in the body of a database
+<style color=#00ffffff size=1>.</style>            attribute in the primary file of the database. (If no such
+<style color=#00ffffff size=1>.</style>            attribute appears, there is just the one physical file in
+<style color=#00ffffff size=1>.</style>            the database.)
+
+<style color=#00ffffff size=1>.</style>            Db.open(path)
+<style color=#00ffffff size=1>.</style>                 Opens path as a database, and returns a (reference to
+<style color=#00ffffff size=1>.</style>                 a) Db value that represents it. On an error, it returns
+<style color=#00ffffff size=1>.</style>                 nil and the system error string contains a diagnostic.
+<style color=#00ffffff size=1>.</style>                 If path contains a database attribute with associated
+<style color=#00ffffff size=1>.</style>                 attributes of the form file=filename, the logical
+<style color=#00ffffff size=1>.</style>                 database is formed by (logically) concatenating the
+<style color=#00ffffff size=1>.</style>                 contents of each filename in the order listed. See
+<style color=#00ffffff size=1>.</style>                 <action name=attrdb(6)>attrdb(6)</action> for details.
+
+<style color=#00ffffff size=1>.</style>            Db.sopen(data)
+<style color=#00ffffff size=1>.</style>                 Treat the contents of the string data as a database,
+<style color=#00ffffff size=1>.</style>                 and return a Db value representing it.
+
+<style color=#00ffffff size=1>.</style>            db1.append(db2)
+<style color=#00ffffff size=1>.</style>                 Return a Db value that represents the result of
+<style color=#00ffffff size=1>.</style>                 logically appending the contents of database db2 to db1
+<style color=#00ffffff size=1>.</style>                 .
+
+<style color=#00ffffff size=1>.</style>            db.changed()
+<style color=#00ffffff size=1>.</style>                 Return true iff one or more of the underlying files
+<style color=#00ffffff size=1>.</style>                 have changed since they were last read.
+
+<style color=#00ffffff size=1>.</style>            db.reopen()
+<style color=#00ffffff size=1>.</style>                 Discard any cached data, and reopen the database files.
+<style color=#00ffffff size=1>.</style>                 Return 0 on success but -1 if any file could not be
+<style color=#00ffffff size=1>.</style>                 reopened.
+
+<style color=#00ffffff size=1>.</style>            db.find(ptr,attr)
+<style color=#00ffffff size=1>.</style>                 Starting at ptr, look in db for the next entry that
+<style color=#00ffffff size=1>.</style>                 contains an attribute attr and return a tuple (e,ptr)
+<style color=#00ffffff size=1>.</style>                 where e is a Dbentry value representing the whole
+<style color=#00ffffff size=1>.</style>                 entry, and ptr is a database pointer for the next
+<style color=#00ffffff size=1>.</style>                 entry. If attr cannot be found, e is nil.
+
+<style color=#00ffffff size=1>.</style>            db.findpair(ptr, attr, value)
+<style color=#00ffffff size=1>.</style>                 Starting at ptr, look in db for the next entry that
+<style color=#00ffffff size=1>.</style>                 contains the pair attr=value, and return a tuple (e,ptr
+<style color=#00ffffff size=1>.</style>                 ) where e is a Dbentry value representing the whole
+<style color=#00ffffff size=1>.</style>                 entry, and ptr is a database pointer for the next
+<style color=#00ffffff size=1>.</style>                 entry. If the given pair cannot be found, e is nil.
+
+<style color=#00ffffff size=1>.</style>            db.findbyattr(ptr, attr, value, rattr)
+<style color=#00ffffff size=1>.</style>                 Starting at ptr in db, look for the next entry
+<style color=#00ffffff size=1>.</style>                 containing both the pair attr=value and a pair with
+<style color=#00ffffff size=1>.</style>                 attribute rattr\; return a tuple (e,ptr) where e is a
+<style color=#00ffffff size=1>.</style>                 Dbentry value representing the whole entry, and ptr is
+<style color=#00ffffff size=1>.</style>                 a database pointer for the next entry. If no such entry
+<style color=#00ffffff size=1>.</style>                 can be found, e is nil.
+
+<style color=#00ffffff size=1>.</style>            Parseline takes a line containing a set of space-separated
+<style color=#00ffffff size=1>.</style>            attribute=value pairs, and returns a tuple (ts,err). If the
+<style color=#00ffffff size=1>.</style>            line's syntax is correct, ts is a Tuples value that
+<style color=#00ffffff size=1>.</style>            represents the pairs as a list of Attr values. If the syntax
+<style color=#00ffffff size=1>.</style>            is wrong (eg, unmatched quote), ts is nil and err contains a
+<style color=#00ffffff size=1>.</style>            diagnostic.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/attrdb.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cfg(2)>cfg(2)</action>, <action name=attrdb(6)>attrdb(6)</action>, <action name=ndb(6)>ndb(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

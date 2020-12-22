@@ -1,0 +1,25 @@
+KSTRIP(10.1)                                         KSTRIP(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            kstrip - remove symbols from kernel images
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            kstrip file ...
+
+<style color=#00ffffff size=1>.</style>            kstrip -o ofile file
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Kstrip removes symbol table segments from executable files,
+<style color=#00ffffff size=1>.</style>            rewriting the files in place. Stripping a file requires
+<style color=#00ffffff size=1>.</style>            write permission on the file and the directory it is in.
+
+<style color=#00ffffff size=1>.</style>            If the -o flag is given, the single input file file is
+<style color=#00ffffff size=1>.</style>            stripped and the result written to ofile. File is unchanged.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /utils/kstrip
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            ksize(10.1), a.out(10.6)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,43 @@
+<action name=DUP(3)>DUP(3)</action>                                                     <action name=DUP(3)>DUP(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dup - dups of open files
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind #d /fd
+
+<style color=#00ffffff size=1>.</style>            /fd/0
+<style color=#00ffffff size=1>.</style>            /fd/0ctl
+<style color=#00ffffff size=1>.</style>            /fd/1
+<style color=#00ffffff size=1>.</style>            /fd/1ctl
+<style color=#00ffffff size=1>.</style>            ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The dup device serves a one-level directory containing files
+<style color=#00ffffff size=1>.</style>            whose names are decimal numbers. Each such file also has an
+<style color=#00ffffff size=1>.</style>            associated control file. A file of name n corresponds to
+<style color=#00ffffff size=1>.</style>            open file descriptor n in the current process.
+
+<style color=#00ffffff size=1>.</style>            A <action name=sys-open(2)>sys-open(2)</action> of file n results in a file descriptor
+<style color=#00ffffff size=1>.</style>            identical to what would be returned from a system call
+<style color=#00ffffff size=1>.</style>            sys->dup(n, -1). Note that the result is no longer a file in
+<style color=#00ffffff size=1>.</style>            the dup device.
+
+<style color=#00ffffff size=1>.</style>            The stat operation returns information about the device
+<style color=#00ffffff size=1>.</style>            file, not the open file it points to. A stat of #d/n will
+<style color=#00ffffff size=1>.</style>            contain n for the name, 0 for the length, and 400, 200, or
+<style color=#00ffffff size=1>.</style>            600 (octal) for the mode, depending on whether the dup
+<style color=#00ffffff size=1>.</style>            target is open for reading, writing, or both.
+
+<style color=#00ffffff size=1>.</style>            A file of name nctl may be read to discover the properties
+<style color=#00ffffff size=1>.</style>            of the associated file descriptor, in format identical to
+<style color=#00ffffff size=1>.</style>            that of the fd file in <action name=prog(3)>prog(3)</action>.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-dup(2)>sys-dup(2)</action>
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /usr/inferno/emu/port/devdup.c
+<style color=#00ffffff size=1>.</style>            /usr/inferno/os/port/devdup.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

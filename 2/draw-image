@@ -1,0 +1,499 @@
+<action name=DRAW-IMAGE(2)>DRAW-IMAGE(2)</action>                                       <action name=DRAW-IMAGE(2)>DRAW-IMAGE(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Image - pictures and drawing
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include	"draw.m"\;
+<style color=#00ffffff size=1>.</style>            draw := load Draw Draw->PATH\;
+
+<style color=#00ffffff size=1>.</style>            # compositing operators
+<style color=#00ffffff size=1>.</style>            SinD:   con 1<<3\;
+<style color=#00ffffff size=1>.</style>            DinS:   con 1<<2\;
+<style color=#00ffffff size=1>.</style>            SoutD:  con 1<<1\;
+<style color=#00ffffff size=1>.</style>            DoutS:  con 1<<0\;
+
+<style color=#00ffffff size=1>.</style>            S:      con SinD|SoutD\;
+<style color=#00ffffff size=1>.</style>            SoverD: con SinD|SoutD|DoutS\;
+<style color=#00ffffff size=1>.</style>            SatopD: con SinD|DoutS\;
+<style color=#00ffffff size=1>.</style>            SxorD:  con SoutD|DoutS\;
+
+<style color=#00ffffff size=1>.</style>            D:      con DinS|DoutS\;
+<style color=#00ffffff size=1>.</style>            DoverS: con DinS|DoutS|SoutD\;
+<style color=#00ffffff size=1>.</style>            DatopS: con DinS|SoutD\;
+<style color=#00ffffff size=1>.</style>            DxorS:  con DoutS|SoutD\;
+
+<style color=#00ffffff size=1>.</style>            Clear:  con 0\;
+
+<style color=#00ffffff size=1>.</style>            Image: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                r:          Rect\;
+<style color=#00ffffff size=1>.</style>                clipr:      Rect\;
+<style color=#00ffffff size=1>.</style>                chans:      Chans\;
+<style color=#00ffffff size=1>.</style>                depth:      int\;
+<style color=#00ffffff size=1>.</style>                repl:       int\;
+
+<style color=#00ffffff size=1>.</style>                display:    ref Display\;
+<style color=#00ffffff size=1>.</style>                screen:     ref Screen\;
+
+<style color=#00ffffff size=1>.</style>                draw:       fn(dst: self ref Image, r: Rect, src: ref Image,
+<style color=#00ffffff size=1>.</style>                               mask: ref Image, p: Point)\;
+<style color=#00ffffff size=1>.</style>                drawop:       fn(dst: self ref Image, r: Rect, src: ref Image,
+<style color=#00ffffff size=1>.</style>                               mask: ref Image, p: Point, op: int)\;
+<style color=#00ffffff size=1>.</style>                gendraw:    fn(dst: self ref Image, r: Rect, src: ref Image,
+<style color=#00ffffff size=1>.</style>                               p0: Point, mask: ref Image, p1: Point)\;
+<style color=#00ffffff size=1>.</style>                gendrawop:    fn(dst: self ref Image, r: Rect, src: ref Image,
+<style color=#00ffffff size=1>.</style>                               p0: Point, mask: ref Image, p1: Point, op: int)\;
+<style color=#00ffffff size=1>.</style>                line:       fn(dst: self ref Image, p0,p1: Point,
+<style color=#00ffffff size=1>.</style>                               end0,end1,thick: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point)\;
+<style color=#00ffffff size=1>.</style>                lineop:       fn(dst: self ref Image, p0,p1: Point,
+<style color=#00ffffff size=1>.</style>                               end0,end1,thick: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point, op: int)\;
+<style color=#00ffffff size=1>.</style>                poly:       fn(dst: self ref Image, p: array of Point,
+<style color=#00ffffff size=1>.</style>                               end0,end1,thick: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point)\;
+<style color=#00ffffff size=1>.</style>                polyop:       fn(dst: self ref Image, p: array of Point,
+<style color=#00ffffff size=1>.</style>                               end0,end1,thick: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point, op: int)\;
+<style color=#00ffffff size=1>.</style>                bezspline:  fn(dst: self ref Image, p: array of Point,
+<style color=#00ffffff size=1>.</style>                               end0,end1,thick: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point)\;
+<style color=#00ffffff size=1>.</style>                bezsplineop:  fn(dst: self ref Image, p: array of Point,
+<style color=#00ffffff size=1>.</style>                               end0,end1,thick: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point, op: int)\;
+<style color=#00ffffff size=1>.</style>                fillpoly:   fn(dst: self ref Image, p: array of Point,
+<style color=#00ffffff size=1>.</style>                               wind: int, src: ref Image, sp: Point)\;
+<style color=#00ffffff size=1>.</style>                fillpolyop:   fn(dst: self ref Image, p: array of Point,
+<style color=#00ffffff size=1>.</style>                               wind: int, src: ref Image, sp: Point, op: int)\;
+<style color=#00ffffff size=1>.</style>                fillbezspline: fn(dst: self ref Image, p: array of Point,
+<style color=#00ffffff size=1>.</style>                               wind: int, src: ref Image, sp: Point)\;
+<style color=#00ffffff size=1>.</style>                fillbezsplineop: fn(dst: self ref Image, p: array of Point,
+<style color=#00ffffff size=1>.</style>                               wind: int, src: ref Image, sp: Point, op: int)\;
+<style color=#00ffffff size=1>.</style>                ellipse:    fn(dst: self ref Image, c: Point, a, b,
+<style color=#00ffffff size=1>.</style>                               thick: int, src: ref Image, sp: Point)\;
+<style color=#00ffffff size=1>.</style>                ellipseop:    fn(dst: self ref Image, c: Point, a, b,
+<style color=#00ffffff size=1>.</style>                               thick: int, src: ref Image, sp: Point, op: int)\;
+<style color=#00ffffff size=1>.</style>                fillellipse:fn(dst: self ref Image, c: Point, a, b: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point)\;
+<style color=#00ffffff size=1>.</style>                fillellipseop:fn(dst: self ref Image, c: Point, a, b: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point, op: int)\;
+<style color=#00ffffff size=1>.</style>                arc:        fn(dst: self ref Image, c: Point, a, b, thick: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point, alpha, phi: int)\;
+<style color=#00ffffff size=1>.</style>                arcop:      fn(dst: self ref Image, c: Point, a, b, thick: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point,
+<style color=#00ffffff size=1>.</style>                               alpha, phi: int, op: int)\;
+<style color=#00ffffff size=1>.</style>                fillarc:    fn(dst: self ref Image, c: Point, a, b: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point, alpha, phi: int)\;
+<style color=#00ffffff size=1>.</style>                fillarcop:  fn(dst: self ref Image, c: Point, a, b: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point,
+<style color=#00ffffff size=1>.</style>                               alpha, phi: int, op: int)\;
+<style color=#00ffffff size=1>.</style>                bezier:     fn(dst: self ref Image, a,b,c,d: Point,
+<style color=#00ffffff size=1>.</style>                               end0,end1,thick: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point)\;
+<style color=#00ffffff size=1>.</style>                bezierop:     fn(dst: self ref Image, a,b,c,d: Point,
+<style color=#00ffffff size=1>.</style>                               end0,end1,thick: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point, op: int)\;
+<style color=#00ffffff size=1>.</style>                fillbezier: fn(dst: self ref Image, a,b,c,d: Point, wind:int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point)\;
+<style color=#00ffffff size=1>.</style>                fillbezierop: fn(dst: self ref Image, a,b,c,d: Point, wind:int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point, op: int)\;
+<style color=#00ffffff size=1>.</style>                arrow:      fn(a,b,c: int): int\;
+<style color=#00ffffff size=1>.</style>                text:       fn(dst: self ref Image, p: Point, src: ref Image,
+<style color=#00ffffff size=1>.</style>                               sp: Point, font: ref Font, str: string): Point\;
+<style color=#00ffffff size=1>.</style>                textop:       fn(dst: self ref Image, p: Point, src: ref Image,
+<style color=#00ffffff size=1>.</style>                               sp: Point, font: ref Font, str: string,
+<style color=#00ffffff size=1>.</style>                               op: int): Point\;
+<style color=#00ffffff size=1>.</style>                textbg:     fn(dst: self ref Image, p: Point, src: ref Image,
+<style color=#00ffffff size=1>.</style>                               sp: Point, font: ref Font, str: string,
+<style color=#00ffffff size=1>.</style>                               bg: ref Image, bgp: Point): Point\;
+<style color=#00ffffff size=1>.</style>                textbgop:     fn(dst: self ref Image, p: Point, src: ref Image,
+<style color=#00ffffff size=1>.</style>                               sp: Point, font: ref Font, str: string,
+<style color=#00ffffff size=1>.</style>                               bg: ref Image, bgp: Point, op: int): Point\;
+<style color=#00ffffff size=1>.</style>                border:     fn(dst: self ref Image, r: Rect, i: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point)\;
+<style color=#00ffffff size=1>.</style>                borderop:     fn(dst: self ref Image, r: Rect, i: int,
+<style color=#00ffffff size=1>.</style>                               src: ref Image, sp: Point, op: int)\;
+
+<style color=#00ffffff size=1>.</style>                readpixels: fn(src: self ref Image, r: Rect,
+<style color=#00ffffff size=1>.</style>                               data: array of byte): int\;
+<style color=#00ffffff size=1>.</style>                writepixels:fn(dst: self ref Image, r: Rect,
+<style color=#00ffffff size=1>.</style>                               data: array of byte): int\;
+<style color=#00ffffff size=1>.</style>                name:       fn(im: self ref Image, s: string, in: int): int\;
+<style color=#00ffffff size=1>.</style>                top:        fn(win: self ref Image)\;
+<style color=#00ffffff size=1>.</style>                bottom:     fn(win: self ref Image)\;
+<style color=#00ffffff size=1>.</style>                flush:      fn(win: self ref Image, func: int)\;
+<style color=#00ffffff size=1>.</style>                origin:     fn(win: self ref Image, log, scr: Point): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Image type defines rectangular pictures and the methods
+<style color=#00ffffff size=1>.</style>            to draw upon them\; it is also the building block for higher
+<style color=#00ffffff size=1>.</style>            level objects such as windows and fonts. In particular, a
+<style color=#00ffffff size=1>.</style>            window is represented as an Image\; no special operators are
+<style color=#00ffffff size=1>.</style>            needed to draw on a window. Off-screen images can have an
+<style color=#00ffffff size=1>.</style>            alpha channel, which gives each pixel an opacity factor,
+<style color=#00ffffff size=1>.</style>            which in turn allows non-rectangular images to be defined
+<style color=#00ffffff size=1>.</style>            (ie, pixels made fully transparent by the alpha channel do
+<style color=#00ffffff size=1>.</style>            not appear when the image is displayed). Many drawing
+<style color=#00ffffff size=1>.</style>            operations allow images to be shaped, or partial
+<style color=#00ffffff size=1>.</style>            transparency added, by using the alpha channel of another
+<style color=#00ffffff size=1>.</style>            image as a mask (also called a `matte'). There are two
+<style color=#00ffffff size=1>.</style>            functions in Image for each such operation. One has an op
+<style color=#00ffffff size=1>.</style>            suffix, and takes an explicit image compositing operator: S,
+<style color=#00ffffff size=1>.</style>            D, SinD,..., SoverD and so on. (See the Porter-Duff paper
+<style color=#00ffffff size=1>.</style>            mentioned below for the meaning of each operation.) The
+<style color=#00ffffff size=1>.</style>            other function (without the op suffix) provides as its
+<style color=#00ffffff size=1>.</style>            default operation the most common operation, SoverD, by
+<style color=#00ffffff size=1>.</style>            which the source image, within its matte, is drawn over the
+<style color=#00ffffff size=1>.</style>            destination image.
+
+<style color=#00ffffff size=1>.</style>            An Image has a pixel channel structure as described in
+<style color=#00ffffff size=1>.</style>            <action name=colour(6)>colour(6)</action>, represented by a value of the Chans adt, defined
+<style color=#00ffffff size=1>.</style>            in <action name=draw-display(2)>draw-display(2)</action>. The channel structure of an image is
+<style color=#00ffffff size=1>.</style>            fixed when the image is allocated.
+
+<style color=#00ffffff size=1>.</style>            Image has the following components:
+
+<style color=#00ffffff size=1>.</style>            display   Tells on which display the image resides.
+
+<style color=#00ffffff size=1>.</style>            screen    If the image is a window on a Screen (see
+<style color=#00ffffff size=1>.</style>                      <action name=draw-screen(2)>draw-screen(2)</action>), this field refers to that screen\;
+<style color=#00ffffff size=1>.</style>                      otherwise it is nil.
+
+<style color=#00ffffff size=1>.</style>            r         The coordinates of the rectangle in the plane for
+<style color=#00ffffff size=1>.</style>                      which the Image has defined pixel values. It
+<style color=#00ffffff size=1>.</style>                      should not be modified after the image is created.
+
+<style color=#00ffffff size=1>.</style>            clipr     The clipping rectangle: operations that read or
+<style color=#00ffffff size=1>.</style>                      write the image will not access pixels outside
+<style color=#00ffffff size=1>.</style>                      clipr. Frequently, clipr is the same as Image.r,
+<style color=#00ffffff size=1>.</style>                      but it may differ\; see in particular the
+<style color=#00ffffff size=1>.</style>                      discussion of Image.repl. The clipping region may
+<style color=#00ffffff size=1>.</style>                      be modified dynamically.
+
+<style color=#00ffffff size=1>.</style>            chans     The pixel channel structure of the image\; the
+<style color=#00ffffff size=1>.</style>                      value should not be modified after the image is
+<style color=#00ffffff size=1>.</style>                      created.
+
+<style color=#00ffffff size=1>.</style>            depth     The number of bits per pixel in the picture: it is
+<style color=#00ffffff size=1>.</style>                      simply a convenience since it is necessarily equal
+<style color=#00ffffff size=1>.</style>                      to chans.depth(), and it should not be modified
+<style color=#00ffffff size=1>.</style>                      after the image is created.
+
+<style color=#00ffffff size=1>.</style>            repl      A boolean value specifying whether the image is
+<style color=#00ffffff size=1>.</style>                      tiled to cover the plane when used as a source for
+<style color=#00ffffff size=1>.</style>                      a drawing operation. If Image.repl is zero,
+<style color=#00ffffff size=1>.</style>                      operations are restricted to the intersection of
+<style color=#00ffffff size=1>.</style>                      Image.r and Image.clipr. If Image.repl is set,
+<style color=#00ffffff size=1>.</style>                      Image.r defines the tile to be replicated and
+<style color=#00ffffff size=1>.</style>                      Image.clipr defines the portion of the plane
+<style color=#00ffffff size=1>.</style>                      covered by the tiling, in other words, Image.r is
+<style color=#00ffffff size=1>.</style>                      replicated to cover Image.clipr\; in such cases
+<style color=#00ffffff size=1>.</style>                      Image.r and Image.clipr are independent.
+
+<style color=#00ffffff size=1>.</style>                 For example, a replicated image with Image.r set to
+<style color=#00ffffff size=1>.</style>                 ((0, 0), (1, 1)) and Image.clipr set to ((0, 0), (100,
+<style color=#00ffffff size=1>.</style>                 100)), with the single pixel of Image.r set to blue,
+<style color=#00ffffff size=1>.</style>                 behaves identically to an image with Image.r and
+<style color=#00ffffff size=1>.</style>                 Image.clipr both set to ((0, 0), (100, 100)) and all
+<style color=#00ffffff size=1>.</style>                 pixels set to blue. However, the first image requires
+<style color=#00ffffff size=1>.</style>                 far less memory. The replication flag may be modified
+<style color=#00ffffff size=1>.</style>                 dynamically along with the clipping rectangle.
+
+<style color=#00ffffff size=1>.</style>            dst.draw(r, src, mask, p)
+<style color=#00ffffff size=1>.</style>            dst.drawop(r, src, mask, p, op)
+<style color=#00ffffff size=1>.</style>                 Draw is the standard drawing function. Only those
+<style color=#00ffffff size=1>.</style>                 pixels within the intersection of dst.r and dst.clipr
+<style color=#00ffffff size=1>.</style>                 will be affected\; draw ignores dst.repl. The operation
+<style color=#00ffffff size=1>.</style>                 proceeds as follows (this is a description of the
+<style color=#00ffffff size=1>.</style>                 behavior, not the implementation):
+
+<style color=#00ffffff size=1>.</style>                 1.   If repl is set in src or mask, replicate their
+<style color=#00ffffff size=1>.</style>                      contents to fill their clip rectangles.
+
+<style color=#00ffffff size=1>.</style>                 2.   Translate src and mask so p is aligned with r.min.
+
+<style color=#00ffffff size=1>.</style>                 3.   Set r to the intersection of r and dst.r.
+
+<style color=#00ffffff size=1>.</style>                 4.   Intersect r with src.clipr. If src.repl is false,
+<style color=#00ffffff size=1>.</style>                      also intersect r with src.r.
+
+<style color=#00ffffff size=1>.</style>                 5.   Intersect r with mask.clipr. If mask.repl is
+<style color=#00ffffff size=1>.</style>                      false, also intersect r with mask.r.
+
+<style color=#00ffffff size=1>.</style>                 6.   For each location in r, combine the dst pixel
+<style color=#00ffffff size=1>.</style>                      using the alpha value corresponding to the mask
+<style color=#00ffffff size=1>.</style>                      pixel. If the mask has an explicit alpha channel,
+<style color=#00ffffff size=1>.</style>                      the alpha value corresponding to the mask pixel is
+<style color=#00ffffff size=1>.</style>                      simply that pixel's alpha channel. Otherwise, the
+<style color=#00ffffff size=1>.</style>                      alpha value is the NTSC greyscale equivalent of
+<style color=#00ffffff size=1>.</style>                      the colour value, with white meaning opaque and
+<style color=#00ffffff size=1>.</style>                      black transparent.
+
+<style color=#00ffffff size=1>.</style>                 In terms of the Porter-Duff compositing algebra, draw
+<style color=#00ffffff size=1>.</style>                 replaces the dst pixels with (src in mask) over dst.
+<style color=#00ffffff size=1>.</style>                 Drawop is almost identical, but applies the compositing
+<style color=#00ffffff size=1>.</style>                 operation op instead: (src in mask) op dst.
+
+<style color=#00ffffff size=1>.</style>                 The various pixel channel formats involved need not be
+<style color=#00ffffff size=1>.</style>                 identical. If the channels involved are smaller than
+<style color=#00ffffff size=1>.</style>                 8-bits, they will be promoted before the calculation by
+<style color=#00ffffff size=1>.</style>                 replicating the extant bits\; after the calculation,
+<style color=#00ffffff size=1>.</style>                 they will be truncated to their proper sizes. For draw
+<style color=#00ffffff size=1>.</style>                 and gendraw only, if mask is nil, no mask is used.
+
+<style color=#00ffffff size=1>.</style>            dst.gendraw(r, src, p0, mask, p1)
+<style color=#00ffffff size=1>.</style>            dst.gendrawop(r, src, p0, mask, p1, op)
+<style color=#00ffffff size=1>.</style>                 Similar to draw() except that it aligns the source and
+<style color=#00ffffff size=1>.</style>                 mask differently: src is aligned so p0 corresponds to r
+<style color=#00ffffff size=1>.</style>                 .min and mask is aligned so p1 corresponds to r.min.
+<style color=#00ffffff size=1>.</style>                 For most purposes with simple masks and source images,
+<style color=#00ffffff size=1>.</style>                 draw is sufficient, but gendraw is the general operator
+<style color=#00ffffff size=1>.</style>                 and the one the other drawing primitives are built
+<style color=#00ffffff size=1>.</style>                 upon.
+
+<style color=#00ffffff size=1>.</style>            dst.line(p0, p1, end0, end1, thick, src, sp)
+<style color=#00ffffff size=1>.</style>            dst.lineop(p0, p1, end0, end1, thick, src, sp, op)
+<style color=#00ffffff size=1>.</style>                 Line draws in dst a line of width 1+2*thick pixels
+<style color=#00ffffff size=1>.</style>                 joining points p0 and p1. The line is drawn using
+<style color=#00ffffff size=1>.</style>                 pixels from the src image aligned so sp in the source
+<style color=#00ffffff size=1>.</style>                 corresponds to p0 in the destination. The line touches
+<style color=#00ffffff size=1>.</style>                 both p0 and p1, and end0 and end1 specify how the ends
+<style color=#00ffffff size=1>.</style>                 of the line are drawn. Draw->Endsquare terminates the
+<style color=#00ffffff size=1>.</style>                 line perpendicularly to the direction of the line\; a
+<style color=#00ffffff size=1>.</style>                 thick line with Endsquare on both ends will be a
+<style color=#00ffffff size=1>.</style>                 rectangle. Draw->Enddisc terminates the line by drawing
+<style color=#00ffffff size=1>.</style>                 a disc of diameter 1+2*thick centered on the end point.
+<style color=#00ffffff size=1>.</style>                 Draw->Endarrow terminates the line with an arrowhead
+<style color=#00ffffff size=1>.</style>                 whose tip touches the endpoint. See the description of
+<style color=#00ffffff size=1>.</style>                 arrow for more information.
+
+<style color=#00ffffff size=1>.</style>                 Line and the other geometrical operators are equivalent
+<style color=#00ffffff size=1>.</style>                 to calls to gendraw using a mask produced by the
+<style color=#00ffffff size=1>.</style>                 geometric procedure.
+
+<style color=#00ffffff size=1>.</style>            dst.poly(p, end0, end1, thick, src, sp)
+<style color=#00ffffff size=1>.</style>            dst.polyop(p, end0, end1, thick, src, sp, op)
+<style color=#00ffffff size=1>.</style>                 Poly draws a general polygon\; it is equivalent to a
+<style color=#00ffffff size=1>.</style>                 series of calls to line joining adjacent points in the
+<style color=#00ffffff size=1>.</style>                 array of Points p. The ends of the polygon are
+<style color=#00ffffff size=1>.</style>                 specified as in line\; interior lines are terminated
+<style color=#00ffffff size=1>.</style>                 with Enddisc to make smooth joins. The source is
+<style color=#00ffffff size=1>.</style>                 aligned so sp corresponds to p\[0\].
+
+<style color=#00ffffff size=1>.</style>            dst.bezspline(p, end0, end1, thick, src, sp)
+<style color=#00ffffff size=1>.</style>            dst.bezsplineop(p, end0, end1, thick, src, sp, op)
+<style color=#00ffffff size=1>.</style>                 Bezspline takes the same arguments as poly but draws a
+<style color=#00ffffff size=1>.</style>                 quadratic B-spline (despite its name) rather than a
+<style color=#00ffffff size=1>.</style>                 polygon. If the first and last points in p are equal,
+<style color=#00ffffff size=1>.</style>                 the spline has periodic end conditions.
+
+<style color=#00ffffff size=1>.</style>            dst.fillpoly(p, wind, src, sp)
+<style color=#00ffffff size=1>.</style>            dst.fillpolyop(p, wind, src, sp, op)
+<style color=#00ffffff size=1>.</style>                 Fillpoly is like poly but fills in the resulting
+<style color=#00ffffff size=1>.</style>                 polygon rather than outlining it. The source is aligned
+<style color=#00ffffff size=1>.</style>                 so sp corresponds to p\[0\]. The winding rule parameter
+<style color=#00ffffff size=1>.</style>                 wind resolves ambiguities about what to fill if the
+<style color=#00ffffff size=1>.</style>                 polygon is self-intersecting. If wind is ~0, a pixel is
+<style color=#00ffffff size=1>.</style>                 inside the polygon if the polygon's winding number
+<style color=#00ffffff size=1>.</style>                 about the point is non-zero. If wind is 1, a pixel is
+<style color=#00ffffff size=1>.</style>                 inside if the winding number is odd. Complementary
+<style color=#00ffffff size=1>.</style>                 values (0 or ~1) cause outside pixels to be filled. The
+<style color=#00ffffff size=1>.</style>                 meaning of other values is undefined. The polygon is
+<style color=#00ffffff size=1>.</style>                 closed with a line if necessary.
+
+<style color=#00ffffff size=1>.</style>            dst.fillbezspline(p, wind, src, sp)
+<style color=#00ffffff size=1>.</style>            dst.fillbezsplineop(p, wind, src, sp, op)
+<style color=#00ffffff size=1>.</style>                 Fillbezspline is like fillpoly but fills the quadratic
+<style color=#00ffffff size=1>.</style>                 B-spline rather than the polygon outlined by p. The
+<style color=#00ffffff size=1>.</style>                 spline is closed with a line if necessary.
+
+<style color=#00ffffff size=1>.</style>            dst.ellipse(c, a, b, thick, src, sp)
+<style color=#00ffffff size=1>.</style>            dst.ellipseop(c, a, b, thick, src, sp, op)
+<style color=#00ffffff size=1>.</style>                 Ellipse draws in dst an ellipse centered on c with
+<style color=#00ffffff size=1>.</style>                 horizontal and vertical semiaxes a and b. The source is
+<style color=#00ffffff size=1>.</style>                 aligned so sp in src corresponds to c in dst. The
+<style color=#00ffffff size=1>.</style>                 ellipse is drawn with thickness 1+2*thick.
+
+<style color=#00ffffff size=1>.</style>            dst.fillellipse(c, a, b, src, sp)
+<style color=#00ffffff size=1>.</style>            dst.fillellipseop(c, a, b, src, sp, op)
+<style color=#00ffffff size=1>.</style>                 Fillellipse is like ellipse but fills the ellipse
+<style color=#00ffffff size=1>.</style>                 rather than outlining it.
+
+<style color=#00ffffff size=1>.</style>            dst.arc(c, a, b, thick, src, sp, alpha, phi)
+<style color=#00ffffff size=1>.</style>            dst.arcop(c, a, b, thick, src, sp, alpha, phi, op)
+<style color=#00ffffff size=1>.</style>                 Arc is like ellipse, but draws only that portion of the
+<style color=#00ffffff size=1>.</style>                 ellipse starting at angle alpha and extending through
+<style color=#00ffffff size=1>.</style>                 an angle of phi. The angles are measured in degrees
+<style color=#00ffffff size=1>.</style>                 counterclockwise from the positive x axis.
+
+<style color=#00ffffff size=1>.</style>            dst.fillarc(c, a, b, src, sp, alpha, phi)
+<style color=#00ffffff size=1>.</style>            dst.fillarcop(c, a, b, src, sp, alpha, phi, op)
+<style color=#00ffffff size=1>.</style>                 Fillarc is like arc, but fills the sector with the
+<style color=#00ffffff size=1>.</style>                 source color.
+
+<style color=#00ffffff size=1>.</style>            dst.bezier(a, b, c, d, end0, end1, thick, src, sp)
+<style color=#00ffffff size=1>.</style>            dst.bezierop(a, b, c, d, end0, end1, thick, src, sp, op)
+<style color=#00ffffff size=1>.</style>                 Bezier draws the cubic Bezier curve defined by Points a
+<style color=#00ffffff size=1>.</style>                 , b, c, and d. The end styles are determined by end0
+<style color=#00ffffff size=1>.</style>                 and end1\; the thickness of the curve is 1+2*thick. The
+<style color=#00ffffff size=1>.</style>                 source is aligned so sp in src corresponds to a in dst.
+
+<style color=#00ffffff size=1>.</style>            dst.fillbezier(a, b, c, d, wind, src, sp)
+<style color=#00ffffff size=1>.</style>            dst.fillbezierop(a, b, c, d, wind, src, sp, op)
+<style color=#00ffffff size=1>.</style>                 Fillbezier is to bezier as fillpoly is to poly.
+
+<style color=#00ffffff size=1>.</style>            arrow(a, b, c)
+<style color=#00ffffff size=1>.</style>                 Arrow is a function to describe general arrowheads\; its
+<style color=#00ffffff size=1>.</style>                 result is passed as end parameters to line, poly, etc.
+<style color=#00ffffff size=1>.</style>                 If all three parameters are zero, it produces the
+<style color=#00ffffff size=1>.</style>                 default arrowhead, otherwise, a sets the distance along
+<style color=#00ffffff size=1>.</style>                 line from end of the regular line to tip, b sets the
+<style color=#00ffffff size=1>.</style>                 distance along line from the barb to the tip, and c
+<style color=#00ffffff size=1>.</style>                 sets the distance perpendicular to the line from edge
+<style color=#00ffffff size=1>.</style>                 of line to the tip of the barb, all in pixels.
+
+<style color=#00ffffff size=1>.</style>            dst.border(r, i, src, sp)
+<style color=#00ffffff size=1>.</style>            dst.borderop(r, i, src, sp, op)
+<style color=#00ffffff size=1>.</style>                 Border draws in dst an outline of rectangle r in the
+<style color=#00ffffff size=1>.</style>                 given src colour. The outline has width i\; if positive,
+<style color=#00ffffff size=1>.</style>                 the border goes inside the rectangle\; negative,
+<style color=#00ffffff size=1>.</style>                 outside. The source is aligned so sp corresponds to r
+<style color=#00ffffff size=1>.</style>                 .min.
+
+<style color=#00ffffff size=1>.</style>            dst.text(p, src, sp, font, str)
+<style color=#00ffffff size=1>.</style>            dst.textop(p, src, sp, font, str, op)
+<style color=#00ffffff size=1>.</style>            dst.textbg(p, src, sp, font, str, bg, bgp)
+<style color=#00ffffff size=1>.</style>            dst.textbgop(p, src, sp, font, str, bg, bgp, op)
+<style color=#00ffffff size=1>.</style>                 Text draws in dst characters specified by the string
+<style color=#00ffffff size=1>.</style>                 str and font font\; it is equivalent to a series of
+<style color=#00ffffff size=1>.</style>                 calls to gendraw using source src and masks determined
+<style color=#00ffffff size=1>.</style>                 by the character shapes. The text is positioned with
+<style color=#00ffffff size=1>.</style>                 the left of the first character at p.x and the top of
+<style color=#00ffffff size=1>.</style>                 the line of text at p.y. The source is positioned so sp
+<style color=#00ffffff size=1>.</style>                 in src corresponds to p in dst. Text returns a Point
+<style color=#00ffffff size=1>.</style>                 that is the position of the next character that would
+<style color=#00ffffff size=1>.</style>                 be drawn if the string were longer.
+
+<style color=#00ffffff size=1>.</style>                 For characters with undefined or zero-width images in
+<style color=#00ffffff size=1>.</style>                 the font, the character at font position 0 (NUL) is
+<style color=#00ffffff size=1>.</style>                 drawn.
+
+<style color=#00ffffff size=1>.</style>                 Text draws the text leaving the background intact.
+<style color=#00ffffff size=1>.</style>                 Textbg draws the background colour bg behind the
+<style color=#00ffffff size=1>.</style>                 characters, with the alignment specified by point bgp\;
+<style color=#00ffffff size=1>.</style>                 it is otherwise the same as text.
+
+<style color=#00ffffff size=1>.</style>            src.readpixels(r, data)
+<style color=#00ffffff size=1>.</style>                 Readpixels fills the data array with pixels from the
+<style color=#00ffffff size=1>.</style>                 specified rectangle of the src image. The pixels are
+<style color=#00ffffff size=1>.</style>                 presented one horizontal line at a time, starting with
+<style color=#00ffffff size=1>.</style>                 the top-left pixel of r. Each scan line starts with a
+<style color=#00ffffff size=1>.</style>                 new byte in the array, leaving the last byte of the
+<style color=#00ffffff size=1>.</style>                 previous line partially empty, if necessary. Pixels are
+<style color=#00ffffff size=1>.</style>                 packed as tightly as possible within data, regardless
+<style color=#00ffffff size=1>.</style>                 of the rectangle being extracted. Bytes are filled from
+<style color=#00ffffff size=1>.</style>                 most to least significant bit order, as the x
+<style color=#00ffffff size=1>.</style>                 coordinate increases, aligned so x=0 would appear as
+<style color=#00ffffff size=1>.</style>                 the leftmost pixel of its byte. Thus, for a 1-bit deep
+<style color=#00ffffff size=1>.</style>                 greyscale image, the pixel at x offset 165 within the
+<style color=#00ffffff size=1>.</style>                 rectangle will be in a data byte with mask value 16r04
+<style color=#00ffffff size=1>.</style>                 regardless of the overall rectangle: 165 mod 8 equals
+<style color=#00ffffff size=1>.</style>                 5, and 16r80 >> 5 equals 16r04. It is an error to call
+<style color=#00ffffff size=1>.</style>                 readpixels with an array that is too small to hold the
+<style color=#00ffffff size=1>.</style>                 rectangle's pixels. The return value is the number of
+<style color=#00ffffff size=1>.</style>                 bytes copied. The arrangement of pixels in arrays of
+<style color=#00ffffff size=1>.</style>                 bytes is described in <action name=image(6)>image(6)</action>.
+
+<style color=#00ffffff size=1>.</style>            dst.writepixels(r, data)
+<style color=#00ffffff size=1>.</style>                 Writepixels copies pixel values from the data array to
+<style color=#00ffffff size=1>.</style>                 the specified rectangle in the dst image. The format of
+<style color=#00ffffff size=1>.</style>                 the data is that produced by readpixels. The return
+<style color=#00ffffff size=1>.</style>                 value is the number of bytes copied. It is an error to
+<style color=#00ffffff size=1>.</style>                 call writepixels with an array that is too small to
+<style color=#00ffffff size=1>.</style>                 fill the rectangle.
+
+<style color=#00ffffff size=1>.</style>            im.name(s,in)
+<style color=#00ffffff size=1>.</style>                 Publish the image im on its display under name s, if in
+<style color=#00ffffff size=1>.</style>                 is non-zero\; otherwise, s must be an already published
+<style color=#00ffffff size=1>.</style>                 name and it is withdrawn from publication. A published
+<style color=#00ffffff size=1>.</style>                 image can be retrieved using Display.namedimage (see
+<style color=#00ffffff size=1>.</style>                 <action name=draw-display(2)>draw-display(2)</action>). This function returns -1 on error,
+<style color=#00ffffff size=1>.</style>                 typically because the name is already in use (for in
+<style color=#00ffffff size=1>.</style>                 non-zero), or does not exist (for in zero).
+
+<style color=#00ffffff size=1>.</style>            win.top()
+<style color=#00ffffff size=1>.</style>                 If the image win is a window, top pulls it to the
+<style color=#00ffffff size=1>.</style>                 ``top'' of the stack of windows on its Screen, perhaps
+<style color=#00ffffff size=1>.</style>                 obscuring other images. If win is not a window, top has
+<style color=#00ffffff size=1>.</style>                 no effect.
+
+<style color=#00ffffff size=1>.</style>            win.bottom()
+<style color=#00ffffff size=1>.</style>                 If the image win is a window, bottom pulls it to the
+<style color=#00ffffff size=1>.</style>                 ``bottom'' of the stack of windows on its Screen,
+<style color=#00ffffff size=1>.</style>                 perhaps obscuring it. If win is not a window, bottom
+<style color=#00ffffff size=1>.</style>                 has no effect.
+
+<style color=#00ffffff size=1>.</style>            image.flush(flag)
+<style color=#00ffffff size=1>.</style>                 The connection to a display has a buffer used to gather
+<style color=#00ffffff size=1>.</style>                 graphics requests generated by calls to the draw
+<style color=#00ffffff size=1>.</style>                 library. By default, the library flushes the buffer at
+<style color=#00ffffff size=1>.</style>                 the conclusion of any call that affects the visible
+<style color=#00ffffff size=1>.</style>                 display image itself. The flush routine allows finer
+<style color=#00ffffff size=1>.</style>                 control of buffer management. The flag has three
+<style color=#00ffffff size=1>.</style>                 possible values: Flushoff turns off all automatic
+<style color=#00ffffff size=1>.</style>                 flushing caused by writes to image, typically a window
+<style color=#00ffffff size=1>.</style>                 or the display image itself (buffers may still be
+<style color=#00ffffff size=1>.</style>                 written when they fill or when other objects on the
+<style color=#00ffffff size=1>.</style>                 display are modified)\; Flushnow causes the buffer to be
+<style color=#00ffffff size=1>.</style>                 flushed immediately\; and Flushon restores the default
+<style color=#00ffffff size=1>.</style>                 behaviour.
+
+<style color=#00ffffff size=1>.</style>            win.origin(log, scr)
+<style color=#00ffffff size=1>.</style>                 When a window is created (see <action name=draw-screen(2)>draw-screen(2)</action>), the
+<style color=#00ffffff size=1>.</style>                 coordinate system within the window is identical to
+<style color=#00ffffff size=1>.</style>                 that of the screen: the upper left corner of the window
+<style color=#00ffffff size=1>.</style>                 rectangle is its physical location on the display, not
+<style color=#00ffffff size=1>.</style>                 for example (0, 0). This symmetry may be broken,
+<style color=#00ffffff size=1>.</style>                 however: origin allows control of the location of the
+<style color=#00ffffff size=1>.</style>                 window on the display and the coordinate system used by
+<style color=#00ffffff size=1>.</style>                 programs drawing on the window. The first argument, log
+<style color=#00ffffff size=1>.</style>                 , sets the upper left corner of the logical (in-window)
+<style color=#00ffffff size=1>.</style>                 coordinate system without changing the position of the
+<style color=#00ffffff size=1>.</style>                 window on the screen. The second argument, scr, sets
+<style color=#00ffffff size=1>.</style>                 the upper left corner of physical (on-screen)
+<style color=#00ffffff size=1>.</style>                 coordinate system, that is, the window's location on
+<style color=#00ffffff size=1>.</style>                 the display, without changing the internal coordinate
+<style color=#00ffffff size=1>.</style>                 system. Therefore, changing scr without changing log
+<style color=#00ffffff size=1>.</style>                 moves the window without requiring the client using it
+<style color=#00ffffff size=1>.</style>                 to be notified of the change\; changing log without
+<style color=#00ffffff size=1>.</style>                 changing scr allows the client to set up a private
+<style color=#00ffffff size=1>.</style>                 coordinate system regardless of the window's location.
+<style color=#00ffffff size=1>.</style>                 It is permissible for values of scr to move some or all
+<style color=#00ffffff size=1>.</style>                 of the window off screen. Origin returns -1 if the
+<style color=#00ffffff size=1>.</style>                 image is not a window or, in the case of changes to scr
+<style color=#00ffffff size=1>.</style>                 , if there are insufficient resources available to move
+<style color=#00ffffff size=1>.</style>                 the window\; otherwise it returns 1.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libdraw
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=draw-intro(2)>draw-intro(2)</action>, <action name=draw-display(2)>draw-display(2)</action>, <action name=draw-point(2)>draw-point(2)</action>, <action name=draw-rect(2)>draw-rect(2)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=draw-screen(2)>draw-screen(2)</action>, <action name=colour(6)>colour(6)</action>, <action name=image(6)>image(6)</action>, <action name=font(6)>font(6)</action> <action name=utf(6)>utf(6)</action>
+
+<style color=#00ffffff size=1>.</style>            T. Porter, T. Duff. ``Compositing Digital Images'', Computer
+<style color=#00ffffff size=1>.</style>            Graphics (Proc. SIGGRAPH), 18:3, pp. 253-259, 1984.
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            These functions raise exceptions if argument images are nil,
+<style color=#00ffffff size=1>.</style>            except for draw and gendraw where the mask image is optional
+<style color=#00ffffff size=1>.</style>            and may be nil.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Anti-aliased characters can be drawn by defining a font with
+<style color=#00ffffff size=1>.</style>            multiple bits per pixel, but there are no anti-aliasing
+<style color=#00ffffff size=1>.</style>            geometric primitives.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

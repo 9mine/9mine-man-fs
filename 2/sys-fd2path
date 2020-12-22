@@ -1,0 +1,36 @@
+<action name=FD2PATH(2)>FD2PATH(2)</action>                                             <action name=FD2PATH(2)>FD2PATH(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            fd2path - return file name associated with file descriptor
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            fd2path(fd: ref FD): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            As described in <action name=intro(2)>intro(2)</action>, the kernel stores a rooted path
+<style color=#00ffffff size=1>.</style>            name with every open file or directory\; typically, it is the
+<style color=#00ffffff size=1>.</style>            name used in the original access of the file. Fd2path
+<style color=#00ffffff size=1>.</style>            returns the path name associated with open file descriptor
+<style color=#00ffffff size=1>.</style>            fd. (It returns nil if an error occurs.)
+
+<style color=#00ffffff size=1>.</style>            Changes to the underlying name space do not update the path
+<style color=#00ffffff size=1>.</style>            name stored with the file descriptor. Therefore, the path
+<style color=#00ffffff size=1>.</style>            returned by fd2path may no longer refer to the same file (or
+<style color=#00ffffff size=1>.</style>            indeed any file) after some component directory or file in
+<style color=#00ffffff size=1>.</style>            the path has been removed, renamed or rebound.
+
+<style color=#00ffffff size=1>.</style>            As an example, <action name=workdir(2)>workdir(2)</action> is implemented by opening . and
+<style color=#00ffffff size=1>.</style>            executing fd2path on the resulting file descriptor.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bind(1)>bind(1)</action>, <action name=ns(1)>ns(1)</action>, <action name=sys-bind(2)>sys-bind(2)</action>, <action name=sys-<action name=intro(2)>intro(2)</action>>sys-<action name=intro(2)>intro(2)</action></action>, <action name=workdir(2)>workdir(2)</action>, prog
+<style color=#00ffffff size=1>.</style>            (3)
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Fd2path returns nil on error and sets the system error
+<style color=#00ffffff size=1>.</style>            string.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

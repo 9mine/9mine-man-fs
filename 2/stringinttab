@@ -1,0 +1,63 @@
+<action name=STRINGINTTAB(2)>STRINGINTTAB(2)</action>                                   <action name=STRINGINTTAB(2)>STRINGINTTAB(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            stringinttab - string table lookup module
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "strinttab.m"\;
+<style color=#00ffffff size=1>.</style>            StringInt: import StringIntTab\;
+
+<style color=#00ffffff size=1>.</style>            strinttab := load StringIntTab StringIntTab->PATH\;
+
+<style color=#00ffffff size=1>.</style>            StringInt: adt{
+<style color=#00ffffff size=1>.</style>                key: string\;
+<style color=#00ffffff size=1>.</style>                val: int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            lookup:    fn(tab: array of StringInt, key: string) : (int, int)\;
+<style color=#00ffffff size=1>.</style>            revlookup: fn(tab: array of StringInt, val: int)    : string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Stringinttab provides functions that perform forward and
+<style color=#00ffffff size=1>.</style>            reverse searches of an ordered table of key-value pairs.
+
+<style color=#00ffffff size=1>.</style>            A table should be constructed as an array of StringInt
+<style color=#00ffffff size=1>.</style>            entries, ordered by increasing key value.  Keys ordering is
+<style color=#00ffffff size=1>.</style>            determined by comparison of the Unicode value of their
+<style color=#00ffffff size=1>.</style>            characters.
+
+<style color=#00ffffff size=1>.</style>            Lookup performs a binary search of tab for the StringInt
+<style color=#00ffffff size=1>.</style>            entry whose key field has a value equal to key and returns a
+<style color=#00ffffff size=1>.</style>            tuple: an int whose value is non-zero if a match has been
+<style color=#00ffffff size=1>.</style>            found and zero otherwise, and an int whose value is equal to
+<style color=#00ffffff size=1>.</style>            the val field of the matching StringInt entry.
+
+<style color=#00ffffff size=1>.</style>            Revlookup searches tab for the first StringInt entry whose
+<style color=#00ffffff size=1>.</style>            val field has a value equal to val and returns the
+<style color=#00ffffff size=1>.</style>            corresponding key string.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            T := load StringIntTab StringIntTab->PATH\;
+
+<style color=#00ffffff size=1>.</style>            fmtstringtab := array\[\] of { Strinttab->StringInt
+<style color=#00ffffff size=1>.</style>            	("html", FHtml),
+<style color=#00ffffff size=1>.</style>            	("latex", FLatex),
+<style color=#00ffffff size=1>.</style>            	("latexbook", FLatexBook),
+<style color=#00ffffff size=1>.</style>            	("latexpart", FLatexPart),
+<style color=#00ffffff size=1>.</style>            	("latexproc", FLatexProc),
+<style color=#00ffffff size=1>.</style>            	("latexslides", FLatexSlides),
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            (fnd, fmt) := T->lookup(fmtstringtab, "latexbook")\;
+<style color=#00ffffff size=1>.</style>            fmtstring := T->revlookup(fmtstringtab, FLatex)\;
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/strinttab.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=hash(2)>hash(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Revlookup performs a sequential search of the table.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

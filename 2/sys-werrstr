@@ -1,0 +1,23 @@
+<action name=SYS-WERRSTR(2)>SYS-WERRSTR(2)</action>                                     <action name=SYS-WERRSTR(2)>SYS-WERRSTR(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            werrstr - set the system error string
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            werrstr(s: string): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            When a system call fails, it returns an error value (often
+<style color=#00ffffff size=1>.</style>            -1) and records a string describing the error in a
+<style color=#00ffffff size=1>.</style>            per-process location. The verb r in <action name=sys-print(2)>sys-print(2)</action> outputs the
+<style color=#00ffffff size=1>.</style>            error string. Werrstr sets the process's error string to s,
+<style color=#00ffffff size=1>.</style>            to allow a function in a module to mimic the error reporting
+<style color=#00ffffff size=1>.</style>            interface of a system call.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-print(2)>sys-print(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

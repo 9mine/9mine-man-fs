@@ -1,0 +1,22 @@
+<action name=SYS-REMOVE(2)>SYS-REMOVE(2)</action>                                       <action name=SYS-REMOVE(2)>SYS-REMOVE(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            remove - remove a file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            remove:	fn(file: string): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Remove removes file from the directory containing it and
+<style color=#00ffffff size=1>.</style>            discards the contents of the file. The user must have write
+<style color=#00ffffff size=1>.</style>            permission in the containing directory. If file is a
+<style color=#00ffffff size=1>.</style>            directory, it must be empty. Remove returns zero if it
+<style color=#00ffffff size=1>.</style>            deletes the file, -1 otherwise.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

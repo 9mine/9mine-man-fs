@@ -1,0 +1,21 @@
+<action name=FOCUS(9)>FOCUS(9)</action>                                                 <action name=FOCUS(9)>FOCUS(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            focus - change or query keyboard focus
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            focus ?what?
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            With no arguments, focus returns the name of the widget to
+<style color=#00ffffff size=1>.</style>            which keyboard events are currently delivered, known as the
+<style color=#00ffffff size=1>.</style>            keyboard focus. When given an argument, focus changes the
+<style color=#00ffffff size=1>.</style>            keyboard focus. If what is the name of a widget, that widget
+<style color=#00ffffff size=1>.</style>            will be made the keyboard focus. If what is next, the
+<style color=#00ffffff size=1>.</style>            keyboard focus will be changed to the next item in the focus
+<style color=#00ffffff size=1>.</style>            order for that window. If what is previous, the keyboard
+<style color=#00ffffff size=1>.</style>            focus will be changed to the previous item in the focus
+<style color=#00ffffff size=1>.</style>            order for that window. The focus order is determined
+<style color=#00ffffff size=1>.</style>            automatically by Tk.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

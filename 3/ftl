@@ -1,0 +1,119 @@
+<action name=FTL(3)>FTL(3)</action>                                                     <action name=FTL(3)>FTL(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ftl - flash translation layer
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a '#X' /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/ftlctl
+<style color=#00ffffff size=1>.</style>            /dev/ftldata
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The flash translation layer device provides the interface
+<style color=#00ffffff size=1>.</style>            for management of rewritable blocks on a flash memory
+<style color=#00ffffff size=1>.</style>            device. Flash memory differs from normal disc or memory in
+<style color=#00ffffff size=1>.</style>            that it is organised in large blocks (erase units),
+<style color=#00ffffff size=1>.</style>            typically 64k bytes or more in size, and although writes can
+<style color=#00ffffff size=1>.</style>            reset bits they cannot set them\; instead an entire erase
+<style color=#00ffffff size=1>.</style>            unit must be erased at once. These properties make it
+<style color=#00ffffff size=1>.</style>            unsuitable for direct use by a conventional block-oriented
+<style color=#00ffffff size=1>.</style>            file system. The flash translation layer compensates by
+<style color=#00ffffff size=1>.</style>            implementing a logical to physical mapping that allows
+<style color=#00ffffff size=1>.</style>            512-byte blocks to be read or written in the same way as
+<style color=#00ffffff size=1>.</style>            rewritable disc blocks. The translation layer manages the
+<style color=#00ffffff size=1>.</style>            details of block remapping, copying erase units to reclaim
+<style color=#00ffffff size=1>.</style>            obsolete physical versions of rewritten logical blocks,
+<style color=#00ffffff size=1>.</style>            erase unit load wearing, etc.
+
+<style color=#00ffffff size=1>.</style>            The flash translation device serves a one-level directory,
+<style color=#00ffffff size=1>.</style>            giving access to two files. The control file ftlctl receives
+<style color=#00ffffff size=1>.</style>            commands to format a flash device or initialise access to an
+<style color=#00ffffff size=1>.</style>            already formatted device. Ftldata is the data file, giving
+<style color=#00ffffff size=1>.</style>            access to the logical blocks on the formatted flash. For
+<style color=#00ffffff size=1>.</style>            example, it can be given to <action name=kfs(3)>kfs(3)</action> for use as a file system.
+<style color=#00ffffff size=1>.</style>            The length of the ftldata file as returned by Sys->stat
+<style color=#00ffffff size=1>.</style>            shows the total logical (formatted) space available for use
+<style color=#00ffffff size=1>.</style>            by the driver's clients.
+
+<style color=#00ffffff size=1>.</style>            The target flash device is identified to this driver by name
+<style color=#00ffffff size=1>.</style>            (eg, #F/flash) in a control message defined below. The flash
+<style color=#00ffffff size=1>.</style>            device must have the following properties:
+
+<style color=#00ffffff size=1>.</style>            1.   It must have a corresponding control file devicectl
+<style color=#00ffffff size=1>.</style>                 (eg, #F/flashctl), which must be writable.
+
+<style color=#00ffffff size=1>.</style>            2.   The flash control file must accept a command of the
+<style color=#00ffffff size=1>.</style>                 form erase offset which must cause the flash erase unit
+<style color=#00ffffff size=1>.</style>                 starting at the given byte offset to be erased.
+
+<style color=#00ffffff size=1>.</style>            3.   The device must allow reads and writes of any number of
+<style color=#00ffffff size=1>.</style>                 bytes on arbitrary byte boundaries (file offset). (In
+<style color=#00ffffff size=1>.</style>                 other words, the flash driver must hide alignment
+<style color=#00ffffff size=1>.</style>                 restrictions.)
+
+<style color=#00ffffff size=1>.</style>            4.   A write request must allow previously-written regions
+<style color=#00ffffff size=1>.</style>                 to be updated provided the new data does not change any
+<style color=#00ffffff size=1>.</style>                 0 bit to 1 (ie, writes can clear bits to 0 but will not
+<style color=#00ffffff size=1>.</style>                 change any 0 bits to 1).
+
+<style color=#00ffffff size=1>.</style>            The following control messages can be written to ftlctl:
+
+<style color=#00ffffff size=1>.</style>            format device \[ offset \[ n \[ erasesize \] \] \]
+<style color=#00ffffff size=1>.</style>                 Erase n bytes of the given flash device starting at the
+<style color=#00ffffff size=1>.</style>                 given byte offset, and format the erased region for use
+<style color=#00ffffff size=1>.</style>                 by the flash translation layer. Omitting the optional
+<style color=#00ffffff size=1>.</style>                 parameters is equivalent to setting them to 0xffffffff.
+<style color=#00ffffff size=1>.</style>                 Erasesize is the number of bytes in the flash device's
+<style color=#00ffffff size=1>.</style>                 erase unit\; setting to 0xffffffff takes the value from
+<style color=#00ffffff size=1>.</style>                 the underlying device. If offset is 0xffffffff, then
+<style color=#00ffffff size=1>.</style>                 the underlying device is searched from the start for an
+<style color=#00ffffff size=1>.</style>                 existing flash translation layer header, and the
+<style color=#00ffffff size=1>.</style>                 remaining parameters are taken from there. If n is
+<style color=#00ffffff size=1>.</style>                 0xffffffff, then everywhere from offset to the end of
+<style color=#00ffffff size=1>.</style>                 the underlying device is erased. Otherwise, offset and
+<style color=#00ffffff size=1>.</style>                 n must be multiples of erasesize. Make the newly
+<style color=#00ffffff size=1>.</style>                 formatted device's contents available on ftldata.
+
+<style color=#00ffffff size=1>.</style>            init device \[ offset \[ n \[ erasesize \] \] \]
+<style color=#00ffffff size=1>.</style>                 Make available on ftldata the logical blocks (with
+<style color=#00ffffff size=1>.</style>                 existing content) of a previously-formatted device. The
+<style color=#00ffffff size=1>.</style>                 parameters are as defined for the format command,
+<style color=#00ffffff size=1>.</style>                 above.
+
+<style color=#00ffffff size=1>.</style>            part name start \[ limit \]
+<style color=#00ffffff size=1>.</style>                 Add a partition. This creates a new data file ftlname
+<style color=#00ffffff size=1>.</style>                 with similar properties to ftldata, but which
+<style color=#00ffffff size=1>.</style>                 constrains the range of the formatted data accessed to
+<style color=#00ffffff size=1>.</style>                 begin at start, and end at limit-1, or the last byte of
+<style color=#00ffffff size=1>.</style>                 the formatted data if limit is omitted.
+
+<style color=#00ffffff size=1>.</style>            delpart name
+<style color=#00ffffff size=1>.</style>                 Removes a partition. 
+
+<style color=#00ffffff size=1>.</style>            detach
+<style color=#00ffffff size=1>.</style>                 Stop flash translation on the corresponding flash
+<style color=#00ffffff size=1>.</style>                 device, and close it. An error results instead if
+<style color=#00ffffff size=1>.</style>                 ftldata is open.
+
+<style color=#00ffffff size=1>.</style>            scavenge
+<style color=#00ffffff size=1>.</style>                 Force scavenging of reusable blocks (mainly intended to
+<style color=#00ffffff size=1>.</style>                 be used when testing flash or debugging the driver).
+
+<style color=#00ffffff size=1>.</style>            trace n
+<style color=#00ffffff size=1>.</style>                 Trace the actions of the flash translation driver. No
+<style color=#00ffffff size=1>.</style>                 tracing is done if n is zero. Larger values of n
+<style color=#00ffffff size=1>.</style>                 increase the level of detail.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/*/devftl.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=flash(3)>flash(3)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Reads and writes of ftldata must be multiples of 512 bytes
+<style color=#00ffffff size=1>.</style>            in length and start on a 512-byte block boundary.
+<style color=#00ffffff size=1>.</style>            Only one flash device can be active.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

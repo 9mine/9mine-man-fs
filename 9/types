@@ -1,0 +1,92 @@
+<action name=TYPES(9)>TYPES(9)</action>                                                 <action name=TYPES(9)>TYPES(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            types - Standard types required by widget options.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This manual entry describes the the standard types that can
+<style color=#00ffffff size=1>.</style>            be given as arguments to Inferno Tk widget options. When an
+<style color=#00ffffff size=1>.</style>            option is documented, the type of argument that it accepts
+<style color=#00ffffff size=1>.</style>            is either documented there, or the name of the argument
+<style color=#00ffffff size=1>.</style>            refers to one of the names documented below.
+
+<style color=#00ffffff size=1>.</style>            anchorPos
+<style color=#00ffffff size=1>.</style>                 One of the values n, ne, e, se, s, sw, w, nw, or center
+<style color=#00ffffff size=1>.</style>                 . See -anchor in <action name=options(9)>options(9)</action>.
+
+<style color=#00ffffff size=1>.</style>            boolean
+<style color=#00ffffff size=1>.</style>                 A true or false value, one of the following: 0, no, off
+<style color=#00ffffff size=1>.</style>                 , false (false), 1, yes, on, true (true).
+
+<style color=#00ffffff size=1>.</style>            bitmap
+<style color=#00ffffff size=1>.</style>                 Identifies an image which can be drawn, or used as a
+<style color=#00ffffff size=1>.</style>                 mask through which something else is drawn. If bitmap
+<style color=#00ffffff size=1>.</style>                 begins with a `@', the remaining characters must be the
+<style color=#00ffffff size=1>.</style>                 path name of an Inferno image file. If bitmap begins
+<style color=#00ffffff size=1>.</style>                 with the character `<', the remaining characters must
+<style color=#00ffffff size=1>.</style>                 be a decimal integer giving the file descriptor number
+<style color=#00ffffff size=1>.</style>                 of an open file (see <action name=sys-open(2)>sys-open(2)</action>) from which the bitmap
+<style color=#00ffffff size=1>.</style>                 can be loaded. Otherwise, bitmap should be the name of
+<style color=#00ffffff size=1>.</style>                 a bitmap file in the directory /icons/tk.
+
+<style color=#00ffffff size=1>.</style>            color
+<style color=#00ffffff size=1>.</style>                 A color parameter can be a colour name or an RGB (red,
+<style color=#00ffffff size=1>.</style>                 green and blue luminance) value. The colour names
+<style color=#00ffffff size=1>.</style>                 recognized are:
+<style color=#00ffffff size=1>.</style>                     aqua     yellow   red      teal     white
+<style color=#00ffffff size=1>.</style>                     fuchsia  black    blue     darkblue transparent
+<style color=#00ffffff size=1>.</style>                     maroon   gray     green    lime
+<style color=#00ffffff size=1>.</style>                     purple   navy     olive    orange
+<style color=#00ffffff size=1>.</style>                 For RGB values, either #rgb or #rrggbb can be used,
+<style color=#00ffffff size=1>.</style>                 where r, rr, etc. are hexadecimal values for the
+<style color=#00ffffff size=1>.</style>                 corresponding colour components. The notation #rrggbbaa
+<style color=#00ffffff size=1>.</style>                 can be used to describe a colour with alpha
+<style color=#00ffffff size=1>.</style>                 (transparency) component aa\; the rr, gg, and bb values
+<style color=#00ffffff size=1>.</style>                 should be pre-multiplied appropriately. This is the
+<style color=#00ffffff size=1>.</style>                 canonical form for colour values. Alternatively,
+<style color=#00ffffff size=1>.</style>                 transparency can be applied to any other colour using a
+<style color=#00ffffff size=1>.</style>                 suffix *alpha where alpha is either #aa (two hex digits
+<style color=#00ffffff size=1>.</style>                 representing an alpha value between 0 and 255) or f (a
+<style color=#00ffffff size=1>.</style>                 decimal fixed point number between 0 and 1). For
+<style color=#00ffffff size=1>.</style>                 example, red*0.5 gives half transparent red\;
+<style color=#00ffffff size=1>.</style>                 #007f007f*#7f gives 0.75 transparent green (canonically
+<style color=#00ffffff size=1>.</style>                 #003f003f).
+
+<style color=#00ffffff size=1>.</style>            dist Dist specifies a distance on the screen, in the
+<style color=#00ffffff size=1>.</style>                 following form: an optional minus sign (-), then one or
+<style color=#00ffffff size=1>.</style>                 more decimal digits (with possible embedded decimal
+<style color=#00ffffff size=1>.</style>                 point), then an optional units specifier. The unit
+<style color=#00ffffff size=1>.</style>                 specifiers are the following:
+
+<style color=#00ffffff size=1>.</style>                 c    centimetres
+
+<style color=#00ffffff size=1>.</style>                 m    millimetres
+
+<style color=#00ffffff size=1>.</style>                 i    inches
+
+<style color=#00ffffff size=1>.</style>                 p    points (1/72th inch)
+
+<style color=#00ffffff size=1>.</style>                 h    height of widget's font (only applicable if the
+<style color=#00ffffff size=1>.</style>                      widget has an associated font, and if the font has
+<style color=#00ffffff size=1>.</style>                      previously been set).
+
+<style color=#00ffffff size=1>.</style>                 w    width of the zero (0) character in widget's font.
+<style color=#00ffffff size=1>.</style>                      (see above).
+
+<style color=#00ffffff size=1>.</style>                 Measurements are converted into pixels assuming 100
+<style color=#00ffffff size=1>.</style>                      dots
+<style color=#00ffffff size=1>.</style>                      per inch on an average CRT display.
+
+<style color=#00ffffff size=1>.</style>            font A font parameter gives the full path name of an Inferno
+<style color=#00ffffff size=1>.</style>                 font file\; for example, /fonts/pelm/unicode.9.font.
+
+<style color=#00ffffff size=1>.</style>            frac A numeric, possibly fractional, value.
+
+<style color=#00ffffff size=1>.</style>            relief
+<style color=#00ffffff size=1>.</style>                 One of raised, sunken, flat, ridge, or groove. See
+<style color=#00ffffff size=1>.</style>                 -relief in <action name=options(9)>options(9)</action>.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=intro(9)>intro(9)</action>, <action name=options(9)>options(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

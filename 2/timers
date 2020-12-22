@@ -1,0 +1,69 @@
+<action name=TIMERS(2)>TIMERS(2)</action>                                               <action name=TIMERS(2)>TIMERS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            timers - interval timers
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "timers.m"\;
+<style color=#00ffffff size=1>.</style>            timers := load Timers Timers->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Timer: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>               timeout: chan of int\;
+<style color=#00ffffff size=1>.</style>               start:   fn(msec: int): ref Timer\;
+<style color=#00ffffff size=1>.</style>               stop:    fn(t: self ref Timer)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:     fn(minms: int): int\;
+<style color=#00ffffff size=1>.</style>            shutdown: fn()\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Timers provides simple interval timing. Timeouts are
+<style color=#00ffffff size=1>.</style>            notified by a message sent on a channel, allowing them to
+<style color=#00ffffff size=1>.</style>            provide timeouts in alt statements.
+
+<style color=#00ffffff size=1>.</style>            The module must first be initialised by calling init, which
+<style color=#00ffffff size=1>.</style>            starts a process to manage the interval timers and returns
+<style color=#00ffffff size=1>.</style>            its process ID. Before exit, the caller must shut the timing
+<style color=#00ffffff size=1>.</style>            process down either by calling shutdown, which stops it
+<style color=#00ffffff size=1>.</style>            synchronously\; by using the process ID returned by init to
+<style color=#00ffffff size=1>.</style>            kill it\; or by killing the process group of the process that
+<style color=#00ffffff size=1>.</style>            called init (since the timing processes remain in that
+<style color=#00ffffff size=1>.</style>            group). Minms gives the minimum granularity of timing
+<style color=#00ffffff size=1>.</style>            requests in milliseconds.
+
+<style color=#00ffffff size=1>.</style>            Timer.start(msec)
+<style color=#00ffffff size=1>.</style>                 Returns a Timer that will expire in msec milliseconds,
+<style color=#00ffffff size=1>.</style>                 measured with the granularity of either <action name=sys-sleep(2)>sys-sleep(2)</action> or
+<style color=#00ffffff size=1>.</style>                 the granularity set by init, whichever is greater.
+
+<style color=#00ffffff size=1>.</style>            t.timeout
+<style color=#00ffffff size=1>.</style>                 An arbitrary integer value is sent on this channel when
+<style color=#00ffffff size=1>.</style>                 the timer t expires.
+
+<style color=#00ffffff size=1>.</style>            t.stop()
+<style color=#00ffffff size=1>.</style>                 The timer t is stopped and removed from the interval
+<style color=#00ffffff size=1>.</style>                 timing queue, if it has not already expired.
+
+<style color=#00ffffff size=1>.</style>            Each Timer value times a single interval. When a timer t
+<style color=#00ffffff size=1>.</style>            expires, the timing process attempts, at that and each
+<style color=#00ffffff size=1>.</style>            subsequent timing interval, to send on t.timeout until the
+<style color=#00ffffff size=1>.</style>            expiry message is delivered or the timer is stopped.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Wait for data to be sent on an input channel, but give up if
+<style color=#00ffffff size=1>.</style>            it does not arrive within 600 milliseconds:
+
+<style color=#00ffffff size=1>.</style>                 t := Timer.start(600)\;
+<style color=#00ffffff size=1>.</style>                 alt {
+<style color=#00ffffff size=1>.</style>                 data := <-input =>
+<style color=#00ffffff size=1>.</style>                 	t.stop()\;
+<style color=#00ffffff size=1>.</style>                 	# process the data
+<style color=#00ffffff size=1>.</style>                 <-t.timeout =>
+<style color=#00ffffff size=1>.</style>                 	# request timed out
+<style color=#00ffffff size=1>.</style>                 }
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-millisec(2)>sys-millisec(2)</action>, <action name=sys-sleep(2)>sys-sleep(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

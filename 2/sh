@@ -1,0 +1,334 @@
+<action name=SH(2)>SH(2)</action>                                                       <action name=SH(2)>SH(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Sh - module interface to the shell
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sh.m"\;
+<style color=#00ffffff size=1>.</style>            sh := load Sh Sh->PATH\;
+<style color=#00ffffff size=1>.</style>            Context, Listnode: import sh\;
+
+<style color=#00ffffff size=1>.</style>            system:           fn(drawctxt: ref Draw->Context, cmd: string): string\;
+<style color=#00ffffff size=1>.</style>            run:              fn(drawctxt: ref Draw->Context, argv: list of string): string\;
+<style color=#00ffffff size=1>.</style>            parse:            fn(s: string): (ref Cmd, string)\;
+<style color=#00ffffff size=1>.</style>            cmd2string:       fn(c: ref Cmd): string\;
+<style color=#00ffffff size=1>.</style>            list2stringlist:  fn(nl: list of ref Listnode): list of string\;
+<style color=#00ffffff size=1>.</style>            stringlist2list:  fn(sl: list of string): list of ref Listnode\;
+
+<style color=#00ffffff size=1>.</style>            Context: adt {
+<style color=#00ffffff size=1>.</style>                    new:            fn(drawcontext: ref Draw->Context): ref Context\;
+<style color=#00ffffff size=1>.</style>                    get:            fn(c: self ref Context,
+<style color=#00ffffff size=1>.</style>                                       name: string): list of ref Listnode\;
+<style color=#00ffffff size=1>.</style>                    set:            fn(c: self ref Context,
+<style color=#00ffffff size=1>.</style>                                       name: string,
+<style color=#00ffffff size=1>.</style>                                       value: list of ref Listnode)\;
+<style color=#00ffffff size=1>.</style>                    setlocal:       fn(c: self ref Context,
+<style color=#00ffffff size=1>.</style>                                       name: string,
+<style color=#00ffffff size=1>.</style>                                       value: list of ref Listnode)\;
+<style color=#00ffffff size=1>.</style>                    envlist:        fn(c: self ref Context):
+<style color=#00ffffff size=1>.</style>            			              list of (string, list of ref Listnode)\;
+<style color=#00ffffff size=1>.</style>                    push, pop:      fn(c: self ref Context)\;
+<style color=#00ffffff size=1>.</style>                    copy:           fn(c: self ref Context, copyenv: int): ref Context\;
+<style color=#00ffffff size=1>.</style>                    run:            fn(c: self ref Context,
+<style color=#00ffffff size=1>.</style>                                       args: list of ref Listnode,
+<style color=#00ffffff size=1>.</style>                                       last: int): string\;
+<style color=#00ffffff size=1>.</style>                    addmodule:      fn(c: self ref Context, name: string,
+<style color=#00ffffff size=1>.</style>                                       mod: Shellbuiltin)\;
+<style color=#00ffffff size=1>.</style>                    addbuiltin:     fn(c: self ref Context, name: string,
+<style color=#00ffffff size=1>.</style>                                       mod: Shellbuiltin)\;
+<style color=#00ffffff size=1>.</style>                    removebuiltin:  fn(c: self ref Context, name: string,
+<style color=#00ffffff size=1>.</style>                                       mod: Shellbuiltin)\;
+<style color=#00ffffff size=1>.</style>                    addsbuiltin:    fn(c: self ref Context, name: string,
+<style color=#00ffffff size=1>.</style>                                       mod: Shellbuiltin)\;
+<style color=#00ffffff size=1>.</style>                    removesbuiltin: fn(c: self ref Context, name: string,
+<style color=#00ffffff size=1>.</style>                                       mod: Shellbuiltin)\;
+<style color=#00ffffff size=1>.</style>                    fail:           fn(c: self ref Context, ename, msg: string)\;
+<style color=#00ffffff size=1>.</style>                    options:        fn(c: self ref Context): int\;
+<style color=#00ffffff size=1>.</style>                    setoptions:     fn(c: self ref Context, flags, on: int): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Listnode: adt {
+<style color=#00ffffff size=1>.</style>                    cmd:    ref Cmd\;
+<style color=#00ffffff size=1>.</style>                    word:   string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Cmd: adt {
+<style color=#00ffffff size=1>.</style>                    # private data
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Shellbuiltin: module {
+<style color=#00ffffff size=1>.</style>                    initbuiltin:    fn(ctxt: ref Context, sh: Sh): string\;
+<style color=#00ffffff size=1>.</style>                    whatis:         fn(ctxt: ref Sh->Context, sh: Sh,
+<style color=#00ffffff size=1>.</style>                                       name: string, wtype: int): string\;
+<style color=#00ffffff size=1>.</style>                   runbuiltin:     fn(ctxt: ref Context, sh: Sh,
+<style color=#00ffffff size=1>.</style>                                       cmd: list of ref Listnode,
+<style color=#00ffffff size=1>.</style>                                       last: int): string\;
+<style color=#00ffffff size=1>.</style>                    runsbuiltin:    fn(ctxt: ref Context, sh: Sh,
+<style color=#00ffffff size=1>.</style>                                       cmd: list of ref Listnode): list of ref Listnode\;
+<style color=#00ffffff size=1>.</style>                    getself:        fn(): Shellbuiltin\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Sh is a command-line interpreter and a scripting language\;
+<style color=#00ffffff size=1>.</style>            it also presents a module interface to allow Limbo modules
+<style color=#00ffffff size=1>.</style>            to access its functionality at a lower level. The Sh module
+<style color=#00ffffff size=1>.</style>            can be used in several different ways. At the simplest
+<style color=#00ffffff size=1>.</style>            level, it can be run as a command-line program\; for details
+<style color=#00ffffff size=1>.</style>            of this, see <action name=sh(1)>sh(1)</action>. The simplest access at the Limbo level
+<style color=#00ffffff size=1>.</style>            is through the system function, which given a draw Context
+<style color=#00ffffff size=1>.</style>            (see <action name=draw-context(2)>draw-context(2)</action>) and a string executes the sh command
+<style color=#00ffffff size=1>.</style>            contained in s and returns its result. It catches any
+<style color=#00ffffff size=1>.</style>            exceptions raised by the command. Almost as simple is run,
+<style color=#00ffffff size=1>.</style>            which runs argv as a command, taking the first word as the
+<style color=#00ffffff size=1>.</style>            command to be executed (it can be a braced block) and giving
+<style color=#00ffffff size=1>.</style>            the rest as arguments, catching any exceptions raised.
+
+<style color=#00ffffff size=1>.</style>            Although program arguments are passed to external programs
+<style color=#00ffffff size=1>.</style>            as lists of strings, at the Sh module level, an argument
+<style color=#00ffffff size=1>.</style>            list is held as a list of ref Listnode. A Listnode holds
+<style color=#00ffffff size=1>.</style>            either a simple string, or a braced block that has been
+<style color=#00ffffff size=1>.</style>            parsed by the shell. Sometimes it can hold both\; in this
+<style color=#00ffffff size=1>.</style>            case the string and the block both represent the same thing.
+<style color=#00ffffff size=1>.</style>            Parse converts from a string to a Cmd (a braced block). It
+<style color=#00ffffff size=1>.</style>            returns a tuple (cmd, error) where cmd holds the parsed
+<style color=#00ffffff size=1>.</style>            block, and error is non-empty if an error has occurred doing
+<style color=#00ffffff size=1>.</style>            so. Cmd2string performs the opposite conversion\; it returns
+<style color=#00ffffff size=1>.</style>            a string that when parsed will yield the same command block
+<style color=#00ffffff size=1>.</style>            it was passed. The utility functions List2stringlist and
+<style color=#00ffffff size=1>.</style>            stringlist2list convert from and to a list of ref Listnode
+<style color=#00ffffff size=1>.</style>            to or from a list of string respectively.
+
+<style color=#00ffffff size=1>.</style>            A Context holds all the state information needed by a
+<style color=#00ffffff size=1>.</style>            currently running sh process\; this adt holds current values
+<style color=#00ffffff size=1>.</style>            of environment variables and a list of currently loaded
+<style color=#00ffffff size=1>.</style>            modules and builtin commands. It is specific to the process
+<style color=#00ffffff size=1>.</style>            within which it was created. If it is desired to run sh
+<style color=#00ffffff size=1>.</style>            commands in a newly spawned process, a new Context must be
+<style color=#00ffffff size=1>.</style>            created, or a copy of an existing Context made (making sure
+<style color=#00ffffff size=1>.</style>            to synchronise access until the copy has been made).
+
+<style color=#00ffffff size=1>.</style>            Context.new(drawcontext)
+<style color=#00ffffff size=1>.</style>                      New creates a new context. Drawcontext represents
+<style color=#00ffffff size=1>.</style>                      the current graphics context within which sh
+<style color=#00ffffff size=1>.</style>                      commands will be run (see <action name=draw-context(2)>draw-context(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            ctxt.get(name)
+<style color=#00ffffff size=1>.</style>                      Get retrieves the value of environment variable
+<style color=#00ffffff size=1>.</style>                      name from ctxt. It is retrieved from the innermost
+<style color=#00ffffff size=1>.</style>                      scope in which a value for name has been set.
+
+<style color=#00ffffff size=1>.</style>            ctxt.set(name, value)
+<style color=#00ffffff size=1>.</style>                      Set sets the value of environment variable name in
+<style color=#00ffffff size=1>.</style>                      ctxt to value. It is set in the innermost scope in
+<style color=#00ffffff size=1>.</style>                      which a value for name has been set, or the
+<style color=#00ffffff size=1>.</style>                      outermost level if it has not been set.
+
+<style color=#00ffffff size=1>.</style>            ctxt.setlocal(name, value)
+<style color=#00ffffff size=1>.</style>                      Similar to set() except that the value is set in
+<style color=#00ffffff size=1>.</style>                      the innermost scope that has been pushed.
+
+<style color=#00ffffff size=1>.</style>            ctxt.envlist()
+<style color=#00ffffff size=1>.</style>                      Envlist retrieves the list of all the environment
+<style color=#00ffffff size=1>.</style>                      variables currently in scope, and their values. It
+<style color=#00ffffff size=1>.</style>                      returns a list of (name, value) tuples, where name
+<style color=#00ffffff size=1>.</style>                      is the name of the variable and value is its
+<style color=#00ffffff size=1>.</style>                      value.
+
+<style color=#00ffffff size=1>.</style>            ctxt.push()
+<style color=#00ffffff size=1>.</style>                      Push creates a new innermost environment variable
+<style color=#00ffffff size=1>.</style>                      scope.
+
+<style color=#00ffffff size=1>.</style>            ctxt.pop()
+<style color=#00ffffff size=1>.</style>                      Pop discards the current innermost scope, losing
+<style color=#00ffffff size=1>.</style>                      the values of all variables that have been defined
+<style color=#00ffffff size=1>.</style>                      there. It is an error to pop a context that has
+<style color=#00ffffff size=1>.</style>                      not been pushed. Care must be taken to ensure that
+<style color=#00ffffff size=1>.</style>                      a push is always matched by a pop. In particular,
+<style color=#00ffffff size=1>.</style>                      exceptions should be caught, the context popped,
+<style color=#00ffffff size=1>.</style>                      and the exception re-raised.
+
+<style color=#00ffffff size=1>.</style>            ctxt.copy(copyenv)
+<style color=#00ffffff size=1>.</style>                      The shell's Context is associated with a
+<style color=#00ffffff size=1>.</style>                      particular process\; copy returns a copy of ctxt
+<style color=#00ffffff size=1>.</style>                      associated with the current process. If copyenv is
+<style color=#00ffffff size=1>.</style>                      non-zero, the whole environment will be copied -
+<style color=#00ffffff size=1>.</style>                      this should be set if the new process is to run
+<style color=#00ffffff size=1>.</style>                      asynchronously - i.e. if there is a chance that
+<style color=#00ffffff size=1>.</style>                      there might be two processes accessing the context
+<style color=#00ffffff size=1>.</style>                      in parallel. It is an error to copy a context if
+<style color=#00ffffff size=1>.</style>                      not within a new process.
+
+<style color=#00ffffff size=1>.</style>            ctxt.run(args, last)
+<style color=#00ffffff size=1>.</style>                      Run executes a sh command. Last should be non-zero
+<style color=#00ffffff size=1>.</style>                      if this is the last time that run will be called,
+<style color=#00ffffff size=1>.</style>                      so sh does not have to spawn a new process in
+<style color=#00ffffff size=1>.</style>                      order to hide file redirection side-effects.
+
+<style color=#00ffffff size=1>.</style>            ctxt.addmodule(name, mod)
+<style color=#00ffffff size=1>.</style>                      Addmodule adds the Shellbuiltin module mod to its
+<style color=#00ffffff size=1>.</style>                      list of builtin modules. The module will be
+<style color=#00ffffff size=1>.</style>                      initialised as described in ``Builtin modules'',
+<style color=#00ffffff size=1>.</style>                      below.
+
+<style color=#00ffffff size=1>.</style>            ctxt.addbuiltin(name, mod)
+<style color=#00ffffff size=1>.</style>                      Addbuiltin may be called by a module that has
+<style color=#00ffffff size=1>.</style>                      previously been loaded by addmodule or by the load
+<style color=#00ffffff size=1>.</style>                      sh command to add a new builtin command to the
+<style color=#00ffffff size=1>.</style>                      shell. Any subsequent invocation of name within
+<style color=#00ffffff size=1>.</style>                      ctxt will result in a call of runbuiltin() to mod.
+<style color=#00ffffff size=1>.</style>                      Any attempt to redefine the command ``builtin''
+<style color=#00ffffff size=1>.</style>                      will be ignored.
+
+<style color=#00ffffff size=1>.</style>            ctxt.removebuiltin(name, mod)
+<style color=#00ffffff size=1>.</style>                      Removebuiltin removes name from the list of
+<style color=#00ffffff size=1>.</style>                      builtin commands in ctxt. If name had not
+<style color=#00ffffff size=1>.</style>                      previously been defined by mod, or had
+<style color=#00ffffff size=1>.</style>                      subsequently been replaced, then this function
+<style color=#00ffffff size=1>.</style>                      does nothing.
+
+<style color=#00ffffff size=1>.</style>            ctxt.addsbuiltin(name, mod)
+<style color=#00ffffff size=1>.</style>                      Addsbuiltin may be called by a module that has
+<style color=#00ffffff size=1>.</style>                      previously been loaded by addmodule or by the load
+<style color=#00ffffff size=1>.</style>                      sh command to add a new builtin substitution
+<style color=#00ffffff size=1>.</style>                      operator to the shell. Any subsequent invocation
+<style color=#00ffffff size=1>.</style>                      of ${name} within ctxt will result in a call of
+<style color=#00ffffff size=1>.</style>                      runsbuiltin() to mod.
+
+<style color=#00ffffff size=1>.</style>            ctxt.removesbuiltin(name, mod)
+<style color=#00ffffff size=1>.</style>                      Removesbuiltin removes name from the list of
+<style color=#00ffffff size=1>.</style>                      builtin substitution operators in ctxt. If name
+<style color=#00ffffff size=1>.</style>                      had not previously been defined by mod, or had
+<style color=#00ffffff size=1>.</style>                      subsequently been replaced, then this function
+<style color=#00ffffff size=1>.</style>                      does nothing.
+
+<style color=#00ffffff size=1>.</style>            ctxt.fail(ename, msg)
+<style color=#00ffffff size=1>.</style>                      Fail prints msg to the standard error if message
+<style color=#00ffffff size=1>.</style>                      printing is currently enabled, and raises the
+<style color=#00ffffff size=1>.</style>                      exception fail:ename.
+
+<style color=#00ffffff size=1>.</style>            ctxt.options()
+<style color=#00ffffff size=1>.</style>                      Options returns a bitmask of the options currently
+<style color=#00ffffff size=1>.</style>                      enabled in ctxt. The bits are defined by constants
+<style color=#00ffffff size=1>.</style>                      declared within Context. They include:
+
+<style color=#00ffffff size=1>.</style>                      ctxt.INTERACTIVE
+<style color=#00ffffff size=1>.</style>                           Sh is currently being run from an interactive
+<style color=#00ffffff size=1>.</style>                           command-line.
+
+<style color=#00ffffff size=1>.</style>                      ctxt.VERBOSE
+<style color=#00ffffff size=1>.</style>                           Message printing is currently enabled.
+
+<style color=#00ffffff size=1>.</style>                      ctxt.EXECPRINT
+<style color=#00ffffff size=1>.</style>                           Commands are printed to standard error as
+<style color=#00ffffff size=1>.</style>                           they are executed.
+
+<style color=#00ffffff size=1>.</style>                      ctxt.ERROREXIT
+<style color=#00ffffff size=1>.</style>                           An exception will be raised when the first
+<style color=#00ffffff size=1>.</style>                           simple command returns an error status.
+
+<style color=#00ffffff size=1>.</style>                      Options are defined in the innermost scope of ctxt
+<style color=#00ffffff size=1>.</style>                      and will be lost when it is popped.
+
+<style color=#00ffffff size=1>.</style>            ctxt.setoptions(flags, on)
+<style color=#00ffffff size=1>.</style>                      Setoptions sets the specified flags within ctxt.
+<style color=#00ffffff size=1>.</style>                      Flags is a bitmask of options, as described in
+<style color=#00ffffff size=1>.</style>                      options, above. If on is non-zero, the specified
+<style color=#00ffffff size=1>.</style>                      bits will be set\; otherwise they will be reset.
+<style color=#00ffffff size=1>.</style>                      Setoptions returns the previously set options
+<style color=#00ffffff size=1>.</style>                      bitmask.
+
+<style color=#00ffffff size=1>.</style>         Builtin modules
+<style color=#00ffffff size=1>.</style>            Shellbuiltin specifies the interface to a loadable sh
+<style color=#00ffffff size=1>.</style>            builtin module. Any Limbo module mod adhering to this
+<style color=#00ffffff size=1>.</style>            interface may be loaded into the shell.
+
+<style color=#00ffffff size=1>.</style>            mod->initbuiltin(ctxt, sh)
+<style color=#00ffffff size=1>.</style>                      Initbuiltin is called when sh loads mod either via
+<style color=#00ffffff size=1>.</style>                      the load command, or via the loadmodule()
+<style color=#00ffffff size=1>.</style>                      function. Ctxt is the context within which the
+<style color=#00ffffff size=1>.</style>                      builtin has been loaded, and sh is the Sh module
+<style color=#00ffffff size=1>.</style>                      itself. When initbuiltin is called, mod is
+<style color=#00ffffff size=1>.</style>                      expected to call ctxt.addbuiltin and ctxt
+<style color=#00ffffff size=1>.</style>                      .addsbuiltin to define any builtin commands and
+<style color=#00ffffff size=1>.</style>                      builtin substitution operators that it wants. If
+<style color=#00ffffff size=1>.</style>                      an error occurs on initialisation, initbuiltin
+<style color=#00ffffff size=1>.</style>                      should return a non-nil value\; this will cause the
+<style color=#00ffffff size=1>.</style>                      load to fail.
+
+<style color=#00ffffff size=1>.</style>            mod->runbuiltin(ctxt, sh, cmd, last)
+<style color=#00ffffff size=1>.</style>                      Runbuiltin is invoked when sh executes a command
+<style color=#00ffffff size=1>.</style>                      that has previously been defined as a builtin
+<style color=#00ffffff size=1>.</style>                      command by mod. Ctxt is the current execution
+<style color=#00ffffff size=1>.</style>                      context (which may not be the original context
+<style color=#00ffffff size=1>.</style>                      passed to initbuiltin()), sh is the running Sh
+<style color=#00ffffff size=1>.</style>                      module, and cmd is the command to be executed.
+<style color=#00ffffff size=1>.</style>                      Last is true if this is the last command to be
+<style color=#00ffffff size=1>.</style>                      executed in the current process\; it can be passed
+<style color=#00ffffff size=1>.</style>                      to ctxt.run() as appropriate. The name of the
+<style color=#00ffffff size=1>.</style>                      command can be found in (hd cmd).word. Runbuiltin
+<style color=#00ffffff size=1>.</style>                      returns its exit status\; by convention this is the
+<style color=#00ffffff size=1>.</style>                      exit status of the last command executed. A
+<style color=#00ffffff size=1>.</style>                      non-nil exit status is usually treated as false.
+<style color=#00ffffff size=1>.</style>                      By convention, if an invalid set of arguments are
+<style color=#00ffffff size=1>.</style>                      passed to a builtin command, a usage exception is
+<style color=#00ffffff size=1>.</style>                      raised by calling ctxt.fail with usage and an
+<style color=#00ffffff size=1>.</style>                      explanatory usage message as arguments.
+
+<style color=#00ffffff size=1>.</style>            mod->runsbuiltin(ctxt, sh, cmd)
+<style color=#00ffffff size=1>.</style>                      Similar to runbuiltin, runsbuiltin is called when
+<style color=#00ffffff size=1>.</style>                      sh encounters a builtin substitution operator that
+<style color=#00ffffff size=1>.</style>                      has previously been defined by mod. It returns the
+<style color=#00ffffff size=1>.</style>                      list of values that will be substituted in place
+<style color=#00ffffff size=1>.</style>                      of the operator.
+
+<style color=#00ffffff size=1>.</style>            mod->getself()
+<style color=#00ffffff size=1>.</style>                      Getself should return the Shellbuiltin module
+<style color=#00ffffff size=1>.</style>                      handle for mod, usually obtained by invoking load
+<style color=#00ffffff size=1>.</style>                      $self. N.B. it is important that the value
+<style color=#00ffffff size=1>.</style>                      returned by getself is the same as that passed to
+<style color=#00ffffff size=1>.</style>                      addbuiltin or addsbuiltin. As the Limbo load
+<style color=#00ffffff size=1>.</style>                      operator returns a different value each time, the
+<style color=#00ffffff size=1>.</style>                      value to be returned by getself() should be
+<style color=#00ffffff size=1>.</style>                      initialised once, during the call to initbuiltin()
+<style color=#00ffffff size=1>.</style>                      .
+
+<style color=#00ffffff size=1>.</style>            mod->whatis(ctxt, sh, name, wtype)
+<style color=#00ffffff size=1>.</style>                      Whatis is called by the shell's whatis command to
+<style color=#00ffffff size=1>.</style>                      query the definition of a name. Wtype gives the
+<style color=#00ffffff size=1>.</style>                      type of name that is being asked about\; it can be
+<style color=#00ffffff size=1>.</style>                      BUILTIN (conventional commands), SBUILTIN
+<style color=#00ffffff size=1>.</style>                      (substitution builtins), or OTHER (any other names
+<style color=#00ffffff size=1>.</style>                      that the module defines). Return nil to get the
+<style color=#00ffffff size=1>.</style>                      usual default behaviour. The std module, for
+<style color=#00ffffff size=1>.</style>                      example, uses this feature to display the
+<style color=#00ffffff size=1>.</style>                      definition of a shell function correctly.
+
+<style color=#00ffffff size=1>.</style>         Exceptions
+<style color=#00ffffff size=1>.</style>            The exceptions used within sh are exactly the same as those
+<style color=#00ffffff size=1>.</style>            used within Limbo, except that all exceptions generated by
+<style color=#00ffffff size=1>.</style>            the shell are prefixed by the string ``fail:'', and any
+<style color=#00ffffff size=1>.</style>            exception caught with the prefix fail: has its first 5
+<style color=#00ffffff size=1>.</style>            characters removed before being made available to the sh
+<style color=#00ffffff size=1>.</style>            script. This adheres to the convention defined by other
+<style color=#00ffffff size=1>.</style>            shells within Inferno that a process that raises an
+<style color=#00ffffff size=1>.</style>            exception with a fail: prefix is just returning a non-zero
+<style color=#00ffffff size=1>.</style>            exit status, and should not be left in a Broken state. It
+<style color=#00ffffff size=1>.</style>            also means that the number of bytes available for the
+<style color=#00ffffff size=1>.</style>            exception string is reduced by 5 (to 59). Care must
+<style color=#00ffffff size=1>.</style>            therefore be taken to avoid generating an exception with a
+<style color=#00ffffff size=1>.</style>            name that is too long\; sh takes the pragmatic approach of
+<style color=#00ffffff size=1>.</style>            truncating any exception string that is too long.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /prog/pid/wait
+<style color=#00ffffff size=1>.</style>                      The file used by the shell to wait for dead child
+<style color=#00ffffff size=1>.</style>                      processes.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sh/sh.y
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=sh-std(1)>sh-std(1)</action>, <action name=sh-expr(1)>sh-expr(1)</action>, <action name=sh-tk(1)>sh-tk(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

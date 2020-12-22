@@ -1,0 +1,35 @@
+<action name=SENDMAIL(1)>SENDMAIL(1)</action>                                           <action name=SENDMAIL(1)>SENDMAIL(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            sendmail - send mail messages
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            sendmail \[ recipient ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Sendmail sends mail to each recipient named as an argument.
+<style color=#00ffffff size=1>.</style>            It reads its standard input to get the text of the message.
+<style color=#00ffffff size=1>.</style>            If no recipient is named, the recipient(s) will be taken
+<style color=#00ffffff size=1>.</style>            from the message header.
+
+<style color=#00ffffff size=1>.</style>            The mail message is scanned for lines beginning ``From:' `
+<style color=#00ffffff size=1>.</style>            `To:' and ``Cc:'
+<style color=#00ffffff size=1>.</style>            If no `from' line is found, the sender is assumed to be the
+<style color=#00ffffff size=1>.</style>            current user. The recipient(s) of the message can be
+<style color=#00ffffff size=1>.</style>            mentioned as arguments or in a list of names in a ``To:'
+<style color=#00ffffff size=1>.</style>            line but not as both. If the sender's name is unqualified
+<style color=#00ffffff size=1>.</style>            (is just a user name), sendmail appends the value of the
+<style color=#00ffffff size=1>.</style>            environment variable `DOMAIN'.
+
+<style color=#00ffffff size=1>.</style>            Sendmail delivers the mail using the module <action name=smtp(2)>smtp(2)</action>, which
+<style color=#00ffffff size=1>.</style>            connects to a mail server running the Simple Mail Transport
+<style color=#00ffffff size=1>.</style>            Protocol (SMTP), using the symbolic host name $MAILSERVER
+<style color=#00ffffff size=1>.</style>            (see <action name=db(6)>db(6)</action>).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sendmail.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=smtp(2)>smtp(2)</action>, <action name=db(6)>db(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

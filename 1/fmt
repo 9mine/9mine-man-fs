@@ -1,0 +1,31 @@
+<action name=FMT(1)>FMT(1)</action>                                                     <action name=FMT(1)>FMT(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            fmt - simple text formatter
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            fmt \[ -l n \] \[ -i n \] \[ -j \] \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Fmt copies the given files (standard input by default) to
+<style color=#00ffffff size=1>.</style>            its standard output, filling and indenting lines. The
+<style color=#00ffffff size=1>.</style>            options are
+
+<style color=#00ffffff size=1>.</style>            -l n Output line length is n, including indent (default 70).
+
+<style color=#00ffffff size=1>.</style>            -w n A synonym for -l.
+
+<style color=#00ffffff size=1>.</style>            -i n Indent n spaces (default 0).
+
+<style color=#00ffffff size=1>.</style>            -j   Do not join short lines: only fold long lines.
+
+<style color=#00ffffff size=1>.</style>            Empty lines and initial white space in input lines are
+<style color=#00ffffff size=1>.</style>            preserved. Empty lines are inserted between input files.
+
+<style color=#00ffffff size=1>.</style>            Fmt is idempotent: it leaves already formatted text
+<style color=#00ffffff size=1>.</style>            unchanged.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/fmt.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,124 @@
+<action name=SYS-PRINT(2)>SYS-PRINT(2)</action>                                         <action name=SYS-PRINT(2)>SYS-PRINT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            print, aprint, fprint, sprint - print formatted output
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            aprint: fn(format: string, *): array of byte\;
+<style color=#00ffffff size=1>.</style>            fprint: fn(fd: ref FD, format: string, *): int\;
+<style color=#00ffffff size=1>.</style>            print:  fn(format: string, *): int\;
+<style color=#00ffffff size=1>.</style>            sprint: fn(format: string, *): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These functions format and print their arguments as UTF
+<style color=#00ffffff size=1>.</style>            text. Print writes text to the standard output. Fprint
+<style color=#00ffffff size=1>.</style>            writes to the named output file descriptor. Sprint places
+<style color=#00ffffff size=1>.</style>            text in a string, which it returns. Aprint is similar but
+<style color=#00ffffff size=1>.</style>            returns the text in <action name=utf(6)>utf(6)</action> representation as an array of
+<style color=#00ffffff size=1>.</style>            bytes. Print and fprint return the number of bytes
+<style color=#00ffffff size=1>.</style>            transmitted or a negative value if an  error was encountered
+<style color=#00ffffff size=1>.</style>            when writing the output.
+
+<style color=#00ffffff size=1>.</style>            Each of these functions converts, formats, and prints its
+<style color=#00ffffff size=1>.</style>            trailing arguments under control of a format string. The
+<style color=#00ffffff size=1>.</style>            format contains two types of objects: plain characters,
+<style color=#00ffffff size=1>.</style>            which are simply copied to the output stream, and conversion
+<style color=#00ffffff size=1>.</style>            specifications, each of which results in fetching of zero or
+<style color=#00ffffff size=1>.</style>            more arguments. The Limbo compiler recognizes calls to these
+<style color=#00ffffff size=1>.</style>            functions and checks that the arguments match the format
+<style color=#00ffffff size=1>.</style>            specifications in number and type.
+
+<style color=#00ffffff size=1>.</style>            Each conversion specification has the following format:
+
+<style color=#00ffffff size=1>.</style>                 % \[flags\] verb
+
+<style color=#00ffffff size=1>.</style>            The verb is a single character and each flag is a single
+<style color=#00ffffff size=1>.</style>            character or a (decimal) numeric string. Up to two numeric
+<style color=#00ffffff size=1>.</style>            strings may be used\; the first is called f1, the second f2.
+<style color=#00ffffff size=1>.</style>            They can be separated by `.', and if one is present, then f1
+<style color=#00ffffff size=1>.</style>            and f2 are taken to be zero if missing, otherwise they are
+<style color=#00ffffff size=1>.</style>            considered `omitted'. Either or both of the numbers may be
+<style color=#00ffffff size=1>.</style>            replaced with the character *, meaning that the actual
+<style color=#00ffffff size=1>.</style>            number will be obtained from the argument list as an
+<style color=#00ffffff size=1>.</style>            integer. The flags and numbers are arguments to the verb
+<style color=#00ffffff size=1>.</style>            described below.
+
+<style color=#00ffffff size=1>.</style>            d, o, x, X
+<style color=#00ffffff size=1>.</style>                 The numeric verbs d, o, and x format their int
+<style color=#00ffffff size=1>.</style>                 arguments in decimal, octal, and hexadecimal (with hex
+<style color=#00ffffff size=1>.</style>                 digits in lower-case). The flag b is required when the
+<style color=#00ffffff size=1>.</style>                 corresponding value is a Limbo big, not an int.
+<style color=#00ffffff size=1>.</style>                 Arguments are taken to be signed, unless the u flag is
+<style color=#00ffffff size=1>.</style>                 given, to force them to be treated as unsigned. Each
+<style color=#00ffffff size=1>.</style>                 interprets the flags - , , , and # to mean left
+<style color=#00ffffff size=1>.</style>                 justified, commas every three digits, and alternative
+<style color=#00ffffff size=1>.</style>                 format. If f2 is not omitted, the number is padded on
+<style color=#00ffffff size=1>.</style>                 the left with zeros until at least f2 digits appear.
+<style color=#00ffffff size=1>.</style>                 Then, if alternative format is specified for x
+<style color=#00ffffff size=1>.</style>                 conversion, the number is preceded by 0x. Finally, if
+<style color=#00ffffff size=1>.</style>                 f1 is not omitted, the number is padded on the left (or
+<style color=#00ffffff size=1>.</style>                 right, if left justification is specified) with enough
+<style color=#00ffffff size=1>.</style>                 blanks to make the field at least f1 characters long.
+<style color=#00ffffff size=1>.</style>                 The verb X is similar to x, except that the hexadecimal
+<style color=#00ffffff size=1>.</style>                 digits are displayed in upper-case, and in alternative
+<style color=#00ffffff size=1>.</style>                 format, the number is preceded by 0X.
+
+<style color=#00ffffff size=1>.</style>            e, f, g
+<style color=#00ffffff size=1>.</style>                 The floating point verbs e, f, and g take a real
+<style color=#00ffffff size=1>.</style>                 argument. Each interprets the flags +, -, and # to mean
+<style color=#00ffffff size=1>.</style>                 always print a sign, left justified, and alternative
+<style color=#00ffffff size=1>.</style>                 format. F1 is the minimum field width and, if the
+<style color=#00ffffff size=1>.</style>                 converted value takes up less than f1 characters, it is
+<style color=#00ffffff size=1>.</style>                 padded on the left (or right, if `left justified') with
+<style color=#00ffffff size=1>.</style>                 spaces. F2 is the number of digits that are converted
+<style color=#00ffffff size=1>.</style>                 after the decimal place for e and f conversions, and f2
+<style color=#00ffffff size=1>.</style>                 is the maximum number of significant digits for g
+<style color=#00ffffff size=1>.</style>                 conversions. The f verb produces output of the form \[-
+<style color=#00ffffff size=1>.</style>                 \]\c digits\[\c .digits\]. The e conversion appends an
+<style color=#00ffffff size=1>.</style>                 exponent e\[-\]\c digits. The g verb will output the
+<style color=#00ffffff size=1>.</style>                 argument in either e or f with the goal of producing
+<style color=#00ffffff size=1>.</style>                 the smallest output. Also, trailing zeros are omitted
+<style color=#00ffffff size=1>.</style>                 from the fraction part of the output, and a trailing
+<style color=#00ffffff size=1>.</style>                 decimal point appears only if it is followed by a
+<style color=#00ffffff size=1>.</style>                 digit. When alternative format is specified, the result
+<style color=#00ffffff size=1>.</style>                 will always contain a decimal point, and for g
+<style color=#00ffffff size=1>.</style>                 conversions, trailing zeros are not removed.
+
+<style color=#00ffffff size=1>.</style>            E, G These are the same as e and g respectively, but use E
+<style color=#00ffffff size=1>.</style>                 not e to specify an exponent when one appears.
+
+<style color=#00ffffff size=1>.</style>            c    The c verb converts a single Unicode character from an
+<style color=#00ffffff size=1>.</style>                 int argument to a UTF encoding, justified within a
+<style color=#00ffffff size=1>.</style>                 field of f1 characters as described above.
+
+<style color=#00ffffff size=1>.</style>            r    The r verb takes no arguments\; it prints the error
+<style color=#00ffffff size=1>.</style>                 string associated with the most recent system error.
+
+<style color=#00ffffff size=1>.</style>            s    The s verb copies a string to the output. The number of
+<style color=#00ffffff size=1>.</style>                 characters copied (n) is the minimum of the size of the
+<style color=#00ffffff size=1>.</style>                 string and f2. These n characters are justified within
+<style color=#00ffffff size=1>.</style>                 a field of f1 characters as described above.
+
+<style color=#00ffffff size=1>.</style>            q    The q verb copies a string to the output as for s, but
+<style color=#00ffffff size=1>.</style>                 quotes the string in the style of <action name=sh(1)>sh(1)</action> only if
+<style color=#00ffffff size=1>.</style>                 necessary to avoid ambiguity (for instance if the
+<style color=#00ffffff size=1>.</style>                 string contains quotes or spaces). If the format
+<style color=#00ffffff size=1>.</style>                 string, however, includes the specifier # (for example
+<style color=#00ffffff size=1>.</style>                 %#q), the printed string will always be quoted.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/runt.c:/^xprint
+<style color=#00ffffff size=1>.</style>            /os/port/print.c
+<style color=#00ffffff size=1>.</style>            /lib9/print.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-open(2)>sys-open(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The x verb does not apply the 0x prefix when f2 is present.
+<style color=#00ffffff size=1>.</style>            The prefix should probably be 16r anyway.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

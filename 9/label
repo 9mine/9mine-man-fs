@@ -1,0 +1,78 @@
+<action name=LABEL(9)>LABEL(9)</action>                                                 <action name=LABEL(9)>LABEL(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            label - Create and manipulate label widgets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            label pathName ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -anchor        -font               -justify
+<style color=#00ffffff size=1>.</style>            -background    -foreground         -relief
+<style color=#00ffffff size=1>.</style>            -bitmap        -highlightcolor     -takefocus
+<style color=#00ffffff size=1>.</style>            -borderwidth   -highlightthickness -text
+<style color=#00ffffff size=1>.</style>            -disabledcolor -image              -underline
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -height dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired height for the label. If this
+<style color=#00ffffff size=1>.</style>                 option isn't specified, the label's desired height is
+<style color=#00ffffff size=1>.</style>                 computed from the size of the image or bitmap or text
+<style color=#00ffffff size=1>.</style>                 being displayed in it.
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired width for the label. If this option
+<style color=#00ffffff size=1>.</style>                 isn't specified, the label's desired width is computed
+<style color=#00ffffff size=1>.</style>                 from the size of the image or bitmap or text being
+<style color=#00ffffff size=1>.</style>                 displayed in it.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The label command creates a new window (given by the
+<style color=#00ffffff size=1>.</style>            pathName argument) and makes it into a label widget.
+<style color=#00ffffff size=1>.</style>            Additional options, described above, may be specified on the
+<style color=#00ffffff size=1>.</style>            command line to configure aspects of the label such as its
+<style color=#00ffffff size=1>.</style>            colours, font, text, and initial relief.  The label command
+<style color=#00ffffff size=1>.</style>            returns its pathName argument.  At the time this command is
+<style color=#00ffffff size=1>.</style>            invoked, there must not exist a window named pathName.
+
+<style color=#00ffffff size=1>.</style>            A label is a widget that displays a textual string, bitmap
+<style color=#00ffffff size=1>.</style>            or image. If text is displayed, it must all be in a single
+<style color=#00ffffff size=1>.</style>            font, but it can occupy multiple lines on the screen (if it
+<style color=#00ffffff size=1>.</style>            contains newlines) and one of the characters may optionally
+<style color=#00ffffff size=1>.</style>            be underlined using the underline option. The label can be
+<style color=#00ffffff size=1>.</style>            manipulated in a few simple ways, such as changing its
+<style color=#00ffffff size=1>.</style>            relief or text, using the commands described below.
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The label command creates a new Tk command whose name is 
+<style color=#00ffffff size=1>.</style>            pathName.  This command may be used to invoke various
+<style color=#00ffffff size=1>.</style>            operations on the widget.  It has the following general
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathName option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            Option and the args determine the exact behaviour of the
+<style color=#00ffffff size=1>.</style>            command.  The following commands are possible for label
+<style color=#00ffffff size=1>.</style>            widgets:
+
+<style color=#00ffffff size=1>.</style>            pathName cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the label command.
+
+<style color=#00ffffff size=1>.</style>            pathName configure ?option? ?value option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathName.  If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, then the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the label command.
+
+BINDINGS
+<style color=#00ffffff size=1>.</style>            When a new label is created, it has no default event
+<style color=#00ffffff size=1>.</style>            bindings: labels are not intended to be interactive.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=options(9)>options(9)</action>, <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

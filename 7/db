@@ -1,0 +1,148 @@
+<action name=DB(7)>DB(7)</action>                                                       <action name=DB(7)>DB(7)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            DB - database support
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "security.m"\;   # need Auth for algorithm names
+<style color=#00ffffff size=1>.</style>            include "db.m"\;
+<style color=#00ffffff size=1>.</style>            db := load DB DB->PATH\;
+
+<style color=#00ffffff size=1>.</style>            DB_Handle: adt {
+<style color=#00ffffff size=1>.</style>               SQLOpen:     fn(oldh: self ref DB_Handle): (int, ref DB_Handle)\;
+<style color=#00ffffff size=1>.</style>               SQLClose:    fn(dbh: self ref DB_Handle): int\;
+<style color=#00ffffff size=1>.</style>               SQL:         fn(handle: self ref DB_Handle, command: string):
+<style color=#00ffffff size=1>.</style>                              (int, string)\;
+<style color=#00ffffff size=1>.</style>               columns:     fn(handle: self ref DB_Handle): int\;
+<style color=#00ffffff size=1>.</style>               nextRow:     fn(handle: self ref DB_Handle): int\;
+<style color=#00ffffff size=1>.</style>               read:        fn(handle: self ref DB_Handle, column: int):
+<style color=#00ffffff size=1>.</style>                              (int, array of byte)\;
+<style color=#00ffffff size=1>.</style>               write:       fn(handle: self ref DB_Handle, param: int,
+<style color=#00ffffff size=1>.</style>                              fld: array of byte): int
+<style color=#00ffffff size=1>.</style>               columnTitle: fn(handle: self ref DB_Handle,
+<style color=#00ffffff size=1>.</style>                                column: int): string\;
+<style color=#00ffffff size=1>.</style>               errmsg:      fn(handle: self ref DB_Handle): string\;
+
+<style color=#00ffffff size=1>.</style>               datafd:    ref Sys->FD\;
+<style color=#00ffffff size=1>.</style>               sqlconn:   int\;
+<style color=#00ffffff size=1>.</style>               sqlstream: int\;
+<style color=#00ffffff size=1>.</style>               lock:      chan of int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            connect:  fn(addr, alg: string): (ref Sys->FD, string)\;
+<style color=#00ffffff size=1>.</style>            dbopen:   fn(fd: ref Sys->FD, username, password, dbname: string):
+<style color=#00ffffff size=1>.</style>                        (ref DB_Handle, list of string)\;
+<style color=#00ffffff size=1>.</style>            open:     fn(addr, username, password, dbname: string):
+<style color=#00ffffff size=1>.</style>                        (ref DB_Handle, list of string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            DB allows Limbo programs to connect to data base management
+<style color=#00ffffff size=1>.</style>            systems that support an ODBC interface.
+
+<style color=#00ffffff size=1>.</style>            <action name=Dbsrv(7)>Dbsrv(7)</action> must be running (usually in a hosted <action name=emu(1)>emu(1)</action>) to
+<style color=#00ffffff size=1>.</style>            service database requests.
+
+<style color=#00ffffff size=1>.</style>            If security features will be used in conjunction with DB,
+<style color=#00ffffff size=1>.</style>            the Auth module definitions (see <action name=security-auth(2)>security-auth(2)</action>) from
+<style color=#00ffffff size=1>.</style>            security.m must be included.
+
+<style color=#00ffffff size=1>.</style>            If authentication is in use, DB will use the certificate in
+<style color=#00ffffff size=1>.</style>            the file
+
+<style color=#00ffffff size=1>.</style>                 /usr/user/keyring/net!machine
+
+<style color=#00ffffff size=1>.</style>            if that file exists. Otherwise, db will attempt to find a
+<style color=#00ffffff size=1>.</style>            certificate in the file
+
+<style color=#00ffffff size=1>.</style>                 /usr/user/keyring/default.
+
+<style color=#00ffffff size=1>.</style>            Connect establishes a connection to the dbsrv at addr. Addr
+<style color=#00ffffff size=1>.</style>            has the form machine!service. Machine is a symbolic or
+<style color=#00ffffff size=1>.</style>            numeric network address, and service is a service or port on
+<style color=#00ffffff size=1>.</style>            that machine. Dbsrv starts a corresponding infdb process.
+<style color=#00ffffff size=1>.</style>            After some negotiation, infdb will take the appropriate
+<style color=#00ffffff size=1>.</style>            authentication, digesting, and decryption actions, based on
+<style color=#00ffffff size=1>.</style>            the alg requested by the client. If successful, connect will
+<style color=#00ffffff size=1>.</style>            return a file descriptor required by dbopen.
+
+<style color=#00ffffff size=1>.</style>            Dbopen initiates a session with a database dbname, passing
+<style color=#00ffffff size=1>.</style>            username and password down the fd returned by connect.
+<style color=#00ffffff size=1>.</style>            Dbopen returns a reference to an instance of DB_Handle and
+<style color=#00ffffff size=1>.</style>            an error string, which is nil on success. On error, the
+<style color=#00ffffff size=1>.</style>            reference is nil, but the string contains a diagnostic.
+<style color=#00ffffff size=1>.</style>            Dbopen implicitly opens an initial SQL stream via SQLOpen.
+
+<style color=#00ffffff size=1>.</style>            Open returns the result of a connect followed (if
+<style color=#00ffffff size=1>.</style>            successful) by a dbopen.
+
+<style color=#00ffffff size=1>.</style>            oh.SQLOpen
+<style color=#00ffffff size=1>.</style>                 Creates a new DB_Handle and opens a new SQL stream with
+<style color=#00ffffff size=1>.</style>                 which requests can be associated. The new handle shares
+<style color=#00ffffff size=1>.</style>                 the connection and transaction context with oh. Other
+<style color=#00ffffff size=1>.</style>                 characteristics such as the current SQL command, the
+<style color=#00ffffff size=1>.</style>                 result set, and cursor position are independent, which
+<style color=#00ffffff size=1>.</style>                 allows the manipulation and interaction of many SQL
+<style color=#00ffffff size=1>.</style>                 statements within a transaction. It returns zero on
+<style color=#00ffffff size=1>.</style>                 success, non-zero on error.
+
+<style color=#00ffffff size=1>.</style>            h.SQLClose
+<style color=#00ffffff size=1>.</style>                 Closes the SQL stream opened by SQLOpen. Closing all
+<style color=#00ffffff size=1>.</style>                 SQL streams associated with a connection causes the
+<style color=#00ffffff size=1>.</style>                 connection to be closed.
+
+<style color=#00ffffff size=1>.</style>            h.SQL(command)
+<style color=#00ffffff size=1>.</style>                 Sends the SQL statement command to the database. If the
+<style color=#00ffffff size=1>.</style>                 call fails, the first element of the returned tuple is
+<style color=#00ffffff size=1>.</style>                 non-zero and the second is an error message.
+
+<style color=#00ffffff size=1>.</style>            h.columns()
+<style color=#00ffffff size=1>.</style>                 Returns the number of columns in the result set of the
+<style color=#00ffffff size=1>.</style>                 previous SQL select command sent to the database. A
+<style color=#00ffffff size=1>.</style>                 returned value of 0 indicates there was a problem with
+<style color=#00ffffff size=1>.</style>                 the previous command, or there was no previous select
+<style color=#00ffffff size=1>.</style>                 command.
+
+<style color=#00ffffff size=1>.</style>            h.nextRow()
+<style color=#00ffffff size=1>.</style>                 Advances the current row, then returns the current row
+<style color=#00ffffff size=1>.</style>                 number of the selection results. A return value of 0
+<style color=#00ffffff size=1>.</style>                 indicates there are no more rows\; a negative value is
+<style color=#00ffffff size=1>.</style>                 returned in case of an error. The initial current row
+<style color=#00ffffff size=1>.</style>                 is 0 following a select, so nextRow must be called
+<style color=#00ffffff size=1>.</style>                 before any data is read.
+
+<style color=#00ffffff size=1>.</style>            h.read(c)
+<style color=#00ffffff size=1>.</style>                 Returns the data of column c of the current row. If c
+<style color=#00ffffff size=1>.</style>                 is out of range, there is no current row, or some other
+<style color=#00ffffff size=1>.</style>                 error occurred, the first element of the returned tuple
+<style color=#00ffffff size=1>.</style>                 will be negative, and the byte array (sic) will contain
+<style color=#00ffffff size=1>.</style>                 an error message. Otherwise, it will be the number of
+<style color=#00ffffff size=1>.</style>                 bytes in the field requested. This could be greater
+<style color=#00ffffff size=1>.</style>                 than the length of the returned array, if the DB module
+<style color=#00ffffff size=1>.</style>                 could not allocate enough memory to contain the entire
+<style color=#00ffffff size=1>.</style>                 field. In this case the returned array contains the
+<style color=#00ffffff size=1>.</style>                 initial portion of the field.
+
+<style color=#00ffffff size=1>.</style>            h.write(p,data)
+<style color=#00ffffff size=1>.</style>                 Write sends data for a binary field to the server, in
+<style color=#00ffffff size=1>.</style>                 anticipation of a subsequent SQL `update request with
+<style color=#00ffffff size=1>.</style>                 placeholders'. Data is an array of bytes containing the
+<style color=#00ffffff size=1>.</style>                 data for placeholder p (counting from 1). All binary
+<style color=#00ffffff size=1>.</style>                 fields should be set by write before the SQL request is
+<style color=#00ffffff size=1>.</style>                 sent to the server with SQL. It returns the number of
+<style color=#00ffffff size=1>.</style>                 bytes saved for the field, or -1 on failure.
+
+<style color=#00ffffff size=1>.</style>            h.columnTitle(n)
+<style color=#00ffffff size=1>.</style>                 ColumnTitle returns the title of column n. It returns
+<style color=#00ffffff size=1>.</style>                 nil if n is out of range.
+
+<style color=#00ffffff size=1>.</style>            h.errmsg()
+<style color=#00ffffff size=1>.</style>                 Returns the error message associated with the failure
+<style color=#00ffffff size=1>.</style>                 of a previous columns, nextRow, columnTitle or read.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/db.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=svc(8)>svc(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

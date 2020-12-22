@@ -1,0 +1,33 @@
+<action name=SYS-SEEK(2)>SYS-SEEK(2)</action>                                           <action name=SYS-SEEK(2)>SYS-SEEK(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            seek - change file offset
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            seek:  fn(fd: ref FD, off: big, start: int): big\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Seek sets the 64-bit offset for the file associated with fd
+<style color=#00ffffff size=1>.</style>            as follows:
+
+<style color=#00ffffff size=1>.</style>                 If start is Sys->SEEKSTART, the offset is set to off
+<style color=#00ffffff size=1>.</style>                 bytes.
+
+<style color=#00ffffff size=1>.</style>                 If start is Sys->SEEKRELA, the pointer is set to its
+<style color=#00ffffff size=1>.</style>                 current location plus off.
+
+<style color=#00ffffff size=1>.</style>                 If start is Sys->SEEKEND, the pointer is set to the
+<style color=#00ffffff size=1>.</style>                 size of the file plus off.
+
+<style color=#00ffffff size=1>.</style>            The new file offset value is returned.
+
+<style color=#00ffffff size=1>.</style>            Seeking in a pipe is not allowed. Seeking in a directory is
+<style color=#00ffffff size=1>.</style>            allowed only if the new offset is zero.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-open(2)>sys-open(2)</action>, <action name=bufio(2)>bufio(2)</action>,
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

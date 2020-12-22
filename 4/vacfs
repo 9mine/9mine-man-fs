@@ -1,0 +1,38 @@
+<action name=VACFS(4)>VACFS(4)</action>                                                 <action name=VACFS(4)>VACFS(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            vacfs - mount venti archive
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            vacfs \[ -Ddp \] \[ -a addr \] \[vac:score\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Vacfs makes the contents of a venti archive available over
+<style color=#00ffffff size=1>.</style>            styx.  Standard input is used for reading and writing styx
+<style color=#00ffffff size=1>.</style>            messages. If score is not specified, vacfs serves multiple
+<style color=#00ffffff size=1>.</style>            venti archives.  In this case the root directory lists no
+<style color=#00ffffff size=1>.</style>            files, but walking to a directory score opens the venti
+<style color=#00ffffff size=1>.</style>            archive with that score.  Note that the vacfs does not
+<style color=#00ffffff size=1>.</style>            support writing.
+
+<style color=#00ffffff size=1>.</style>            -D   Print styx trace messages.
+
+<style color=#00ffffff size=1>.</style>            -d   Print debug messages.
+
+<style color=#00ffffff size=1>.</style>            -p   Disable permission checking.
+
+<style color=#00ffffff size=1>.</style>            -a address
+<style color=#00ffffff size=1>.</style>                 Dial address instead of the default venti server.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/vacfs.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=vacget(1)>vacget(1)</action>, <action name=vacput(1)>vacput(1)</action>, <action name=vcache(1)>vcache(1)</action>, <action name=venti(2)>venti(2)</action>, <action name=ventisrv(8)>ventisrv(8)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Vacfs needs more testing.
+<style color=#00ffffff size=1>.</style>            When the venti connection is broken, directories appear
+<style color=#00ffffff size=1>.</style>            empty.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

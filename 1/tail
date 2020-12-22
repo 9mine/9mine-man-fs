@@ -1,0 +1,44 @@
+<action name=TAIL(1)>TAIL(1)</action>                                                   <action name=TAIL(1)>TAIL(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tail - deliver the last part of a file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            tail \[ \[+-\]number\[lbc\]\[rf\] \] \[ file \]
+
+<style color=#00ffffff size=1>.</style>            tail \[ -fr \] \[ -n nlines \] \[ -c ncharacters \] \[ file \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Tail copies the named file to the standard output beginning
+<style color=#00ffffff size=1>.</style>            at a designated place. If no file is named, the standard
+<style color=#00ffffff size=1>.</style>            input is copied.
+
+<style color=#00ffffff size=1>.</style>            Copying begins at position +number measured from the
+<style color=#00ffffff size=1>.</style>            beginning, or -number from the end of the input. Number is
+<style color=#00ffffff size=1>.</style>            counted in lines, 1K blocks or characters, according to the
+<style color=#00ffffff size=1>.</style>            appended flag `l', `b', or `c'. Default is -10l (ten ell).
+
+<style color=#00ffffff size=1>.</style>            The further flag ``r'' causes tail to print lines from the
+<style color=#00ffffff size=1>.</style>            end of the file in reverse order\; ``f'' (follow) causes
+<style color=#00ffffff size=1>.</style>            tail, after printing to the end, to keep watch and print
+<style color=#00ffffff size=1>.</style>            further data as it appears.
+
+<style color=#00ffffff size=1>.</style>            The second syntax is that promulgated by POSIX, where the
+<style color=#00ffffff size=1>.</style>            numbers of lines (-n) or characters (-c) are specified
+<style color=#00ffffff size=1>.</style>            separately as signed integers. Note than an unsigned value
+<style color=#00ffffff size=1>.</style>            is treated as negative, ie '-n 2' is equivalent to '-n -2'.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            tail file
+<style color=#00ffffff size=1>.</style>                 Print the last 10 lines of a file.
+
+<style color=#00ffffff size=1>.</style>            tail +0f file
+<style color=#00ffffff size=1>.</style>                 Print a file, and continue to watch data accumulate as
+<style color=#00ffffff size=1>.</style>                 it grows.
+<style color=#00ffffff size=1>.</style>                 According to custom, option +number counts lines from
+<style color=#00ffffff size=1>.</style>                 1, and counts blocks and characters from 0.
+
+<style color=#00ffffff size=1>.</style>            tail -nlines +3 file
+<style color=#00ffffff size=1>.</style>                 Print a file starting at line number 3
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

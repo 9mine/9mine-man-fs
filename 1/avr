@@ -1,0 +1,32 @@
+<action name=AVR(1)>AVR(1)</action>                                                     <action name=AVR(1)>AVR(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            avr - Atmel AVR support
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            avr/burn \[-e\] \[-r\] \[ -d device \] file.srec
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Currently there is just one Inferno application to support
+<style color=#00ffffff size=1>.</style>            Atmel AVRs but others should appear.
+
+<style color=#00ffffff size=1>.</style>            Burn initialises or verifies the contents of an Atmel
+<style color=#00ffffff size=1>.</style>            ATmega128 AVR. The programming board must be connected to a
+<style color=#00ffffff size=1>.</style>            serial port (see <action name=eia(3)>eia(3)</action>), /dev/eia0 by default. File.srec is
+<style color=#00ffffff size=1>.</style>            a file containing the desired flash contents in Motorola
+<style color=#00ffffff size=1>.</style>            S-record format, as produced by ms2(10.1). By default, burn
+<style color=#00ffffff size=1>.</style>            erases the AVR chip (both flash and EEPROM), then loads the
+<style color=#00ffffff size=1>.</style>            flash with the contents of file.srec. The -e option stops
+<style color=#00ffffff size=1>.</style>            burn from erasing first, allowing additional code or data to
+<style color=#00ffffff size=1>.</style>            be loaded (but only into an already-erased region). If the
+<style color=#00ffffff size=1>.</style>            -r option is given, burn instead compares the contents of
+<style color=#00ffffff size=1>.</style>            the AVR with the data in file.srec. Burn supports the MIB510
+<style color=#00ffffff size=1>.</style>            programming board from Crossbow Technology Inc.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/avr/burn.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=eia(3)>eia(3)</action>, ms2(10.1)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

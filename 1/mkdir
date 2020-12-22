@@ -1,0 +1,35 @@
+<action name=MKDIR(1)>MKDIR(1)</action>                                                 <action name=MKDIR(1)>MKDIR(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mkdir - make a directory
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            mkdir \[ -p \] \[ dirname ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Mkdir creates the specified directories. It requires write
+<style color=#00ffffff size=1>.</style>            permission in the parent directory.
+
+<style color=#00ffffff size=1>.</style>            The -p option causes mkdir to create the whole path dirname,
+<style color=#00ffffff size=1>.</style>            including any missing parent directories\; it also will not
+<style color=#00ffffff size=1>.</style>            complain if dirname already exists and is a directory.
+
+<style color=#00ffffff size=1>.</style>            The new directories are created with permissions starting
+<style color=#00ffffff size=1>.</style>            with 8r777 but masked with the permissions of the parent
+<style color=#00ffffff size=1>.</style>            directory according to the procedure followed by sys-open
+<style color=#00ffffff size=1>.</style>            (2). For example, if the parent directory lacks write
+<style color=#00ffffff size=1>.</style>            permission for group and has no permissions for others, so
+<style color=#00ffffff size=1>.</style>            will the newly created directory.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/mkdir.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=chmod(1)>chmod(1)</action>, <action name=cd(1)>cd(1)</action>, <action name=rm(1)>rm(1)</action>, <action name=sys-open(2)>sys-open(2)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            If any directory cannot be created successfully, mkdir
+<style color=#00ffffff size=1>.</style>            prints a warning, and continues with any remaining
+<style color=#00ffffff size=1>.</style>            directories, but returns "error" exit status at the end.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

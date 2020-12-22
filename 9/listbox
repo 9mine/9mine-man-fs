@@ -1,0 +1,306 @@
+<action name=LISTBOX(9)>LISTBOX(9)</action>                                             <action name=LISTBOX(9)>LISTBOX(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            listbox - Create and manipulate listbox widgets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            listbox pathName ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -background  -highlightcolor     -selectforeground
+<style color=#00ffffff size=1>.</style>            -borderwidth -highlightthickness -takefocus
+<style color=#00ffffff size=1>.</style>            -font        -relief             -width
+<style color=#00ffffff size=1>.</style>            -foreground  -selectbackground   -xscrollcommand
+<style color=#00ffffff size=1>.</style>            -height      -selectborderwidth  -yscrollcommand
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -height dist
+<style color=#00ffffff size=1>.</style>                 Specifies the desired height for the window.
+
+<style color=#00ffffff size=1>.</style>            -selectmode val
+<style color=#00ffffff size=1>.</style>                 Specifies one of several styles for manipulating the
+<style color=#00ffffff size=1>.</style>                 selection. The value of the option may be arbitrary,
+<style color=#00ffffff size=1>.</style>                 but the default bindings expect it to be either single,
+<style color=#00ffffff size=1>.</style>                 browse, multiple, or extended\;  the default value is 
+<style color=#00ffffff size=1>.</style>                 single.
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies the desired width for the window.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The listbox command creates a new window (given by the
+<style color=#00ffffff size=1>.</style>            pathName argument) and makes it into a listbox widget.
+<style color=#00ffffff size=1>.</style>            Additional options, described above, may be specified on the
+<style color=#00ffffff size=1>.</style>            command line to configure aspects of the listbox such as its
+<style color=#00ffffff size=1>.</style>            colours, font, text, and relief.  The listbox command
+<style color=#00ffffff size=1>.</style>            returns its pathName argument.  At the time this command is
+<style color=#00ffffff size=1>.</style>            invoked, there must not exist a window named pathName.
+
+<style color=#00ffffff size=1>.</style>            A listbox is a widget that displays a list of strings, one
+<style color=#00ffffff size=1>.</style>            per line. When first created, a new listbox has no elements.
+<style color=#00ffffff size=1>.</style>            Elements may be added or deleted using widget commands
+<style color=#00ffffff size=1>.</style>            described below.  In addition, one or more elements may be
+<style color=#00ffffff size=1>.</style>            selected as described below.
+
+<style color=#00ffffff size=1>.</style>            It is not necessary for all the elements to be displayed in
+<style color=#00ffffff size=1>.</style>            the listbox window at once\;  commands described below may be
+<style color=#00ffffff size=1>.</style>            used to change the view in the window.  Listboxes allow
+<style color=#00ffffff size=1>.</style>            scrolling in both directions using the standard 
+<style color=#00ffffff size=1>.</style>            -xscrollcommand and -yscrollcommand options.
+
+INDICES
+<style color=#00ffffff size=1>.</style>            Many of the widget commands for listboxes take one or more
+<style color=#00ffffff size=1>.</style>            indices as arguments. An index specifies a particular
+<style color=#00ffffff size=1>.</style>            element of the listbox, in any of the following ways:
+
+<style color=#00ffffff size=1>.</style>            number      Specifies the element as a numerical index,
+<style color=#00ffffff size=1>.</style>                        where 0 corresponds to the first element in the
+<style color=#00ffffff size=1>.</style>                        listbox.
+
+<style color=#00ffffff size=1>.</style>            active      Indicates the element that has the location
+<style color=#00ffffff size=1>.</style>                        cursor.  This element will be displayed with a
+<style color=#00ffffff size=1>.</style>                        highlight rectangle when the listbox has the
+<style color=#00ffffff size=1>.</style>                        keyboard focus, and it is specified with the 
+<style color=#00ffffff size=1>.</style>                        activate widget command.
+
+<style color=#00ffffff size=1>.</style>            anchor      Indicates the anchor point for the selection,
+<style color=#00ffffff size=1>.</style>                        which is set with the selection anchor widget
+<style color=#00ffffff size=1>.</style>                        command.
+
+<style color=#00ffffff size=1>.</style>            end         Indicates the end of the listbox. For some
+<style color=#00ffffff size=1>.</style>                        commands this means just after the last element\;
+<style color=#00ffffff size=1>.</style>                        for other commands it means the last element.
+
+<style color=#00ffffff size=1>.</style>            @x,y        Indicates the element that covers the point in
+<style color=#00ffffff size=1>.</style>                        the listbox window specified by x and y (in
+<style color=#00ffffff size=1>.</style>                        pixel coordinates).  If no element covers that
+<style color=#00ffffff size=1>.</style>                        point, then the closest element to that point is
+<style color=#00ffffff size=1>.</style>                        used.
+
+<style color=#00ffffff size=1>.</style>            In the widget command descriptions below, arguments named 
+<style color=#00ffffff size=1>.</style>            index, first, and last always contain text indices in one of
+<style color=#00ffffff size=1>.</style>            the above forms.
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The listbox command creates a new Tk command whose name is 
+<style color=#00ffffff size=1>.</style>            pathName.  This command may be used to invoke various
+<style color=#00ffffff size=1>.</style>            operations on the widget.  It has the following general
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathName option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            Option and the args determine the exact behaviour of the
+<style color=#00ffffff size=1>.</style>            command.  The following commands are possible for listbox
+<style color=#00ffffff size=1>.</style>            widgets:
+
+<style color=#00ffffff size=1>.</style>            pathName activate index
+<style color=#00ffffff size=1>.</style>                 Sets the active element to the one indicated by index.
+<style color=#00ffffff size=1>.</style>                 The active element is drawn with an underline when the
+<style color=#00ffffff size=1>.</style>                 widget has the input focus, and its index may be
+<style color=#00ffffff size=1>.</style>                 retrieved with the index active.
+
+<style color=#00ffffff size=1>.</style>            pathName cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the listbox command.
+
+<style color=#00ffffff size=1>.</style>            pathName configure ?option? ?value option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathName.  If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, then the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the listbox command.
+
+<style color=#00ffffff size=1>.</style>            pathName curselection
+<style color=#00ffffff size=1>.</style>                 Returns a list containing the numerical indices of all
+<style color=#00ffffff size=1>.</style>                 of the elements in the listbox that are currently
+<style color=#00ffffff size=1>.</style>                 selected. If there are no elements selected in the
+<style color=#00ffffff size=1>.</style>                 listbox then an empty string is returned.
+
+<style color=#00ffffff size=1>.</style>            pathName delete first ?last?
+<style color=#00ffffff size=1>.</style>                 Deletes one or more elements of the listbox.  First and
+<style color=#00ffffff size=1>.</style>                 last are indices specifying the first and last elements
+<style color=#00ffffff size=1>.</style>                 in the range to delete.  If last isn't specified it
+<style color=#00ffffff size=1>.</style>                 defaults to first, i.e. a single element is deleted.
+
+<style color=#00ffffff size=1>.</style>            pathName get first ?last?
+<style color=#00ffffff size=1>.</style>                 If last is omitted, returns the contents of the listbox
+<style color=#00ffffff size=1>.</style>                 element indicated by first. If last is specified, the
+<style color=#00ffffff size=1>.</style>                 command returns a list whose elements are all of the
+<style color=#00ffffff size=1>.</style>                 listbox elements between first and last, inclusive.
+<style color=#00ffffff size=1>.</style>                 Both first and last may have any of the standard forms
+<style color=#00ffffff size=1>.</style>                 for indices.
+
+<style color=#00ffffff size=1>.</style>            pathName index index
+<style color=#00ffffff size=1>.</style>                 Returns a decimal string giving the integer index value
+<style color=#00ffffff size=1>.</style>                 that corresponds to index.
+
+<style color=#00ffffff size=1>.</style>            pathName insert index ?element element ...?
+<style color=#00ffffff size=1>.</style>                 Inserts zero or more new elements in the list just
+<style color=#00ffffff size=1>.</style>                 before the element given by index.  If index is
+<style color=#00ffffff size=1>.</style>                 specified as end then the new elements are added to the
+<style color=#00ffffff size=1>.</style>                 end of the list.  Returns an empty string.
+
+<style color=#00ffffff size=1>.</style>            pathName nearest y
+<style color=#00ffffff size=1>.</style>                 Given a y-coordinate within the listbox window, this
+<style color=#00ffffff size=1>.</style>                 command returns the index of the (visible) listbox
+<style color=#00ffffff size=1>.</style>                 element nearest to that y-coordinate.
+
+<style color=#00ffffff size=1>.</style>            pathName see index
+<style color=#00ffffff size=1>.</style>                 Adjust the view in the listbox so that the element
+<style color=#00ffffff size=1>.</style>                 given by index is visible. If the element is already
+<style color=#00ffffff size=1>.</style>                 visible then the command has no effect\; if the element
+<style color=#00ffffff size=1>.</style>                 is near one edge of the window then the listbox scrolls
+<style color=#00ffffff size=1>.</style>                 to bring the element into view at the edge\;  otherwise
+<style color=#00ffffff size=1>.</style>                 the listbox scrolls to center the element.
+
+<style color=#00ffffff size=1>.</style>            pathName selection option arg
+<style color=#00ffffff size=1>.</style>                 This command is used to adjust the selection within a
+<style color=#00ffffff size=1>.</style>                 listbox.  It has several forms, depending on option:
+
+<style color=#00ffffff size=1>.</style>                 pathName selection anchor index
+<style color=#00ffffff size=1>.</style>                      Sets the selection anchor to the element given by 
+<style color=#00ffffff size=1>.</style>                      index. The selection anchor is the end of the
+<style color=#00ffffff size=1>.</style>                      selection that is fixed while dragging out a
+<style color=#00ffffff size=1>.</style>                      selection with the mouse. The index anchor may be
+<style color=#00ffffff size=1>.</style>                      used to refer to the anchor element.
+
+<style color=#00ffffff size=1>.</style>                 pathName selection clear first ?last?
+<style color=#00ffffff size=1>.</style>                      If any of the elements between first and last
+<style color=#00ffffff size=1>.</style>                      (inclusive) are selected, they are deselected. The
+<style color=#00ffffff size=1>.</style>                      selection state is not changed for elements
+<style color=#00ffffff size=1>.</style>                      outside this range.
+
+<style color=#00ffffff size=1>.</style>                 pathName selection includes index
+<style color=#00ffffff size=1>.</style>                      Returns 1 if the element indicated by index is
+<style color=#00ffffff size=1>.</style>                      currently selected, 0 if it isn't.
+
+<style color=#00ffffff size=1>.</style>                 pathName selection set first ?last?
+<style color=#00ffffff size=1>.</style>                      Selects all of the elements in the range between
+<style color=#00ffffff size=1>.</style>                      first and last, inclusive, without affecting the
+<style color=#00ffffff size=1>.</style>                      selection state of elements outside that range.
+
+<style color=#00ffffff size=1>.</style>            pathName size
+<style color=#00ffffff size=1>.</style>                 Returns a decimal string indicating the total number of
+<style color=#00ffffff size=1>.</style>                 elements in the listbox.
+
+<style color=#00ffffff size=1>.</style>            pathName xview args
+<style color=#00ffffff size=1>.</style>                 This command is used to query and change the horizontal
+<style color=#00ffffff size=1>.</style>                 position of the information in the widget's window.  It
+<style color=#00ffffff size=1>.</style>                 can take any of the following forms:
+
+<style color=#00ffffff size=1>.</style>                 pathName xview
+<style color=#00ffffff size=1>.</style>                      Returns a list containing two elements. Each
+<style color=#00ffffff size=1>.</style>                      element is a real fraction between 0 and 1\;
+<style color=#00ffffff size=1>.</style>                      together they describe the horizontal span that is
+<style color=#00ffffff size=1>.</style>                      visible in the window. For example, if the first
+<style color=#00ffffff size=1>.</style>                      element is .2 and the second element is .6, 20% of
+<style color=#00ffffff size=1>.</style>                      the listbox's text is off-screen to the left, the
+<style color=#00ffffff size=1>.</style>                      middle 40% is visible in the window, and 40% of
+<style color=#00ffffff size=1>.</style>                      the text is off-screen to the right. These are the
+<style color=#00ffffff size=1>.</style>                      same values passed to scrollbars via the 
+<style color=#00ffffff size=1>.</style>                      -xscrollcommand option.
+
+<style color=#00ffffff size=1>.</style>                 pathName xview index
+<style color=#00ffffff size=1>.</style>                      Adjusts the view in the window so that the
+<style color=#00ffffff size=1>.</style>                      character position given by index is displayed at
+<style color=#00ffffff size=1>.</style>                      the left edge of the window. Character positions
+<style color=#00ffffff size=1>.</style>                      are defined by the width of the character 0.
+
+<style color=#00ffffff size=1>.</style>                 pathName xview moveto fraction
+<style color=#00ffffff size=1>.</style>                      Adjusts the view in the window so that fraction of
+<style color=#00ffffff size=1>.</style>                      the total width of the listbox text is off-screen
+<style color=#00ffffff size=1>.</style>                      to the left. fraction must be a fraction between 0
+<style color=#00ffffff size=1>.</style>                      and 1.
+
+<style color=#00ffffff size=1>.</style>                 pathName xview scroll number what
+<style color=#00ffffff size=1>.</style>                      This command shifts the view in the window left or
+<style color=#00ffffff size=1>.</style>                      right according to number and what. Number must be
+<style color=#00ffffff size=1>.</style>                      an integer. What must be either units or pages. If
+<style color=#00ffffff size=1>.</style>                      what is units, the view adjusts left or right by
+<style color=#00ffffff size=1>.</style>                      number character units (the width of the 0
+<style color=#00ffffff size=1>.</style>                      character) on the display\;  if it is pages then
+<style color=#00ffffff size=1>.</style>                      the view adjusts by number screenfuls. If number
+<style color=#00ffffff size=1>.</style>                      is negative then characters farther to the left
+<style color=#00ffffff size=1>.</style>                      become visible\;  if it is positive then characters
+<style color=#00ffffff size=1>.</style>                      farther to the right become visible.
+
+<style color=#00ffffff size=1>.</style>            pathName yview ?args?
+<style color=#00ffffff size=1>.</style>                 This command is used to query and change the vertical
+<style color=#00ffffff size=1>.</style>                 position of the text in the widget's window. It can
+<style color=#00ffffff size=1>.</style>                 take any of the following forms:
+
+<style color=#00ffffff size=1>.</style>                 pathName yview
+<style color=#00ffffff size=1>.</style>                      Returns a list containing two elements, both of
+<style color=#00ffffff size=1>.</style>                      which are real fractions between 0 and 1. The
+<style color=#00ffffff size=1>.</style>                      first element gives the position of the listbox
+<style color=#00ffffff size=1>.</style>                      element at the top of the window, relative to the
+<style color=#00ffffff size=1>.</style>                      listbox as a whole (0.5 means it is halfway
+<style color=#00ffffff size=1>.</style>                      through the listbox, for example). The second
+<style color=#00ffffff size=1>.</style>                      element gives the position of the listbox element
+<style color=#00ffffff size=1>.</style>                      just after the last one in the window, relative to
+<style color=#00ffffff size=1>.</style>                      the listbox as a whole. These are the same values
+<style color=#00ffffff size=1>.</style>                      passed to scrollbars via the -yscrollcommand
+<style color=#00ffffff size=1>.</style>                      option.
+
+<style color=#00ffffff size=1>.</style>                 pathName yview index
+<style color=#00ffffff size=1>.</style>                      Adjusts the view in the window so that the element
+<style color=#00ffffff size=1>.</style>                      given by index is displayed at the top of the
+<style color=#00ffffff size=1>.</style>                      window.
+
+<style color=#00ffffff size=1>.</style>                 pathName yview moveto fraction
+<style color=#00ffffff size=1>.</style>                      Adjusts the view in the window so that the element
+<style color=#00ffffff size=1>.</style>                      given by fraction appears at the top of the
+<style color=#00ffffff size=1>.</style>                      window. Fraction is a fraction between 0 and 1\;  0
+<style color=#00ffffff size=1>.</style>                      indicates the first element in the listbox, 0.33
+<style color=#00ffffff size=1>.</style>                      indicates the element one-third the way through
+<style color=#00ffffff size=1>.</style>                      the listbox, and so on.
+
+<style color=#00ffffff size=1>.</style>                 pathName yview scroll number what
+<style color=#00ffffff size=1>.</style>                      This command adjusts the view in the window up or
+<style color=#00ffffff size=1>.</style>                      down according to number and what. Number must be
+<style color=#00ffffff size=1>.</style>                      an integer. What must be either units or pages. If
+<style color=#00ffffff size=1>.</style>                      what is units, the view adjusts up or down by
+<style color=#00ffffff size=1>.</style>                      number lines\;  if it is pages then the view
+<style color=#00ffffff size=1>.</style>                      adjusts by number screenfuls. If number is
+<style color=#00ffffff size=1>.</style>                      negative then earlier elements become visible\;  if
+<style color=#00ffffff size=1>.</style>                      it is positive then later elements become visible.
+
+DEFAULT BINDINGS
+<style color=#00ffffff size=1>.</style>            If the selection mode is single or browse, at most one
+<style color=#00ffffff size=1>.</style>            element can be selected in the listbox at once. In both
+<style color=#00ffffff size=1>.</style>            modes, clicking button 1 on an element selects it and
+<style color=#00ffffff size=1>.</style>            deselects any other selected item. In browse mode it is also
+<style color=#00ffffff size=1>.</style>            possible to drag the selection with button 1.
+
+<style color=#00ffffff size=1>.</style>            If the selection mode is multiple or extended, any number of
+<style color=#00ffffff size=1>.</style>            elements may be selected at once, including discontiguous
+<style color=#00ffffff size=1>.</style>            ranges.  In multiple mode, clicking button 1 on an element
+<style color=#00ffffff size=1>.</style>            toggles its selection state without affecting any other
+<style color=#00ffffff size=1>.</style>            elements. In extended mode, pressing button 1 on an element
+<style color=#00ffffff size=1>.</style>            selects it, deselects everything else, and sets the anchor
+<style color=#00ffffff size=1>.</style>            to the element under the mouse\;  dragging the mouse with
+<style color=#00ffffff size=1>.</style>            button 1 down extends the selection to include all the
+<style color=#00ffffff size=1>.</style>            elements between the anchor and the element under the mouse,
+<style color=#00ffffff size=1>.</style>            inclusive.
+
+<style color=#00ffffff size=1>.</style>            Most people will probably want to use browse mode for single
+<style color=#00ffffff size=1>.</style>            selections and extended mode for multiple selections\; the
+<style color=#00ffffff size=1>.</style>            other modes appear to be useful only in special situations.
+
+<style color=#00ffffff size=1>.</style>            The behaviour of listboxes can be changed by defining new
+<style color=#00ffffff size=1>.</style>            bindings for individual widgets. The default bindings do a
+<style color=#00ffffff size=1>.</style>            grab set when button 1 is pressed and a grab release when
+<style color=#00ffffff size=1>.</style>            button 1 is released. Care must be taken when overriding
+<style color=#00ffffff size=1>.</style>            either or both of these defaults to ensure that grabbing is
+<style color=#00ffffff size=1>.</style>            consistent.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            At least one entry is required for the widget to indicate
+<style color=#00ffffff size=1>.</style>            that it has keyboard focus.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=options(9)>options(9)</action>, <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

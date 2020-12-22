@@ -1,0 +1,77 @@
+<action name=SH-SEXPRS(1)>SH-SEXPRS(1)</action>                                         <action name=SH-SEXPRS(1)>SH-SEXPRS(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            sexprs, islist, els, text, textels, mktext, mklist,
+<style color=#00ffffff size=1>.</style>            mktextlist - parse and generate S-expressions
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load sexprs
+
+<style color=#00ffffff size=1>.</style>            getsexprs command
+<style color=#00ffffff size=1>.</style>            islist sexpr
+<style color=#00ffffff size=1>.</style>            ${els sexpr}
+<style color=#00ffffff size=1>.</style>            ${text sexpr}
+<style color=#00ffffff size=1>.</style>            ${textels sexpr}
+<style color=#00ffffff size=1>.</style>            ${mktext val}
+<style color=#00ffffff size=1>.</style>            ${mklist \[ val... \]}
+<style color=#00ffffff size=1>.</style>            ${mktextlist \[ val... \]}
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Sexprs is a loadable module for <action name=sh(1)>sh(1)</action> that provides the
+<style color=#00ffffff size=1>.</style>            facility to parse and generate S-expressions (see sexprs
+<style color=#00ffffff size=1>.</style>            (2)). The following primitives are provided:
+
+<style color=#00ffffff size=1>.</style>            getsexprs Getsexprs works similiarly to getlines in sh-std
+<style color=#00ffffff size=1>.</style>                      (1). It reads S-expressions from the standard
+<style color=#00ffffff size=1>.</style>                      input, and for expression read, it invokes command
+<style color=#00ffffff size=1>.</style>                      with $sexp set to the text representation of that
+<style color=#00ffffff size=1>.</style>                      expression. Getsexprs recognises the usual loop
+<style color=#00ffffff size=1>.</style>                      break and continue exceptions.
+
+<style color=#00ffffff size=1>.</style>            islist sexp
+<style color=#00ffffff size=1>.</style>                      Islist yields a nil (true) status if sexp, which
+<style color=#00ffffff size=1>.</style>                      must be a well-formed S-expression, is a list
+<style color=#00ffffff size=1>.</style>                      element.
+
+<style color=#00ffffff size=1>.</style>            ${els sexp}
+<style color=#00ffffff size=1>.</style>                      If sexp is an S-expression containing a list, then
+<style color=#00ffffff size=1>.</style>                      els returns a list of the S-expressions it
+<style color=#00ffffff size=1>.</style>                      contains. It is an error if sexp is not a valid
+<style color=#00ffffff size=1>.</style>                      S-expression.
+
+<style color=#00ffffff size=1>.</style>            ${text sexp}
+<style color=#00ffffff size=1>.</style>                      If sexp is an S-expression containing a simple
+<style color=#00ffffff size=1>.</style>                      element, then text returns the value of that
+<style color=#00ffffff size=1>.</style>                      element. If sexp is a list, the return value will
+<style color=#00ffffff size=1>.</style>                      be an empty string. Note that elements containing
+<style color=#00ffffff size=1>.</style>                      binary data will likely be corrupted by conversion
+<style color=#00ffffff size=1>.</style>                      to utf-8. It is an error if sexp is not a valid
+<style color=#00ffffff size=1>.</style>                      S-expression.
+
+<style color=#00ffffff size=1>.</style>            ${textels sexp}
+<style color=#00ffffff size=1>.</style>                      If sexp is an S-expression containing a list, then
+<style color=#00ffffff size=1>.</style>                      textels returns a list of the text values in that
+<style color=#00ffffff size=1>.</style>                      S-expression, converted as with ${text}. It is an
+<style color=#00ffffff size=1>.</style>                      error if sexp is not a valid S-expression.
+
+<style color=#00ffffff size=1>.</style>            ${mktext val}
+<style color=#00ffffff size=1>.</style>                      Mktext returns a text representation of the
+<style color=#00ffffff size=1>.</style>                      S-expression containing the simple value val.
+
+<style color=#00ffffff size=1>.</style>            ${mklist \[sexp...\]}
+<style color=#00ffffff size=1>.</style>                      Mklist returns a text representation of the
+<style color=#00ffffff size=1>.</style>                      S-expression list containing its arguments, which
+<style color=#00ffffff size=1>.</style>                      must be well-format S-expressions.
+
+<style color=#00ffffff size=1>.</style>            ${mktextlist \[val...\]}
+<style color=#00ffffff size=1>.</style>                      Mktextlist returns a text representation of the
+<style color=#00ffffff size=1>.</style>                      S-expression list containing one simple element
+<style color=#00ffffff size=1>.</style>                      for each val.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sh/sexprs.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=sh-std(1)>sh-std(1)</action>, <action name=sexprs(2)>sexprs(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

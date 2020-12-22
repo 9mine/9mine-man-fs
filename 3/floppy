@@ -1,0 +1,37 @@
+<action name=FLOPPY(3)>FLOPPY(3)</action>                                               <action name=FLOPPY(3)>FLOPPY(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            floppy - floppy disk interface
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a '#f' /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/fd0disk
+<style color=#00ffffff size=1>.</style>            /dev/fd0ctl
+<style color=#00ffffff size=1>.</style>            /dev/fd1disk
+<style color=#00ffffff size=1>.</style>            /dev/fd1ctl
+<style color=#00ffffff size=1>.</style>            /dev/fd2disk
+<style color=#00ffffff size=1>.</style>            /dev/fd2ctl
+<style color=#00ffffff size=1>.</style>            /dev/fd3disk
+<style color=#00ffffff size=1>.</style>            /dev/fd3ctl
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The floppy disk interface serves a one-level directory
+<style color=#00ffffff size=1>.</style>            giving access to up to four floppy disk drives. Each drive
+<style color=#00ffffff size=1>.</style>            is represented by a data and control file. There are no
+<style color=#00ffffff size=1>.</style>            partitions.
+
+<style color=#00ffffff size=1>.</style>            Messages accepted by the ctl file include:
+<style color=#00ffffff size=1>.</style>            eject   Eject the floppy, if possible.
+<style color=#00ffffff size=1>.</style>            reset   Reset the drive.
+<style color=#00ffffff size=1>.</style>            format type
+<style color=#00ffffff size=1>.</style>                    Format the floppy.  The type sets the density and
+<style color=#00ffffff size=1>.</style>                    type of disk to be formatted\; see <action name=format(8)>format(8)</action>.
+
+<style color=#00ffffff size=1>.</style>            A read of the ctl file returns a string describing the form
+<style color=#00ffffff size=1>.</style>            factor of the disk, one of 3½DD, 3½HD, 5¼DD, or 5¼HD.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/pc/devfloppy.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

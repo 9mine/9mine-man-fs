@@ -1,0 +1,43 @@
+<action name=FILEPAT(2)>FILEPAT(2)</action>                                             <action name=FILEPAT(2)>FILEPAT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            filepat: expand, match - file pattern matching
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "filepat.m"\;
+<style color=#00ffffff size=1>.</style>            filepat := load Filepat Filepat->PATH\;
+
+<style color=#00ffffff size=1>.</style>            expand:  fn(pat: string): list of string\;
+<style color=#00ffffff size=1>.</style>            match:   fn(pat, name: string): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Expand builds a list of file names in alphabetical order
+<style color=#00ffffff size=1>.</style>            that match the pattern pat. The pattern is tokenised using /
+<style color=#00ffffff size=1>.</style>            as a delimiter.
+
+<style color=#00ffffff size=1>.</style>            Match returns 1 if name matches the pattern pat, and 0
+<style color=#00ffffff size=1>.</style>            otherwise.
+
+<style color=#00ffffff size=1>.</style>            The pat passed to match and expand may include combinations
+<style color=#00ffffff size=1>.</style>            of the special characters *, ?, \[, and \].
+
+<style color=#00ffffff size=1>.</style>            The asterisk * matches a string of zero or more characters.
+
+<style color=#00ffffff size=1>.</style>            The query ? matches any single character.
+
+<style color=#00ffffff size=1>.</style>            The notation \[s\], where s is a nonempty string, matches any
+<style color=#00ffffff size=1>.</style>            single character in s. The notation \[^s\], where s is a
+<style color=#00ffffff size=1>.</style>            nonempty string, matches any single character not in s. The
+<style color=#00ffffff size=1>.</style>            characters *, ?, and \[ have no special meaning within s.
+
+<style color=#00ffffff size=1>.</style>            If any character is preceded by the character \, that
+<style color=#00ffffff size=1>.</style>            character loses any special meaning and is interpreted
+<style color=#00ffffff size=1>.</style>            literally.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/filepat.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-tokenize(2)>sys-tokenize(2)</action>, <action name=readdir(2)>readdir(2)</action> <action name=regex(2)>regex(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

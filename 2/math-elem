@@ -1,0 +1,65 @@
+<action name=MATH-ELEM(2)>MATH-ELEM(2)</action>                                         <action name=MATH-ELEM(2)>MATH-ELEM(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Math: cbrt, sqrt, pow, pow10, hypot, exp, expm1, log, log10,
+<style color=#00ffffff size=1>.</style>            log1p, cos, cosh, sin, sinh, tan, tanh, acos, asin, acosh,
+<style color=#00ffffff size=1>.</style>            asinh, atan, atanh, atan2, lgamma, erf, erfc, j0, j1, y0,
+<style color=#00ffffff size=1>.</style>            y1, jn, yn - elementary functions of applied mathematics
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "math.m"\;
+<style color=#00ffffff size=1>.</style>            math := load Math Math->PATH\;
+
+<style color=#00ffffff size=1>.</style>            cbrt, sqrt: fn(x: real): real\;
+<style color=#00ffffff size=1>.</style>            pow: fn(x, y: real): real\;
+<style color=#00ffffff size=1>.</style>            pow10: fn(p: int): real\;
+<style color=#00ffffff size=1>.</style>            hypot: fn(x, y: real): real\;
+<style color=#00ffffff size=1>.</style>            exp, expm1, log, log10, log1p: fn(x: real): real\;
+
+<style color=#00ffffff size=1>.</style>            cos, cosh, sin, sinh, tan, tanh: fn(x: real): real\;
+<style color=#00ffffff size=1>.</style>            acos, asin, acosh, asinh, atan, atanh: fn(x: real): real\;
+<style color=#00ffffff size=1>.</style>            atan2: fn(y, x: real) of real\;
+
+<style color=#00ffffff size=1>.</style>            lgamma: fn(x: real): (int,real)\;
+<style color=#00ffffff size=1>.</style>            erf, erfc: fn(x: real): real\;
+<style color=#00ffffff size=1>.</style>            j0, j1, y0, y1: fn(x: real): real\;
+<style color=#00ffffff size=1>.</style>            jn, yn: fn(n: int, x: real): real\;
+
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These routines implement the basic elementary functions of
+<style color=#00ffffff size=1>.</style>            applied mathematics.
+
+<style color=#00ffffff size=1>.</style>            Sqrt(x) computes the square root of x, cbrt(x) the cube
+<style color=#00ffffff size=1>.</style>            root. Pow(x,y) computes x raised to the exponent y\; pow10
+<style color=#00ffffff size=1>.</style>            raises 10 to the integer power n. Hypot(x,y) computes sqrt(x
+<style color=#00ffffff size=1>.</style>            *x+y*y).
+
+<style color=#00ffffff size=1>.</style>            Exp(x) returns the exponential function of x, and expm1(x)
+<style color=#00ffffff size=1>.</style>            is exp(x)-1.
+
+<style color=#00ffffff size=1>.</style>            Log(x) returns the natural logarithm of x, while log10(x)
+<style color=#00ffffff size=1>.</style>            returns the logarithm base 10 and log1p(x) returns the
+<style color=#00ffffff size=1>.</style>            logarithm of 1+x.
+
+<style color=#00ffffff size=1>.</style>            The trigonometric functions use radians. The ranges of the
+<style color=#00ffffff size=1>.</style>            inverse functions are: acos in \[0,π\]\; asin in \[-π/2,π/2\]\;
+<style color=#00ffffff size=1>.</style>            atan in \[-π/2,π/2\]\; and atan2(y,x) = arctan(y/x) in \[-π,π\]\;
+
+<style color=#00ffffff size=1>.</style>            The gamma function is implemented by lgamma(x)\; the tuple it
+<style color=#00ffffff size=1>.</style>            returns, say (s,lg), encodes the gamma function by Γ(x) = s
+<style color=#00ffffff size=1>.</style>            *exp(lg).
+
+<style color=#00ffffff size=1>.</style>            The hyperbolic trigonometric functions sinh etc. behave as
+<style color=#00ffffff size=1>.</style>            expected. Erf is the error function and erfc(x) is 1-erf(x).
+
+<style color=#00ffffff size=1>.</style>            The Bessel functions are computed by j0, j1, jn, y0, y1, and
+<style color=#00ffffff size=1>.</style>            yn.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/math.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=math-intro(2)>math-intro(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

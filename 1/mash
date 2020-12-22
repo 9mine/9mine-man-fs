@@ -1,0 +1,322 @@
+<action name=MASH(1)>MASH(1)</action>                                                   <action name=MASH(1)>MASH(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mash - programmable shell
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            mash \[ -denx \]\[ -ccommand \] \[ file \[ arg ... \]\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Mash is an older alternative to the original Inferno shell
+<style color=#00ffffff size=1>.</style>            (now <action name=tiny(1)>tiny(1)</action>). Mash is a programmable shell that also allows
+<style color=#00ffffff size=1>.</style>            the definition of simple dependency rules, resembling those
+<style color=#00ffffff size=1>.</style>            of Unix make. It executes commands read from standard input 
+<style color=#00ffffff size=1>.</style>            or a file or, with the -c flag, from mash's argument list.
+<style color=#00ffffff size=1>.</style>            Its syntax and semantics are similar to that of Plan 9's rc.
+
+<style color=#00ffffff size=1>.</style>         Invocation
+<style color=#00ffffff size=1>.</style>            If mash is started with no arguments it reads commands from
+<style color=#00ffffff size=1>.</style>            standard input. Otherwise its first non-flag argument is the
+<style color=#00ffffff size=1>.</style>            name of a file from which to read commands (but see -c
+<style color=#00ffffff size=1>.</style>            below). Subsequent arguments become the initial value of
+<style color=#00ffffff size=1>.</style>            $args. Mash accepts the following command-line flags.
+<style color=#00ffffff size=1>.</style>            -c string  Commands are read from string.
+<style color=#00ffffff size=1>.</style>            -d         Dump parsed commands before execution.
+<style color=#00ffffff size=1>.</style>            -e         Fail if a top level command does. 
+<style color=#00ffffff size=1>.</style>            -n         Parse but do not execute. 
+<style color=#00ffffff size=1>.</style>            -x         Print each simple command before executing it.
+
+<style color=#00ffffff size=1>.</style>            If invoked without arguments mash first runs the commands
+<style color=#00ffffff size=1>.</style>            found in /lib/mashinit.
+
+<style color=#00ffffff size=1>.</style>         Command Lines
+<style color=#00ffffff size=1>.</style>            Each command is terminated with an ampersand or a semicolon
+<style color=#00ffffff size=1>.</style>            (& or \;). When reading from /dev/cons a newline not escaped
+<style color=#00ffffff size=1>.</style>            with a backslash (\) is treated as a semicolon. Mash does
+<style color=#00ffffff size=1>.</style>            not wait for a command followed by & to finish executing
+<style color=#00ffffff size=1>.</style>            before starting the following command. 
+
+<style color=#00ffffff size=1>.</style>            A number-sign (#) and any following characters up to (but
+<style color=#00ffffff size=1>.</style>            not including) the next newline are ignored, except in
+<style color=#00ffffff size=1>.</style>            quotation marks. 
+
+<style color=#00ffffff size=1>.</style>         Simple Commands
+<style color=#00ffffff size=1>.</style>            A simple command is a sequence of words interspersed with
+<style color=#00ffffff size=1>.</style>            I/O redirections. If the first word is the name of a mash
+<style color=#00ffffff size=1>.</style>            function or of one of mash's built-in commands, it is
+<style color=#00ffffff size=1>.</style>            executed by mash. Otherwise, if the name starts with a slash
+<style color=#00ffffff size=1>.</style>            (/), it must be the path name of a Dis file to be loaded and
+<style color=#00ffffff size=1>.</style>            executed. Names containing no initial slash are searched for
+<style color=#00ffffff size=1>.</style>            in the current directory and then in /dis. The .dis
+<style color=#00ffffff size=1>.</style>            extension need not be supplied. 
+
+<style color=#00ffffff size=1>.</style>            The keywords are
+<style color=#00ffffff size=1>.</style>            	case else fn for hd if in len rescue tl while 
+
+<style color=#00ffffff size=1>.</style>         Words and Variables
+<style color=#00ffffff size=1>.</style>            A number of constructions may be used where mash's syntax
+<style color=#00ffffff size=1>.</style>            requires a word to appear. In many cases a construction's
+<style color=#00ffffff size=1>.</style>            value will be a list of strings rather than a single string.
+
+<style color=#00ffffff size=1>.</style>            The simplest kind of word is the unquoted word: a sequence
+<style color=#00ffffff size=1>.</style>            of one or more characters none of which is a blank, tab,
+<style color=#00ffffff size=1>.</style>            newline, or any of the following:
+<style color=#00ffffff size=1>.</style>            	# : \; ! ~ @ & | ^ $ = " ` ' { } ( ) < > 
+<style color=#00ffffff size=1>.</style>            An unquoted word that contains any of the characters *, ? or
+<style color=#00ffffff size=1>.</style>            \[ is a pattern for matching against file names. The
+<style color=#00ffffff size=1>.</style>            character * matches any sequence of characters, ? matches
+<style color=#00ffffff size=1>.</style>            any single character, and \[ class \] matches any character in
+<style color=#00ffffff size=1>.</style>            the class. The class may also contain pairs of characters 
+<style color=#00ffffff size=1>.</style>            separated by -, standing for all characters lexically
+<style color=#00ffffff size=1>.</style>            between the two. The character / must appear explicitly in a
+<style color=#00ffffff size=1>.</style>            pattern. A pattern is replaced by a list of words, one for
+<style color=#00ffffff size=1>.</style>            each path name matched, except that a pattern matching no
+<style color=#00ffffff size=1>.</style>            names is not replaced by the empty list, but rather stands
+<style color=#00ffffff size=1>.</style>            for itself. Pattern matching is done after all other
+<style color=#00ffffff size=1>.</style>            operations. Thus,
+<style color=#00ffffff size=1>.</style>            	x=/tmp\; echo $x^/*.c\; 
+<style color=#00ffffff size=1>.</style>            matches /tmp/*.c, rather than matching /*.c and then
+<style color=#00ffffff size=1>.</style>            prefixing /tmp.
+
+<style color=#00ffffff size=1>.</style>            A quoted word is a sequence of characters surrounded by
+<style color=#00ffffff size=1>.</style>            single quotes ('). A single quote is escaped with a
+<style color=#00ffffff size=1>.</style>            backslash. 
+
+<style color=#00ffffff size=1>.</style>            Each of the following is a word.
+<style color=#00ffffff size=1>.</style>            $identifier
+<style color=#00ffffff size=1>.</style>                 The identifier after the $ is the name of a variable
+<style color=#00ffffff size=1>.</style>                 whose value is substituted. Variable values are lists
+<style color=#00ffffff size=1>.</style>                 of strings. It is an error if the named variable has
+<style color=#00ffffff size=1>.</style>                 never been assigned a value.
+<style color=#00ffffff size=1>.</style>            $number
+<style color=#00ffffff size=1>.</style>                 See the description of rules for the <action name=mash-make(1)>mash-make(1)</action>
+<style color=#00ffffff size=1>.</style>                 builtin.
+<style color=#00ffffff size=1>.</style>            $\c identifier
+<style color=#00ffffff size=1>.</style>                 The value is a single string containing the components
+<style color=#00ffffff size=1>.</style>                 of the named variable separated by spaces.
+<style color=#00ffffff size=1>.</style>            `{commands}
+<style color=#00ffffff size=1>.</style>                 mash executes the commands and reads the standard
+<style color=#00ffffff size=1>.</style>                 output, splitting it into a list of words, using the
+<style color=#00ffffff size=1>.</style>                 whitespace characters (space, tab, newline and carriage
+<style color=#00ffffff size=1>.</style>                 return) as separators.
+<style color=#00ffffff size=1>.</style>            "{\c commands}
+<style color=#00ffffff size=1>.</style>                 mash executes the commands and reads the standard
+<style color=#00ffffff size=1>.</style>                 output, splitting it into a list of words, using the
+<style color=#00ffffff size=1>.</style>                 whitespace characters (space, tab, newline and carriage
+<style color=#00ffffff size=1>.</style>                 return) as separators.
+<style color=#00ffffff size=1>.</style>            <{commands}
+<style color=#00ffffff size=1>.</style>            >{commands}
+<style color=#00ffffff size=1>.</style>                 The commands are executed asynchronously with their
+<style color=#00ffffff size=1>.</style>                 standard output or standard input connected to a pipe.
+<style color=#00ffffff size=1>.</style>                 The value of the word is the name of a file referring
+<style color=#00ffffff size=1>.</style>                 to the other end of the pipe. This allows the
+<style color=#00ffffff size=1>.</style>                 construction of non-linear pipelines. For example, the 
+<style color=#00ffffff size=1>.</style>                 following runs two commands old and new and uses cmp to
+<style color=#00ffffff size=1>.</style>                 compare their outputs
+<style color=#00ffffff size=1>.</style>                 	cmp <{old} <{new}\; 
+<style color=#00ffffff size=1>.</style>            (expr)
+<style color=#00ffffff size=1>.</style>                 mash evaluates expr as an expression. The value is a
+<style color=#00ffffff size=1>.</style>                 (possibly null) list of words. Expressions are
+<style color=#00ffffff size=1>.</style>                 described in detail below.
+<style color=#00ffffff size=1>.</style>            word^word
+<style color=#00ffffff size=1>.</style>                 The ^ operator concatenates its two operands. If either
+<style color=#00ffffff size=1>.</style>                 operand is a singleton, the concatenation is
+<style color=#00ffffff size=1>.</style>                 distributive. Otherwise the lists are concatenated
+<style color=#00ffffff size=1>.</style>                 pairwise.
+<style color=#00ffffff size=1>.</style>         Free Carets
+<style color=#00ffffff size=1>.</style>            In most circumstances, mash will insert the ^ operator
+<style color=#00ffffff size=1>.</style>            automatically between words that are not separated by white
+<style color=#00ffffff size=1>.</style>            space. Whenever one of $ 'or ` (dollar, single quote or back
+<style color=#00ffffff size=1>.</style>            quote) follows a quoted or unquoted word or an unquoted word
+<style color=#00ffffff size=1>.</style>            follows a quoted word with no intervening blanks or tabs, a
+<style color=#00ffffff size=1>.</style>            ^ is inserted between the two. If an unquoted word
+<style color=#00ffffff size=1>.</style>            immediately follows a $ and contains a character other than
+<style color=#00ffffff size=1>.</style>            an alphanumeric, or underscore, a ^ is inserted before the
+<style color=#00ffffff size=1>.</style>            first such character. Thus 
+
+<style color=#00ffffff size=1>.</style>                 limbo -$flags $stem.b
+
+<style color=#00ffffff size=1>.</style>            is equivalent to 
+
+<style color=#00ffffff size=1>.</style>                 limbo -^$flags $stem^.b
+
+<style color=#00ffffff size=1>.</style>         I/O Redirections
+<style color=#00ffffff size=1>.</style>            The sequence >file redirects the standard output file (file
+<style color=#00ffffff size=1>.</style>            descriptor 1, normally /dev/cons) to the named file\; >>file
+<style color=#00ffffff size=1>.</style>            appends standard output to the file. The standard input file
+<style color=#00ffffff size=1>.</style>            (file descriptor 0, also normally /dev/cons) may be
+<style color=#00ffffff size=1>.</style>            redirected from a file by the sequence <file. The sequence
+<style color=#00ffffff size=1>.</style>            <>file opens the file for read/write and associates both
+<style color=#00ffffff size=1>.</style>            file descriptor 0 and 1 with it.
+
+Compound Commands
+<style color=#00ffffff size=1>.</style>            A pair of commands separated by a pipe operator (|) is a
+<style color=#00ffffff size=1>.</style>            command. The standard output of the left command is sent
+<style color=#00ffffff size=1>.</style>            through a pipe to the standard input of the right command. 
+
+<style color=#00ffffff size=1>.</style>            Each of the following is a command.
+<style color=#00ffffff size=1>.</style>            if ( expr ) command1
+<style color=#00ffffff size=1>.</style>            if ( expr ) command1 else command2
+<style color=#00ffffff size=1>.</style>                 The expr  is evaluated and if the result is not null,
+<style color=#00ffffff size=1>.</style>                 then command1 is executed. In the second form command2
+<style color=#00ffffff size=1>.</style>                 is executed if the result is null.
+<style color=#00ffffff size=1>.</style>            for ( name in list )command
+<style color=#00ffffff size=1>.</style>                 The command is executed once for each word in list with
+<style color=#00ffffff size=1>.</style>                 that word assigned to name.
+<style color=#00ffffff size=1>.</style>            while ( expr ) command
+<style color=#00ffffff size=1>.</style>                 The expr is evaluated repeatedly until its value is
+<style color=#00ffffff size=1>.</style>                 null. Each time it evaluates to non-null, the command
+<style color=#00ffffff size=1>.</style>                 is executed.
+<style color=#00ffffff size=1>.</style>            case expr { pattern-list => command ... }
+<style color=#00ffffff size=1>.</style>            case expr-list { pattern => command ... }
+<style color=#00ffffff size=1>.</style>                 In the first form of the command the expr is matched
+<style color=#00ffffff size=1>.</style>                 against a series of lists of regular expressions (See
+<style color=#00ffffff size=1>.</style>                 <action name=regex(2)>regex(2)</action>). The command associated with the matching
+<style color=#00ffffff size=1>.</style>                 expression is executed. In the second form the command
+<style color=#00ffffff size=1>.</style>                 associated with the first pattern to match one of the
+<style color=#00ffffff size=1>.</style>                 words in expr-list is executed. An expr-list will never
+<style color=#00ffffff size=1>.</style>                 match a pattern-list.
+<style color=#00ffffff size=1>.</style>            {commands}
+<style color=#00ffffff size=1>.</style>            @{commands}
+<style color=#00ffffff size=1>.</style>                 Braces serve to alter the grouping of commands implied
+<style color=#00ffffff size=1>.</style>                 by operator priorities. The body is a sequence of
+<style color=#00ffffff size=1>.</style>                 commands separated by & or \;. The second form is
+<style color=#00ffffff size=1>.</style>                 executed with a new scope. Either form can be followed
+<style color=#00ffffff size=1>.</style>                 by redirections.
+<style color=#00ffffff size=1>.</style>            fnname{list}
+<style color=#00ffffff size=1>.</style>            fnname
+<style color=#00ffffff size=1>.</style>                 The first form defines a function with the given name.
+<style color=#00ffffff size=1>.</style>                 Subsequently, whenever a command whose first word is
+<style color=#00ffffff size=1>.</style>                 name is encountered, the current value of the remainder
+<style color=#00ffffff size=1>.</style>                 of the command's word list will be assigned to the
+<style color=#00ffffff size=1>.</style>                 local variable args, in a new scope, and mash will
+<style color=#00ffffff size=1>.</style>                 execute the list. The second form removes name's
+<style color=#00ffffff size=1>.</style>                 function definition.
+<style color=#00ffffff size=1>.</style>            name=list
+<style color=#00ffffff size=1>.</style>            name:=list
+<style color=#00ffffff size=1>.</style>                 The first form is an assignment to a variable. If the
+<style color=#00ffffff size=1>.</style>                 name is currently defined as a local variable its value
+<style color=#00ffffff size=1>.</style>                 will be updated. Otherwise a global variable with the
+<style color=#00ffffff size=1>.</style>                 given name will be defined or updated. The second form
+<style color=#00ffffff size=1>.</style>                 is an explicit definition or update of a local
+<style color=#00ffffff size=1>.</style>                 variable.
+<style color=#00ffffff size=1>.</style>            list:list
+<style color=#00ffffff size=1>.</style>            list:list{commands}
+<style color=#00ffffff size=1>.</style>            word:~word{commands}
+<style color=#00ffffff size=1>.</style>                 These forms define dependencies and rules for the make
+<style color=#00ffffff size=1>.</style>                 loadable builtin. The first form defines a simple
+<style color=#00ffffff size=1>.</style>                 dependency, the second a dependency with an explicit
+<style color=#00ffffff size=1>.</style>                 rule. The third form defines an implicit rule where the
+<style color=#00ffffff size=1>.</style>                 left-hand word is a file pattern, the right-hand word
+<style color=#00ffffff size=1>.</style>                 is the prerequisite. The right-hand word and the
+<style color=#00ffffff size=1>.</style>                 commands can contain references to the characters
+<style color=#00ffffff size=1>.</style>                 matched by the * meta-character in the pattern ($1
+<style color=#00ffffff size=1>.</style>                 evaluates to the characters matched by the first *, $2
+<style color=#00ffffff size=1>.</style>                 the second and so on\; $0 is the entire match). 
+
+<style color=#00ffffff size=1>.</style>         Expressions
+<style color=#00ffffff size=1>.</style>            Expressions evaluate to possibly null lists of strings. A
+<style color=#00ffffff size=1>.</style>            word is an expression. An expression may take one of the
+<style color=#00ffffff size=1>.</style>            following forms
+<style color=#00ffffff size=1>.</style>            ( expr )
+<style color=#00ffffff size=1>.</style>                 Parentheses are used for grouping.
+<style color=#00ffffff size=1>.</style>            hd expr
+<style color=#00ffffff size=1>.</style>            tl expr
+<style color=#00ffffff size=1>.</style>            len expr
+<style color=#00ffffff size=1>.</style>            ! expr
+<style color=#00ffffff size=1>.</style>                 hd is the first element of a list, tl the remainder.
+<style color=#00ffffff size=1>.</style>                 len is the length of a list. Both evaluate to the null
+<style color=#00ffffff size=1>.</style>                 list if their operand is a null list. ! is the not
+<style color=#00ffffff size=1>.</style>                 operator and evaluates to true for a null list or to a
+<style color=#00ffffff size=1>.</style>                 null list otherwise.
+<style color=#00ffffff size=1>.</style>            expr ^ expr
+<style color=#00ffffff size=1>.</style>            expr :: expr
+<style color=#00ffffff size=1>.</style>            expr == expr
+<style color=#00ffffff size=1>.</style>            expr != expr
+<style color=#00ffffff size=1>.</style>            expr ~ expr
+<style color=#00ffffff size=1>.</style>                 ^ is concatenation (as defined above), :: is list
+<style color=#00ffffff size=1>.</style>                 concatenation, == and != are the equality operators
+<style color=#00ffffff size=1>.</style>                 evaluating to true or the null list, depending on the
+<style color=#00ffffff size=1>.</style>                 equality or inequality of the two operands. ~ is the
+<style color=#00ffffff size=1>.</style>                 match operator, true if a singleton string matches one
+<style color=#00ffffff size=1>.</style>                 of a list of regular expressions, or one of a list of
+<style color=#00ffffff size=1>.</style>                 strings matches a regular expression. (If neither
+<style color=#00ffffff size=1>.</style>                 operand is a singleton it evaluates to the null list.)
+<style color=#00ffffff size=1>.</style>                 ^ has the highest precedence, followed by :: followed
+<style color=#00ffffff size=1>.</style>                 by the other three. All associate to the left except ::
+<style color=#00ffffff size=1>.</style>                 .
+<style color=#00ffffff size=1>.</style>         Built-in Commands
+<style color=#00ffffff size=1>.</style>            Mash supports loadable modules of builtins. The Mashbuiltin
+<style color=#00ffffff size=1>.</style>            module definition and description is in mash.m. One such
+<style color=#00ffffff size=1>.</style>            module, builtins, is loaded before mash begins parsing. This
+<style color=#00ffffff size=1>.</style>            module defines the following commands
+<style color=#00ffffff size=1>.</style>            env
+<style color=#00ffffff size=1>.</style>                 Print global and local variables. Global variables are
+<style color=#00ffffff size=1>.</style>                 displayed using a name=value format, and local
+<style color=#00ffffff size=1>.</style>                 variables using a name:=value format.
+<style color=#00ffffff size=1>.</style>            eval
+<style color=#00ffffff size=1>.</style>                 Concatenate arguments and use as mash input.
+<style color=#00ffffff size=1>.</style>            exit
+<style color=#00ffffff size=1>.</style>                 Cause mash to raise an exit exception.
+<style color=#00ffffff size=1>.</style>            load file
+<style color=#00ffffff size=1>.</style>                 Load a builtin module. The file must be a module with
+<style color=#00ffffff size=1>.</style>                 type Mashbuiltin. The argument file is assumed to
+<style color=#00ffffff size=1>.</style>                 contain a path to the loadable module. If no such
+<style color=#00ffffff size=1>.</style>                 module is found then the string /dis/lib/mash/ is
+<style color=#00ffffff size=1>.</style>                 prepended to file and the load is retried.
+<style color=#00ffffff size=1>.</style>            prompt
+<style color=#00ffffff size=1>.</style>            prompttext
+<style color=#00ffffff size=1>.</style>            prompttext contin
+<style color=#00ffffff size=1>.</style>                 When called with no arguments causes the current value
+<style color=#00ffffff size=1>.</style>                 of the mash prompt to be printed to standard output.
+<style color=#00ffffff size=1>.</style>                 The default value is mash%. The second form sets a new
+<style color=#00ffffff size=1>.</style>                 prompt. The final form sets a new prompt and
+<style color=#00ffffff size=1>.</style>                 additionally a continuation string. Initially the
+<style color=#00ffffff size=1>.</style>                 continuation string is set to a single tab character.
+<style color=#00ffffff size=1>.</style>                 Mash uses the continuation string in place of the
+<style color=#00ffffff size=1>.</style>                 prompt string to indicate that the preceding line has
+<style color=#00ffffff size=1>.</style>                 been continued by escaping with a final backslash (\)
+<style color=#00ffffff size=1>.</style>                 character.
+<style color=#00ffffff size=1>.</style>            quoteargs...
+<style color=#00ffffff size=1>.</style>                 Print arguments quoted as input for mash.
+<style color=#00ffffff size=1>.</style>            run -\[denx\] file \[arg...\]
+<style color=#00ffffff size=1>.</style>                 Interpret a file as input to mash.
+<style color=#00ffffff size=1>.</style>            timecmd \[arg...\]
+<style color=#00ffffff size=1>.</style>                 Time the execution of a command. The total execution
+<style color=#00ffffff size=1>.</style>                 time is reported in seconds and on standard error when
+<style color=#00ffffff size=1>.</style>                 the command completes.
+<style color=#00ffffff size=1>.</style>            whatisname
+<style color=#00ffffff size=1>.</style>                 Print variable, function or builtin. The object given
+<style color=#00ffffff size=1>.</style>                 by name is described on standard output in a format
+<style color=#00ffffff size=1>.</style>                 that reflects its type.
+<style color=#00ffffff size=1>.</style>            The make loadable builtin provides `make` functionality. The
+<style color=#00ffffff size=1>.</style>            tk loadable builtin provides control over some of the visual
+<style color=#00ffffff size=1>.</style>            elements of a mash window.
+<style color=#00ffffff size=1>.</style>         Adding Builtins
+<style color=#00ffffff size=1>.</style>            New builtins can be added to mash by creating a Dis module
+<style color=#00ffffff size=1>.</style>            that can be loaded with a Mashbuiltin module interface
+<style color=#00ffffff size=1>.</style>            (defined in mash.m). The new module is loaded with the
+<style color=#00ffffff size=1>.</style>            builtin load command which calls its mashinit function to
+<style color=#00ffffff size=1>.</style>            initialise it with an argument containing the load command
+<style color=#00ffffff size=1>.</style>            line. The function should use this call to register the set
+<style color=#00ffffff size=1>.</style>            of builtins that the module will provide using the
+<style color=#00ffffff size=1>.</style>            Env.defbuiltin function. Thereafter, each time one of the
+<style color=#00ffffff size=1>.</style>            registered builtins is invoked the module's mashcmd function
+<style color=#00ffffff size=1>.</style>            is called passing as an argument a list containing the
+<style color=#00ffffff size=1>.</style>            invoked builtin name and its arguments. See the examples in
+<style color=#00ffffff size=1>.</style>            mash/builtins.b, mash/make.b, and mash/tk.b.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/mashinit
+<style color=#00ffffff size=1>.</style>            /dis/lib/mash
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/mash
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=mash-tk(1)>mash-tk(1)</action>, <action name=mash-make(1)>mash-make(1)</action>, <action name=regex(2)>regex(2)</action>
+
+<style color=#00ffffff size=1>.</style>            Tom Duff, ``Rc  - The Plan 9 Shell'', in the Plan 9
+<style color=#00ffffff size=1>.</style>            Programmer's Manual, Second Edition, Volume 2.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

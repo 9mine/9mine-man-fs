@@ -1,0 +1,184 @@
+ODBC(10.4)                                             ODBC(10.4)
+
+NAME
+<style color=#00ffffff size=1>.</style>            ODBC - A Windows ODBC file server
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            odbc.exe \[ -d \] \[ -p port \] \[ -u user \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Odbc is a file server that runs under Windows and exports a
+<style color=#00ffffff size=1>.</style>            9P namespace (see <action name=intro(5)>intro(5)</action>). An Inferno process that mounts
+<style color=#00ffffff size=1>.</style>            the namespace can use it to manipulate Windows ODBC
+<style color=#00ffffff size=1>.</style>            databases.
+
+<style color=#00ffffff size=1>.</style>            The -d option causes odbc to print debugging information.
+
+<style color=#00ffffff size=1>.</style>            The -p option gives the port number to listen on for
+<style color=#00ffffff size=1>.</style>            connections. The default is 6700.
+
+<style color=#00ffffff size=1>.</style>            By default, the user inferno owns the files in the name
+<style color=#00ffffff size=1>.</style>            space. The -u option makes user own the files instead.
+
+<style color=#00ffffff size=1>.</style>         Name space
+<style color=#00ffffff size=1>.</style>            Odbc presents the following name space:
+
+<style color=#00ffffff size=1>.</style>            /nclients
+<style color=#00ffffff size=1>.</style>            /db
+<style color=#00ffffff size=1>.</style>            /db/new
+<style color=#00ffffff size=1>.</style>            /db/n
+<style color=#00ffffff size=1>.</style>            /db/n/cmd
+<style color=#00ffffff size=1>.</style>            /db/n/ctl
+<style color=#00ffffff size=1>.</style>            /db/n/data
+<style color=#00ffffff size=1>.</style>            /db/n/error
+<style color=#00ffffff size=1>.</style>            /db/n/format
+<style color=#00ffffff size=1>.</style>            /db/n/sources
+<style color=#00ffffff size=1>.</style>            /db/n/status
+
+<style color=#00ffffff size=1>.</style>            The top level read-only file nclients contains the current
+<style color=#00ffffff size=1>.</style>            number of active clients on the server.
+
+<style color=#00ffffff size=1>.</style>            The top level db directory contains a new file and
+<style color=#00ffffff size=1>.</style>            subdirectories numbered n from zero to the maximum number of
+<style color=#00ffffff size=1>.</style>            configured conversations.
+
+<style color=#00ffffff size=1>.</style>            Opening the new file reserves a conversation, represented by
+<style color=#00ffffff size=1>.</style>            one of the numbered directories. The resulting file
+<style color=#00ffffff size=1>.</style>            descriptor will be open on the control file, ctl, of the
+<style color=#00ffffff size=1>.</style>            newly allocated conversation. Reading the ctl file returns a
+<style color=#00ffffff size=1>.</style>            text string representing the number of the conversation. A
+<style color=#00ffffff size=1>.</style>            conversation is used to converse with the server - in ODBC
+<style color=#00ffffff size=1>.</style>            terms it is equivalent to obtaining a connection handle.
+<style color=#00ffffff size=1>.</style>            This is the level at which ODBC transactions are managed.
+
+<style color=#00ffffff size=1>.</style>            A conversation is controlled by writing text strings to the
+<style color=#00ffffff size=1>.</style>            associated ctl file. ODBC commands may be sent to the server
+<style color=#00ffffff size=1>.</style>            by writing them, as text strings, to the cmd file. For
+<style color=#00ffffff size=1>.</style>            commands that return a record set, the results may be read
+<style color=#00ffffff size=1>.</style>            from the data file\; each read returning a single record. If
+<style color=#00ffffff size=1>.</style>            a command results in an error, the write to the cmd file
+<style color=#00ffffff size=1>.</style>            will fail. The full ODBC error message can be obtained by
+<style color=#00ffffff size=1>.</style>            reading the error file. A conversation remains open while at
+<style color=#00ffffff size=1>.</style>            least one of the ctl, cmd or data files remains open.
+
+<style color=#00ffffff size=1>.</style>            The following commands can be written to the ctl file:
+
+<style color=#00ffffff size=1>.</style>            connect  datasource  \[user!auth\]
+<style color=#00ffffff size=1>.</style>                 Connect to the ODBC datasource using the username and
+<style color=#00ffffff size=1>.</style>                 authentication, if given.
+
+<style color=#00ffffff size=1>.</style>            disconnect
+<style color=#00ffffff size=1>.</style>                 Disconnect from the datasource.
+
+<style color=#00ffffff size=1>.</style>            fixed
+<style color=#00ffffff size=1>.</style>                 Reads from the data file will return data in a fixed
+<style color=#00ffffff size=1>.</style>                 format. The format can be read from the format file
+<style color=#00ffffff size=1>.</style>                 after writing the command to the cmd file and before
+<style color=#00ffffff size=1>.</style>                 reading the data from the data file.
+
+<style color=#00ffffff size=1>.</style>            float  \[fs< \[rs<\]\]
+<style color=#00ffffff size=1>.</style>                 Reads from the data file will return data using the
+<style color=#00ffffff size=1>.</style>                 character fs to separate fields and the character rs to
+<style color=#00ffffff size=1>.</style>                 separate records. The default values for fs and rs are
+<style color=#00ffffff size=1>.</style>                 the pipe symbol '|' and the newline character.
+
+<style color=#00ffffff size=1>.</style>            trans  begin
+<style color=#00ffffff size=1>.</style>                 Enter ODBC manual-commit mode for transactions. A
+<style color=#00ffffff size=1>.</style>                 transaction will not complete until one of trans commit
+<style color=#00ffffff size=1>.</style>                 or trans rollback is written to the ctl file.
+
+<style color=#00ffffff size=1>.</style>            trans  auto
+<style color=#00ffffff size=1>.</style>                 Enter ODBC auto-commit mode for transactions (the
+<style color=#00ffffff size=1>.</style>                 default). Each database statement is wrapped by a
+<style color=#00ffffff size=1>.</style>                 transaction that is automatically commited when the
+<style color=#00ffffff size=1>.</style>                 statement is executed.
+
+<style color=#00ffffff size=1>.</style>            trans  commit
+<style color=#00ffffff size=1>.</style>                 Commit a transaction when in manual-commit mode.
+
+<style color=#00ffffff size=1>.</style>            trans  rollback
+<style color=#00ffffff size=1>.</style>                 Rollback a transation when in manual-commit mode.
+
+<style color=#00ffffff size=1>.</style>            Once a conversation has been established and transaction
+<style color=#00ffffff size=1>.</style>            mode and output formats determined the cmd file is used to
+<style color=#00ffffff size=1>.</style>            send ODBC commands to the server. The following commands can
+<style color=#00ffffff size=1>.</style>            be written to the cmd file:
+
+<style color=#00ffffff size=1>.</style>            tables
+<style color=#00ffffff size=1>.</style>                 The result of calling the ODBC API function SQLTables
+<style color=#00ffffff size=1>.</style>                 is returned in the data file.
+
+<style color=#00ffffff size=1>.</style>            columns  tablename
+<style color=#00ffffff size=1>.</style>                 The result of calling the ODBC API function SQLColumns
+<style color=#00ffffff size=1>.</style>                 with the given tablename as a parameter is returned in
+<style color=#00ffffff size=1>.</style>                 the data file.
+
+<style color=#00ffffff size=1>.</style>            any  ODBC  command
+<style color=#00ffffff size=1>.</style>                 Any ODBC command written to the cmd file is passed to
+<style color=#00ffffff size=1>.</style>                 the ODBC API function SQLExecDirect. This most commonly
+<style color=#00ffffff size=1>.</style>                 includes select, update, insert, and delete commands.
+
+<style color=#00ffffff size=1>.</style>            The format file is used to determine column names and how to
+<style color=#00ffffff size=1>.</style>            extract individual columns from the record read from the
+<style color=#00ffffff size=1>.</style>            data file when using fixed format output. A read of it gives
+<style color=#00ffffff size=1>.</style>            a single record read returning one line for each column in
+<style color=#00ffffff size=1>.</style>            the result data. Each line has three components separated by
+<style color=#00ffffff size=1>.</style>            a single space: a number giving the character position of
+<style color=#00ffffff size=1>.</style>            the start of the field in the result data, a number giving
+<style color=#00ffffff size=1>.</style>            the character position one beyond the end of the field in
+<style color=#00ffffff size=1>.</style>            the result data, and the field name.
+
+<style color=#00ffffff size=1>.</style>            The result of database enquiries can be read from the data
+<style color=#00ffffff size=1>.</style>            file. After writing a command that returns data to the cmd
+<style color=#00ffffff size=1>.</style>            file, reads from the data file will return the results one
+<style color=#00ffffff size=1>.</style>            record at a time. When the last record has been read the
+<style color=#00ffffff size=1>.</style>            following read will return zero bytes indicating the end of
+<style color=#00ffffff size=1>.</style>            the data.
+
+<style color=#00ffffff size=1>.</style>            The read-only file sources gives a newline separated list of
+<style color=#00ffffff size=1>.</style>            sources. Each line consists of the source name and the
+<style color=#00ffffff size=1>.</style>            source type separated by a colon.
+
+<style color=#00ffffff size=1>.</style>            The read-only file status return the status of the current
+<style color=#00ffffff size=1>.</style>            conversation.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            For example, the Inferno shell can be used to retrieve
+<style color=#00ffffff size=1>.</style>            values from a database. The shell commands:
+
+<style color=#00ffffff size=1>.</style>            mount -A tcp!localhost!6700 /n/remote
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	d=/n/remote/db/`{cat}
+<style color=#00ffffff size=1>.</style>            	echo -n 'float' > $d/ctl
+<style color=#00ffffff size=1>.</style>            	echo -n 'connect cellar' > $d/ctl
+<style color=#00ffffff size=1>.</style>            	echo -n 'select name from wine' > $d/cmd
+<style color=#00ffffff size=1>.</style>            	cat $d/data
+<style color=#00ffffff size=1>.</style>            } < /n/remote/db/new
+
+<style color=#00ffffff size=1>.</style>            produces the output:
+
+<style color=#00ffffff size=1>.</style>            Chardonnay
+<style color=#00ffffff size=1>.</style>            Jo. Riesling
+<style color=#00ffffff size=1>.</style>            Fume Blanc
+<style color=#00ffffff size=1>.</style>            Wh. Burgundy
+<style color=#00ffffff size=1>.</style>            Gewurztraminer
+<style color=#00ffffff size=1>.</style>            Cab. Sauvignon
+<style color=#00ffffff size=1>.</style>            Pinot Noir
+<style color=#00ffffff size=1>.</style>            Zinfandel
+<style color=#00ffffff size=1>.</style>            Gamay
+
+<style color=#00ffffff size=1>.</style>            Here the server has been started on the local machine,
+<style color=#00ffffff size=1>.</style>            listening on port 6700 for network connections. The braced
+<style color=#00ffffff size=1>.</style>            block and the redirection from /n/remote/db/new reserve a
+<style color=#00ffffff size=1>.</style>            conversation with the server and ensures that it remains
+<style color=#00ffffff size=1>.</style>            open for the duration of the execution of the set of
+<style color=#00ffffff size=1>.</style>            commands within the block. The -A option to mount is used
+<style color=#00ffffff size=1>.</style>            because this server can not authenticate a connection.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /tools/odbc/odbc.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bind(1)>bind(1)</action>, <action name=sys-bind(2)>sys-bind(2)</action>, <action name=intro(5)>intro(5)</action>, <action name=db(7)>db(7)</action>, <action name=dbsrv(7)>dbsrv(7)</action>, <action name=svc(8)>svc(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

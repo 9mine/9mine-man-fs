@@ -1,0 +1,32 @@
+<action name=DMVIEW(1)>DMVIEW(1)</action>                                               <action name=DMVIEW(1)>DMVIEW(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dmview, dmwm - view remote displays
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wm/dmview address
+
+<style color=#00ffffff size=1>.</style>            wm/dmwm \[ -p port \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dmwm is run in place of the usual Inferno window manager wm
+<style color=#00ffffff size=1>.</style>            (1), to allow the display's contents to be viewed elsewhere.
+<style color=#00ffffff size=1>.</style>            Dmwm waits for incoming viewing requests on the given TCP/IP
+<style color=#00ffffff size=1>.</style>            port (default: 9998). On each connection attempt, dmwm
+<style color=#00ffffff size=1>.</style>            prompts the user to accept or reject the request for a
+<style color=#00ffffff size=1>.</style>            remote view.
+
+<style color=#00ffffff size=1>.</style>            Dmview opens a connection to an instance of dmwm at the
+<style color=#00ffffff size=1>.</style>            given network address and, if the remote user accepts the
+<style color=#00ffffff size=1>.</style>            connection, opens a new window on dmview's own display that
+<style color=#00ffffff size=1>.</style>            contains a replica of the remote display.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/drawmux/dmview.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/drawmux/dmwm.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/drawmux/drawmux.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=drawmux(2)>drawmux(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

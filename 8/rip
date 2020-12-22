@@ -1,0 +1,53 @@
+<action name=RIP(8)>RIP(8)</action>                                                     <action name=RIP(8)>RIP(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            rip - routing information protocol
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ip/rip \[-2\] \[-b\] \[-d\] \[-n\] \[ -x mntpt \] \[ net ... \] &
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Rip implements the Internet RIP routing protocol described
+<style color=#00ffffff size=1>.</style>            by RFC1058 and RFC2453. It watches the network and makes
+<style color=#00ffffff size=1>.</style>            appropriate changes to the machine's Internet routing table
+<style color=#00ffffff size=1>.</style>            (see iproute in <action name=ip(3)>ip(3)</action>), based on routing packets broadcast
+<style color=#00ffffff size=1>.</style>            by gateways on the network. Rip is only used when a single
+<style color=#00ffffff size=1>.</style>            default gateway is inadequate, typically because a machine
+<style color=#00ffffff size=1>.</style>            sits on a network directly connected to several others,
+<style color=#00ffffff size=1>.</style>            having no common gateway or router. On networks where there
+<style color=#00ffffff size=1>.</style>            is just one gateway, it is usually simpler and more
+<style color=#00ffffff size=1>.</style>            efficient to configure that statically using <action name=ndb(6)>ndb(6)</action> or
+<style color=#00ffffff size=1>.</style>            dynamically using DHCP/BOOTP, rather than running rip.
+
+<style color=#00ffffff size=1>.</style>            Rip serves the network on mntpt (default: /net). When it
+<style color=#00ffffff size=1>.</style>            starts, rip learns its own interfaces and directly attached
+<style color=#00ffffff size=1>.</style>            networks by reading mntpt/ipifc, and notes any routes
+<style color=#00ffffff size=1>.</style>            currently in mntpt/iproute.
+
+<style color=#00ffffff size=1>.</style>            By default, rip neither broadcasts routes nor replies to
+<style color=#00ffffff size=1>.</style>            requests for its route table. If the -b option is given, rip
+<style color=#00ffffff size=1>.</style>            periodically broadcasts changes to its routing table to each
+<style color=#00ffffff size=1>.</style>            of its interfaces. If at least one explicit net address is
+<style color=#00ffffff size=1>.</style>            given, the broadcasts are restricted to just the interfaces
+<style color=#00ffffff size=1>.</style>            listed (and -b is implied).
+
+<style color=#00ffffff size=1>.</style>            The -d option causes routed to record changes it makes to
+<style color=#00ffffff size=1>.</style>            the routing tables. This can be helpful when locating
+<style color=#00ffffff size=1>.</style>            misleading announcements from rogue gateways. A second -d
+<style color=#00ffffff size=1>.</style>            will include detailed information about every packet. The -n
+<style color=#00ffffff size=1>.</style>            option tells rip not to change the local routing table, but
+<style color=#00ffffff size=1>.</style>            only say what changes it would have made.
+
+<style color=#00ffffff size=1>.</style>            Rip understands both version1 and version 2 of the protocol,
+<style color=#00ffffff size=1>.</style>            and interprets updates from gateways appropriately. By
+<style color=#00ffffff size=1>.</style>            default, it transmits updates using version 1\; if the -2
+<style color=#00ffffff size=1>.</style>            option is given, it uses version 2 instead, which is
+<style color=#00ffffff size=1>.</style>            preferable when the network has subnets.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ip/rip.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ip(3)>ip(3)</action>, <action name=ndb(6)>ndb(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

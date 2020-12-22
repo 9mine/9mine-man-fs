@@ -1,0 +1,71 @@
+<action name=KEYFS(4)>KEYFS(4)</action>                                                 <action name=KEYFS(4)>KEYFS(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            keyfs - encrypted key storage
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            auth/keyfs \[ -D \] \[ -m mountpoint \] \[ -n nvram \] \[ keyfile \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Keyfs serves a two-level name space for storing
+<style color=#00ffffff size=1>.</style>            authentication data, specifically the status and secrets of
+<style color=#00ffffff size=1>.</style>            each user to whom <action name=logind(8)>logind(8)</action> can issue a certificate. The
+<style color=#00ffffff size=1>.</style>            data is stored in keyfile (default: /keydb/keys), encrypted
+<style color=#00ffffff size=1>.</style>            by a master key using AES (see <action name=keyring-crypt(2)>keyring-crypt(2)</action>). Keyfs
+<style color=#00ffffff size=1>.</style>            should be started only on the machine acting as
+<style color=#00ffffff size=1>.</style>            authentication server (signer), before a listener is started
+<style color=#00ffffff size=1>.</style>            for <action name=signer(8)>signer(8)</action>. Note that signer and keyfs must share the
+<style color=#00ffffff size=1>.</style>            name space. Furthermore, no other application except the
+<style color=#00ffffff size=1>.</style>            console should see that name space.
+
+<style color=#00ffffff size=1>.</style>            Keyfs prompts for the master key, reads and decrypts keyfile
+<style color=#00ffffff size=1>.</style>            , and serves files representing the contents at mountpoint
+<style color=#00ffffff size=1>.</style>            in the name space (default: /mnt/keys).
+
+<style color=#00ffffff size=1>.</style>            Each user in keyfile is represented by a directory
+<style color=#00ffffff size=1>.</style>            mountpoint/user. Each such directory has the following
+<style color=#00ffffff size=1>.</style>            files:
+<style color=#00ffffff size=1>.</style>            log     A count of the number of failed authentications.
+<style color=#00ffffff size=1>.</style>                    Writing bad to the file increments the count\;
+<style color=#00ffffff size=1>.</style>                    writing good resets it to 0. When the count reaches
+<style color=#00ffffff size=1>.</style>                    some implementation-defined limit, the account
+<style color=#00ffffff size=1>.</style>                    status is set to disabled (see the status file
+<style color=#00ffffff size=1>.</style>                    below).
+<style color=#00ffffff size=1>.</style>            expire  The time in seconds since the epoch when the account
+<style color=#00ffffff size=1>.</style>                    will expire, or the text never if it has no
+<style color=#00ffffff size=1>.</style>                    expiration time. The string never or a number can be
+<style color=#00ffffff size=1>.</style>                    written to the file to set a new expiry time.
+<style color=#00ffffff size=1>.</style>            secret  The secret (supposedly) known only to the user and
+<style color=#00ffffff size=1>.</style>                    the authentication service. A secret is any sequence
+<style color=#00ffffff size=1>.</style>                    of bytes between 0 and 255 bytes long\; it is
+<style color=#00ffffff size=1>.</style>                    initially empty. The length of the file returned by
+<style color=#00ffffff size=1>.</style>                    <action name=sys-stat(2)>sys-stat(2)</action> is the length of the secret. If the
+<style color=#00ffffff size=1>.</style>                    account has expired or is disabled, an attempt to
+<style color=#00ffffff size=1>.</style>                    read the file will give an error.
+<style color=#00ffffff size=1>.</style>            status  The current status of the user's account, either ok
+<style color=#00ffffff size=1>.</style>                    or disabled. Either string can be written to the
+<style color=#00ffffff size=1>.</style>                    file to change the state accordingly.
+
+<style color=#00ffffff size=1>.</style>            To add a new account, make a directory with that name in
+<style color=#00ffffff size=1>.</style>            mountpoint. It must not already exist. To remove an account,
+<style color=#00ffffff size=1>.</style>            remove the corresponding directory\; to rename an account,
+<style color=#00ffffff size=1>.</style>            rename the directory.
+
+<style color=#00ffffff size=1>.</style>            All changes made via file system operations in mountpoint
+<style color=#00ffffff size=1>.</style>            result in appropriate changes to keyfile.
+
+<style color=#00ffffff size=1>.</style>            If the -n option is given, instead of prompting for the
+<style color=#00ffffff size=1>.</style>            master key, keyfs will read it from the file nvram.
+<style color=#00ffffff size=1>.</style>            Obviously that file should be well-protected from ordinary
+<style color=#00ffffff size=1>.</style>            observers.
+
+<style color=#00ffffff size=1>.</style>            The -D option enables tracing of the file service protocol,
+<style color=#00ffffff size=1>.</style>            for debugging.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auth/keyfs.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=changelogin(8)>changelogin(8)</action>, <action name=logind(8)>logind(8)</action>, <action name=signer(8)>signer(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

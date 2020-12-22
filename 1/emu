@@ -1,0 +1,147 @@
+EMU(1E)                                                   EMU(1E)
+
+NAME
+<style color=#00ffffff size=1>.</style>            emu - Inferno emulator (hosted Inferno)
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            emu \[ -g Xsize x Ysize \] \[ -cn \] \[ -d daemon \] \[-s\] \[ -p
+<style color=#00ffffff size=1>.</style>            pool=maxsize \] \[ -f font \] \[ -r rootpath \] \[-7\] \[ -C channel
+<style color=#00ffffff size=1>.</style>            \] \[ -S \] \[ -v \] \[ cmd \[ arg ... \] \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Emu provides the Inferno emulation environment, otherwise
+<style color=#00ffffff size=1>.</style>            known as `hosted Inferno'. The emulator runs as an
+<style color=#00ffffff size=1>.</style>            application under the machine's native operating system, and
+<style color=#00ffffff size=1>.</style>            provides system services and a Dis virtual machine for
+<style color=#00ffffff size=1>.</style>            Inferno applications.
+
+<style color=#00ffffff size=1>.</style>            Emu starts an Inferno initialisation program
+<style color=#00ffffff size=1>.</style>            /dis/emuinit.dis, whose path name is interpreted in the
+<style color=#00ffffff size=1>.</style>            Inferno file name space, not in the native operating
+<style color=#00ffffff size=1>.</style>            system's name space. It in turn invokes the shell
+<style color=#00ffffff size=1>.</style>            /dis/sh.dis by default or the optional cmd and its
+<style color=#00ffffff size=1>.</style>            arguments. If the -d option is specified, emu instead
+<style color=#00ffffff size=1>.</style>            invokes daemon, turning the emu instance into an Inferno
+<style color=#00ffffff size=1>.</style>            service process on the network, running the given daemon
+<style color=#00ffffff size=1>.</style>            service or services.
+
+<style color=#00ffffff size=1>.</style>            The emulator supports the following options:
+
+<style color=#00ffffff size=1>.</style>            -cn  Unless specified otherwise by the module (see wm/rt in
+<style color=#00ffffff size=1>.</style>                 <action name=wm-misc(1)>wm-misc(1)</action>), emu uses an interpreter to execute Dis
+<style color=#00ffffff size=1>.</style>                 instructions. Setting n to 1 (the default value is 0)
+<style color=#00ffffff size=1>.</style>                 makes the default behaviour to compile Dis into native
+<style color=#00ffffff size=1>.</style>                 instructions when a module is loaded, resulting in
+<style color=#00ffffff size=1>.</style>                 faster execution but larger run-time size. Setting n to
+<style color=#00ffffff size=1>.</style>                 values larger than 1 enables increasingly detailed
+<style color=#00ffffff size=1>.</style>                 traces of the compiler.
+
+<style color=#00ffffff size=1>.</style>            -d daemon
+<style color=#00ffffff size=1>.</style>                 Run emu as a server, invoking daemon instead of
+<style color=#00ffffff size=1>.</style>                 /dis/emuinit.dis, and disabling input from cons (see
+<style color=#00ffffff size=1>.</style>                 <action name=cons(3)>cons(3)</action>).
+
+<style color=#00ffffff size=1>.</style>            -gXsizexYsize
+<style color=#00ffffff size=1>.</style>                 Define screen width and height in pixels. The default
+<style color=#00ffffff size=1>.</style>                 values are 640x480 and the minimum values are 64x48.
+<style color=#00ffffff size=1>.</style>                 Values smaller than the minimum or greater than the
+<style color=#00ffffff size=1>.</style>                 available display size are ignored.
+
+<style color=#00ffffff size=1>.</style>            -ffont
+<style color=#00ffffff size=1>.</style>                 Specify the default font for the tk module. The path is
+<style color=#00ffffff size=1>.</style>                 interpreted in the Inferno name space. If unspecified,
+<style color=#00ffffff size=1>.</style>                 the font variable has value /fonts/lucm/unicode.9.font.
+
+<style color=#00ffffff size=1>.</style>            -rrootpath
+<style color=#00ffffff size=1>.</style>                 Specify the host system directory that emu will serve
+<style color=#00ffffff size=1>.</style>                 as its root. The default value is /usr/inferno on most
+<style color=#00ffffff size=1>.</style>                 systems, but \inferno on Windows.
+
+<style color=#00ffffff size=1>.</style>            -s   Specify how the emulator deals with traps reported by
+<style color=#00ffffff size=1>.</style>                 the operating system. By default, they suspend
+<style color=#00ffffff size=1>.</style>                 execution of the offending thread within the virtual
+<style color=#00ffffff size=1>.</style>                 machine abstraction. The -s option causes emu itself to
+<style color=#00ffffff size=1>.</style>                 trap, permitting debugging of the broken host operating
+<style color=#00ffffff size=1>.</style>                 system process that results when a trap occurs. (This
+<style color=#00ffffff size=1>.</style>                 is intended to allow debugging of emu, not Inferno
+<style color=#00ffffff size=1>.</style>                 applications.)
+
+<style color=#00ffffff size=1>.</style>            -ppool=maxsize
+<style color=#00ffffff size=1>.</style>                 Specify the maximum size in bytes of the named memory
+<style color=#00ffffff size=1>.</style>                 allocation pool. The pools are:
+
+<style color=#00ffffff size=1>.</style>                 main the general malloc arena
+
+<style color=#00ffffff size=1>.</style>                 heap the Dis virtual machine heap
+
+<style color=#00ffffff size=1>.</style>                 image
+<style color=#00ffffff size=1>.</style>                      image storage for the display
+
+<style color=#00ffffff size=1>.</style>            -7   When host graphics is provided by X11, request a 7-bit
+<style color=#00ffffff size=1>.</style>                 colour map\; use this option only if X11 refused to
+<style color=#00ffffff size=1>.</style>                 allow emu to configure the normal (default) 8-bit
+<style color=#00ffffff size=1>.</style>                 Inferno colour map.
+
+<style color=#00ffffff size=1>.</style>            -C channel
+<style color=#00ffffff size=1>.</style>                 Use the given channel for the display, if possible. See
+<style color=#00ffffff size=1>.</style>                 <action name=image(6)>image(6)</action> for the full range of channel descriptors. For
+<style color=#00ffffff size=1>.</style>                 example, k8 gives 8 bit greyscale, and x8r8g8b8 gives
+<style color=#00ffffff size=1>.</style>                 24 bit colour on a PC. The set of channels supported is
+<style color=#00ffffff size=1>.</style>                 platform-dependent.
+
+<style color=#00ffffff size=1>.</style>            -S   Force stylus input behaviour for Tk mouse events:
+<style color=#00ffffff size=1>.</style>                 motion events are received only when a button is down
+<style color=#00ffffff size=1>.</style>                 (just as a stylus produces no events until it touches
+<style color=#00ffffff size=1>.</style>                 the screen). This option only affects the behaviour of
+<style color=#00ffffff size=1>.</style>                 Tk mouse events, it does not affect the behaviour of
+<style color=#00ffffff size=1>.</style>                 /dev/pointer as described in <action name=cons(3)>cons(3)</action>.
+
+<style color=#00ffffff size=1>.</style>            -v   Print version data: edition and revision date.
+
+<style color=#00ffffff size=1>.</style>            Options may also be set in the host operating system's
+<style color=#00ffffff size=1>.</style>            environment variable EMU\; they are overridden by options
+<style color=#00ffffff size=1>.</style>            supplied on the command line.
+
+<style color=#00ffffff size=1>.</style>            Emu finds the host system directory that will serve as its
+<style color=#00ffffff size=1>.</style>            Inferno root directory as the last value found as follows:
+<style color=#00ffffff size=1>.</style>            it is the value built-in to the executable, by default\; or
+<style color=#00ffffff size=1>.</style>            the value of the host system's environment variable INFERNO\;
+<style color=#00ffffff size=1>.</style>            or the value of the environment variable ROOT\; or the value
+<style color=#00ffffff size=1>.</style>            of a -r option in the environment variable EMU\; or the
+<style color=#00ffffff size=1>.</style>            rootpath set by a -r option to the emu command itself.
+
+<style color=#00ffffff size=1>.</style>            Emu sets several Inferno environment variables:
+
+<style color=#00ffffff size=1>.</style>            cputype     host processor architecture: 386 (for any x86),
+<style color=#00ffffff size=1>.</style>                        arm, mips, power (any Power or PowerPC), sparc,
+<style color=#00ffffff size=1>.</style>                        and spim (little-endian MIPS).
+
+<style color=#00ffffff size=1>.</style>            emuargs     arguments with which emu was invoked
+
+<style color=#00ffffff size=1>.</style>            emuhost     host operating system type, such as: FreeBSD,
+<style color=#00ffffff size=1>.</style>                        Irix, Linux, MacOSX, NetBSD, Nt (used for
+<style color=#00ffffff size=1>.</style>                        Windows generally), OpenBSD, Plan9, Solaris and
+<style color=#00ffffff size=1>.</style>                        Unixware.
+
+<style color=#00ffffff size=1>.</style>            emuroot     name of directory in host file system that acts
+<style color=#00ffffff size=1>.</style>                        as Inferno's root directory
+
+<style color=#00ffffff size=1>.</style>            emuwdir     name in host file system of directory where emu
+<style color=#00ffffff size=1>.</style>                        was invoked
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            To start wm/logon directly:
+
+<style color=#00ffffff size=1>.</style>                 EMU='-g800x600 -c1'
+<style color=#00ffffff size=1>.</style>                 emu /dis/wm/wm.dis wm/logon -u inferno
+
+FILES
+<style color=#00ffffff size=1>.</style>            /dis/emuinit.dis  The default initialisation program.
+<style color=#00ffffff size=1>.</style>            /dis/sh.dis       The default Inferno shell.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=limbo(1)>limbo(1)</action>, <action name=wm-misc(1)>wm-misc(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

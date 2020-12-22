@@ -1,0 +1,58 @@
+<action name=PBUS(3)>PBUS(3)</action>                                                   <action name=PBUS(3)>PBUS(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            pbus - USR/3Com Edgeserver packet bus
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a '#Y' /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/pbus
+<style color=#00ffffff size=1>.</style>            /dev/pbusctl
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The packet bus driver serves a directory containing two
+<style color=#00ffffff size=1>.</style>            files, giving MAC-level access to the EPB version of the
+<style color=#00ffffff size=1>.</style>            packet bus of the US Robotics (3Com) Edgeserver chassis.
+
+<style color=#00ffffff size=1>.</style>            The read-only file pbusctl contains a single integer that
+<style color=#00ffffff size=1>.</style>            gives the chassis slot occupied by the Edge server (its
+<style color=#00ffffff size=1>.</style>            address on the packet bus).
+
+<style color=#00ffffff size=1>.</style>            The file pbus is read and written to communicate on the bus.
+<style color=#00ffffff size=1>.</style>            Each write transmits a single packet on the bus. The driver
+<style color=#00ffffff size=1>.</style>            expects a four byte header in each write:
+
+<style color=#00ffffff size=1>.</style>                 slot chan 0 0
+
+<style color=#00ffffff size=1>.</style>            where slot is the destination chassis slot number and chan
+<style color=#00ffffff size=1>.</style>            identifies a logical receiver in that slot. Including the
+<style color=#00ffffff size=1>.</style>            header, the largest write accepted is 128 bytes. The driver
+<style color=#00ffffff size=1>.</style>            completes the header as the bus firmware requires\; it also
+<style color=#00ffffff size=1>.</style>            pads each packet with zero bytes to a hardware packet
+<style color=#00ffffff size=1>.</style>            boundary as it puts it on the bus. It flashes green in the
+<style color=#00ffffff size=1>.</style>            `Wan TX' LED as packets are transmitted.
+
+<style color=#00ffffff size=1>.</style>            Each read of the pbus file returns the contents of a single
+<style color=#00ffffff size=1>.</style>            packet received from the bus. The read will block if
+<style color=#00ffffff size=1>.</style>            necessary until a packet arrives. The data includes a four
+<style color=#00ffffff size=1>.</style>            byte header as above, and padding to a hardware packet
+<style color=#00ffffff size=1>.</style>            boundary. Normally a higher-level protocol will provide its
+<style color=#00ffffff size=1>.</style>            own headers including an actual length.
+
+<style color=#00ffffff size=1>.</style>            At reset, the driver downloads firmware to the controller if
+<style color=#00ffffff size=1>.</style>            required. All invalid packets received are quietly
+<style color=#00ffffff size=1>.</style>            discarded. Packets are also dropped whenever an internal
+<style color=#00ffffff size=1>.</style>            input queue overflows because the reader has not kept up
+<style color=#00ffffff size=1>.</style>            with arriving traffic.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/pc/devpbus.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=plap(3)>plap(3)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The driver detects but does not recover from bus clock loss
+<style color=#00ffffff size=1>.</style>            The driver cannot be included in the public distribution.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

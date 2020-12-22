@@ -1,0 +1,63 @@
+MEMORY(10.2)                                         MEMORY(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            memccpy, memchr, memcmp, memcpy, memmove, memset - memory
+<style color=#00ffffff size=1>.</style>            operations
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            void*	memccpy(void *s1, void *s2, int c, long n)
+
+<style color=#00ffffff size=1>.</style>            void*	memchr(void *s, int c, long n)
+
+<style color=#00ffffff size=1>.</style>            int	memcmp(void *s1, void *s2, long n)
+
+<style color=#00ffffff size=1>.</style>            void*	memcpy(void *s1, void *s2, long n)
+
+<style color=#00ffffff size=1>.</style>            void*	memmove(void *s1, void *s2, long n)
+
+<style color=#00ffffff size=1>.</style>            void*	memset(void *s, int c, long n)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These functions operate efficiently on memory areas (arrays
+<style color=#00ffffff size=1>.</style>            of bytes bounded by a count, not terminated by a zero byte).
+<style color=#00ffffff size=1>.</style>            They do not check for the overflow of any receiving memory
+<style color=#00ffffff size=1>.</style>            area.
+
+<style color=#00ffffff size=1>.</style>            Memccpy copies bytes from memory area s2 into s1, stopping
+<style color=#00ffffff size=1>.</style>            after the first occurrence of byte c has been copied, or
+<style color=#00ffffff size=1>.</style>            after n bytes have been copied, whichever comes first. It
+<style color=#00ffffff size=1>.</style>            returns a pointer to the byte after the copy of c in s1, or
+<style color=#00ffffff size=1>.</style>            zero if c was not found in the first n bytes of s2.
+
+<style color=#00ffffff size=1>.</style>            Memchr returns a pointer to the first occurrence of byte c
+<style color=#00ffffff size=1>.</style>            in the first n bytes of memory area s, or zero if c does not
+<style color=#00ffffff size=1>.</style>            occur.
+
+<style color=#00ffffff size=1>.</style>            Memcmp compares its arguments, looking at the first n bytes
+<style color=#00ffffff size=1>.</style>            only, and returns an integer less than, equal to, or greater
+<style color=#00ffffff size=1>.</style>            than 0, according as s1 is lexicographically less than,
+<style color=#00ffffff size=1>.</style>            equal to, or greater than s2. The comparison is bytewise
+<style color=#00ffffff size=1>.</style>            unsigned.
+
+<style color=#00ffffff size=1>.</style>            Memmove copies n bytes from memory area s2 to s1. It returns
+<style color=#00ffffff size=1>.</style>            s1. It is guaranteed to work if s1 and s2 overlap.
+
+<style color=#00ffffff size=1>.</style>            In the Inferno kernel memcpy is equivalent to memmove. (In
+<style color=#00ffffff size=1>.</style>            ANSI C, by contrast, memcpy does not account for overlapping
+<style color=#00ffffff size=1>.</style>            memory regions.)
+
+<style color=#00ffffff size=1>.</style>            Memset sets the first n bytes in memory area s to the value
+<style color=#00ffffff size=1>.</style>            of the least significant byte of c. It returns s.
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            If memcpy and memmove are handed negative counts, they
+<style color=#00ffffff size=1>.</style>            abort.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libkern/mem*.c
+<style color=#00ffffff size=1>.</style>            /libkern/mem*-objtype.s
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            strcat(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

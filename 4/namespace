@@ -1,0 +1,154 @@
+<action name=NAMESPACE(4)>NAMESPACE(4)</action>                                         <action name=NAMESPACE(4)>NAMESPACE(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            namespace - structure of conventional Inferno name space
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            none
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The list below gives an overview of the Inferno distribution
+<style color=#00ffffff size=1>.</style>            file tree, organised into related categories.
+<style color=#00ffffff size=1>.</style>            /          The root directory. To programs running outside
+<style color=#00ffffff size=1>.</style>                       Inferno, this corresponds to the directory in
+<style color=#00ffffff size=1>.</style>                       which Inferno has been installed (e.g. C:\inferno
+<style color=#00ffffff size=1>.</style>                       under Windows).
+<style color=#00ffffff size=1>.</style>         Mount points
+<style color=#00ffffff size=1>.</style>            The following are all placeholders for filesystems that are
+<style color=#00ffffff size=1>.</style>            mounted when Inferno is running. They contain no data files.
+<style color=#00ffffff size=1>.</style>            Although an Inferno namespace is a dynamic entity, and
+<style color=#00ffffff size=1>.</style>            devices can be mounted anywhere therein, many programs
+<style color=#00ffffff size=1>.</style>            assume that devices have been mounted in the standard
+<style color=#00ffffff size=1>.</style>            places, as suggested by the skeleton directories listed
+<style color=#00ffffff size=1>.</style>            below.
+<style color=#00ffffff size=1>.</style>            /dev       The standard mount point for devices (e.g. cons
+<style color=#00ffffff size=1>.</style>                       (3))
+<style color=#00ffffff size=1>.</style>            /env       The standard mount point for the <action name=env(3)>env(3)</action> device.
+<style color=#00ffffff size=1>.</style>            /mnt       A directory containing mount points for
+<style color=#00ffffff size=1>.</style>                       applications.
+<style color=#00ffffff size=1>.</style>            /chan      An empty directory, used for holding files
+<style color=#00ffffff size=1>.</style>                       created with <action name=sys-file2chan(2)>sys-file2chan(2)</action>.
+<style color=#00ffffff size=1>.</style>            /net       The standard mount point directory for network
+<style color=#00ffffff size=1>.</style>                       interfaces.
+<style color=#00ffffff size=1>.</style>            /n         A directory containing mount points for file
+<style color=#00ffffff size=1>.</style>                       trees on local devices or imported from remote
+<style color=#00ffffff size=1>.</style>                       systems.
+<style color=#00ffffff size=1>.</style>            /prog      An empty directory, the mount point for the prog
+<style color=#00ffffff size=1>.</style>                       (3) device.
+<style color=#00ffffff size=1>.</style>            /nvfs      An empty directory, the mount point for a
+<style color=#00ffffff size=1>.</style>                       non-volatile RAM filesystem on devices that have
+<style color=#00ffffff size=1>.</style>                       one.
+<style color=#00ffffff size=1>.</style>            /tmp       Mount point for private directory of temporary
+<style color=#00ffffff size=1>.</style>                       files (eg, /usr/user/tmp\c ).
+<style color=#00ffffff size=1>.</style>            /mail      Conventional place to mount mailboxes.
+<style color=#00ffffff size=1>.</style>         Limbo applications
+<style color=#00ffffff size=1>.</style>            /dis       Dis executables (commands)
+<style color=#00ffffff size=1>.</style>            /dis/lib   Dis libraries
+<style color=#00ffffff size=1>.</style>            /dis/wm    Dis commands that run under <action name=wm(1)>wm(1)</action>.
+<style color=#00ffffff size=1>.</style>            /man       Manual pages.
+<style color=#00ffffff size=1>.</style>            /doc       Documentation other than manual pages.
+<style color=#00ffffff size=1>.</style>            /appl      Source to Limbo applications.
+<style color=#00ffffff size=1>.</style>            /appl/cmd  Source to the commands in /dis (as documented in
+<style color=#00ffffff size=1>.</style>                       Section 1).
+<style color=#00ffffff size=1>.</style>            /appl/wm   Source to the commands in /dis/wm
+<style color=#00ffffff size=1>.</style>            /appl/lib  Source to the modules in /dis/lib (as documented
+<style color=#00ffffff size=1>.</style>                       in Section 2).
+<style color=#00ffffff size=1>.</style>            /module    Limbo module declarations
+<style color=#00ffffff size=1>.</style>         Supporting data
+<style color=#00ffffff size=1>.</style>            /acme      Programs and guide files specific to <action name=acme(1)>acme(1)</action>.
+<style color=#00ffffff size=1>.</style>            /fonts     Font definitions
+<style color=#00ffffff size=1>.</style>            /locale    Timezone and locale information
+<style color=#00ffffff size=1>.</style>            /icons     Contains <action name=image(6)>image(6)</action> files used by programs.
+<style color=#00ffffff size=1>.</style>            /icons/tk  Default directory searched by tk's -bitmap option
+<style color=#00ffffff size=1>.</style>                       (see <action name=options(9)>options(9)</action>).
+<style color=#00ffffff size=1>.</style>            /lib       Static program-specific data.
+<style color=#00ffffff size=1>.</style>            /lib/ndb   Network configuration files used by <action name=cs(8)>cs(8)</action>, <action name=dns(8)>dns(8)</action>
+<style color=#00ffffff size=1>.</style>                       and others.
+<style color=#00ffffff size=1>.</style>         Administration
+<style color=#00ffffff size=1>.</style>            /keydb     Storage of secrets and certificates on signers
+<style color=#00ffffff size=1>.</style>                       (authentication servers).
+<style color=#00ffffff size=1>.</style>            /services  A jungle of program-specific configuration files.
+<style color=#00ffffff size=1>.</style>         Platform specific
+<style color=#00ffffff size=1>.</style>            /Platform  Binaries specific to Platform. Current platforms
+<style color=#00ffffff size=1>.</style>                       include Inferno (native binaries), FreeBSD, Hp,
+<style color=#00ffffff size=1>.</style>                       Irix, Linux, Nt, Plan9, Solaris and Unixware.
+<style color=#00ffffff size=1>.</style>            /Platform/arch/bin
+<style color=#00ffffff size=1>.</style>            /Platform/arch/lib
+<style color=#00ffffff size=1>.</style>            /Platform/arch/include
+<style color=#00ffffff size=1>.</style>                       Platform specific binaries, libraries and include
+<style color=#00ffffff size=1>.</style>                       files respectively. Arch is the architecture
+<style color=#00ffffff size=1>.</style>                       type, as defined in 2c(10.1) and held in the
+<style color=#00ffffff size=1>.</style>                       $objtype environment variable.
+<style color=#00ffffff size=1>.</style>            /usr       A directory containing user directories.
+<style color=#00ffffff size=1>.</style>         Inferno source code
+<style color=#00ffffff size=1>.</style>            /emu            Directory containing source specific to emu
+<style color=#00ffffff size=1>.</style>                            (1).
+<style color=#00ffffff size=1>.</style>            /emu/port       Cross-platform source for <action name=emu(1)>emu(1)</action>. /emu/
+<style color=#00ffffff size=1>.</style>                            Platform Platform-specific source for emu
+<style color=#00ffffff size=1>.</style>                            (1).
+<style color=#00ffffff size=1>.</style>            /libkfs         The emu version of <action name=kfs(3)>kfs(3)</action>.
+<style color=#00ffffff size=1>.</style>            /libbio
+<style color=#00ffffff size=1>.</style>            /libregexp      Source to libraries used by hosted commands.
+<style color=#00ffffff size=1>.</style>            /lib9           Source to the Plan 9 emulation library, used
+<style color=#00ffffff size=1>.</style>                            by emu and the hosted commands.
+<style color=#00ffffff size=1>.</style>            /libmemdraw
+<style color=#00ffffff size=1>.</style>            /libmemlayer
+<style color=#00ffffff size=1>.</style>            /libprefab
+<style color=#00ffffff size=1>.</style>            /libkern
+<style color=#00ffffff size=1>.</style>            /libkeyring
+<style color=#00ffffff size=1>.</style>            /libdraw
+<style color=#00ffffff size=1>.</style>            /libinterp
+<style color=#00ffffff size=1>.</style>            /libtk          Inferno source used by both native and
+<style color=#00ffffff size=1>.</style>                            hosted versions of Inferno.
+<style color=#00ffffff size=1>.</style>            /asm
+<style color=#00ffffff size=1>.</style>            /limbo          Source to the two hosted Inferno commands of
+<style color=#00ffffff size=1>.</style>                            the same name.
+<style color=#00ffffff size=1>.</style>            /utils          Source to hosted utilities run from <action name=emu(1)>emu(1)</action>
+<style color=#00ffffff size=1>.</style>                            via the <action name=cmd(3)>cmd(3)</action> interface.
+<style color=#00ffffff size=1>.</style>            /tools          A directory containing source directories
+<style color=#00ffffff size=1>.</style>                            for hosted tools used in building Inferno
+<style color=#00ffffff size=1>.</style>                            (e.g. mk(10.1)).
+<style color=#00ffffff size=1>.</style>            /os             A directory holding source directories for
+<style color=#00ffffff size=1>.</style>                            the native versions of Inferno.
+<style color=#00ffffff size=1>.</style>            /os/init        Limbo source for platform-specific
+<style color=#00ffffff size=1>.</style>                            initialisation procedures.
+<style color=#00ffffff size=1>.</style>            /os/port        Portable native kernel source.
+<style color=#00ffffff size=1>.</style>            /os/arch        Arch-specific native kernel source.
+<style color=#00ffffff size=1>.</style>            /os/kfs         The native kernel version of <action name=kfs(3)>kfs(3)</action>.
+<style color=#00ffffff size=1>.</style>         Minimal name space
+<style color=#00ffffff size=1>.</style>            The above is all very well on a system with lots of storage,
+<style color=#00ffffff size=1>.</style>            but what is actually necessary for the running of Inferno?
+<style color=#00ffffff size=1>.</style>            The following gives a quick summary of the structure that
+<style color=#00ffffff size=1>.</style>            must be provided for Inferno to function correctly.
+<style color=#00ffffff size=1>.</style>            /dis       This must contain Dis modules for all the
+<style color=#00ffffff size=1>.</style>                       applications you plan to run, and the modules
+<style color=#00ffffff size=1>.</style>                       they depend on. <action name=Disdep(1)>Disdep(1)</action> can be useful when
+<style color=#00ffffff size=1>.</style>                       trying to determine this set.
+<style color=#00ffffff size=1>.</style>            /dev
+<style color=#00ffffff size=1>.</style>            /env
+<style color=#00ffffff size=1>.</style>            /chan
+<style color=#00ffffff size=1>.</style>            /net
+<style color=#00ffffff size=1>.</style>            /prog
+<style color=#00ffffff size=1>.</style>            /tmp       All empty unwritable directories, place holders
+<style color=#00ffffff size=1>.</style>                       for mounted services and applications. Often
+<style color=#00ffffff size=1>.</style>                       these are provided by the built-in <action name=root(3)>root(3)</action>.
+<style color=#00ffffff size=1>.</style>            /mnt       A directory containing mount points for
+<style color=#00ffffff size=1>.</style>                       applications.
+<style color=#00ffffff size=1>.</style>            /n         A directory containing mount points for remote
+<style color=#00ffffff size=1>.</style>                       file systems.
+<style color=#00ffffff size=1>.</style>         Files needed to run as a server
+<style color=#00ffffff size=1>.</style>            /keydb/keys
+<style color=#00ffffff size=1>.</style>                       See <action name=keyfs(4)>keyfs(4)</action>, <action name=logind(8)>logind(8)</action> and <action name=signer(8)>signer(8)</action>.
+<style color=#00ffffff size=1>.</style>            /keydb/signerkey
+<style color=#00ffffff size=1>.</style>                       See <action name=createsignerkey(8)>createsignerkey(8)</action> and <action name=logind(8)>logind(8)</action>.
+<style color=#00ffffff size=1>.</style>         Files needed to run the window manager
+<style color=#00ffffff size=1>.</style>            /fonts     At least one font must be provided - a default
+<style color=#00ffffff size=1>.</style>                       font for Tk to use.
+<style color=#00ffffff size=1>.</style>            /icons/tk  This should contain icons used by applications
+<style color=#00ffffff size=1>.</style>                       that run within Tk.
+<style color=#00ffffff size=1>.</style>            /user/user At least one user directory must exist if logon
+<style color=#00ffffff size=1>.</style>                       (1) is to function correctly.
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=intro(1)>intro(1)</action>, <action name=root(3)>root(3)</action>, <action name=namespace(6)>namespace(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

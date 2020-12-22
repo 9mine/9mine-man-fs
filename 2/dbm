@@ -1,0 +1,144 @@
+<action name=DBM(2)>DBM(2)</action>                                                     <action name=DBM(2)>DBM(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Dbm: Dbf, init - data base with hashed indexing
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "dbm.m"\;
+
+<style color=#00ffffff size=1>.</style>            dbm := load Dbm Dbm->PATH\;
+<style color=#00ffffff size=1>.</style>            Datum, Dbf: import dbm\;
+
+<style color=#00ffffff size=1>.</style>            Datum:  type array of byte\;
+
+<style color=#00ffffff size=1>.</style>            Dbf: adt {
+<style color=#00ffffff size=1>.</style>                create: fn(file: string, perm: int): ref Dbf\;
+<style color=#00ffffff size=1>.</style>                open:   fn(file: string, flags: int): ref Dbf\;
+
+<style color=#00ffffff size=1>.</style>                fetch:  fn(db: self ref Dbf, key: Datum): Datum\;
+<style color=#00ffffff size=1>.</style>                delete: fn(db: self ref Dbf, key: Datum): int\;
+<style color=#00ffffff size=1>.</style>                store:  fn(db: self ref Dbf, key: Datum, data: Datum,
+<style color=#00ffffff size=1>.</style>                              replace: int): int\;
+
+<style color=#00ffffff size=1>.</style>                firstkey: fn(db: self ref Dbf): Datum\;
+<style color=#00ffffff size=1>.</style>                nextkey:  fn(db: self ref Dbf, key: Datum): Datum\;
+
+<style color=#00ffffff size=1>.</style>                flush:    fn(db: self ref Dbf)\;
+<style color=#00ffffff size=1>.</style>                isrdonly: fn(db: self ref Dbf): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:   fn()\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dbm maintains key/content pairs in a data base. The
+<style color=#00ffffff size=1>.</style>            functions will handle very large (a billion blocks)
+<style color=#00ffffff size=1>.</style>            databases and will access a keyed item in one or two
+<style color=#00ffffff size=1>.</style>            filesystem accesses.
+
+<style color=#00ffffff size=1>.</style>            Keys and contents are both represented by arrays of bytes
+<style color=#00ffffff size=1>.</style>            (with the synonym Datum), allowing arbitrary binary values.
+
+<style color=#00ffffff size=1>.</style>            The data base is stored in two files. One file is a
+<style color=#00ffffff size=1>.</style>            directory containing a bit map and has ``.dir'' as its
+<style color=#00ffffff size=1>.</style>            suffix. The second file contains all data and has ``.pag''
+<style color=#00ffffff size=1>.</style>            as its suffix. An application can access several databases
+<style color=#00ffffff size=1>.</style>            at once, but must avoid concurrent operations on any one
+<style color=#00ffffff size=1>.</style>            database (eg, by using a monitor process to control access).
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other operation of the
+<style color=#00ffffff size=1>.</style>            module.
+
+<style color=#00ffffff size=1>.</style>            A database is created by Dbf.create, which accepts a file
+<style color=#00ffffff size=1>.</style>            permission parameter perm, as described for Sys->create (see
+<style color=#00ffffff size=1>.</style>            <action name=sys-open(2)>sys-open(2)</action>)\; it creates the two files file.dir and file.pag
+<style color=#00ffffff size=1>.</style>            . If successful, it returns a Dbf reference describing the
+<style color=#00ffffff size=1>.</style>            database, which is open for reading and writing. (It will
+<style color=#00ffffff size=1>.</style>            truncate an existing database.) It returns nil if it cannot
+<style color=#00ffffff size=1>.</style>            create the database for some reason, and sets the error
+<style color=#00ffffff size=1>.</style>            string.
+
+<style color=#00ffffff size=1>.</style>            Dbf.open accepts a mode parameter as described in sys-open
+<style color=#00ffffff size=1>.</style>            (2), and opens the existing database in file.dir and file
+<style color=#00ffffff size=1>.</style>            .pag. If successful, it returns a Dbf reference describing
+<style color=#00ffffff size=1>.</style>            the database, which is open either for reading and writing
+<style color=#00ffffff size=1>.</style>            (ie, Sys->ORDWR), or only for reading (Sys->OREAD) as
+<style color=#00ffffff size=1>.</style>            determined by mode. It returns nil if the database cannot be
+<style color=#00ffffff size=1>.</style>            opened successfully, and sets the error string.
+
+<style color=#00ffffff size=1>.</style>            The remaining operations apply to an existing Dbf reference
+<style color=#00ffffff size=1>.</style>            db:
+
+<style color=#00ffffff size=1>.</style>            db.fetch(key)
+<style color=#00ffffff size=1>.</style>                 Return the data stored under a key\; nil is returned if
+<style color=#00ffffff size=1>.</style>                 the key is not in the database.
+
+<style color=#00ffffff size=1>.</style>            db.store(key, data, replace)
+<style color=#00ffffff size=1>.</style>                 Store data under the given key. If replace is non-zero,
+<style color=#00ffffff size=1>.</style>                 store will simply replace the existing value by the new
+<style color=#00ffffff size=1>.</style>                 one if the key is already in the database\; if replace
+<style color=#00ffffff size=1>.</style>                 is zero store will return 0 if the new item was
+<style color=#00ffffff size=1>.</style>                 inserted, but 1 if the key already appears in the
+<style color=#00ffffff size=1>.</style>                 database, and the new value will not be stored.
+
+<style color=#00ffffff size=1>.</style>            db.delete(key)
+<style color=#00ffffff size=1>.</style>                 Key and its associated value is removed from the
+<style color=#00ffffff size=1>.</style>                 database.
+
+<style color=#00ffffff size=1>.</style>            db.firstkey()
+<style color=#00ffffff size=1>.</style>                 Return the first key in the database\; return nil if the
+<style color=#00ffffff size=1>.</style>                 database is empty.
+
+<style color=#00ffffff size=1>.</style>            db.nextkey(key)
+<style color=#00ffffff size=1>.</style>                 Return the key following the given key, or nil if there
+<style color=#00ffffff size=1>.</style>                 is none.
+
+<style color=#00ffffff size=1>.</style>            db.flush()
+<style color=#00ffffff size=1>.</style>                 Discard any data cached from the file. The cache is
+<style color=#00ffffff size=1>.</style>                 write-through, so it is not necessary to flush the file
+<style color=#00ffffff size=1>.</style>                 before the application exits.
+
+<style color=#00ffffff size=1>.</style>            db.isrdonly()
+<style color=#00ffffff size=1>.</style>                 Return true if db was opened only for reading and
+<style color=#00ffffff size=1>.</style>                 writes are not allowed.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            A linear pass through all keys in a database may be made, in
+<style color=#00ffffff size=1>.</style>            an (apparently) random order, by use of Dbf.firstkey and
+<style color=#00ffffff size=1>.</style>            Dbf.nextkey. This code will traverse the data base:
+
+<style color=#00ffffff size=1>.</style>                 for(key := db.firstkey()\; key != nil\; key = db.nextkey(key)){
+<style color=#00ffffff size=1>.</style>                 	d := db.fetch(key)\;
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>            The order of keys presented by Dbf.firstkey and Dbf.nextkey
+<style color=#00ffffff size=1>.</style>            depends on a hashing function, not on anything interesting.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/dbm.b
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            All functions that return an int indicate errors with
+<style color=#00ffffff size=1>.</style>            negative values. A zero return indicates success. Routines
+<style color=#00ffffff size=1>.</style>            that return pointers, including values of Datum, return nil
+<style color=#00ffffff size=1>.</style>            values on error. Dbf.create and Dbf.open return nil on
+<style color=#00ffffff size=1>.</style>            failure to access the database, setting the error string to
+<style color=#00ffffff size=1>.</style>            a more detailed diagnostic.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            On some systems (notably Plan 9 but also some Unix systems),
+<style color=#00ffffff size=1>.</style>            the .pag file might contain holes where no data block has
+<style color=#00ffffff size=1>.</style>            ever been written so that its apparent size is about four
+<style color=#00ffffff size=1>.</style>            times its actual content. These files cannot be copied by
+<style color=#00ffffff size=1>.</style>            normal means (cp, cat) without filling in the holes.
+
+<style color=#00ffffff size=1>.</style>            Except for firstkey and nextkey, Datum values returned by
+<style color=#00ffffff size=1>.</style>            these functions point to storage that is changed by
+<style color=#00ffffff size=1>.</style>            subsequent calls.
+
+<style color=#00ffffff size=1>.</style>            The sum of the sizes of a key/content pair must not exceed
+<style color=#00ffffff size=1>.</style>            the internal block size (currently 512 bytes). Moreover all
+<style color=#00ffffff size=1>.</style>            key/content pairs that hash together must fit on a single
+<style color=#00ffffff size=1>.</style>            block. Dbf.store will return an error in the event that a
+<style color=#00ffffff size=1>.</style>            block fills with inseparable data.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

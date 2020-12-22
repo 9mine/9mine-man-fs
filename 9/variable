@@ -1,0 +1,26 @@
+<action name=VARIABLE(9)>VARIABLE(9)</action>                                           <action name=VARIABLE(9)>VARIABLE(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            variable - interrogate a button variable
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            variable var ?value?
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Variable queries or sets the value of a Tk radiobutton,
+<style color=#00ffffff size=1>.</style>            checkbutton or choicebutton variable. An error diagnostic
+<style color=#00ffffff size=1>.</style>            will be returned if the variable is of the wrong type (if
+<style color=#00ffffff size=1>.</style>            for instance it is the name of a named channel).
+
+<style color=#00ffffff size=1>.</style>            If value is given, the value of the variable is set to that
+<style color=#00ffffff size=1>.</style>            value, and any associated buttons will subsequently reflect
+<style color=#00ffffff size=1>.</style>            this in their appearance. Omitting the value argument
+<style color=#00ffffff size=1>.</style>            returns the current value of the variable.
+
+<style color=#00ffffff size=1>.</style>            The special variable lasterror holds the text of the last Tk
+<style color=#00ffffff size=1>.</style>            error encountered. It resets when queried.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=checkbutton(9)>checkbutton(9)</action>, <action name=choicebutton(9)>choicebutton(9)</action>, <action name=radiobutton(9)>radiobutton(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

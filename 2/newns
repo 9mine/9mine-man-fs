@@ -1,0 +1,32 @@
+<action name=NEWNS(2)>NEWNS(2)</action>                                                 <action name=NEWNS(2)>NEWNS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Newns: newns, newuser - build a new name space from a
+<style color=#00ffffff size=1>.</style>            description file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "newns.m"\;
+<style color=#00ffffff size=1>.</style>            ns := load Newns Newns->PATH\;
+
+<style color=#00ffffff size=1>.</style>            newns:   fn(user: string, nsfile: string): string\;
+<style color=#00ffffff size=1>.</style>            newuser: fn(user: string, cap: string, nsfile: string): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Newns reads file nsfile and builds a new name space based on
+<style color=#00ffffff size=1>.</style>            the commands it contains. The file has the format defined by
+<style color=#00ffffff size=1>.</style>            <action name=namespace(6)>namespace(6)</action>. If nsfile is nil or empty, then newns attempts
+<style color=#00ffffff size=1>.</style>            to read file the file namespace.
+
+<style color=#00ffffff size=1>.</style>            Newuser uses a capability cap suitable for <action name=cap(3)>cap(3)</action> to change
+<style color=#00ffffff size=1>.</style>            the current process's user name to user, and uses newns and
+<style color=#00ffffff size=1>.</style>            nsfile to build it a new name space. The capability is
+<style color=#00ffffff size=1>.</style>            typically obtained via <action name=factotum(4)>factotum(4)</action>.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/newns.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-bind(2)>sys-bind(2)</action>, <action name=sys-chdir(2)>sys-chdir(2)</action>, <action name=sys-pctl(2)>sys-pctl(2)</action>, <action name=factotum(4)>factotum(4)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=namespace(6)>namespace(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,346 @@
+<action name=SPREE-CARDLIB(2)>SPREE-CARDLIB(2)</action>                                 <action name=SPREE-CARDLIB(2)>SPREE-CARDLIB(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Cardlib - support for card games in Spree engines.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            include "sets.m"\;
+<style color=#00ffffff size=1>.</style>            include "spree.m"\;
+<style color=#00ffffff size=1>.</style>            include "spree/cardlib.m"\;
+
+<style color=#00ffffff size=1>.</style>            Object: import Spree\;
+<style color=#00ffffff size=1>.</style>            cardlib := load Cardlib Cardlib->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:			fn(spree: Spree, clique: ref Clique, archived: int)\;
+<style color=#00ffffff size=1>.</style>            selection:	fn(stack: ref Object): ref Selection\;
+
+<style color=#00ffffff size=1>.</style>            makecard:	fn(deck: ref Object, c: Card, rear: string): ref Object\;
+<style color=#00ffffff size=1>.</style>            makecards:	fn(stack: ref Object, r: Range, rear: string)\;
+<style color=#00ffffff size=1>.</style>            getcard:		fn(card: ref Object): Card\;
+<style color=#00ffffff size=1>.</style>            getcards:		fn(stack: ref Object): array of Card\;
+<style color=#00ffffff size=1>.</style>            setface:		fn(card: ref Object, face: int)\;
+<style color=#00ffffff size=1>.</style>            flip:			fn(stack: ref Object)\;
+<style color=#00ffffff size=1>.</style>            shuffle:		fn(stack: ref Object)\;
+<style color=#00ffffff size=1>.</style>            discard:		fn(stk, pile: ref Object, facedown: int)\;
+<style color=#00ffffff size=1>.</style>            deal:			fn(stack: ref Object, n: int, stacks: array of ref Object, first: int)\;
+<style color=#00ffffff size=1>.</style>            sort:			fn(stack: ref Object, rank, suitrank: array of int)\;
+
+<style color=#00ffffff size=1>.</style>            addlayframe:	fn(name: string, parent: string, layout: ref Layout, packopts: int, facing: int)\;
+<style color=#00ffffff size=1>.</style>            addlayobj:	fn(name: string, parent: string, layout: ref Layout, packopts: int, obj: ref Object)\;
+<style color=#00ffffff size=1>.</style>            dellay:		fn(name: string, layout: ref Layout)\;
+<style color=#00ffffff size=1>.</style>            maketable:	fn(parent: string)\;
+
+<style color=#00ffffff size=1>.</style>            newstack:		fn(parent: ref Object, p: ref Member, spec: Stackspec): ref Object\;
+
+<style color=#00ffffff size=1>.</style>            archive:		fn(): ref Object\;
+<style color=#00ffffff size=1>.</style>            unarchive:	fn(): ref Object\;
+<style color=#00ffffff size=1>.</style>            setarchivename: fn(o: ref Object, name: string)\;
+<style color=#00ffffff size=1>.</style>            archivearray:	fn(a: array of ref Object, name: string)\;
+<style color=#00ffffff size=1>.</style>            getarchiveobj:	fn(name: string): ref Object\;
+<style color=#00ffffff size=1>.</style>            getarchivearray: fn(name: string): array of ref Object\;
+
+<style color=#00ffffff size=1>.</style>            nmembers:	fn(): int\;
+
+<style color=#00ffffff size=1>.</style>            Layout: adt {
+<style color=#00ffffff size=1>.</style>            	lay:	ref Object\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Stackspec: adt {
+<style color=#00ffffff size=1>.</style>            	style:	string\;
+<style color=#00ffffff size=1>.</style>            	maxcards:	int\;
+<style color=#00ffffff size=1>.</style>            	title:		string\;
+<style color=#00ffffff size=1>.</style>            	conceal:	int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Card: adt {
+<style color=#00ffffff size=1>.</style>            	suit:		int\;
+<style color=#00ffffff size=1>.</style>            	number:	int\;
+<style color=#00ffffff size=1>.</style>            	face:		int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            # a member currently playing
+<style color=#00ffffff size=1>.</style>            Cmember: adt {
+<style color=#00ffffff size=1>.</style>            	ord:		int\;
+<style color=#00ffffff size=1>.</style>            	id:		int\;
+<style color=#00ffffff size=1>.</style>            	p:		ref Member\;
+<style color=#00ffffff size=1>.</style>            	obj:		ref Object\;
+<style color=#00ffffff size=1>.</style>            	layout:	ref Layout\;
+<style color=#00ffffff size=1>.</style>            	sel:		ref Selection\;
+
+<style color=#00ffffff size=1>.</style>            	join:		fn(p: ref Member, ord: int): ref Cmember\;
+<style color=#00ffffff size=1>.</style>            	index:	fn(ord: int): ref Cmember\;
+<style color=#00ffffff size=1>.</style>            	find:		fn(p: ref Member): ref Cmember\;
+<style color=#00ffffff size=1>.</style>            	findid:	fn(id: int): ref Cmember\;
+<style color=#00ffffff size=1>.</style>            	leave:	fn(cp: self ref Cmember)\;
+<style color=#00ffffff size=1>.</style>            	next:		fn(cp: self ref Cmember, fwd: int): ref Cmember\;
+<style color=#00ffffff size=1>.</style>            	prev:		fn(cp: self ref Cmember, fwd: int): ref Cmember\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Selection: adt {
+<style color=#00ffffff size=1>.</style>            	stack:	ref Object\;
+<style color=#00ffffff size=1>.</style>            	ownerid:	int\;
+<style color=#00ffffff size=1>.</style>            	isrange:	int\;
+<style color=#00ffffff size=1>.</style>            	r:		Range\;
+<style color=#00ffffff size=1>.</style>            	idxl:		list of int\;
+
+<style color=#00ffffff size=1>.</style>            	set:		fn(sel: self ref Selection, stack: ref Object)\;
+<style color=#00ffffff size=1>.</style>            	setexcl:	fn(sel: self ref Selection, stack: ref Object): int\;
+<style color=#00ffffff size=1>.</style>            	setrange:	fn(sel: self ref Selection, r: Range)\;
+<style color=#00ffffff size=1>.</style>            	addindex:	fn(sel: self ref Selection, i: int)\;
+<style color=#00ffffff size=1>.</style>            	delindex:	fn(sel: self ref Selection, i: int)\;
+<style color=#00ffffff size=1>.</style>            	isempty:	fn(sel: self ref Selection): int\;
+<style color=#00ffffff size=1>.</style>            	isset:		fn(sel: self ref Selection, index: int): int\;
+<style color=#00ffffff size=1>.</style>            	transfer:	fn(sel: self ref Selection, dst: ref Object, index: int)\;
+<style color=#00ffffff size=1>.</style>            	owner:	fn(sel: self ref Selection): ref Cmember\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Cardlib provides facilities to help in the implementation of
+<style color=#00ffffff size=1>.</style>            spree (2) engines that implement the <action name=spree-cards(4)>spree-cards(4)</action>
+<style color=#00ffffff size=1>.</style>            interface. Facilities include the layout of clients' cards,
+<style color=#00ffffff size=1>.</style>            support for card selections, and card manipulation.
+
+<style color=#00ffffff size=1>.</style>            Init must be called first to initialise the Cardlib module,
+<style color=#00ffffff size=1>.</style>            giving it the spree module and the current clique. Archived
+<style color=#00ffffff size=1>.</style>            should be non-zero if the card game is being restored from
+<style color=#00ffffff size=1>.</style>            an archive.
+
+<style color=#00ffffff size=1>.</style>         Cards
+<style color=#00ffffff size=1>.</style>            The value of a playing card is represented by the Card adt,
+<style color=#00ffffff size=1>.</style>            having attributes suit, number, and face. Suit ranges from 0
+<style color=#00ffffff size=1>.</style>            to 3 inclusive, representing clubs, diamonds, hearts and
+<style color=#00ffffff size=1>.</style>            spades respectively\; number ranges from 0 to 12 inclusive
+<style color=#00ffffff size=1>.</style>            for the standard cards, with ace low and king high - a joker
+<style color=#00ffffff size=1>.</style>            is represented by a number greater than 12\; face represents
+<style color=#00ffffff size=1>.</style>            whether the card is face up or face down (0 is face down).
+
+<style color=#00ffffff size=1>.</style>            A actual card is represented by an object in the object
+<style color=#00ffffff size=1>.</style>            hierarchy of type card, with attributes number, face, and
+<style color=#00ffffff size=1>.</style>            rear. Number is the suit/number of the card (held as n,
+<style color=#00ffffff size=1>.</style>            where n%4 gives the suit, and n/4 the rank). Face is as held
+<style color=#00ffffff size=1>.</style>            in the Card adt, and rear is a number that represents the
+<style color=#00ffffff size=1>.</style>            pattern on the back of the card (numbered from 0 upwards).
+<style color=#00ffffff size=1>.</style>            Conventionally the number attribute is made invisible to all
+<style color=#00ffffff size=1>.</style>            players when the face attribute is set to zero.
+
+<style color=#00ffffff size=1>.</style>            Makecard creates a new card of value c, placing the new card
+<style color=#00ffffff size=1>.</style>            object at the end of deck, and setting the rear attribute to
+<style color=#00ffffff size=1>.</style>            rear if it is non-nil. Makecards makes a set of cards, all
+<style color=#00ffffff size=1>.</style>            face down, in all four suits, having numbers within the
+<style color=#00ffffff size=1>.</style>            range r.
+
+<style color=#00ffffff size=1>.</style>            Getcard gets the value representation of a card from object
+<style color=#00ffffff size=1>.</style>            card\; getcards gets the values of all the card objects
+<style color=#00ffffff size=1>.</style>            within stack. Setface sets of card to face\; the visibility
+<style color=#00ffffff size=1>.</style>            of the card's number is changed appropriately.
+
+<style color=#00ffffff size=1>.</style>            The following few routines operate on stacks of cards:
+<style color=#00ffffff size=1>.</style>            objects which contain only card objects: flip reverses a
+<style color=#00ffffff size=1>.</style>            stack of cards, reversing their faces as it does so\; shuffle
+<style color=#00ffffff size=1>.</style>            shuffles a stack of cards, and sort sorts a stack of cards
+<style color=#00ffffff size=1>.</style>            by suit and then number, according to rank and suitrank.
+<style color=#00ffffff size=1>.</style>            Rank and suitrank are permutations mapping number/suit to
+<style color=#00ffffff size=1>.</style>            sort precedence (0 low). If either of these are nil, then a
+<style color=#00ffffff size=1>.</style>            default ranking scheme is chosen (two low, ace high for
+<style color=#00ffffff size=1>.</style>            number). Discard moves all the cards in stk onto pile,
+<style color=#00ffffff size=1>.</style>            turning them face down if facedown is non-zero. Deal deals
+<style color=#00ffffff size=1>.</style>            out all the cards in stack as evenly as possible amongst
+<style color=#00ffffff size=1>.</style>            stacks, dealing to stacks\[first\] first.
+
+<style color=#00ffffff size=1>.</style>         Members and card selection
+<style color=#00ffffff size=1>.</style>            Cardlib keeps a record of the current players of the game\; a
+<style color=#00ffffff size=1>.</style>            player is represented by a Cmember adt\; the players are
+<style color=#00ffffff size=1>.</style>            assumed to sit in a circle, numbered from 0 updwards\;
+<style color=#00ffffff size=1>.</style>            nmembers gives the number of current players. Each player
+<style color=#00ffffff size=1>.</style>            has a unique integer id, and an associated selection and
+<style color=#00ffffff size=1>.</style>            card layout.
+
+<style color=#00ffffff size=1>.</style>            m.join(m, ord)
+<style color=#00ffffff size=1>.</style>                      Join a new player to the game\; m is the clique
+<style color=#00ffffff size=1>.</style>                      member that's joining, and ord is where to slot
+<style color=#00ffffff size=1>.</style>                      the player in the circle of existing players. If
+<style color=#00ffffff size=1>.</style>                      ord is -1, the player will be added at the end.
+
+<style color=#00ffffff size=1>.</style>            m.leave() Remove m from the list of current players.
+
+<style color=#00ffffff size=1>.</style>            m.index(ord)
+<style color=#00ffffff size=1>.</style>                      Index returns the ordth player around the table.
+
+<style color=#00ffffff size=1>.</style>            m.find(m) Find the Cmember corresponding to member m.
+
+<style color=#00ffffff size=1>.</style>            m.findid(id)
+<style color=#00ffffff size=1>.</style>                      Find the Cmember with identifier id, and return
+<style color=#00ffffff size=1>.</style>                      it. m.next(fwd) Next returns the next player
+<style color=#00ffffff size=1>.</style>                      around the table from m. If fwd is non-zero, it
+<style color=#00ffffff size=1>.</style>                      counts upwards, otherwise it counts downwards. m
+<style color=#00ffffff size=1>.</style>                      .prev(fwd) Prev is the opposite of next. If fwd is
+<style color=#00ffffff size=1>.</style>                      non-zero, it counts downwards, otherwise it counts
+<style color=#00ffffff size=1>.</style>                      upwards.
+
+<style color=#00ffffff size=1>.</style>         Selection
+<style color=#00ffffff size=1>.</style>            Each Cmember m has an associated selection, m.sel, which
+<style color=#00ffffff size=1>.</style>            consists of a selection of some cards from a single stack of
+<style color=#00ffffff size=1>.</style>            cards. A selection can consist of either a range of cards
+<style color=#00ffffff size=1>.</style>            within a stack, or an arbitrary set of cards within a stack.
+<style color=#00ffffff size=1>.</style>            A stack can only be the subject of one selection\; the member
+<style color=#00ffffff size=1>.</style>            that has that selection is known as its owner.
+
+<style color=#00ffffff size=1>.</style>            sel.set(stack)
+<style color=#00ffffff size=1>.</style>                      Set makes stack (an object containing only card
+<style color=#00ffffff size=1>.</style>                      objects) the subject of sel's selection. If stack
+<style color=#00ffffff size=1>.</style>                      is nil, the selection is cleared.
+
+<style color=#00ffffff size=1>.</style>            sel.setexcl(stack)
+<style color=#00ffffff size=1>.</style>                      Setexcl is the same as set except that it will
+<style color=#00ffffff size=1>.</style>                      fail if the stack is owned by a different player.
+<style color=#00ffffff size=1>.</style>                      It returns 0 if it fails, otherwise non-zero.
+
+<style color=#00ffffff size=1>.</style>            sel.setrange(r)
+<style color=#00ffffff size=1>.</style>                      Setrange sets the selection sel to be a range of
+<style color=#00ffffff size=1>.</style>                      cards within its stack. If the selection had been
+<style color=#00ffffff size=1>.</style>                      of distinct cards (set using addindex), it is
+<style color=#00ffffff size=1>.</style>                      first cleared.
+
+<style color=#00ffffff size=1>.</style>            sel.addindex(i)
+<style color=#00ffffff size=1>.</style>                      Addindex adds the card at index i to the selection
+<style color=#00ffffff size=1>.</style>                      sel. If a range had previously been selected, it
+<style color=#00ffffff size=1>.</style>                      is first cleared.
+
+<style color=#00ffffff size=1>.</style>            sel.delindex(i)
+<style color=#00ffffff size=1>.</style>                      Delindex deletes the card at index i from the
+<style color=#00ffffff size=1>.</style>                      selection. If the selection was previously a
+<style color=#00ffffff size=1>.</style>                      range, this is a no-op.
+
+<style color=#00ffffff size=1>.</style>            sel.isempty()
+<style color=#00ffffff size=1>.</style>                      Isempty returns non-zero if sel holds an empty
+<style color=#00ffffff size=1>.</style>                      selection.
+
+<style color=#00ffffff size=1>.</style>            sel.isset(index)
+<style color=#00ffffff size=1>.</style>                      Isset returns non-zero if the card at index index
+<style color=#00ffffff size=1>.</style>                      is contained within the selection sel.
+
+<style color=#00ffffff size=1>.</style>            sel.transfer(dst, index)
+<style color=#00ffffff size=1>.</style>                      Transfer moves all the cards in the selection sel
+<style color=#00ffffff size=1>.</style>                      to just before index within the stack dst. sel
+<style color=#00ffffff size=1>.</style>                      .owner() Owner returns the Cmember that owns the
+<style color=#00ffffff size=1>.</style>                      selection sel.
+
+<style color=#00ffffff size=1>.</style>         Layout
+<style color=#00ffffff size=1>.</style>            Creating a stack of cards does not specify how it is to be
+<style color=#00ffffff size=1>.</style>            displayed to members of the game. Each member has a layout
+<style color=#00ffffff size=1>.</style>            object which defines which objects are to be displayed to
+<style color=#00ffffff size=1>.</style>            that member, and how they are to be laid out. Any member
+<style color=#00ffffff size=1>.</style>            must see at most one layout object (it is conventional to
+<style color=#00ffffff size=1>.</style>            make a layout object visible only to its owner). Objects are
+<style color=#00ffffff size=1>.</style>            laid out using tk-like <action name=pack(9)>pack(9)</action> semantics: frames pack
+<style color=#00ffffff size=1>.</style>            together display objects or other frames. A display object
+<style color=#00ffffff size=1>.</style>            can lay out anything the card client knows how to display
+<style color=#00ffffff size=1>.</style>            (see ``Display Objects'', below).
+
+<style color=#00ffffff size=1>.</style>            Addlayframe adds a new frame named name within a layout
+<style color=#00ffffff size=1>.</style>            frame named parent, specific to layout. If parent is nil,
+<style color=#00ffffff size=1>.</style>            the frame is added to the root of the hierarchy. If layout
+<style color=#00ffffff size=1>.</style>            is nil, a frame is added to parent for each member that has
+<style color=#00ffffff size=1>.</style>            a layout frame of that name. Packopts specifies how the
+<style color=#00ffffff size=1>.</style>            frame is to be packed within its parent: it is a bitmask,
+<style color=#00ffffff size=1>.</style>            specifying the side of the cavity against which it is to be
+<style color=#00ffffff size=1>.</style>            packed, the place it is to be anchored should the cavity be
+<style color=#00ffffff size=1>.</style>            bigger than its requested size, how to fill its cavity,
+<style color=#00ffffff size=1>.</style>            whether to expand its requested size to fill extra available
+<style color=#00ffffff size=1>.</style>            space. See <action name=pack(9)>pack(9)</action> for details of the packing algorithm. The
+<style color=#00ffffff size=1>.</style>            packing direction is specified with one of dTOP, dLEFT,
+<style color=#00ffffff size=1>.</style>            dBOTTOM or dRIGHT. The anchor direction is specified with
+<style color=#00ffffff size=1>.</style>            one of aCENTRE, aUPPERCENTRE, aUPPERLEFT, aCENTRELEFT,
+<style color=#00ffffff size=1>.</style>            aLOWERLEFT, aLOWERCENTRE, aLOWERRIGHT, aCENTRERIGHT, or
+<style color=#00ffffff size=1>.</style>            aUPPERRIGHT. FILLX and FILLY specify how to fill unused
+<style color=#00ffffff size=1>.</style>            space in its cavity (not mutually exclusive), and EXPAND
+<style color=#00ffffff size=1>.</style>            requests unused space. Facing influences direction that
+<style color=#00ffffff size=1>.</style>            objects are packed in underneath the frame. It should be one
+<style color=#00ffffff size=1>.</style>            of the pack direction constants specified above (e.g. dTOP).
+<style color=#00ffffff size=1>.</style>            For instance, if dRIGHT is specified, then all objects
+<style color=#00ffffff size=1>.</style>            packed underneath have their attributes modified 90°
+<style color=#00ffffff size=1>.</style>            clockwise, as if the player in question was sitting on the
+<style color=#00ffffff size=1>.</style>            left of the table, looking right. This feature means that it
+<style color=#00ffffff size=1>.</style>            is possible to set up a ``table'' in which layout objects
+<style color=#00ffffff size=1>.</style>            can be added to all players at the same time, but which
+<style color=#00ffffff size=1>.</style>            nonetheless looks different to each player around the table.
+
+<style color=#00ffffff size=1>.</style>            Maketable creates such a 	``table'' for between 0 and 4
+<style color=#00ffffff size=1>.</style>            players. It creates a frame for each player, named pn, where
+<style color=#00ffffff size=1>.</style>            n is the ordinal number of the player around the table\; and
+<style color=#00ffffff size=1>.</style>            an inner space, named public. The parent argument to
+<style color=#00ffffff size=1>.</style>            maketable gives the frame within which the table is to be
+<style color=#00ffffff size=1>.</style>            created.
+
+<style color=#00ffffff size=1>.</style>            Addlayobj adds a new display object obj to the layout
+<style color=#00ffffff size=1>.</style>            hierarchy. Name, parent, layout, and packopts are the same
+<style color=#00ffffff size=1>.</style>            as for addlayframe except that if it is a stack object, then
+<style color=#00ffffff size=1>.</style>            packopts also specifies the orientation of the stack, with
+<style color=#00ffffff size=1>.</style>            one of the constants oRIGHT, oUP, oLEFT, or oDOWN, giving
+<style color=#00ffffff size=1>.</style>            the direction in which cards are laid out within the stack.
+
+<style color=#00ffffff size=1>.</style>            Dellay deletes the object named name from the layout
+<style color=#00ffffff size=1>.</style>            hierarchy. If layout is nil, it is deleted from all layouts,
+<style color=#00ffffff size=1>.</style>            otherwise from layout only.
+
+<style color=#00ffffff size=1>.</style>         Display Objects
+<style color=#00ffffff size=1>.</style>            Currently, two kinds of objects can be displayed: stacks and
+<style color=#00ffffff size=1>.</style>            widgets. A stack has object type stack, and contains only
+<style color=#00ffffff size=1>.</style>            cards objects. Attributes on the stack object define its
+<style color=#00ffffff size=1>.</style>            appearance: maxcards gives the default size of the stack\;
+<style color=#00ffffff size=1>.</style>            style gives the style of stack layout, currently one of pile
+<style color=#00ffffff size=1>.</style>            (all the cards piled directly on top of one another), or
+<style color=#00ffffff size=1>.</style>            display (cards are spread out in the direction specified by
+<style color=#00ffffff size=1>.</style>            the orientation given in the packing options, see Layout,
+<style color=#00ffffff size=1>.</style>            above)\; title gives a title to display with the stack.
+
+<style color=#00ffffff size=1>.</style>            Newstack creates a new stack according to the specifications
+<style color=#00ffffff size=1>.</style>            in spec, where spec is an adt that holds style, maxcards,
+<style color=#00ffffff size=1>.</style>            and title, as described above. If spec.conceal is non-zero,
+<style color=#00ffffff size=1>.</style>            the contents of the new stack will be made invisible to all
+<style color=#00ffffff size=1>.</style>            (except owner, if owner is non-nil).
+
+<style color=#00ffffff size=1>.</style>            Widgets are created by making an object of type ``widget
+<style color=#00ffffff size=1>.</style>            type'', where type is one of button, entry,or menu. The text
+<style color=#00ffffff size=1>.</style>            attribute controls the text that is displayed in the widget\;
+<style color=#00ffffff size=1>.</style>            command gives the text that will be sent to the engine when
+<style color=#00ffffff size=1>.</style>            the widget is activated, and width specifies the widget of
+<style color=#00ffffff size=1>.</style>            the widget, in multiples of the width of the ``0''
+<style color=#00ffffff size=1>.</style>            character.
+
+<style color=#00ffffff size=1>.</style>            Entries can be made in a menu widget by creating new objects
+<style color=#00ffffff size=1>.</style>            of type menuentry inside a menu object. The text and command
+<style color=#00ffffff size=1>.</style>            attributes have the usual meaning here.
+
+<style color=#00ffffff size=1>.</style>         Archival
+<style color=#00ffffff size=1>.</style>            Engines that use cardlib should not use <action name=spree-objstore(2)>spree-objstore(2)</action> to
+<style color=#00ffffff size=1>.</style>            archive their objects: cardlib provides an interface to do
+<style color=#00ffffff size=1>.</style>            this, and also knows how to archive and unarchive its own
+<style color=#00ffffff size=1>.</style>            internal state.
+
+<style color=#00ffffff size=1>.</style>            Archive commits all the internal state of cardlib to the
+<style color=#00ffffff size=1>.</style>            object hierarchy, prior to archival. It returns an
+<style color=#00ffffff size=1>.</style>            ``archive'' object that can be used as a convenient place to
+<style color=#00ffffff size=1>.</style>            put attributes that need archiving but are not associated
+<style color=#00ffffff size=1>.</style>            with any particular object. Setarchivename associates name
+<style color=#00ffffff size=1>.</style>            with the object o such that it can be retrieved when
+<style color=#00ffffff size=1>.</style>            unarchiving by calling getarchiveobj with the same name.
+<style color=#00ffffff size=1>.</style>            Similarly Archivearray associates a name with each object in
+<style color=#00ffffff size=1>.</style>            the array a such that the array can be retrieved when
+<style color=#00ffffff size=1>.</style>            unarchiving by calling getarchivearray with the same name.
+<style color=#00ffffff size=1>.</style>            Name should not end in a decimal digit. Unarchive unarchives
+<style color=#00ffffff size=1>.</style>            cardlib's internal state. It returns the same archive object
+<style color=#00ffffff size=1>.</style>            that was returned by archive.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/spree/lib/cardlib.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=spree(2)>spree(2)</action>, <action name=spree-allow(2)>spree-allow(2)</action>, <action name=spree-objstore(2)>spree-objstore(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            This interface is not complete and is liable to change.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

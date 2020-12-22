@@ -1,0 +1,34 @@
+<action name=ASM(1)>ASM(1)</action>                                                     <action name=ASM(1)>ASM(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            asm, disdump - Dis assembler, Dis disassembler
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            asm \[-l\] file
+<style color=#00ffffff size=1>.</style>            disdump file...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Asm reads one Dis assembly language file and translates it
+<style color=#00ffffff size=1>.</style>            into instructions for the Dis virtual machine. The output is
+<style color=#00ffffff size=1>.</style>            written to a file whose name is created by taking the last
+<style color=#00ffffff size=1>.</style>            element of the input file, stripping any extension, and
+<style color=#00ffffff size=1>.</style>            appending .dis For example, the output file for abc would be
+<style color=#00ffffff size=1>.</style>            abc.dis\; the output file for dir/def.s, would be def.dis.
+
+<style color=#00ffffff size=1>.</style>            The assembler has one option:
+
+<style color=#00ffffff size=1>.</style>            -l   Generate a listing, showing the generated object code.
+
+<style color=#00ffffff size=1>.</style>            Disdump prints to the standard output the Dis virtual
+<style color=#00ffffff size=1>.</style>            machine instructions in each of its Dis file arguments.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/asm
+<style color=#00ffffff size=1>.</style>            /appl/cmd/disdump.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=emu(1)>emu(1)</action>, <action name=limbo(1)>limbo(1)</action>
+
+<style color=#00ffffff size=1>.</style>            ``The Dis Virtual Machine'' in Volume 2.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

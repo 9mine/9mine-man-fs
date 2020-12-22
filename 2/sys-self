@@ -1,0 +1,60 @@
+<action name=SYS-SELF(2)>SYS-SELF(2)</action>                                           <action name=SYS-SELF(2)>SYS-SELF(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            SELF - reference self as a compatible module type
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            me := load Module SELF\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            An instance of a module of one type can acquire a reference
+<style color=#00ffffff size=1>.</style>            to itself as any compatible module type, using the Limbo
+<style color=#00ffffff size=1>.</style>            load operator with the special built-in module name $self.
+<style color=#00ffffff size=1>.</style>            Normally, applications use a synonym, the constant SELF,
+<style color=#00ffffff size=1>.</style>            which is defined by sys.m outside the declaration of the Sys
+<style color=#00ffffff size=1>.</style>            module (so that it need not be imported). Note that the
+<style color=#00ffffff size=1>.</style>            result of the load refers to the same instance that is
+<style color=#00ffffff size=1>.</style>            currently executing (ie, the same module data).
+
+<style color=#00ffffff size=1>.</style>            This mechanism is most often used to obtain a reference to
+<style color=#00ffffff size=1>.</style>            the current module instance with a restriction of its module
+<style color=#00ffffff size=1>.</style>            type to a compatible subtype (eg, containing a subset of the
+<style color=#00ffffff size=1>.</style>            current module's declarations). For example, given modules
+<style color=#00ffffff size=1>.</style>            of the following types:
+
+<style color=#00ffffff size=1>.</style>                 T: module
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                     init:    fn(nil: ref Draw->Context, nil: list of string)\;
+<style color=#00ffffff size=1>.</style>                     special: fn(a, b: int)\;
+<style color=#00ffffff size=1>.</style>                 }\;
+<style color=#00ffffff size=1>.</style>                 S: module
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                     special: fn(x, y: int)\;
+<style color=#00ffffff size=1>.</style>                 }\;
+<style color=#00ffffff size=1>.</style>                 G: module
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                     init:    fn(v: S)\;
+<style color=#00ffffff size=1>.</style>                 }\;
+
+<style color=#00ffffff size=1>.</style>            an instance of module T can execute both the following:
+
+<style color=#00ffffff size=1>.</style>                 t := load T SELF\;
+<style color=#00ffffff size=1>.</style>                 s := load S SELF\;
+
+<style color=#00ffffff size=1>.</style>            but a module of type S could not load itself as type T.
+
+<style color=#00ffffff size=1>.</style>            The result might typically be assigned to a module variable
+<style color=#00ffffff size=1>.</style>            of that type (including passing as a parameter or storing in
+<style color=#00ffffff size=1>.</style>            an adt), as in:
+
+<style color=#00ffffff size=1>.</style>                 g := load G "g.dis"\;
+<style color=#00ffffff size=1>.</style>                 g->init(s)\;
+
+<style color=#00ffffff size=1>.</style>            See the definition and use of BufioFill in <action name=bufio(2)>bufio(2)</action> and
+<style color=#00ffffff size=1>.</style>            <action name=bufio-chanfill(2)>bufio-chanfill(2)</action> for a practical example.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            ``The Limbo Programming Language'', Volume 2.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

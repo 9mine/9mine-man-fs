@@ -1,0 +1,94 @@
+<action name=ETHER(3)>ETHER(3)</action>                                                 <action name=ETHER(3)>ETHER(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ether - Ethernet device
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #ln /net
+
+<style color=#00ffffff size=1>.</style>            /net/ethern/clone
+<style color=#00ffffff size=1>.</style>            /net/ethern/\[0-7\]
+<style color=#00ffffff size=1>.</style>            /net/ethern/\[0-7\]/data
+<style color=#00ffffff size=1>.</style>            /net/ethern/\[0-7\]/ctl
+<style color=#00ffffff size=1>.</style>            /net/ethern/\[0-7\]/stats
+<style color=#00ffffff size=1>.</style>            /net/ethern/\[0-7\]/type
+<style color=#00ffffff size=1>.</style>            /net/ethern/\[0-7\]/ifstats
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Ethernet device #ln serves a three-level directory
+<style color=#00ffffff size=1>.</style>            representing a physical Ethernet interface: AMD LANCE, 3Com
+<style color=#00ffffff size=1>.</style>            3C509, 3Com 3C905, Intel 82557, and others. If n is not
+<style color=#00ffffff size=1>.</style>            given it is taken to be 0.
+
+<style color=#00ffffff size=1>.</style>            The top level directory has a single directory named ethern,
+<style color=#00ffffff size=1>.</style>            where n is the interface number, starting from 0, assigned
+<style color=#00ffffff size=1>.</style>            in some platform-dependent way. That directory contains a
+<style color=#00ffffff size=1>.</style>            conversation directory for each of 8 Ethernet packet types,
+<style color=#00ffffff size=1>.</style>            and a clone file.
+
+<style color=#00ffffff size=1>.</style>            Opening the clone file returns a file descriptor open on the
+<style color=#00ffffff size=1>.</style>            ctl file of an unused conversation directory. Reading the
+<style color=#00ffffff size=1>.</style>            ctl file returns a text string representing the number of
+<style color=#00ffffff size=1>.</style>            the connection. The connection is controlled by writing
+<style color=#00ffffff size=1>.</style>            textual commands to the associated ctl file:
+
+<style color=#00ffffff size=1>.</style>            connect type
+<style color=#00ffffff size=1>.</style>                 Set the type of Ethernet packets received on the
+<style color=#00ffffff size=1>.</style>                 connection\; the type is expressed as an integer
+<style color=#00ffffff size=1>.</style>                 constant (in hexadecimal if it has a leading 0x, octal
+<style color=#00ffffff size=1>.</style>                 if it has a leading 0, and otherwise decimal). For
+<style color=#00ffffff size=1>.</style>                 instance, Ethernet packets carrying IP version 4 use
+<style color=#00ffffff size=1>.</style>                 type 0x800. The value -1 stands for all types. The
+<style color=#00ffffff size=1>.</style>                 value -2 causes at most the first 64 bytes of all types
+<style color=#00ffffff size=1>.</style>                 of packets to be copied to the conversation. If several
+<style color=#00ffffff size=1>.</style>                 conversations are assigned the same packet type, a copy
+<style color=#00ffffff size=1>.</style>                 of the packet is given to each.
+
+<style color=#00ffffff size=1>.</style>            promiscuous
+<style color=#00ffffff size=1>.</style>                 Set the interface to capture all packets regardless of
+<style color=#00ffffff size=1>.</style>                 destination address. An interface normally receives
+<style color=#00ffffff size=1>.</style>                 only packets whose destination address is that of the
+<style color=#00ffffff size=1>.</style>                 interface or is the broadcast address, ffffffffffff.
+<style color=#00ffffff size=1>.</style>                 The interface remains promiscuous until the control
+<style color=#00ffffff size=1>.</style>                 file is closed. The extra packets are received only by
+<style color=#00ffffff size=1>.</style>                 conversations of the same type as the incoming packet
+<style color=#00ffffff size=1>.</style>                 (or of type -1).
+
+<style color=#00ffffff size=1>.</style>            addmulti address
+<style color=#00ffffff size=1>.</style>                 Add the given MAC multicast address to the set of
+<style color=#00ffffff size=1>.</style>                 multicast addresses accepted by the interface. Address
+<style color=#00ffffff size=1>.</style>                 is a twelve digit MAC address in hexadecimal.
+
+<style color=#00ffffff size=1>.</style>            remmulti address
+<style color=#00ffffff size=1>.</style>                 Remove address from the set of multicast addresses
+<style color=#00ffffff size=1>.</style>                 accepted by the interface.
+
+<style color=#00ffffff size=1>.</style>            Incoming Ethernet packets are demultiplexed by destination
+<style color=#00ffffff size=1>.</style>            address and packet type and queued for reading by the
+<style color=#00ffffff size=1>.</style>            corresponding open connection(s). Each read of the data file
+<style color=#00ffffff size=1>.</style>            returns each packet in turn, including the Ethernet header.
+<style color=#00ffffff size=1>.</style>            A read will terminate at packet boundaries. Each write to
+<style color=#00ffffff size=1>.</style>            the data file causes a packet to be sent. The Ethernet
+<style color=#00ffffff size=1>.</style>            address of the interface is inserted into the packet header
+<style color=#00ffffff size=1>.</style>            as the source address.
+
+<style color=#00ffffff size=1>.</style>            Reading the type file returns the decimal value of the
+<style color=#00ffffff size=1>.</style>            assigned Ethernet packet type.
+
+<style color=#00ffffff size=1>.</style>            Reading the stats file returns status information, the value
+<style color=#00ffffff size=1>.</style>            of counters, the `promiscuous' state, and the Ethernet MAC
+<style color=#00ffffff size=1>.</style>            address of the interface.
+
+<style color=#00ffffff size=1>.</style>            Reading the ifstats file returns statistics and status
+<style color=#00ffffff size=1>.</style>            information specific to a given hardware interface.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/devlance.c
+<style color=#00ffffff size=1>.</style>            /os/port/netif.c
+<style color=#00ffffff size=1>.</style>            /os/*/devether.c
+<style color=#00ffffff size=1>.</style>            /os/*/ether*.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ip(3)>ip(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

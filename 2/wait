@@ -1,0 +1,53 @@
+<action name=WAIT(2)>WAIT(2)</action>                                                   <action name=WAIT(2)>WAIT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            wait - wait for child process to exit
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wait := load Wait Wait->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Wait: module
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>               init:    fn()\;
+<style color=#00ffffff size=1>.</style>               read:    fn(fd: ref Sys->FD): (int, string, string)\;
+<style color=#00ffffff size=1>.</style>               monitor: fn(fd: ref Sys->FD): (int, chan of (int, string, string))\;
+<style color=#00ffffff size=1>.</style>               parse:   fn(status: string): (int, string, string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Wait helps use the wait file of <action name=prog(3)>prog(3)</action>.
+
+<style color=#00ffffff size=1>.</style>            Init must be called to initialise the module before invoking
+<style color=#00ffffff size=1>.</style>            any other function.
+
+<style color=#00ffffff size=1>.</style>            Read reads a single wait record from file descriptor fd,
+<style color=#00ffffff size=1>.</style>            which must be open on some process p's wait file, and
+<style color=#00ffffff size=1>.</style>            returns a tuple (pid, module, status) where pid is the
+<style color=#00ffffff size=1>.</style>            process ID of a child of p that has exited, module is the
+<style color=#00ffffff size=1>.</style>            name of the module that caused p to exit, and status is nil
+<style color=#00ffffff size=1>.</style>            if pid ended without error or a status message otherwise. If
+<style color=#00ffffff size=1>.</style>            reading the wait file resulted in end of file or error, pid
+<style color=#00ffffff size=1>.</style>            is 0 (for end of file) or -1 on error (and status is the
+<style color=#00ffffff size=1>.</style>            system error string for the error).
+
+<style color=#00ffffff size=1>.</style>            Monitor provides a channel interface to the wait file open
+<style color=#00ffffff size=1>.</style>            on fd\; it allows, for instance, a process to use alt to
+<style color=#00ffffff size=1>.</style>            exchange data with a process but also see it exit (for good
+<style color=#00ffffff size=1>.</style>            or ill). It starts a monitor process that applies read to fd
+<style color=#00ffffff size=1>.</style>            and sends each resulting tuple on a channel. It returns a
+<style color=#00ffffff size=1>.</style>            tuple (pid, c) where pid is the process ID of the monitor
+<style color=#00ffffff size=1>.</style>            process (which can be used to kill it when done with it),
+<style color=#00ffffff size=1>.</style>            and c is the channel on which the process sends each value
+<style color=#00ffffff size=1>.</style>            it reads. The tuple has the format described above for read.
+<style color=#00ffffff size=1>.</style>            The monitor process exits when the wait file fd yields end
+<style color=#00ffffff size=1>.</style>            of file or error, after sending the corresponding tuple on c
+<style color=#00ffffff size=1>.</style>            .
+
+<style color=#00ffffff size=1>.</style>            Parse takes a complete status string as read from a wait
+<style color=#00ffffff size=1>.</style>            file and returns a tuple (pid, module, status) as described
+<style color=#00ffffff size=1>.</style>            for read above.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=prog(3)>prog(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

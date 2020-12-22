@@ -1,0 +1,34 @@
+<action name=TSORT(1)>TSORT(1)</action>                                                 <action name=TSORT(1)>TSORT(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tsort - topological sort
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            tsort
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Tsort reads a set of partial order relations between labels
+<style color=#00ffffff size=1>.</style>            (sequences of non-space characters) from its standard input,
+<style color=#00ffffff size=1>.</style>            and lists the labels on its standard output one per line
+<style color=#00ffffff size=1>.</style>            following a topological sort. Each input line represents a
+<style color=#00ffffff size=1>.</style>            set of inequalities: the first label on the line is less
+<style color=#00ffffff size=1>.</style>            than all the others on the same line, and should appear
+<style color=#00ffffff size=1>.</style>            earlier in sorted order. (The relation might for instance
+<style color=#00ffffff size=1>.</style>            represent arcs in a directed graph, from the first label on
+<style color=#00ffffff size=1>.</style>            a line to the others, or dependency relationships.) Labels
+<style color=#00ffffff size=1>.</style>            on a line are separated by space or tab.
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            If the input contains cycles, tsort prints a diagnostic on
+<style color=#00ffffff size=1>.</style>            standard error for each cycle, listing its members. The
+<style color=#00ffffff size=1>.</style>            members of each cycle will also appear on the standard
+<style color=#00ffffff size=1>.</style>            output, in any order, but after any predecessors outside the
+<style color=#00ffffff size=1>.</style>            cycle.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/tsort.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sort(1)>sort(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,30 @@
+<action name=MV(1)>MV(1)</action>                                                       <action name=MV(1)>MV(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mv - move files
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            mv fromfile tofile
+<style color=#00ffffff size=1>.</style>            mv fromfile ... todir
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Mv moves fromfile to tofile. If the files are in the same
+<style color=#00ffffff size=1>.</style>            directory, fromfile is simply renamed\; a previously existing
+<style color=#00ffffff size=1>.</style>            file named tofile will be (silently) removed. Otherwise, mv
+<style color=#00ffffff size=1>.</style>            copies fromfile to tofile, then removes fromfile. This
+<style color=#00ffffff size=1>.</style>            requires write permission for the parent directories
+<style color=#00ffffff size=1>.</style>            involved.
+
+<style color=#00ffffff size=1>.</style>            If the last argument is a directory, the earlier arguments
+<style color=#00ffffff size=1>.</style>            (all files) will be moved into that directory. Any
+<style color=#00ffffff size=1>.</style>            previously existing files of the same name will be
+<style color=#00ffffff size=1>.</style>            overwritten. Directories can only be renamed: mv refuses to
+<style color=#00ffffff size=1>.</style>            move one into another.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/mv.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cp(1)>cp(1)</action>, <action name=rm(1)>rm(1)</action>, <action name=sys-stat(2)>sys-stat(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

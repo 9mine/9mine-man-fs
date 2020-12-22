@@ -1,0 +1,39 @@
+<action name=RDBGSRV(8)>RDBGSRV(8)</action>                                             <action name=RDBGSRV(8)>RDBGSRV(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            rdbgsrv - remote debug server
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -b '#t' /dev
+
+<style color=#00ffffff size=1>.</style>            auxi/rdbgsrv \[ -dn \] \[ -sbaud \] \[ -fdev \] mountpoint
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Rdbgsrv interposes itself between dev (default: /dev/eia0)
+<style color=#00ffffff size=1>.</style>            and mountpoint to convey 9P messages via the serial port to
+<style color=#00ffffff size=1>.</style>            and from a 9P server program running on a board running
+<style color=#00ffffff size=1>.</style>            native Inferno. The -f option specifies the serial device\;
+<style color=#00ffffff size=1>.</style>            the default is /dev/eia0. The -s option sets the line speed\;
+<style color=#00ffffff size=1>.</style>            the default is 38400 baud. The -d option selects debugging
+<style color=#00ffffff size=1>.</style>            options by a bit mask: 1, print trace of 9P message types\;
+<style color=#00ffffff size=1>.</style>            2, print actual 9P message contents.
+
+<style color=#00ffffff size=1>.</style>            The monitor program on the board must be started first.
+<style color=#00ffffff size=1>.</style>            Rdbgsrv writes the two byte message go, and keeps reading
+<style color=#00ffffff size=1>.</style>            the device until it sees the reply ok. It then attempts to
+<style color=#00ffffff size=1>.</style>            mount the exported name space, and copies 9P messages to and
+<style color=#00ffffff size=1>.</style>            from the device.
+
+<style color=#00ffffff size=1>.</style>            Once rdbgsrv is running, any device files provided by the
+<style color=#00ffffff size=1>.</style>            program will be visible at mountpoint.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/auxi/rdbgsrv.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=styxchat(8)>styxchat(8)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            No error recovery is applied, let alone error correction.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

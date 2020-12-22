@@ -1,0 +1,54 @@
+<action name=WISH(1)>WISH(1)</action>                                                   <action name=WISH(1)>WISH(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            wish - interface to the Tk graphics toolkit
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wish \[ file ... \]
+
+<style color=#00ffffff size=1>.</style>            wm/wish \[ -k \] \[ -f file \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Wish provides a Tcl command line interface to the Limbo/Tk
+<style color=#00ffffff size=1>.</style>            graphics toolkit. The input should be in the format of Tcl
+<style color=#00ffffff size=1>.</style>            or Tk commands (see <action name=intro(9)>intro(9)</action>). There are two variants.
+
+<style color=#00ffffff size=1>.</style>            Plain wish must be run from the Inferno console instead of
+<style color=#00ffffff size=1>.</style>            <action name=mux(1)>mux(1)</action> or <action name=wm(1)>wm(1)</action>. It takes input from each file in turn, then
+<style color=#00ffffff size=1>.</style>            prompts for further commands from the standard input. Its
+<style color=#00ffffff size=1>.</style>            commands operate on a Tk toplevel covering the whole screen.
+
+<style color=#00ffffff size=1>.</style>            Wm/wish runs instead in a shell window under <action name=wm(1)>wm(1)</action>. It reads
+<style color=#00ffffff size=1>.</style>            initial input from the optional file, then prompts for
+<style color=#00ffffff size=1>.</style>            further commands on its standard input unless the -k option
+<style color=#00ffffff size=1>.</style>            is given. Its commands operate on the Tk toplevel of a new
+<style color=#00ffffff size=1>.</style>            window created by Wmlib->titlebar (see <action name=wmlib(2)>wmlib(2)</action>), initially
+<style color=#00ffffff size=1>.</style>            titled WishPad.
+
+<style color=#00ffffff size=1>.</style>            The following special input sequences are recognised:
+
+<style color=#00ffffff size=1>.</style>            \n   newline
+
+<style color=#00ffffff size=1>.</style>            \t   tab
+
+<style color=#00ffffff size=1>.</style>            \b   backspace
+
+<style color=#00ffffff size=1>.</style>            \\   backslash
+
+FILES
+<style color=#00ffffff size=1>.</style>            /dev/pointer
+<style color=#00ffffff size=1>.</style>            /dev/keyboard
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/wish.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/wish.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh-tk(1)>sh-tk(1)</action>, <action name=tkcmd(1)>tkcmd(1)</action>, <action name=tk(2)>tk(2)</action>, <action name=intro(9)>intro(9)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Arguably this has been superseded by <action name=sh-tk(1)>sh-tk(1)</action> for scripting
+<style color=#00ffffff size=1>.</style>            Tk applications, and <action name=tkcmd(1)>tkcmd(1)</action> for development and testing of
+<style color=#00ffffff size=1>.</style>            Tk configurations for use by Limbo programs.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

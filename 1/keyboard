@@ -1,0 +1,34 @@
+<action name=KEYBOARD(1)>KEYBOARD(1)</action>                                           <action name=KEYBOARD(1)>KEYBOARD(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            keyboard, pen - character input for touch screen devices
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wm/keyboard \[ -e \] \[ -t \]
+
+<style color=#00ffffff size=1>.</style>            wm/pen \[ -e \] \[ -r \] \[ -t \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Wm/keyboard provides a soft keyboard for touch-screen
+<style color=#00ffffff size=1>.</style>            devices. Characters selected on the on-screen keyboard using
+<style color=#00ffffff size=1>.</style>            a stylus (or mouse button 1) are passed to Tk via
+<style color=#00ffffff size=1>.</style>            Tk->keyboard in <action name=tk(2)>tk(2)</action>. The -t option causes it to put itself
+<style color=#00ffffff size=1>.</style>            on the <action name=wm(1)>wm(1)</action> task bar from the start. The -e option causes
+<style color=#00ffffff size=1>.</style>            it to treat the `exit' button on the title bar as a request
+<style color=#00ffffff size=1>.</style>            to put itself back on the task bar.
+
+<style color=#00ffffff size=1>.</style>            Wm/pen provides character input using single-stroke gestures
+<style color=#00ffffff size=1>.</style>            with the stylus (or mouse button 1). The -r option allows
+<style color=#00ffffff size=1>.</style>            the pen window to be reshaped. Options are otherwise the
+<style color=#00ffffff size=1>.</style>            same as for wm/keyboard.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/strokes/*.cl   Raw sample data for different stroke
+<style color=#00ffffff size=1>.</style>                                sets (eg, letters, digits)
+<style color=#00ffffff size=1>.</style>            /lib/strokes/*.clx  Compact canonical versions of the stroke
+<style color=#00ffffff size=1>.</style>                                sets
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/keyboard.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/pen.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

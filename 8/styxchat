@@ -1,0 +1,121 @@
+<action name=STYXCHAT(8)>STYXCHAT(8)</action>                                           <action name=STYXCHAT(8)>STYXCHAT(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            styxchat - exchange 9P (Styx) messages with a server or
+<style color=#00ffffff size=1>.</style>            client
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            styxchat \[ -m messagesize \] \[ -s \] \[ -v \] \[ -n \] \[
+<style color=#00ffffff size=1>.</style>            destination \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Styxchat exchanges messages with a 9P service. (9P was
+<style color=#00ffffff size=1>.</style>            previously called `Styx' when used by Inferno, hence the
+<style color=#00ffffff size=1>.</style>            command's name.) See <action name=intro(5)>intro(5)</action> for the protocol definition.
+<style color=#00ffffff size=1>.</style>            It makes a connection to a given destination, (or waits for
+<style color=#00ffffff size=1>.</style>            a connection on destination, if the -s option is specified),
+<style color=#00ffffff size=1>.</style>            then reads a textual representation of 9P T-messages from
+<style color=#00ffffff size=1>.</style>            the standard input and writes them on the connection, with a
+<style color=#00ffffff size=1>.</style>            copy on standard output, simultaneously reading 9P
+<style color=#00ffffff size=1>.</style>            R-messages from the connection and printing a representation
+<style color=#00ffffff size=1>.</style>            of them on standard output. Each message is represented by
+<style color=#00ffffff size=1>.</style>            one line on the standard output in the form of a literal of
+<style color=#00ffffff size=1>.</style>            either Tmsg or Rmsg types defined in <action name=styx(2)>styx(2)</action>. The -v option
+<style color=#00ffffff size=1>.</style>            causes a second line to be written for Rmsg.Read and
+<style color=#00ffffff size=1>.</style>            Tmsg.Write that shows the data transmitted, as text or
+<style color=#00ffffff size=1>.</style>            binary as appropriate\; if -v appears a second time, a third
+<style color=#00ffffff size=1>.</style>            line is written that shows the text equivalent of apparently
+<style color=#00ffffff size=1>.</style>            binary data (useful to see text that is surrounded by binary
+<style color=#00ffffff size=1>.</style>            data).
+
+<style color=#00ffffff size=1>.</style>            By default, destination is the name of a file, typically one
+<style color=#00ffffff size=1>.</style>            end of a named pipe. The -n option causes destination to be
+<style color=#00ffffff size=1>.</style>            interpreted as a network address, as accepted by <action name=dial(2)>dial(2)</action> (or
+<style color=#00ffffff size=1>.</style>            listen with -s). If destination is not provided, styxchat
+<style color=#00ffffff size=1>.</style>            reads and writes 9P messages on its standard input, using
+<style color=#00ffffff size=1>.</style>            /dev/cons where it would usually use its standard input and
+<style color=#00ffffff size=1>.</style>            output.
+
+<style color=#00ffffff size=1>.</style>            Each line of standard input has the form:
+
+<style color=#00ffffff size=1>.</style>                 Tversion messagesize version
+<style color=#00ffffff size=1>.</style>                 Tauth afid uname aname
+<style color=#00ffffff size=1>.</style>                 Tflush oldtag
+<style color=#00ffffff size=1>.</style>                 Tattach fid afid uname aname
+<style color=#00ffffff size=1>.</style>                 Twalk fid newfid \[ name ... \]
+<style color=#00ffffff size=1>.</style>                 Topen fid mode
+<style color=#00ffffff size=1>.</style>                 Tcreate fid name perm mode
+<style color=#00ffffff size=1>.</style>                 Tread fid offset count
+<style color=#00ffffff size=1>.</style>                 Twrite fid offset data
+<style color=#00ffffff size=1>.</style>                 Tclunk fid
+<style color=#00ffffff size=1>.</style>                 Tremove fid
+<style color=#00ffffff size=1>.</style>                 Tstat fid
+<style color=#00ffffff size=1>.</style>                 Twstat fid name uid gid mode mtime length
+<style color=#00ffffff size=1>.</style>                 nexttag \[ tag \]
+<style color=#00ffffff size=1>.</style>                 dump
+
+<style color=#00ffffff size=1>.</style>            The input is interpreted as space-separated fields using the
+<style color=#00ffffff size=1>.</style>            quoting conventions of <action name=sh(1)>sh(1)</action>, allowing fields to contain
+<style color=#00ffffff size=1>.</style>            spaces. Empty lines and lines beginning with # are ignored.
+<style color=#00ffffff size=1>.</style>            The first field on each line is normally the name of a
+<style color=#00ffffff size=1>.</style>            T-message. Subsequent fields provide parameter values for
+<style color=#00ffffff size=1>.</style>            the corresponding message. Integers are given in the format
+<style color=#00ffffff size=1>.</style>            accepted for integers by the Limbo compiler (e.g. 16rffff):
+<style color=#00ffffff size=1>.</style>            a tag is 16 bits, offset and length are 64 bits, and all
+<style color=#00ffffff size=1>.</style>            others are 32-bit integers. If the an integer parameter
+<style color=#00ffffff size=1>.</style>            field contains ~0, it is taken to be the `all ones' value of
+<style color=#00ffffff size=1>.</style>            appropriate size for that parameter\; this is particularly
+<style color=#00ffffff size=1>.</style>            useful with Twstat, where that value represents `no change'.
+<style color=#00ffffff size=1>.</style>            In the ``mode'' field of a qid, letters can be given,
+<style color=#00ffffff size=1>.</style>            representing mode bits: d for QTDIR, l for QTEXCL, a for
+<style color=#00ffffff size=1>.</style>            QTAPPEND, and u for QTAUTH. In an Rstat message, the qid
+<style color=#00ffffff size=1>.</style>            mode bits are copied into the Rstat mode field in the
+<style color=#00ffffff size=1>.</style>            appropriate place.
+
+<style color=#00ffffff size=1>.</style>            Following the <action name=sh(1)>sh(1)</action> quoting rules, an empty string is
+<style color=#00ffffff size=1>.</style>            represented by a field containing ''. The data field is sent
+<style color=#00ffffff size=1>.</style>            as its UTF-8 representation as an array of bytes. The value
+<style color=#00ffffff size=1>.</style>            for fid can be nofid (or NOFID) to represent the `no fid'
+<style color=#00ffffff size=1>.</style>            value in the protocol. The tag for each message is
+<style color=#00ffffff size=1>.</style>            automatically supplied by styxchat, starting from 1, and
+<style color=#00ffffff size=1>.</style>            incremented with each successful message transmission. The
+<style color=#00ffffff size=1>.</style>            nexttag command will cause subsequent tags to start from tag
+<style color=#00ffffff size=1>.</style>            \; if none is given, it will print the next tag value. The
+<style color=#00ffffff size=1>.</style>            tag may be notag to represent the `no tag' value (16rFFFF).
+
+<style color=#00ffffff size=1>.</style>            The dump command has the same effect as a -v option,
+<style color=#00ffffff size=1>.</style>            allowing data display to be enabled later.
+
+<style color=#00ffffff size=1>.</style>            By default, styxchat sends a 9P client's T-messages and
+<style color=#00ffffff size=1>.</style>            prints a server's R-messages. The -s option causes it to
+<style color=#00ffffff size=1>.</style>            present a server's view: it prints the T-messages from 9P
+<style color=#00ffffff size=1>.</style>            clients, and sends R-messages as it reads a textual
+<style color=#00ffffff size=1>.</style>            representation of them from standard input:
+
+<style color=#00ffffff size=1>.</style>                 Rversion tag messagesize version
+<style color=#00ffffff size=1>.</style>                 Rauth tag aqid
+<style color=#00ffffff size=1>.</style>                 Rflush tag
+<style color=#00ffffff size=1>.</style>                 Rerror tag ename
+<style color=#00ffffff size=1>.</style>                 Rattach tag qid
+<style color=#00ffffff size=1>.</style>                 Rwalk tag qid ...
+<style color=#00ffffff size=1>.</style>                 Ropen tag qid iounit
+<style color=#00ffffff size=1>.</style>                 Rcreate tag qid iounit
+<style color=#00ffffff size=1>.</style>                 Rread tag data
+<style color=#00ffffff size=1>.</style>                 Rwrite tag count
+<style color=#00ffffff size=1>.</style>                 Rclunk tag
+<style color=#00ffffff size=1>.</style>                 Rremove tag
+<style color=#00ffffff size=1>.</style>                 Rstat tag qid mode atime mtime length name uid gid muid
+<style color=#00ffffff size=1>.</style>                 Rwstat tag
+<style color=#00ffffff size=1>.</style>                 dump
+
+<style color=#00ffffff size=1>.</style>            The input conventions are as above, except that tags are
+<style color=#00ffffff size=1>.</style>            required. A qid is a single field of the form path.vers\[.
+<style color=#00ffffff size=1>.</style>            type\], where the three values are decimal integers.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/styxchat.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=styx(2)>styx(2)</action>, <action name=intro(5)>intro(5)</action>, <action name=styxmon(8)>styxmon(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

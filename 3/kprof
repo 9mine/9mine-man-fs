@@ -1,0 +1,72 @@
+<action name=KPROF(3)>KPROF(3)</action>                                                 <action name=KPROF(3)>KPROF(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            kprof - kernel profiling
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #T /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/kpctl
+<style color=#00ffffff size=1>.</style>            /dev/kpdata
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The kprof device provides simple profiling data for the
+<style color=#00ffffff size=1>.</style>            operating system kernel.   The data accumulates by recording
+<style color=#00ffffff size=1>.</style>            the program counter of the kernel at each `tick' of a
+<style color=#00ffffff size=1>.</style>            profiling clock. Often this is just the system clock, but
+<style color=#00ffffff size=1>.</style>            may be an independent higher priority timer which allows
+<style color=#00ffffff size=1>.</style>            profiling of interrupt handlers, dependent on
+<style color=#00ffffff size=1>.</style>            implementation.
+
+<style color=#00ffffff size=1>.</style>            The file kpdata holds the accumulated counts in big-endian
+<style color=#00ffffff size=1>.</style>            byte order. The size of the file depends on the size of
+<style color=#00ffffff size=1>.</style>            kernel text, and the size of the individual counts. The
+<style color=#00ffffff size=1>.</style>            first six counts are 4 bytes in size, and are special. The
+<style color=#00ffffff size=1>.</style>            first holds the total number of ticks, the second the number
+<style color=#00ffffff size=1>.</style>            of ticks which fell outside the kernel text, the third the
+<style color=#00ffffff size=1>.</style>            number of microseconds per tick, the fourth the number of
+<style color=#00ffffff size=1>.</style>            sample buckets, the fifth the size in bytes of each sample
+<style color=#00ffffff size=1>.</style>            bucket, and sixth the log base 2 of the sample bucket size.
+<style color=#00ffffff size=1>.</style>            Typically the sample size is 4, and the log base 2 of the
+<style color=#00ffffff size=1>.</style>            bucket size 3 (8 bytes). The remainder of the file holds the
+<style color=#00ffffff size=1>.</style>            sample buckets. The entire file has size sample bucket size
+<style color=#00ffffff size=1>.</style>            times number of sample buckets. That is, the first six
+<style color=#00ffffff size=1>.</style>            sample buckets are replaced with the special numbers.
+
+<style color=#00ffffff size=1>.</style>            The file kpctl controls profiling. Writing the string start
+<style color=#00ffffff size=1>.</style>            to kpctl begins profiling\; stop terminates it.  The message
+<style color=#00ffffff size=1>.</style>            startclr restarts profiling after zeroing the array of
+<style color=#00ffffff size=1>.</style>            counts.
+
+<style color=#00ffffff size=1>.</style>            Kprof(10.1) formats the data for presentation.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            The following <action name=sh(1)>sh(1)</action> commands define and invoke a function
+<style color=#00ffffff size=1>.</style>            sample that runs a given test program with kernel profiling
+<style color=#00ffffff size=1>.</style>            enabled, and copies the result to a server presumed to be
+<style color=#00ffffff size=1>.</style>            mounted on /n/remote.
+
+<style color=#00ffffff size=1>.</style>            fn sample {
+<style color=#00ffffff size=1>.</style>            	echo start >/dev/kpctl
+<style color=#00ffffff size=1>.</style>            	$1
+<style color=#00ffffff size=1>.</style>            	echo stop >/dev/kpctl
+<style color=#00ffffff size=1>.</style>            	cp /dev/kpdata /n/remote/tmp/kpdata
+<style color=#00ffffff size=1>.</style>            }
+<style color=#00ffffff size=1>.</style>            bind -a '#T' /dev
+<style color=#00ffffff size=1>.</style>            sample {cp sound /dev/audio}
+
+<style color=#00ffffff size=1>.</style>            On the server, the kprof(10.1) command is used to analyse
+<style color=#00ffffff size=1>.</style>            the data:
+<style color=#00ffffff size=1>.</style>            	kprof /usr/inferno/os/mpc/impc /tmp/kpdata
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/devkprof.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            kprof(10.1)
+
+BUGS
+<style color=#00ffffff size=1>.</style>            It cannot provide times for each node in the dynamic call
+<style color=#00ffffff size=1>.</style>            graph (dynamic profiling).
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

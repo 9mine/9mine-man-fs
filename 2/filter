@@ -1,0 +1,86 @@
+<action name=FILTER(2)>FILTER(2)</action>                                               <action name=FILTER(2)>FILTER(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            filter - data processing interface
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "filter.m"\;
+<style color=#00ffffff size=1>.</style>            filter := load Filter filterpath\;
+
+<style color=#00ffffff size=1>.</style>            Rq: adt {
+<style color=#00ffffff size=1>.</style>            	pick {
+<style color=#00ffffff size=1>.</style>            	Start =>
+<style color=#00ffffff size=1>.</style>            		pid: int\;
+<style color=#00ffffff size=1>.</style>            	Fill or Result =>
+<style color=#00ffffff size=1>.</style>            		buf: array of byte\;
+<style color=#00ffffff size=1>.</style>            		reply: chan of int\;
+<style color=#00ffffff size=1>.</style>            	Finished =>
+<style color=#00ffffff size=1>.</style>            		buf: array of byte\;
+<style color=#00ffffff size=1>.</style>            	Info =>
+<style color=#00ffffff size=1>.</style>            		msg: string\;
+<style color=#00ffffff size=1>.</style>            	Error =>
+<style color=#00ffffff size=1>.</style>            		e: string\;
+<style color=#00ffffff size=1>.</style>            	}
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:  fn()\;
+<style color=#00ffffff size=1>.</style>            start: fn(param: string): chan of ref Rq\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Filter defines a general module interface for byte-stream
+<style color=#00ffffff size=1>.</style>            processing. This manual page documents how to use the
+<style color=#00ffffff size=1>.</style>            interface, and by implication how a Filter module should
+<style color=#00ffffff size=1>.</style>            behave. There is a different implementation module for each
+<style color=#00ffffff size=1>.</style>            filter type and algorithm (eg, for compression or line
+<style color=#00ffffff size=1>.</style>            encoding). All implementations are instances of type Filter,
+<style color=#00ffffff size=1>.</style>            loaded from the Dis file filterpath, given in the manual
+<style color=#00ffffff size=1>.</style>            page for each standard filter (or you can write your own to
+<style color=#00ffffff size=1>.</style>            match this specification). For details of each existing
+<style color=#00ffffff size=1>.</style>            filter module, see <action name=filter-deflate(2)>filter-deflate(2)</action> and following manual
+<style color=#00ffffff size=1>.</style>            pages.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other operation of a filter
+<style color=#00ffffff size=1>.</style>            module.
+
+<style color=#00ffffff size=1>.</style>            Start sets the filter going\; param can be used to pass any
+<style color=#00ffffff size=1>.</style>            filter-specific information to the processor. Start spawns a
+<style color=#00ffffff size=1>.</style>            new thread to do the processing\; it returns a channel that
+<style color=#00ffffff size=1>.</style>            is used to receive requests from the filter. The first
+<style color=#00ffffff size=1>.</style>            message sent is always Rq.Start\; pid is the process id of
+<style color=#00ffffff size=1>.</style>            the new process spawned.
+
+<style color=#00ffffff size=1>.</style>            Subsequent messages are:
+
+<style color=#00ffffff size=1>.</style>            Rq.Fill      A request by the filter to fill buf with data.
+<style color=#00ffffff size=1>.</style>                         The number of bytes that have actually been
+<style color=#00ffffff size=1>.</style>                         placed in the buffer should be sent on reply.
+<style color=#00ffffff size=1>.</style>                         If -1 is sent, the filter will terminate. If
+<style color=#00ffffff size=1>.</style>                         the value is 0, the filter will terminate once
+<style color=#00ffffff size=1>.</style>                         it has processed all its input.
+
+<style color=#00ffffff size=1>.</style>            Rq.Result    Buf contains data from the filter. Receipt of
+<style color=#00ffffff size=1>.</style>                         the the data must be acknowledged by sending a
+<style color=#00ffffff size=1>.</style>                         value on reply. If the value is -1, the filter
+<style color=#00ffffff size=1>.</style>                         will terminate.
+
+<style color=#00ffffff size=1>.</style>            Rq.Finished  The filter has finished processing. Buf
+<style color=#00ffffff size=1>.</style>                         contains any data that was not consumed by the
+<style color=#00ffffff size=1>.</style>                         filter. The filter terminates after sending
+<style color=#00ffffff size=1>.</style>                         this message.
+
+<style color=#00ffffff size=1>.</style>            Rq.Info      This message is used to send a string of
+<style color=#00ffffff size=1>.</style>                         arbitrary information from the filter during
+<style color=#00ffffff size=1>.</style>                         the course of its processing.
+
+<style color=#00ffffff size=1>.</style>            Rq.Error     The filter has encountered an error when
+<style color=#00ffffff size=1>.</style>                         processing. E is a string describing the error.
+<style color=#00ffffff size=1>.</style>                         The filter terminates after sending this
+<style color=#00ffffff size=1>.</style>                         message.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /module/filter.m
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=gzip(1)>gzip(1)</action>, <action name=filter-deflate(2)>filter-deflate(2)</action>, <action name=filter-slip(2)>filter-slip(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,32 @@
+<action name=SECURITY-RANDOM(2)>SECURITY-RANDOM(2)</action>                             <action name=SECURITY-RANDOM(2)>SECURITY-RANDOM(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            random: randomint, randombuf - random number generation
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "keyring.m"\;
+<style color=#00ffffff size=1>.</style>            include "security.m"\;
+<style color=#00ffffff size=1>.</style>            random := load Random Random->PATH\;
+
+<style color=#00ffffff size=1>.</style>            randomint:  fn(which: int): int\;
+<style color=#00ffffff size=1>.</style>            randombuf:  fn(which, n: int): array of byte\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Randomint and randombuf return random or not-quite-random
+<style color=#00ffffff size=1>.</style>            data obtained from /dev/random or /dev/notquiterandom.
+<style color=#00ffffff size=1>.</style>            Randomint returns a random integer\; randombuf returns an
+<style color=#00ffffff size=1>.</style>            array of length n filled with random bytes. In both
+<style color=#00ffffff size=1>.</style>            functions, which may be either ReallyRandom or
+<style color=#00ffffff size=1>.</style>            NotQuiteRandom to select the random data source.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /dev/random
+<style color=#00ffffff size=1>.</style>            /dev/notquiterandom
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/random.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=rand(2)>rand(2)</action>, <action name=cons(3)>cons(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

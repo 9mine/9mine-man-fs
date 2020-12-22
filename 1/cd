@@ -1,0 +1,24 @@
+<action name=CD(1)>CD(1)</action>                                                       <action name=CD(1)>CD(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            cd - change working directory
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            cd \[ directory \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Cd changes the working directory for the shell and all
+<style color=#00ffffff size=1>.</style>            processes in its name space group (see <action name=sys-pctl(2)>sys-pctl(2)</action>) to
+<style color=#00ffffff size=1>.</style>            directory. If no argument is given, cd attempts to change to
+<style color=#00ffffff size=1>.</style>            /usr/user where user is the name read from /dev/user.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /dev/user
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/cd.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=pwd(1)>pwd(1)</action>, <action name=sys-chdir(2)>sys-chdir(2)</action>, <action name=sys-pctl(2)>sys-pctl(2)</action>, <action name=cons(3)>cons(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,30 @@
+<action name=RAND(2)>RAND(2)</action>                                                   <action name=RAND(2)>RAND(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            rand - pseudo random number generation
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "rand.m"\;
+<style color=#00ffffff size=1>.</style>            rand = load Rand Rand->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:    fn(seed: int)\;
+<style color=#00ffffff size=1>.</style>            rand:    fn(modulus: int): int\;
+<style color=#00ffffff size=1>.</style>            bigrand: fn(modulus: big): big\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Init initialises the pseudo-random number generator with
+<style color=#00ffffff size=1>.</style>            seed\; subsequent calls to rand and bigrand return a
+<style color=#00ffffff size=1>.</style>            pseudo-random sequence of integers or bigs respectively,
+<style color=#00ffffff size=1>.</style>            between 0 and modulus-1. Modulus should be a non-negative
+<style color=#00ffffff size=1>.</style>            integer\; for bigrand, it should be less than 2^53.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/rand.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=security-random(2)>security-random(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The quality of the algorithm currently used is questionable.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

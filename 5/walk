@@ -1,0 +1,82 @@
+<action name=WALK(5)>WALK(5)</action>                                                   <action name=WALK(5)>WALK(5)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            walk - descend a directory hierarchy
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            size\[4\] Twalk tag\[2\] fid\[4\] newfid\[4\] nwname\[2\] nwname*(
+<style color=#00ffffff size=1>.</style>            wname\[s\])
+<style color=#00ffffff size=1>.</style>            size\[4\] Rwalk tag\[2\] nwqid\[2\] nwqid*(qid\[13\])
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The walk request carries as arguments an existing fid and a
+<style color=#00ffffff size=1>.</style>            proposed newfid (which must not be in use unless it is the
+<style color=#00ffffff size=1>.</style>            same as fid) that the client wishes to associate with the
+<style color=#00ffffff size=1>.</style>            result of traversing the directory hierarchy by `walking'
+<style color=#00ffffff size=1>.</style>            the hierarchy using the successive path name elements wname.
+<style color=#00ffffff size=1>.</style>            The fid must represent a directory unless zero path name
+<style color=#00ffffff size=1>.</style>            elements are specified.
+
+<style color=#00ffffff size=1>.</style>            The fid must be valid in the current session and must not
+<style color=#00ffffff size=1>.</style>            have been opened for I/O by an open or create message. If
+<style color=#00ffffff size=1>.</style>            the full sequence of nwname elements is walked successfully,
+<style color=#00ffffff size=1>.</style>            newfid will represent the file that results. If not, newfid
+<style color=#00ffffff size=1>.</style>            (and fid) will be unaffected. However, if newfid is in use
+<style color=#00ffffff size=1>.</style>            or otherwise illegal, an Rerror is returned.
+
+<style color=#00ffffff size=1>.</style>            The name ``..'' (dot-dot) represents the parent directory.
+<style color=#00ffffff size=1>.</style>            The name ``.'' (dot), meaning the current directory, is not
+<style color=#00ffffff size=1>.</style>            used in the protocol.
+
+<style color=#00ffffff size=1>.</style>            It is legal for nwname to be zero, in which case newfid will
+<style color=#00ffffff size=1>.</style>            represent the same file as fid and the walk will usually
+<style color=#00ffffff size=1>.</style>            succeed\; this is equivalent to walking to dot. The rest of
+<style color=#00ffffff size=1>.</style>            this discussion assumes nwname is greater than zero.
+
+<style color=#00ffffff size=1>.</style>            The nwname path name elements wname are walked in order,
+<style color=#00ffffff size=1>.</style>            ``elementwise''. For the first elementwise walk to succeed,
+<style color=#00ffffff size=1>.</style>            the file identified by fid must be a directory, and the
+<style color=#00ffffff size=1>.</style>            implied user of the request must have permission to search
+<style color=#00ffffff size=1>.</style>            the directory (see <action name=intro(5)>intro(5)</action>). Subsequent elementwise walks
+<style color=#00ffffff size=1>.</style>            have equivalent restrictions applied to the implicit fid
+<style color=#00ffffff size=1>.</style>            that results from the preceding elementwise walk.
+
+<style color=#00ffffff size=1>.</style>            If the first element cannot be walked for any reason, Rerror
+<style color=#00ffffff size=1>.</style>            is returned. Otherwise, the walk will return an Rwalk
+<style color=#00ffffff size=1>.</style>            message containing nwqid qids corresponding, in order, to
+<style color=#00ffffff size=1>.</style>            the files that are visited by the nwqid successful
+<style color=#00ffffff size=1>.</style>            elementwise walks\; nwqid is therefore either nwname or the
+<style color=#00ffffff size=1>.</style>            index of the first elementwise walk that failed. The value
+<style color=#00ffffff size=1>.</style>            of nwqid cannot be zero unless nwname is zero. Also, nwqid
+<style color=#00ffffff size=1>.</style>            will always be less than or equal to nwname. Only if it is
+<style color=#00ffffff size=1>.</style>            equal, however, will newfid be affected, in which case
+<style color=#00ffffff size=1>.</style>            newfid will represent the file reached by the final
+<style color=#00ffffff size=1>.</style>            elementwise walk requested in the message.
+
+<style color=#00ffffff size=1>.</style>            A walk of the name ``..'' in the root directory of a server
+<style color=#00ffffff size=1>.</style>            is equivalent to a walk with no name elements.
+
+<style color=#00ffffff size=1>.</style>            If newfid is the same as fid, the above discussion applies,
+<style color=#00ffffff size=1>.</style>            with the obvious difference that if the walk changes the
+<style color=#00ffffff size=1>.</style>            state of newfid, it also changes the state of fid\; and if
+<style color=#00ffffff size=1>.</style>            newfid is unaffected, then fid is also unaffected.
+
+<style color=#00ffffff size=1>.</style>            To simplify the implementation of the servers, a maximum of
+<style color=#00ffffff size=1>.</style>            sixteen name elements or qids may be packed in a single
+<style color=#00ffffff size=1>.</style>            message. This constant is called MAXWELEM in <action name=styx(2)>styx(2)</action> and
+<style color=#00ffffff size=1>.</style>            styx(10.2). Despite this restriction, the system imposes no
+<style color=#00ffffff size=1>.</style>            limit on the number of elements in a file name, only the
+<style color=#00ffffff size=1>.</style>            number that may be transmitted in a single message.
+
+ENTRY POINTS
+<style color=#00ffffff size=1>.</style>            A call to <action name=sys-chdir(2)>sys-chdir(2)</action> causes a walk. One or more walk
+<style color=#00ffffff size=1>.</style>            messages may be generated by any of the following calls,
+<style color=#00ffffff size=1>.</style>            which evaluate file names: bind, create, mount, open, remove
+<style color=#00ffffff size=1>.</style>            , stat, unmount, wstat. The file name element . (dot) is
+<style color=#00ffffff size=1>.</style>            interpreted locally and is not transmitted in walk messages.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-bind(2)>sys-bind(2)</action>, <action name=sys-chdir(2)>sys-chdir(2)</action>, <action name=sys-open(2)>sys-open(2)</action>, <action name=sys-remove(2)>sys-remove(2)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=sys-stat(2)>sys-stat(2)</action>, <action name=intro(5)>intro(5)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

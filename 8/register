@@ -1,0 +1,53 @@
+<action name=REGISTER(8)>REGISTER(8)</action>                                           <action name=REGISTER(8)>REGISTER(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            register - command to register set-top-box identity with
+<style color=#00ffffff size=1>.</style>            signer
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            mux/register \[ signer \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Register is intended for use on a set top box (or similar
+<style color=#00ffffff size=1>.</style>            device). It connects to signer, a machine configured to sign
+<style color=#00ffffff size=1>.</style>            certificates, and obtains an authenticated certificate based
+<style color=#00ffffff size=1>.</style>            on the contents of ``/nvfs/ID'' (the set top box ID in
+<style color=#00ffffff size=1>.</style>            non-volatile memory). The certificate is saved in the file
+<style color=#00ffffff size=1>.</style>            ``/nvfs/default'' for later use. If no signer is named
+<style color=#00ffffff size=1>.</style>            explicitly, the $SIGNER named in <action name=db(6)>db(6)</action> is used instead.
+
+<style color=#00ffffff size=1>.</style>            There are several phases to obtaining the certificate.
+
+<style color=#00ffffff size=1>.</style>            1.   The register command interacts with <action name=signer(8)>signer(8)</action> on the
+<style color=#00ffffff size=1>.</style>                 signing host to construct the certificate. This
+<style color=#00ffffff size=1>.</style>                 certificate is `blinded' by a random bit mask, sent
+<style color=#00ffffff size=1>.</style>                 back to register which displays it in textual or
+<style color=#00ffffff size=1>.</style>                 graphical form to the user.
+
+<style color=#00ffffff size=1>.</style>            2.   The user running register must use an independent,
+<style color=#00ffffff size=1>.</style>                 secure mechanism (for example, an untapped telephone
+<style color=#00ffffff size=1>.</style>                 call) to communicate with a human agent at the site
+<style color=#00ffffff size=1>.</style>                 acting as signer. That agent runs verify (see signer
+<style color=#00ffffff size=1>.</style>                 (8)) to display the same `blinded' certificate that was
+<style color=#00ffffff size=1>.</style>                 shown to register's user at the client. Once the agent
+<style color=#00ffffff size=1>.</style>                 is convinced that the `blinded' certificate has been
+<style color=#00ffffff size=1>.</style>                 delivered to the correct party, the agent tells verify
+<style color=#00ffffff size=1>.</style>                 to accept the identity of the caller.
+
+<style color=#00ffffff size=1>.</style>            3.   Register then connects to the countersigner process
+<style color=#00ffffff size=1>.</style>                 (see <action name=signer(8)>signer(8)</action>) to obtain the bitmask needed to
+<style color=#00ffffff size=1>.</style>                 `unblind' the previously received certificate. This
+<style color=#00ffffff size=1>.</style>                 step can only validly be performed after the successful
+<style color=#00ffffff size=1>.</style>                 completion of verify on the signer.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /nvfs/ID         File emulating set top box-id in ROM.
+<style color=#00ffffff size=1>.</style>            /nvfs/default    Repository of authenticated certificate.
+<style color=#00ffffff size=1>.</style>            /services/cs/db  Default definition of `signer' host.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/mux/register.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=db(6)>db(6)</action>, <action name=manufacture(8)>manufacture(8)</action>, <action name=signer(8)>signer(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

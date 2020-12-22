@@ -1,0 +1,123 @@
+ERROR(10.2)                                           ERROR(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            error, nexterror, poperror, waserror - error handling
+<style color=#00ffffff size=1>.</style>            functions
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            void	error(char*)
+
+<style color=#00ffffff size=1>.</style>            void	nexterror(void)
+
+<style color=#00ffffff size=1>.</style>            void	poperror(void)
+
+<style color=#00ffffff size=1>.</style>            int	waserror(void)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The kernel handles error conditions using non-local gotos,
+<style color=#00ffffff size=1>.</style>            similar to setjmp/longjmp in ANSI C, but using a stack of
+<style color=#00ffffff size=1>.</style>            error labels to implement nested exception handling. This
+<style color=#00ffffff size=1>.</style>            simplifies many of the internal interfaces by eliminating
+<style color=#00ffffff size=1>.</style>            the need for returning and checking error codes at every
+<style color=#00ffffff size=1>.</style>            level of the call stack, at the cost of requiring kernel
+<style color=#00ffffff size=1>.</style>            routines to adhere to a strict discipline.
+
+<style color=#00ffffff size=1>.</style>            Each kernel process (see kproc(10.2)) has in its defining
+<style color=#00ffffff size=1>.</style>            Proc structure a stack of labels, currently 32 elements
+<style color=#00ffffff size=1>.</style>            deep. A kernel function that must perform a clean up or
+<style color=#00ffffff size=1>.</style>            recovery action on an error makes a stylised call to
+<style color=#00ffffff size=1>.</style>            waserror, nexterror and poperror:
+
+<style color=#00ffffff size=1>.</style>                 if(waserror()){
+<style color=#00ffffff size=1>.</style>                 	/* recovery action */
+<style color=#00ffffff size=1>.</style>                 	nexterror()\;
+<style color=#00ffffff size=1>.</style>                 }
+<style color=#00ffffff size=1>.</style>                 /* normal action */
+<style color=#00ffffff size=1>.</style>                 poperror()\;
+
+<style color=#00ffffff size=1>.</style>            When called in the normal course of events, waserror
+<style color=#00ffffff size=1>.</style>            registers an error handling block by pushing its label onto
+<style color=#00ffffff size=1>.</style>            the stack, and returns zero. The return value of waserror
+<style color=#00ffffff size=1>.</style>            should be tested as shown above. If non-zero (true), the
+<style color=#00ffffff size=1>.</style>            calling function should perform the needed error recovery,
+<style color=#00ffffff size=1>.</style>            ended by a call to nexterror to transfer control to the next
+<style color=#00ffffff size=1>.</style>            location on the error stack. Typical recovery actions
+<style color=#00ffffff size=1>.</style>            include deallocating memory, unlocking resources, and
+<style color=#00ffffff size=1>.</style>            resetting state variables.
+
+<style color=#00ffffff size=1>.</style>            Within the recovery block, after handling an error
+<style color=#00ffffff size=1>.</style>            condition, there must normally be a call to nexterror to
+<style color=#00ffffff size=1>.</style>            transfer control to any error recovery lower down in the
+<style color=#00ffffff size=1>.</style>            stack. The main exception is in the outermost function in a
+<style color=#00ffffff size=1>.</style>            process, which must not call nexterror (there being nothing
+<style color=#00ffffff size=1>.</style>            further on the stack), but calls pexit (see kproc(10.2))
+<style color=#00ffffff size=1>.</style>            instead, to terminate the process.
+
+<style color=#00ffffff size=1>.</style>            When the need to recover a particular resource has passed, a
+<style color=#00ffffff size=1>.</style>            function that has called waserror must remove the
+<style color=#00ffffff size=1>.</style>            corresponding label from the stack by calling poperror. This
+<style color=#00ffffff size=1>.</style>            must be done before returning from the function\; otherwise,
+<style color=#00ffffff size=1>.</style>            a subsequent call to error will return to an obsolete
+<style color=#00ffffff size=1>.</style>            activation record, with unpredictable but unpleasant
+<style color=#00ffffff size=1>.</style>            consequences.
+
+<style color=#00ffffff size=1>.</style>            Error copies the given error message, which is limited to
+<style color=#00ffffff size=1>.</style>            ERRMAX bytes, into the Osenv.errstr of the current process,
+<style color=#00ffffff size=1>.</style>            enables interrupts by calling spllo (native only), and
+<style color=#00ffffff size=1>.</style>            finally calls nexterror to start invoking the recovery
+<style color=#00ffffff size=1>.</style>            procedures currently stacked by waserror. The files
+<style color=#00ffffff size=1>.</style>            /os/port/error.h and /emu/port/error.h offer a wide
+<style color=#00ffffff size=1>.</style>            selection of predefined error messages, suitable for almost
+<style color=#00ffffff size=1>.</style>            any occasion. The message set by the most recent call to
+<style color=#00ffffff size=1>.</style>            error can be obtained within the kernel by examining
+<style color=#00ffffff size=1>.</style>            up->env->error and in an application, by using the ``%r''
+<style color=#00ffffff size=1>.</style>            directive of <action name=sys-print(2)>sys-print(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            A complex function can have nested error handlers. A
+<style color=#00ffffff size=1>.</style>            waserror block will follow the acquisition of a resource,
+<style color=#00ffffff size=1>.</style>            releasing it on error before calling nexterror, and a
+<style color=#00ffffff size=1>.</style>            poperror will precede its release in the normal case. For
+<style color=#00ffffff size=1>.</style>            example:
+
+<style color=#00ffffff size=1>.</style>                 void
+<style color=#00ffffff size=1>.</style>                 outer(Thing *t)
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                     qlock(t)\;
+<style color=#00ffffff size=1>.</style>                     if(waserror()){      /* A */
+<style color=#00ffffff size=1>.</style>                         qunlock(t)\;
+<style color=#00ffffff size=1>.</style>                         nexterror()\;
+<style color=#00ffffff size=1>.</style>                     }
+<style color=#00ffffff size=1>.</style>                     m = mallocz(READSTR, 0)\;
+<style color=#00ffffff size=1>.</style>                     if(m == nil)
+<style color=#00ffffff size=1>.</style>                         error(Enomem)\;
+<style color=#00ffffff size=1>.</style>                     if(waserror()){     /* B */
+<style color=#00ffffff size=1>.</style>                         free(m)\;
+<style color=#00ffffff size=1>.</style>                         nexterror()\;    /* invokes A */
+<style color=#00ffffff size=1>.</style>                     }
+<style color=#00ffffff size=1>.</style>                     inner(t)\;
+<style color=#00ffffff size=1>.</style>                     poperror()\;         /* pops B */
+<style color=#00ffffff size=1>.</style>                     free(m)\;
+<style color=#00ffffff size=1>.</style>                     poperror()\;         /* pops A */
+<style color=#00ffffff size=1>.</style>                     qunlock(t)\;
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>                 void
+<style color=#00ffffff size=1>.</style>                 inner(Thing *t)
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                     if(t->bad)
+<style color=#00ffffff size=1>.</style>                         error(Egreg)\;   /* error() call returns to B */
+<style color=#00ffffff size=1>.</style>                     t->valid++\;
+<style color=#00ffffff size=1>.</style>                 }
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/proc.c
+<style color=#00ffffff size=1>.</style>            /emu/port/main.c
+
+CAVEATS
+<style color=#00ffffff size=1>.</style>            The description above has many instances of should, will,
+<style color=#00ffffff size=1>.</style>            must and must not.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            panic(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,136 @@
+<action name=MENUBUTTON(9)>MENUBUTTON(9)</action>                                       <action name=MENUBUTTON(9)>MENUBUTTON(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            menubutton - Create and manipulate menubutton widgets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            menubutton pathName ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -activebackground -disabledcolor      -justify
+<style color=#00ffffff size=1>.</style>            -activeforeground -font               -relief
+<style color=#00ffffff size=1>.</style>            -anchor           -foreground         -takefocus
+<style color=#00ffffff size=1>.</style>            -background       -highlightcolor     -text
+<style color=#00ffffff size=1>.</style>            -bitmap           -highlightthickness -underline
+<style color=#00ffffff size=1>.</style>            -borderwidth      -image
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -height state
+<style color=#00ffffff size=1>.</style>                 Specifies a desired height for the menubutton. If this
+<style color=#00ffffff size=1>.</style>                 option is not specified, the menubutton's desired
+<style color=#00ffffff size=1>.</style>                 height is computed from the size of the image or bitmap
+<style color=#00ffffff size=1>.</style>                 or text being displayed in it.
+
+<style color=#00ffffff size=1>.</style>            -menu widgetname
+<style color=#00ffffff size=1>.</style>                 Specifies the path name of the menu associated with
+<style color=#00ffffff size=1>.</style>                 this menubutton. The menu must be a child of the
+<style color=#00ffffff size=1>.</style>                 menubutton.
+
+<style color=#00ffffff size=1>.</style>            -state state
+<style color=#00ffffff size=1>.</style>                 Specifies one of three states for the menubutton:  
+<style color=#00ffffff size=1>.</style>                 normal, active, or disabled.  In normal state the
+<style color=#00ffffff size=1>.</style>                 menubutton is displayed using the foreground and 
+<style color=#00ffffff size=1>.</style>                 background options.  The active state is typically used
+<style color=#00ffffff size=1>.</style>                 when the pointer is over the menubutton.  In active
+<style color=#00ffffff size=1>.</style>                 state the menubutton is displayed using the 
+<style color=#00ffffff size=1>.</style>                 activeforeground and activebackground options.
+<style color=#00ffffff size=1>.</style>                 Disabled state means that the menubutton should be
+<style color=#00ffffff size=1>.</style>                 insensitive:  the default bindings will refuse to
+<style color=#00ffffff size=1>.</style>                 activate the widget and will ignore mouse button
+<style color=#00ffffff size=1>.</style>                 presses. In this state the disabledcolor and background
+<style color=#00ffffff size=1>.</style>                 options determine how the button is displayed.
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired width for the menubutton. If this
+<style color=#00ffffff size=1>.</style>                 option is not specified, the menubutton's desired width
+<style color=#00ffffff size=1>.</style>                 is computed from the size of the image or bitmap or
+<style color=#00ffffff size=1>.</style>                 text being displayed in it.
+
+INTRODUCTION
+<style color=#00ffffff size=1>.</style>            The menubutton command creates a new window (given by the
+<style color=#00ffffff size=1>.</style>            pathName argument) and makes it into a menubutton widget.
+<style color=#00ffffff size=1>.</style>            Additional options, described above, may be specified to
+<style color=#00ffffff size=1>.</style>            configure aspects of the menubutton such as its colors,
+<style color=#00ffffff size=1>.</style>            font, text, and initial relief. The menubutton command
+<style color=#00ffffff size=1>.</style>            returns its pathName argument.  At the time this command is
+<style color=#00ffffff size=1>.</style>            invoked, there must not exist a window named pathName.
+
+<style color=#00ffffff size=1>.</style>            A menubutton is a widget that displays a textual string,
+<style color=#00ffffff size=1>.</style>            bitmap, or image and is associated with a menu widget. If
+<style color=#00ffffff size=1>.</style>            text is displayed, it must all be in a single font, but it
+<style color=#00ffffff size=1>.</style>            can occupy multiple lines on the screen (if it contains
+<style color=#00ffffff size=1>.</style>            newlines) and one of the characters may optionally be
+<style color=#00ffffff size=1>.</style>            underlined using the underline option. In normal usage,
+<style color=#00ffffff size=1>.</style>            pressing mouse button 1 over the menubutton causes the
+<style color=#00ffffff size=1>.</style>            associated menu to be posted just underneath the menubutton.
+<style color=#00ffffff size=1>.</style>            If the mouse button is released over the menubutton then the
+<style color=#00ffffff size=1>.</style>            menu remains posted\; clicking on the menubutton again
+<style color=#00ffffff size=1>.</style>            unposts the menu. Releasing the mouse button over a menu
+<style color=#00ffffff size=1>.</style>            entry invokes the entry, while releasing mouse button
+<style color=#00ffffff size=1>.</style>            elsewhere unposts the menu.
+
+<style color=#00ffffff size=1>.</style>            Menubuttons are typically organized into groups called menu
+<style color=#00ffffff size=1>.</style>            bars that allow scanning: if the mouse button is pressed
+<style color=#00ffffff size=1>.</style>            over one menubutton (causing it to post its menu) and the
+<style color=#00ffffff size=1>.</style>            mouse is moved over another menubutton without releasing the
+<style color=#00ffffff size=1>.</style>            mouse button, then the menu of the first menubutton is
+<style color=#00ffffff size=1>.</style>            unposted and the menu of the new menubutton is posted
+<style color=#00ffffff size=1>.</style>            instead.
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The menubutton command creates a new Tk command whose name
+<style color=#00ffffff size=1>.</style>            is pathName.  This command may be used to invoke various
+<style color=#00ffffff size=1>.</style>            operations on the widget.  It has the following general
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathName option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            Option and the args determine the exact behaviour of the
+<style color=#00ffffff size=1>.</style>            command.  The following commands are possible for menubutton
+<style color=#00ffffff size=1>.</style>            widgets:
+
+<style color=#00ffffff size=1>.</style>            pathName cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the menubutton command.
+
+<style color=#00ffffff size=1>.</style>            pathName configure ?option? ?value option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathName. If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, then the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the menubutton command.
+
+DEFAULT BINDINGS
+<style color=#00ffffff size=1>.</style>            Tk automatically creates class bindings for menubuttons that
+<style color=#00ffffff size=1>.</style>            give them the following default behaviour:
+
+<style color=#00ffffff size=1>.</style>            \[1\]  A menubutton activates whenever the mouse passes over
+<style color=#00ffffff size=1>.</style>                 it and deactivates whenever the mouse leaves it.
+
+<style color=#00ffffff size=1>.</style>            \[2\]  Pressing mouse button 1 over a menubutton posts the
+<style color=#00ffffff size=1>.</style>                 menu specified by the -menu option. If the menu is
+<style color=#00ffffff size=1>.</style>                 already posted then it is unposted.
+
+<style color=#00ffffff size=1>.</style>            \[3\]  Releasing mouse button 1 over the menubutton leaves the
+<style color=#00ffffff size=1>.</style>                 menu posted. Releasing the button over a menu entry, if
+<style color=#00ffffff size=1>.</style>                 the menu is posted, invokes that entry. Releaseing the
+<style color=#00ffffff size=1>.</style>                 button anywhere else unposts the menu.
+
+<style color=#00ffffff size=1>.</style>            \[4\]  When a menubutton is posted, its associated menu claims
+<style color=#00ffffff size=1>.</style>                 the input focus to allow keyboard traversal of the menu
+<style color=#00ffffff size=1>.</style>                 and its submenus. See the <action name=menu(9)>menu(9)</action> manual entry for
+<style color=#00ffffff size=1>.</style>                 details on these bindings.
+
+<style color=#00ffffff size=1>.</style>            If the menubutton's state is disabled then none of the above
+<style color=#00ffffff size=1>.</style>            actions occur:  the menubutton is completely non-responsive.
+
+<style color=#00ffffff size=1>.</style>            The behaviour of menubuttons can be changed by defining new
+<style color=#00ffffff size=1>.</style>            bindings for individual widgets or by redefining the class
+<style color=#00ffffff size=1>.</style>            bindings.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=menu(9)>menu(9)</action>, <action name=options(9)>options(9)</action>, <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

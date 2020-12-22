@@ -1,0 +1,184 @@
+PRINT(10.2)                                           PRINT(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            print, fprint, sprint, snprint, seprint, smprint, vfprint,
+<style color=#00ffffff size=1>.</style>            vsnprint, vseprint, vsmprint - print formatted output
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            int	print(char *format, ...)
+
+<style color=#00ffffff size=1>.</style>            int	fprint(int fd, char *format, ...)
+
+<style color=#00ffffff size=1>.</style>            int	sprint(char *s, char *format, ...)
+
+<style color=#00ffffff size=1>.</style>            int	snprint(char *s, int len, char *format, ...)
+
+<style color=#00ffffff size=1>.</style>            char*	seprint(char *s, char *e, char *format, ...)
+
+<style color=#00ffffff size=1>.</style>            char*	smprint(char *format, ...)
+
+<style color=#00ffffff size=1>.</style>            int	vfprint(int fd, char *format, va_list v)
+
+<style color=#00ffffff size=1>.</style>            int	vsnprint(char *s, int len, char *format, va_list v)
+
+<style color=#00ffffff size=1>.</style>            char*	vseprint(char *s, char *e, char *format, va_list v)
+
+<style color=#00ffffff size=1>.</style>            char*	vsmprint(char *format, va_list v)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Print writes text to the standard output. Fprint writes to
+<style color=#00ffffff size=1>.</style>            the named output file descriptor\; a buffered form is
+<style color=#00ffffff size=1>.</style>            described in <action name=bio(2)>bio(2)</action>. Sprint places text followed by the NUL
+<style color=#00ffffff size=1>.</style>            character (\0) in consecutive bytes starting at s\; it is the
+<style color=#00ffffff size=1>.</style>            user's responsibility to ensure that enough storage is
+<style color=#00ffffff size=1>.</style>            available. Each function returns the number of bytes
+<style color=#00ffffff size=1>.</style>            transmitted (not including the NUL in the case of sprint),
+<style color=#00ffffff size=1>.</style>            or a negative value if an output error was encountered.
+
+<style color=#00ffffff size=1>.</style>            Snprint is like sprint, but will not place more than len
+<style color=#00ffffff size=1>.</style>            bytes in s. Its result is always NUL-terminated and holds
+<style color=#00ffffff size=1>.</style>            the maximal number of complete UTF-8 characters that can
+<style color=#00ffffff size=1>.</style>            fit. Seprint is like snprint, except that the end is
+<style color=#00ffffff size=1>.</style>            indicated by a pointer e rather than a count and the return
+<style color=#00ffffff size=1>.</style>            value points to the terminating NUL of the resulting string.
+<style color=#00ffffff size=1>.</style>            Smprint is like sprint, except that it prints into and
+<style color=#00ffffff size=1>.</style>            returns a string of the required length, which is allocated
+<style color=#00ffffff size=1>.</style>            by malloc(10.2).
+
+<style color=#00ffffff size=1>.</style>            Finally, the routines vfprint, vsnprint, vseprint and
+<style color=#00ffffff size=1>.</style>            vsmprint are like their v-less relatives except they take as
+<style color=#00ffffff size=1>.</style>            arguments a va_list parameter, so they can be called within
+<style color=#00ffffff size=1>.</style>            a variadic function. The Example section shows a
+<style color=#00ffffff size=1>.</style>            representative usage.
+
+<style color=#00ffffff size=1>.</style>            Each of these functions converts, formats, and prints its
+<style color=#00ffffff size=1>.</style>            trailing arguments under control of a format string. The
+<style color=#00ffffff size=1>.</style>            format contains two types of objects: plain characters,
+<style color=#00ffffff size=1>.</style>            which are simply copied to the output stream, and conversion
+<style color=#00ffffff size=1>.</style>            specifications, each of which results in fetching of zero or
+<style color=#00ffffff size=1>.</style>            more arguments. The results are undefined if there are
+<style color=#00ffffff size=1>.</style>            arguments of the wrong type or too few arguments for the
+<style color=#00ffffff size=1>.</style>            format. If the format is exhausted while arguments remain,
+<style color=#00ffffff size=1>.</style>            the excess is ignored.
+
+<style color=#00ffffff size=1>.</style>            Each conversion specification has the following format:
+
+<style color=#00ffffff size=1>.</style>                 % \[flags\] verb
+
+<style color=#00ffffff size=1>.</style>            The verb is a single character and each flag is a single
+<style color=#00ffffff size=1>.</style>            character or a (decimal) numeric string. Up to two numeric
+<style color=#00ffffff size=1>.</style>            strings may be used\; the first is called width, the second
+<style color=#00ffffff size=1>.</style>            precision. A period can be used to separate them, and if the
+<style color=#00ffffff size=1>.</style>            period is present then width and precision are taken to be
+<style color=#00ffffff size=1>.</style>            zero if missing, otherwise they are `omitted'. Either or
+<style color=#00ffffff size=1>.</style>            both of the numbers may be replaced with the character *,
+<style color=#00ffffff size=1>.</style>            meaning that the actual number will be obtained from the
+<style color=#00ffffff size=1>.</style>            argument list as an integer. The flags and numbers are
+<style color=#00ffffff size=1>.</style>            arguments to the verb described below.
+
+<style color=#00ffffff size=1>.</style>            The numeric verbs d, o, b, x, and X format their arguments
+<style color=#00ffffff size=1>.</style>            in decimal, octal, binary, hexadecimal, and upper case
+<style color=#00ffffff size=1>.</style>            hexadecimal. Each interprets the flags 0, h, hh, l, u, +, -,
+<style color=#00ffffff size=1>.</style>            ,, and # to mean pad with zeros, short, byte, long,
+<style color=#00ffffff size=1>.</style>            unsigned, always print a sign, left justified, commas every
+<style color=#00ffffff size=1>.</style>            three digits, and alternate format. Also, a space character
+<style color=#00ffffff size=1>.</style>            in the flag position is like +, but prints a space instead
+<style color=#00ffffff size=1>.</style>            of a plus sign for non-negative values. If neither short nor
+<style color=#00ffffff size=1>.</style>            long is specified, then the argument is an int. If unsigned
+<style color=#00ffffff size=1>.</style>            is specified, then the argument is interpreted as a positive
+<style color=#00ffffff size=1>.</style>            number and no sign is output. If two l flags are given, then
+<style color=#00ffffff size=1>.</style>            the argument is interpreted as a vlong (usually an 8-byte,
+<style color=#00ffffff size=1>.</style>            sometimes a 4-byte integer). If precision is not omitted,
+<style color=#00ffffff size=1>.</style>            the number is padded on the left with zeros until at least
+<style color=#00ffffff size=1>.</style>            precision digits appear. Then, if alternate format is
+<style color=#00ffffff size=1>.</style>            specified, for o conversion, the number is preceded by a 0
+<style color=#00ffffff size=1>.</style>            if it doesn't already begin with one\; for x conversion, the
+<style color=#00ffffff size=1>.</style>            number is preceded by 0x\; for X conversion, the number is
+<style color=#00ffffff size=1>.</style>            preceded by 0X. Finally, if width is not omitted, the number
+<style color=#00ffffff size=1>.</style>            is padded on the left (or right, if left justification is
+<style color=#00ffffff size=1>.</style>            specified) with enough blanks to make the field at least
+<style color=#00ffffff size=1>.</style>            width characters long.
+
+<style color=#00ffffff size=1>.</style>            The floating point verbs f, e, E, g, and G take a double
+<style color=#00ffffff size=1>.</style>            argument. Each interprets the flags +, -, and # to mean
+<style color=#00ffffff size=1>.</style>            always print a sign, left justified, and alternate format.
+<style color=#00ffffff size=1>.</style>            Width is the minimum field width and, if the converted value
+<style color=#00ffffff size=1>.</style>            takes up less than width characters, it is padded on the
+<style color=#00ffffff size=1>.</style>            left (or right, if `left justified') with spaces. Precision
+<style color=#00ffffff size=1>.</style>            is the number of digits that are converted after the decimal
+<style color=#00ffffff size=1>.</style>            place for e, E, and f conversions, and precision is the
+<style color=#00ffffff size=1>.</style>            maximum number of significant digits for g and G
+<style color=#00ffffff size=1>.</style>            conversions. The f verb produces output of the form \[-\]
+<style color=#00ffffff size=1>.</style>            digits\[.digits\]. E conversion appends an exponent E\[-\]digits
+<style color=#00ffffff size=1>.</style>            , and e conversion appends an exponent e\[-\]digits. The g
+<style color=#00ffffff size=1>.</style>            verb will output the argument in either e or f with the goal
+<style color=#00ffffff size=1>.</style>            of producing the smallest output. Also, trailing zeros are
+<style color=#00ffffff size=1>.</style>            omitted from the fraction part of the output, and a trailing
+<style color=#00ffffff size=1>.</style>            decimal point appears only if it is followed by a digit. The
+<style color=#00ffffff size=1>.</style>            G verb is similar, but uses E format instead of e. When
+<style color=#00ffffff size=1>.</style>            alternate format is specified, the result will always
+<style color=#00ffffff size=1>.</style>            contain a decimal point, and for g and G conversions,
+<style color=#00ffffff size=1>.</style>            trailing zeros are not removed.
+
+<style color=#00ffffff size=1>.</style>            The s verb copies a string (pointer to char) to the output.
+<style color=#00ffffff size=1>.</style>            The number of characters copied (n) is the minimum of the
+<style color=#00ffffff size=1>.</style>            size of the string and precision. These n characters are
+<style color=#00ffffff size=1>.</style>            justified within a field of width characters as described
+<style color=#00ffffff size=1>.</style>            above. The S verb is similar, but it interprets its pointer
+<style color=#00ffffff size=1>.</style>            as an array of runes (see <action name=utf(6)>utf(6)</action>)\; the runes are converted
+<style color=#00ffffff size=1>.</style>            to UTF before output.
+
+<style color=#00ffffff size=1>.</style>            The c verb copies a single char (promoted to int) justified
+<style color=#00ffffff size=1>.</style>            within a field of width characters as described above. The C
+<style color=#00ffffff size=1>.</style>            verb is similar, but works on runes.
+
+<style color=#00ffffff size=1>.</style>            The p verb formats a pointer value. At the moment, it is a
+<style color=#00ffffff size=1>.</style>            synonym for ux, but that will change once pointers and
+<style color=#00ffffff size=1>.</style>            integers are different sizes.
+
+<style color=#00ffffff size=1>.</style>            The r verb takes no arguments\; it copies the error string
+<style color=#00ffffff size=1>.</style>            returned by a call to the emulated environment's `system
+<style color=#00ffffff size=1>.</style>            calls'. It must not be used within the kernels.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            This function prints an error message with a variable number
+<style color=#00ffffff size=1>.</style>            of arguments and then quits.
+
+<style color=#00ffffff size=1>.</style>                 void fatal(char *msg, ...)
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                 	char buf\[1024\], *out\;
+<style color=#00ffffff size=1>.</style>                 	va_list arg\;
+
+<style color=#00ffffff size=1>.</style>                 	out = vseprint(buf, buf+sizeof(buf), "Fatal error: ")\;
+<style color=#00ffffff size=1>.</style>                 	va_start(arg, msg)\;
+<style color=#00ffffff size=1>.</style>                 	out = vseprint(out, buf+sizeof(buf), msg, arg)\;
+<style color=#00ffffff size=1>.</style>                 	va_end(arg)\;
+<style color=#00ffffff size=1>.</style>                 	write(2, buf, out-buf)\;
+<style color=#00ffffff size=1>.</style>                 	exits("fatal error")\;
+<style color=#00ffffff size=1>.</style>                 }
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /lib9/fmt*
+<style color=#00ffffff size=1>.</style>            /libkern/fmt*
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=utf(6)>utf(6)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Routines that write to a file descriptor or call malloc set
+<style color=#00ffffff size=1>.</style>            errstr.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The formatting is close to that specified for ANSI fprintf
+<style color=#00ffffff size=1>.</style>            (2)\; the main difference is that b is not in ANSI and u is a
+<style color=#00ffffff size=1>.</style>            flag here instead of a verb. Also, and distinctly not a bug,
+<style color=#00ffffff size=1>.</style>            print and friends generate UTF rather than ASCII.
+
+<style color=#00ffffff size=1>.</style>            There is no runeprint, runefprint, etc. because runes are
+<style color=#00ffffff size=1>.</style>            byte-order dependent and should not be written directly to a
+<style color=#00ffffff size=1>.</style>            file\; use the UTF output of print or fprint instead. Also,
+<style color=#00ffffff size=1>.</style>            sprint is deprecated for safety reasons\; use snprint,
+<style color=#00ffffff size=1>.</style>            seprint, or smprint instead. Safety also precludes the
+<style color=#00ffffff size=1>.</style>            existence of runesprint.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

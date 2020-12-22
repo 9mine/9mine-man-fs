@@ -1,0 +1,187 @@
+<action name=RADIOBUTTON(9)>RADIOBUTTON(9)</action>                                     <action name=RADIOBUTTON(9)>RADIOBUTTON(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            radiobutton - Create and manipulate radiobutton widgets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            radiobutton pathName ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -activebackground -disabledcolor      -justify
+<style color=#00ffffff size=1>.</style>            -activeforeground -font               -relief
+<style color=#00ffffff size=1>.</style>            -anchor           -foreground         -takefocus
+<style color=#00ffffff size=1>.</style>            -background       -highlightcolor     -text
+<style color=#00ffffff size=1>.</style>            -bitmap           -highlightthickness -underline
+<style color=#00ffffff size=1>.</style>            -borderwidth      -image
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -command command
+<style color=#00ffffff size=1>.</style>                 Specifies a Tk command to associate with the button.
+<style color=#00ffffff size=1>.</style>                 This command is typically invoked when mouse button 1
+<style color=#00ffffff size=1>.</style>                 is released over the button window.  The button's
+<style color=#00ffffff size=1>.</style>                 global variable (-variable option) will be updated
+<style color=#00ffffff size=1>.</style>                 before the command is invoked.
+
+<style color=#00ffffff size=1>.</style>            -height dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired height for the button. If this
+<style color=#00ffffff size=1>.</style>                 option isn't specified, the button's desired height is
+<style color=#00ffffff size=1>.</style>                 computed from the size of the image or bitmap or text
+<style color=#00ffffff size=1>.</style>                 being displayed in it.
+
+<style color=#00ffffff size=1>.</style>            -indicatoron boolean
+<style color=#00ffffff size=1>.</style>                 Specifies whether or not the indicator should be drawn.
+<style color=#00ffffff size=1>.</style>                 If false, the relief option is ignored and the widget's
+<style color=#00ffffff size=1>.</style>                 relief is always sunken if the widget is selected and 
+<style color=#00ffffff size=1>.</style>                 raised otherwise.
+
+<style color=#00ffffff size=1>.</style>            -selectcolor colour
+<style color=#00ffffff size=1>.</style>                 Specifies a background colour to use when the button is
+<style color=#00ffffff size=1>.</style>                 selected. If indicatoron is true, the colour applies to
+<style color=#00ffffff size=1>.</style>                 the indicator. If indicatoron is false, this colour is
+<style color=#00ffffff size=1>.</style>                 used as the background for the entire widget, in place
+<style color=#00ffffff size=1>.</style>                 of background or activebackground, whenever the widget
+<style color=#00ffffff size=1>.</style>                 is selected. If specified as an empty string, no
+<style color=#00ffffff size=1>.</style>                 special colour is used for displaying when the widget
+<style color=#00ffffff size=1>.</style>                 is selected.
+
+<style color=#00ffffff size=1>.</style>            -state state
+<style color=#00ffffff size=1>.</style>                 Specifies one of three states for the radiobutton:  
+<style color=#00ffffff size=1>.</style>                 normal, active, or disabled.  In normal state the
+<style color=#00ffffff size=1>.</style>                 radiobutton is displayed using the foreground and 
+<style color=#00ffffff size=1>.</style>                 background options.  The active state is typically used
+<style color=#00ffffff size=1>.</style>                 when the pointer is over the radiobutton.  In active
+<style color=#00ffffff size=1>.</style>                 state the radiobutton is displayed using the 
+<style color=#00ffffff size=1>.</style>                 activeforeground and activebackground options.
+<style color=#00ffffff size=1>.</style>                 Disabled state means that the radiobutton should be
+<style color=#00ffffff size=1>.</style>                 insensitive:  the default bindings will refuse to
+<style color=#00ffffff size=1>.</style>                 activate the widget and will ignore mouse button
+<style color=#00ffffff size=1>.</style>                 presses. In this state the disabledcolor and background
+<style color=#00ffffff size=1>.</style>                 options determine how the radiobutton is displayed.
+
+<style color=#00ffffff size=1>.</style>            -value string
+<style color=#00ffffff size=1>.</style>                 Specifies value to store in the button's associated
+<style color=#00ffffff size=1>.</style>                 variable whenever this button is selected.
+
+<style color=#00ffffff size=1>.</style>            -variable string
+<style color=#00ffffff size=1>.</style>                 Specifies name of global variable to set whenever this
+<style color=#00ffffff size=1>.</style>                 button is selected.  Changes in this variable also
+<style color=#00ffffff size=1>.</style>                 cause the button to select or deselect itself. Defaults
+<style color=#00ffffff size=1>.</style>                 to the value selectedButton.
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired width for the button. If this
+<style color=#00ffffff size=1>.</style>                 option isn't specified, the button's desired width is
+<style color=#00ffffff size=1>.</style>                 computed from the size of the image or bitmap or text
+<style color=#00ffffff size=1>.</style>                 being displayed in it.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The radiobutton command creates a new window (given by the
+<style color=#00ffffff size=1>.</style>            pathName argument) and makes it into a radiobutton widget.
+<style color=#00ffffff size=1>.</style>            Additional options, described above, may be specified on the
+<style color=#00ffffff size=1>.</style>            command line to configure aspects of the radiobutton such as
+<style color=#00ffffff size=1>.</style>            its colours, font, text, and initial relief.  The 
+<style color=#00ffffff size=1>.</style>            radiobutton command returns its pathName argument.  At the
+<style color=#00ffffff size=1>.</style>            time this command is invoked, there must not exist a window
+<style color=#00ffffff size=1>.</style>            named pathName.
+
+<style color=#00ffffff size=1>.</style>            A radiobutton is a widget that displays a textual string,
+<style color=#00ffffff size=1>.</style>            bitmap or image and a circle called an indicator. If text is
+<style color=#00ffffff size=1>.</style>            displayed, it must all be in a single font, but it can
+<style color=#00ffffff size=1>.</style>            occupy multiple lines on the screen (if it contains
+<style color=#00ffffff size=1>.</style>            newlines) and one of the characters may optionally be
+<style color=#00ffffff size=1>.</style>            underlined using the underline option.  A radiobutton has
+<style color=#00ffffff size=1>.</style>            all of the behaviour of a simple button: it can display
+<style color=#00ffffff size=1>.</style>            itself in either of three different ways, according to the 
+<style color=#00ffffff size=1>.</style>            state option\; it can be made to appear raised, sunken, or
+<style color=#00ffffff size=1>.</style>            flat\; and it invokes a Tk command whenever mouse button 1 is
+<style color=#00ffffff size=1>.</style>            clicked over the check button.
+
+<style color=#00ffffff size=1>.</style>            In addition, radiobuttons can be selected. If a radiobutton
+<style color=#00ffffff size=1>.</style>            is selected, the indicator is normally drawn as a circle
+<style color=#00ffffff size=1>.</style>            containing a disc (possibly in a special colour), and a Tk
+<style color=#00ffffff size=1>.</style>            variable associated with the radiobutton is set to a
+<style color=#00ffffff size=1>.</style>            particular value. If the radiobutton is not selected, the
+<style color=#00ffffff size=1>.</style>            indicator is drawn as an empty circle. Typically, several
+<style color=#00ffffff size=1>.</style>            radiobuttons share a single variable and the value of the
+<style color=#00ffffff size=1>.</style>            variable indicates which radiobutton is to be selected. When
+<style color=#00ffffff size=1>.</style>            a radiobutton is selected it sets the value of the variable
+<style color=#00ffffff size=1>.</style>            to indicate that fact\;  each radiobutton also monitors the
+<style color=#00ffffff size=1>.</style>            value of the variable and automatically selects and
+<style color=#00ffffff size=1>.</style>            deselects itself when the variable's value changes. By
+<style color=#00ffffff size=1>.</style>            default the variable selectedButton is used\;  its contents
+<style color=#00ffffff size=1>.</style>            give the name of the button that is selected, or the empty
+<style color=#00ffffff size=1>.</style>            string if no button associated with that variable is
+<style color=#00ffffff size=1>.</style>            selected. The name of the variable for a radiobutton, plus
+<style color=#00ffffff size=1>.</style>            the variable to be stored into it, may be modified with
+<style color=#00ffffff size=1>.</style>            options on the command line. Configuration options may also
+<style color=#00ffffff size=1>.</style>            be used to modify the way the indicator is displayed (or
+<style color=#00ffffff size=1>.</style>            whether it is displayed at all). By default a radiobutton is
+<style color=#00ffffff size=1>.</style>            configured to select itself on button clicks.
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The radiobutton command creates a new Tk command whose name
+<style color=#00ffffff size=1>.</style>            is pathName.  This command may be used to invoke various
+<style color=#00ffffff size=1>.</style>            operations on the widget.  It has the following general
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathName option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            Option and the args determine the exact behaviour of the
+<style color=#00ffffff size=1>.</style>            command.  The following commands are possible for
+<style color=#00ffffff size=1>.</style>            radiobutton widgets:
+
+<style color=#00ffffff size=1>.</style>            pathName cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the radiobutton command.
+
+<style color=#00ffffff size=1>.</style>            pathName configure ?option? ?value option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathName.  If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the radiobutton command.
+
+<style color=#00ffffff size=1>.</style>            pathName deselect
+<style color=#00ffffff size=1>.</style>                 Deselects the radiobutton and sets the associated
+<style color=#00ffffff size=1>.</style>                 variable to an empty string. If this radiobutton was
+<style color=#00ffffff size=1>.</style>                 not currently selected, the command has no effect.
+
+<style color=#00ffffff size=1>.</style>            pathName invoke
+<style color=#00ffffff size=1>.</style>                 Does just what would have happened if the user invoked
+<style color=#00ffffff size=1>.</style>                 the radiobutton with the mouse: selects the button and
+<style color=#00ffffff size=1>.</style>                 invokes its associated Tk command, if there is one. The
+<style color=#00ffffff size=1>.</style>                 return value is the return value from the Tk command,
+<style color=#00ffffff size=1>.</style>                 or an empty string if there is no command associated
+<style color=#00ffffff size=1>.</style>                 with the radiobutton. This command is ignored if the
+<style color=#00ffffff size=1>.</style>                 radiobutton's state is disabled.
+
+<style color=#00ffffff size=1>.</style>            pathName select
+<style color=#00ffffff size=1>.</style>                 Selects the radiobutton and sets the associated
+<style color=#00ffffff size=1>.</style>                 variable to the value corresponding to this widget.
+
+BINDINGS
+<style color=#00ffffff size=1>.</style>            Tk automatically creates bindings for radiobuttons that give
+<style color=#00ffffff size=1>.</style>            them the following default behaviour:
+
+<style color=#00ffffff size=1>.</style>            \[1\]  The radiobutton activates whenever the mouse passes
+<style color=#00ffffff size=1>.</style>                 over it and deactivates whenever the mouse leaves the
+<style color=#00ffffff size=1>.</style>                 radiobutton.
+
+<style color=#00ffffff size=1>.</style>            \[2\]  When mouse button 1 is pressed over a radiobutton it is
+<style color=#00ffffff size=1>.</style>                 invoked (it becomes selected and the command associated
+<style color=#00ffffff size=1>.</style>                 with the button is invoked, if there is one).
+
+<style color=#00ffffff size=1>.</style>            If the radiobutton's state is disabled then none of the
+<style color=#00ffffff size=1>.</style>            above actions occur:  the radiobutton is completely
+<style color=#00ffffff size=1>.</style>            non-responsive.
+
+<style color=#00ffffff size=1>.</style>            The behaviour of radiobuttons can be changed by defining new
+<style color=#00ffffff size=1>.</style>            bindings for individual widgets.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=button(9)>button(9)</action>, check<action name=button(9)>button(9)</action>, choice<action name=button(9)>button(9)</action>, <action name=options(9)>options(9)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

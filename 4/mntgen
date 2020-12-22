@@ -1,0 +1,25 @@
+<action name=MNTGEN(4)>MNTGEN(4)</action>                                               <action name=MNTGEN(4)>MNTGEN(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mntgen - dynamically generate mount points
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            mount {mntgen} dir
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Mntgen serves 9P on its standard input, providing a name
+<style color=#00ffffff size=1>.</style>            space containing a single directory that is initially empty,
+<style color=#00ffffff size=1>.</style>            but in which a subdirectory name appears when is first
+<style color=#00ffffff size=1>.</style>            referenced, and remains only as long as it is needed
+<style color=#00ffffff size=1>.</style>            (referenced). Mntgen is typically mounted on a directory dir
+<style color=#00ffffff size=1>.</style>            using mount (see <action name=bind(1)>bind(1)</action>) as above. Dir is commonly /n or
+<style color=#00ffffff size=1>.</style>            /mnt, to generate mount points on demand for file systems or
+<style color=#00ffffff size=1>.</style>            services.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/mntgen.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=intro(1)>intro(1)</action>, <action name=bind(1)>bind(1)</action>, <action name=intro(5)>intro(5)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,25 @@
+<action name=SLEEP(1)>SLEEP(1)</action>                                                 <action name=SLEEP(1)>SLEEP(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            sleep, pause - suspend execution for an interval
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            sleep n
+
+<style color=#00ffffff size=1>.</style>            pause
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Sleep suspends its own execution for n seconds before
+<style color=#00ffffff size=1>.</style>            returning.
+
+<style color=#00ffffff size=1>.</style>            Pause never returns, and is typically used to stop a command
+<style color=#00ffffff size=1>.</style>            interpreter reading any more from the standard input.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sleep.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/pause.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-sleep(2)>sys-sleep(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

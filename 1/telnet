@@ -1,0 +1,28 @@
+<action name=TELNET(1)>TELNET(1)</action>                                               <action name=TELNET(1)>TELNET(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            telnet - make a remote telnet connection
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            telnet machine
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Telnet uses the Telnet protocol to talk to a remote machine,
+<style color=#00ffffff size=1>.</style>            addressed using any form acceptable to <action name=dial(2)>dial(2)</action>: net!host!
+<style color=#00ffffff size=1>.</style>            port in general. The default net is tcp, and the default
+<style color=#00ffffff size=1>.</style>            port is 23, the standard Telnet login port.
+
+<style color=#00ffffff size=1>.</style>            Telnet connects to the given machine and interprets the
+<style color=#00ffffff size=1>.</style>            Telnet protocol. It reads data from its standard input and
+<style color=#00ffffff size=1>.</style>            sends it to the remote machine, and copies to the standard
+<style color=#00ffffff size=1>.</style>            output the data it receives from the remote machine.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/telnet.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cpu(1)>cpu(1)</action>
+<style color=#00ffffff size=1>.</style>            ``Telnet protocol specification'', RFC854 (1 May 1983) and
+<style color=#00ffffff size=1>.</style>            related RFCs.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

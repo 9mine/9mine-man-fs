@@ -1,0 +1,62 @@
+DMAINIT(10.2)                                       DMAINIT(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            dmainit, dmasetup, dmadone, dmaend, dmacount -
+<style color=#00ffffff size=1>.</style>            platform-specific DMA support
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            void	dmainit(int chan)
+
+<style color=#00ffffff size=1>.</style>            long	dmasetup(int chan, void *va, long len, int isread)
+
+<style color=#00ffffff size=1>.</style>            int	dmadone(int chan)
+
+<style color=#00ffffff size=1>.</style>            void	dmaend(int chan)
+
+<style color=#00ffffff size=1>.</style>            int	dmacount(int chan)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These functions manage DMA on a bus that uses ISA-style DMA
+<style color=#00ffffff size=1>.</style>            controllers. They were originally devised for the x86
+<style color=#00ffffff size=1>.</style>            platform, but the same interface, and similar code, is used
+<style color=#00ffffff size=1>.</style>            by other platforms that use similar controllers. They
+<style color=#00ffffff size=1>.</style>            compensate as best they can for the limitations of older DMA
+<style color=#00ffffff size=1>.</style>            implementations (eg, alignment, boundary and length
+<style color=#00ffffff size=1>.</style>            restrictions). There are 8 DMA channels: 0 to 3 are
+<style color=#00ffffff size=1>.</style>            byte-oriented\; 4 to 7 are word-oriented (16-bit words).
+
+<style color=#00ffffff size=1>.</style>            Dmainit must be called early in a driver's initialisation to
+<style color=#00ffffff size=1>.</style>            prepare chan for use. Amongst other things, it allocates a
+<style color=#00ffffff size=1>.</style>            page-sized buffer to help circumvent hardware restrictions
+<style color=#00ffffff size=1>.</style>            on DMA addressing.
+
+<style color=#00ffffff size=1>.</style>            Dmasetup prepares DMA channel chan for a transfer between a
+<style color=#00ffffff size=1>.</style>            device configured to use it and the virtual address va. (The
+<style color=#00ffffff size=1>.</style>            transfer is started by issuing a command to the device.) If
+<style color=#00ffffff size=1>.</style>            va lies outside the kernel address space, the transfer
+<style color=#00ffffff size=1>.</style>            crosses a 64k boundary, or exceeds the 16 Mbyte limit
+<style color=#00ffffff size=1>.</style>            imposed by some DMA controllers, the transfer will be split
+<style color=#00ffffff size=1>.</style>            into page-sized transfers using the buffer previously
+<style color=#00ffffff size=1>.</style>            allocated by dmainit. If isread is true (non-zero), data is
+<style color=#00ffffff size=1>.</style>            to be transferred from chan to va\; if false, data is
+<style color=#00ffffff size=1>.</style>            transferred from va to chan. In all cases, dmasetup returns
+<style color=#00ffffff size=1>.</style>            the number of bytes to be transferred. That value (rather
+<style color=#00ffffff size=1>.</style>            than len) must be given to the device in the read or write
+<style color=#00ffffff size=1>.</style>            request that starts the transfer.
+
+<style color=#00ffffff size=1>.</style>            Dmadone returns true (non-zero) if chan is idle.
+
+<style color=#00ffffff size=1>.</style>            Dmaend must be called at the end of every DMA operation. It
+<style color=#00ffffff size=1>.</style>            disables chan, preventing further access to the previously
+<style color=#00ffffff size=1>.</style>            associated memory and, if a low-memory buffer was required
+<style color=#00ffffff size=1>.</style>            for input, transfers its contents to the appropriate part of
+<style color=#00ffffff size=1>.</style>            the target buffer.
+
+<style color=#00ffffff size=1>.</style>            Dmacount returns the number of bytes that were last
+<style color=#00ffffff size=1>.</style>            transferred by channel chan. The count is always even for
+<style color=#00ffffff size=1>.</style>            word-oriented DMA channels.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/pc/dma.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

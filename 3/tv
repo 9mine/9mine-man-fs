@@ -1,0 +1,126 @@
+<action name=TV(3)>TV(3)</action>                                                       <action name=TV(3)>TV(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tv - Hauppage TV device
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -b #V /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/tv
+<style color=#00ffffff size=1>.</style>            /dev/tvctl
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The tv device serves two files giving access to a Hauppage
+<style color=#00ffffff size=1>.</style>            television card in NTSC mode (only).
+
+<style color=#00ffffff size=1>.</style>            The control device tvctl accepts the following commands to
+<style color=#00ffffff size=1>.</style>            control tuning and image processing:
+
+<style color=#00ffffff size=1>.</style>            init Reset the device to the default settings.
+
+<style color=#00ffffff size=1>.</style>            window minx miny maxx maxy
+<style color=#00ffffff size=1>.</style>                 Set the display window size (default: none).
+
+<style color=#00ffffff size=1>.</style>            colorkey rl rh gl gh bl bh
+<style color=#00ffffff size=1>.</style>                 Set the key limits for chromakey display to the given
+<style color=#00ffffff size=1>.</style>                 `low' and `high' values for each of red, green and blue
+<style color=#00ffffff size=1>.</style>                 (default: 15 63 255 15 15 63), and enable use of the
+<style color=#00ffffff size=1>.</style>                 colour key. The value 255 for a lower limit disables
+<style color=#00ffffff size=1>.</style>                 the limit.
+
+<style color=#00ffffff size=1>.</style>            capture minx miny maxx maxy
+<style color=#00ffffff size=1>.</style>                 Set the capture window (default: none)\; see the
+<style color=#00ffffff size=1>.</style>                 description of reading the tv file, below.
+
+<style color=#00ffffff size=1>.</style>            capbrightness n
+<style color=#00ffffff size=1>.</style>                 Set the brightness of a captured frame to n, on a scale
+<style color=#00ffffff size=1>.</style>                 from 0 to 100 (default: 13).
+
+<style color=#00ffffff size=1>.</style>            capcontrast n
+<style color=#00ffffff size=1>.</style>                 Set the contrast of a captured frame to n, on a scale
+<style color=#00ffffff size=1>.</style>                 from 0 to 100 (default: 57).
+
+<style color=#00ffffff size=1>.</style>            capsaturation n
+<style color=#00ffffff size=1>.</style>                 Set the saturation of a captured frame to n, on a scale
+<style color=#00ffffff size=1>.</style>                 from 0 to 100 (default: 51).
+
+<style color=#00ffffff size=1>.</style>            caphue n
+<style color=#00ffffff size=1>.</style>                 Set the hue of a captured frame to n, on a scale from 0
+<style color=#00ffffff size=1>.</style>                 to 100 (default: 0).
+
+<style color=#00ffffff size=1>.</style>            capbw n
+<style color=#00ffffff size=1>.</style>                 Capture colour (n=0) or monochrome (n=1)\; (default: 0).
+
+<style color=#00ffffff size=1>.</style>            brightness n
+<style color=#00ffffff size=1>.</style>                 Set the image brightness to n, on a scale from 0 to 100
+<style color=#00ffffff size=1>.</style>                 (default: 0)
+
+<style color=#00ffffff size=1>.</style>            contrast n
+<style color=#00ffffff size=1>.</style>                 Set the image contrast to n, on a scale from 0 to 100
+<style color=#00ffffff size=1>.</style>                 (default: 54)
+
+<style color=#00ffffff size=1>.</style>            saturation n
+<style color=#00ffffff size=1>.</style>                 Set image saturation to n, on a scale from 0 to 100
+<style color=#00ffffff size=1>.</style>                 (default: 54)
+
+<style color=#00ffffff size=1>.</style>            source n
+<style color=#00ffffff size=1>.</style>                 Set the input source to n (default: video input 0).
+
+<style color=#00ffffff size=1>.</style>            svideo n
+<style color=#00ffffff size=1>.</style>                 If n is non-zero, set the input capture format to
+<style color=#00ffffff size=1>.</style>                 S-Video.
+
+<style color=#00ffffff size=1>.</style>            format n
+<style color=#00ffffff size=1>.</style>                 Set the input format to n (0, NTSC-M\; 1, NTSC-443\; 2,
+<style color=#00ffffff size=1>.</style>                 external control). Default: 0.
+
+<style color=#00ffffff size=1>.</style>            channel c f
+<style color=#00ffffff size=1>.</style>                 Sets the right frequency for HRC CATV channel c, with
+<style color=#00ffffff size=1>.</style>                 fine tuning by signed offset f (in MHz).
+
+<style color=#00ffffff size=1>.</style>            volume m\[ n \]
+<style color=#00ffffff size=1>.</style>                 Set the volume of left and right channels to m and n,
+<style color=#00ffffff size=1>.</style>                 on a scale from 0 to 100 (default: 80). If only m is
+<style color=#00ffffff size=1>.</style>                 given, set both left and right volumes to m.
+
+<style color=#00ffffff size=1>.</style>            bass n
+<style color=#00ffffff size=1>.</style>                 Set the bass to n, on a scale from 0 to 100 (default:
+<style color=#00ffffff size=1>.</style>                 50).
+
+<style color=#00ffffff size=1>.</style>            treble n
+<style color=#00ffffff size=1>.</style>                 Set the treble to n, on a scale from 0 to 100 (default:
+<style color=#00ffffff size=1>.</style>                 50).
+
+<style color=#00ffffff size=1>.</style>            freeze n
+<style color=#00ffffff size=1>.</style>                 If n is non-zero, freeze the current frame\; if n is
+<style color=#00ffffff size=1>.</style>                 zero, unfreeze the video.
+
+<style color=#00ffffff size=1>.</style>            The data file tv is read-only. Reading is valid only after a
+<style color=#00ffffff size=1>.</style>            capture window has been set (see capture above). Each read
+<style color=#00ffffff size=1>.</style>            at file offset 0 causes the contents of the input video
+<style color=#00ffffff size=1>.</style>            image within the previously-set capture window to be
+<style color=#00ffffff size=1>.</style>            captured. The frame data is successively returned in this
+<style color=#00ffffff size=1>.</style>            and subsequent reads until a short read signals that all
+<style color=#00ffffff size=1>.</style>            frame data has been transferred. The data is returned in
+<style color=#00ffffff size=1>.</style>            Plan 9 picfile format, with a two line textual header
+<style color=#00ffffff size=1>.</style>            followed by an empty line, followed by the image data in
+<style color=#00ffffff size=1>.</style>            binary format. The header has the form:
+
+<style color=#00ffffff size=1>.</style>                 TYPE=ccir601
+<style color=#00ffffff size=1>.</style>                 WINDOW=minx miny maxx maxy
+
+<style color=#00ffffff size=1>.</style>            The WINDOW coordinates are those of the capture window. The
+<style color=#00ffffff size=1>.</style>            image data is organised as interleaved scan lines from top
+<style color=#00ffffff size=1>.</style>            to bottom of the window, with UY0 and VY1 values
+<style color=#00ffffff size=1>.</style>            alternating, with two bytes per value, stored high-order
+<style color=#00ffffff size=1>.</style>            byte first, encoded according to the IEEE digital component
+<style color=#00ffffff size=1>.</style>            video standard.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/devtv.c
+<style color=#00ffffff size=1>.</style>            /os/pc/tv.h
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=audio(3)>audio(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

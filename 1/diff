@@ -1,0 +1,71 @@
+<action name=DIFF(1)>DIFF(1)</action>                                                   <action name=DIFF(1)>DIFF(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            diff - differential file comparator
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            diff \[ -efbwr \] file1 ... file2
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Diff tells what lines must be changed in two files to bring
+<style color=#00ffffff size=1>.</style>            them into agreement. If one file is a directory, then a file
+<style color=#00ffffff size=1>.</style>            in that directory with basename the same as that of the
+<style color=#00ffffff size=1>.</style>            other file is used. If both files are directories, similarly
+<style color=#00ffffff size=1>.</style>            named files in the two directories are compared by the
+<style color=#00ffffff size=1>.</style>            method of diff for text files and <action name=cmp(1)>cmp(1)</action> otherwise. If more
+<style color=#00ffffff size=1>.</style>            than two file names are given, then each argument is
+<style color=#00ffffff size=1>.</style>            compared to the last argument as above. The -r option causes
+<style color=#00ffffff size=1>.</style>            diff to process similarly named subdirectories recursively.
+<style color=#00ffffff size=1>.</style>            The normal output contains lines of these forms:
+
+<style color=#00ffffff size=1>.</style>                 n1 a n3,n4
+<style color=#00ffffff size=1>.</style>                 n1,n2 d n3
+<style color=#00ffffff size=1>.</style>                 n1,n2 c n3,n4
+
+<style color=#00ffffff size=1>.</style>            These lines resemble Plan 9 or Unix ed commands to convert
+<style color=#00ffffff size=1>.</style>            file1 into file2. The numbers after the letters pertain to
+<style color=#00ffffff size=1>.</style>            file2. In fact, by exchanging `a' for `d' and reading
+<style color=#00ffffff size=1>.</style>            backward one may ascertain equally how to convert file2 into
+<style color=#00ffffff size=1>.</style>            file1. As in ed, identical pairs where n1 = n2 or n3 = n4
+<style color=#00ffffff size=1>.</style>            are abbreviated as a single number.
+
+<style color=#00ffffff size=1>.</style>            Following each of these lines come all the lines that are
+<style color=#00ffffff size=1>.</style>            affected in the first file flagged by `<', then all the
+<style color=#00ffffff size=1>.</style>            lines that are affected in the second file flagged by `>'.
+
+<style color=#00ffffff size=1>.</style>            The -b option causes trailing blanks (spaces and tabs) to be
+<style color=#00ffffff size=1>.</style>            ignored and other strings of blanks to compare equal. The -w
+<style color=#00ffffff size=1>.</style>            option causes all white-space to be removed from input lines
+<style color=#00ffffff size=1>.</style>            before applying the difference algorithm.
+
+<style color=#00ffffff size=1>.</style>            The -e option produces a script of a, c and d commands for
+<style color=#00ffffff size=1>.</style>            the Plan 9 or Unix editor ed, which will recreate file2 from
+<style color=#00ffffff size=1>.</style>            file1. The -f option produces a similar script, not useful
+<style color=#00ffffff size=1>.</style>            with ed, in the opposite order. It may, however, be useful
+<style color=#00ffffff size=1>.</style>            as input to a stream-oriented post-processor.
+
+<style color=#00ffffff size=1>.</style>            Except in rare circumstances, diff finds a smallest
+<style color=#00ffffff size=1>.</style>            sufficient set of file differences.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /tmp/diff\[12\]
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/diff.b
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Exit status is the empty string for no differences, ``some''
+<style color=#00ffffff size=1>.</style>            for some, and ``error'' for trouble.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cmp(1)>cmp(1)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Editing scripts produced under the -e or -f option are naive
+<style color=#00ffffff size=1>.</style>            about creating lines consisting of a single `.'.
+<style color=#00ffffff size=1>.</style>            When running diff on directories, the notion of what is a
+<style color=#00ffffff size=1>.</style>            text file is open to debate.
+<style color=#00ffffff size=1>.</style>            Nothing directly interprets the ed scripts within the
+<style color=#00ffffff size=1>.</style>            Inferno environment.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

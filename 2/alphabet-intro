@@ -1,0 +1,154 @@
+<action name=ALPHABET-INTRO(2)>ALPHABET-INTRO(2)</action>                               <action name=ALPHABET-INTRO(2)>ALPHABET-INTRO(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Alphabet - experimental typed shell
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>         Values, type characters and signatures
+<style color=#00ffffff size=1>.</style>            Each Alphabet typeset defines one Limbo data type,
+<style color=#00ffffff size=1>.</style>            conventionally named Value. It is usually a discriminated
+<style color=#00ffffff size=1>.</style>            union (pick), with each arm of the pick representing one of
+<style color=#00ffffff size=1>.</style>            the types in the typeset. Each one of these types is given a
+<style color=#00ffffff size=1>.</style>            character. These characters are used to describe all value-
+<style color=#00ffffff size=1>.</style>            and module-types within alphabet. The set of typeset
+<style color=#00ffffff size=1>.</style>            characters implemented by a typeset is known as its alphabet
+<style color=#00ffffff size=1>.</style>            .
+
+<style color=#00ffffff size=1>.</style>            For example, in the alphabet root typeset (see alphabet-main
+<style color=#00ffffff size=1>.</style>            (2)), a string is represented by the letter ``s'', held at
+<style color=#00ffffff size=1>.</style>            the Limbo level as a ref Value.S.
+
+<style color=#00ffffff size=1>.</style>            Each alphabet module has a type signature which describes
+<style color=#00ffffff size=1>.</style>            its return type and the number and type of any flags or
+<style color=#00ffffff size=1>.</style>            arguments that it allows. Inside an alphabet typeset, this
+<style color=#00ffffff size=1>.</style>            signature is represented as a simple string where the first
+<style color=#00ffffff size=1>.</style>            character (always present) indicates the return type of the
+<style color=#00ffffff size=1>.</style>            module. Subsequent characters up until the first minus
+<style color=#00ffffff size=1>.</style>            (``-'') sign (or the end of the string) indicate the
+<style color=#00ffffff size=1>.</style>            module's required argument types. If the last character is
+<style color=#00ffffff size=1>.</style>            an asterisk (*), it allows an unlimited repetition of the
+<style color=#00ffffff size=1>.</style>            preceding argument type.
+
+<style color=#00ffffff size=1>.</style>            These may be followed by any number of options, each
+<style color=#00ffffff size=1>.</style>            indicated with a minus character, followed by the option
+<style color=#00ffffff size=1>.</style>            character and then the type characters of any arguments it
+<style color=#00ffffff size=1>.</style>            requires.
+
+<style color=#00ffffff size=1>.</style>            For instance, the following Alphabet declaration:
+<style color=#00ffffff size=1>.</style>            	/mount \[-abc\] \[-x /string\] /wfd /string -> /status
+<style color=#00ffffff size=1>.</style>            can be represented by the signature ``rws-a-b-xs-c''.
+
+<style color=#00ffffff size=1>.</style>         Typesets and proxies
+<style color=#00ffffff size=1>.</style>            The root typeset (see <action name=alphabet-main(2)>alphabet-main(2)</action>) is implemented
+<style color=#00ffffff size=1>.</style>            internally to the alphabet module. All other types are
+<style color=#00ffffff size=1>.</style>            defined by external typesets.
+
+<style color=#00ffffff size=1>.</style>            An external alphabet typeset is conventionally represented
+<style color=#00ffffff size=1>.</style>            by two header files defining the interface to the typeset,
+<style color=#00ffffff size=1>.</style>            and two modules giving its implementation. Suppose we are to
+<style color=#00ffffff size=1>.</style>            create a new typeset, say /foo . We would create the
+<style color=#00ffffff size=1>.</style>            following files:
+
+<style color=#00ffffff size=1>.</style>            /module/alphabet/foo.m
+<style color=#00ffffff size=1>.</style>                      Foo.m declares the interface used by all modules
+<style color=#00ffffff size=1>.</style>                      within the typeset. The existing typeset interface
+<style color=#00ffffff size=1>.</style>                      files (for instance alphabet/grid.m, documented in
+<style color=#00ffffff size=1>.</style>                      <action name=alphabet-grid(2)>alphabet-grid(2)</action>) provide examples of this kind of
+<style color=#00ffffff size=1>.</style>                      interface.
+
+<style color=#00ffffff size=1>.</style>            /appl/alphabet/footypes.b
+<style color=#00ffffff size=1>.</style>                      This module translates between internal values
+<style color=#00ffffff size=1>.</style>                      (each held as a Value as declared in foo.m) and
+<style color=#00ffffff size=1>.</style>                      external values (each held as a Value as declared
+<style color=#00ffffff size=1>.</style>                      in the parent typeset, in this case by the
+<style color=#00ffffff size=1>.</style>                      alphabet module itself). Since Limbo does not
+<style color=#00ffffff size=1>.</style>                      provide a way of holding an arbitrary type
+<style color=#00ffffff size=1>.</style>                      directly, internal values are instead stored in a
+<style color=#00ffffff size=1>.</style>                      table by a local proxy (see below), and referred
+<style color=#00ffffff size=1>.</style>                      to externally by their index there.
+
+<style color=#00ffffff size=1>.</style>            /appl/alphabet/foo.b
+<style color=#00ffffff size=1>.</style>                      Foo.b provides the basic type-manipulation
+<style color=#00ffffff size=1>.</style>                      primitives needed by the typeset, for instance the
+<style color=#00ffffff size=1>.</style>                      translation from type character to type name. It
+<style color=#00ffffff size=1>.</style>                      is also a convenient place to implement helper
+<style color=#00ffffff size=1>.</style>                      functions to make using the typeset easier. For
+<style color=#00ffffff size=1>.</style>                      instance, it is conventional for a typeset's Value
+<style color=#00ffffff size=1>.</style>                      adt to contain one eponymously named member
+<style color=#00ffffff size=1>.</style>                      function for each type character, making sure that
+<style color=#00ffffff size=1>.</style>                      the Value is actually of that type and returning
+<style color=#00ffffff size=1>.</style>                      the widened type, or raising an exception
+<style color=#00ffffff size=1>.</style>                      otherwise. For instance, in the root typeset, v
+<style color=#00ffffff size=1>.</style>                      .s() returns the type ref Value.S, or raises an
+<style color=#00ffffff size=1>.</style>                      error if v is not of that type.
+
+<style color=#00ffffff size=1>.</style>            /module/alphabet/footypes.m
+<style color=#00ffffff size=1>.</style>                      Footypes.m provides an interface to the typeset
+<style color=#00ffffff size=1>.</style>                      proxy module, footypes.b, that allows direct
+<style color=#00ffffff size=1>.</style>                      access to values in the foo typeset, while still
+<style color=#00ffffff size=1>.</style>                      allowing manipulation of those values by an
+<style color=#00ffffff size=1>.</style>                      alphabet instance.
+
+<style color=#00ffffff size=1>.</style>            The proxy module, footypes.b, must define at least one
+<style color=#00ffffff size=1>.</style>            function, proxy, which returns a channel through which all
+<style color=#00ffffff size=1>.</style>            operations on the typeset take place. The Proxy module (see
+<style color=#00ffffff size=1>.</style>            <action name=alphabet-proxy(2)>alphabet-proxy(2)</action>) provides a generic implementation of such
+<style color=#00ffffff size=1>.</style>            a translator\; if footypes.b uses this, it needs only define
+<style color=#00ffffff size=1>.</style>            the mapping between values in its parent typeset and its own
+<style color=#00ffffff size=1>.</style>            values.
+
+<style color=#00ffffff size=1>.</style>         <action name=alphabet-main(2)>alphabet-main(2)</action>
+<style color=#00ffffff size=1>.</style>            types()   Types is always the first function in a module to
+<style color=#00ffffff size=1>.</style>                      be called. It should do nothing but return the
+<style color=#00ffffff size=1>.</style>                      type signature string of the module.
+
+<style color=#00ffffff size=1>.</style>            init()    Init is called to allow the module to initialise
+<style color=#00ffffff size=1>.</style>                      its global state. It is called once only. It is
+<style color=#00ffffff size=1>.</style>                      permissible for this function to raise a ``fail:''
+<style color=#00ffffff size=1>.</style>                      exception on failure. The text following the ``
+<style color=#00ffffff size=1>.</style>                      fail:'' prefix should describe the reason why.
+
+<style color=#00ffffff size=1>.</style>            run(errorc, r, opts, args)
+<style color=#00ffffff size=1>.</style>                           Run runs an actual instance of the module. It
+<style color=#00ffffff size=1>.</style>                           must be re-entrant. The signature of the run
+<style color=#00ffffff size=1>.</style>                           function varies from typeset to typeset, but
+<style color=#00ffffff size=1>.</style>                           usually includes the above arguments. Args
+<style color=#00ffffff size=1>.</style>                           holds a list of the arguments passed to the
+<style color=#00ffffff size=1>.</style>                           module\; opts holds all the flags that have
+<style color=#00ffffff size=1>.</style>                           been specified. Each flag is represented with
+<style color=#00ffffff size=1>.</style>                           a tuple, say: (c, optargs), where c gives the
+<style color=#00ffffff size=1>.</style>                           option character, and optargs is a list
+<style color=#00ffffff size=1>.</style>                           holding any arguments the flag requires. The
+<style color=#00ffffff size=1>.</style>                           arguments and options passed to the module
+<style color=#00ffffff size=1>.</style>                           are guaranteed to conform with the type
+<style color=#00ffffff size=1>.</style>                           signature returned from types. Note that each
+<style color=#00ffffff size=1>.</style>                           flag may be passed multiple times to the
+<style color=#00ffffff size=1>.</style>                           module.
+
+<style color=#00ffffff size=1>.</style>                      If the run succeeds, it should return the
+<style color=#00ffffff size=1>.</style>                      resulting value. If the module returns a value
+<style color=#00ffffff size=1>.</style>                      that was passed in, and it contains a
+<style color=#00ffffff size=1>.</style>                      reference-count, the count should be incremented
+<style color=#00ffffff size=1>.</style>                      before returning, If the module succeeds, it is
+<style color=#00ffffff size=1>.</style>                      responsible for the disposal of any arguments and
+<style color=#00ffffff size=1>.</style>                      option arguments that it has been given.
+<style color=#00ffffff size=1>.</style>                      Appropriate disposal depends on the type of the
+<style color=#00ffffff size=1>.</style>                      argument, but v.<action name=free(0)>free(0)</action> is always sufficient to
+<style color=#00ffffff size=1>.</style>                      dispose of value v.
+
+<style color=#00ffffff size=1>.</style>                      If the run fails, it should return nil\; its
+<style color=#00ffffff size=1>.</style>                      arguments will automatically be freed in this
+<style color=#00ffffff size=1>.</style>                      case.
+
+<style color=#00ffffff size=1>.</style>                      While processing the run request, the module
+<style color=#00ffffff size=1>.</style>                      should send error and debugging diagnostics to the
+<style color=#00ffffff size=1>.</style>                      errorc channel (it should take care never to send
+<style color=#00ffffff size=1>.</style>                      an empty string). If it spawns any new processes,
+<style color=#00ffffff size=1>.</style>                      it can use the Report, r, (see alphabet-reports
+<style color=#00ffffff size=1>.</style>                      (2)) to create new diagnostic channels for these
+<style color=#00ffffff size=1>.</style>                      processes. When such an diagnostic channel is no
+<style color=#00ffffff size=1>.</style>                      longer in use, the module should send an empty
+<style color=#00ffffff size=1>.</style>                      string on it. It should take care that
+<style color=#00ffffff size=1>.</style>                      Report.start is called before run returns.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

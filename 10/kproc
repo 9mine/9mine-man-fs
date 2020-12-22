@@ -1,0 +1,86 @@
+KPROC(10.2)                                           KPROC(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            kproc, setpri, swiproc, pexit - kernel process creation,
+<style color=#00ffffff size=1>.</style>            priority change, interrupt and termination
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            void	kproc(char *name, void (*func)(void*), void *arg, int
+<style color=#00ffffff size=1>.</style>            flags)\;
+
+<style color=#00ffffff size=1>.</style>            int	setpri(int pri)\;
+
+<style color=#00ffffff size=1>.</style>            void	swiproc(Proc *p, int interp)\;
+
+<style color=#00ffffff size=1>.</style>            void	pexit(char*, int)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Kproc creates a new Inferno kernel process to run the
+<style color=#00ffffff size=1>.</style>            function func, which is invoked as (*func)(arg). The string
+<style color=#00ffffff size=1>.</style>            name is copied into the text field of the Proc structure of
+<style color=#00ffffff size=1>.</style>            the new process\; although the value is not visible to Limbo
+<style color=#00ffffff size=1>.</style>            applications, it can appear in system messages written to
+<style color=#00ffffff size=1>.</style>            the console. The process is made runnable\; it will run when
+<style color=#00ffffff size=1>.</style>            selected by the scheduler.
+
+<style color=#00ffffff size=1>.</style>            The new process always acquires the following attributes
+<style color=#00ffffff size=1>.</style>            from the creating process:
+
+<style color=#00ffffff size=1>.</style>                 owner (Inferno user name)
+<style color=#00ffffff size=1>.</style>                 host user and group IDs (in emu only)
+<style color=#00ffffff size=1>.</style>                 floating-point attributes
+
+<style color=#00ffffff size=1>.</style>            Several resources can be shared with the creating process on
+<style color=#00ffffff size=1>.</style>            request, as determined by flags, which is the logical OR of
+<style color=#00ffffff size=1>.</style>            a subset of the following:
+<style color=#00ffffff size=1>.</style>            KPDUPPG    If set, the new process shares the caller's
+<style color=#00ffffff size=1>.</style>                       process group, which includes its process group
+<style color=#00ffffff size=1>.</style>                       ID (for killgrp), name space (mounts, root and
+<style color=#00ffffff size=1>.</style>                       current directory), and PIN for /dev/pin (see
+<style color=#00ffffff size=1>.</style>                       <action name=cons(3)>cons(3)</action>).
+<style color=#00ffffff size=1>.</style>            KPDUPFDG   If set, the new process shares the caller's file
+<style color=#00ffffff size=1>.</style>                       descriptor group\; otherwise, it has no file
+<style color=#00ffffff size=1>.</style>                       descriptor group, and (if it intends to open
+<style color=#00ffffff size=1>.</style>                       files) must call newfgrp(10.2) to obtain an empty
+<style color=#00ffffff size=1>.</style>                       file descriptor group.
+<style color=#00ffffff size=1>.</style>            KPDUPENVG  If set, the new process shares the caller's
+<style color=#00ffffff size=1>.</style>                       environment group (currently applies in emu
+<style color=#00ffffff size=1>.</style>                       only).
+<style color=#00ffffff size=1>.</style>            KPDUP      Equivalent to all of the above.
+
+<style color=#00ffffff size=1>.</style>            If a particular option is not set, the new process will have
+<style color=#00ffffff size=1>.</style>            a nil reference for the corresponding resource.
+
+<style color=#00ffffff size=1>.</style>            Setpri sets the priority of the calling process to pri and
+<style color=#00ffffff size=1>.</style>            returns its previous priority level. If a (now) higher
+<style color=#00ffffff size=1>.</style>            priority process is ready to run, the system will
+<style color=#00ffffff size=1>.</style>            reschedule. The available priority levels are shown below,
+<style color=#00ffffff size=1>.</style>            arranged from highest to lowest priority, with examples of
+<style color=#00ffffff size=1>.</style>            the type of processes intended to use them:
+<style color=#00ffffff size=1>.</style>            PriLock        The highest priority, used by lock(10.2) for
+<style color=#00ffffff size=1>.</style>                           a process entering a critical section
+<style color=#00ffffff size=1>.</style>            PriRealtime    Intended for processes supporting
+<style color=#00ffffff size=1>.</style>                           applications with real-time constraints, such
+<style color=#00ffffff size=1>.</style>                           as video telephony.
+<style color=#00ffffff size=1>.</style>            PriHicodec     MPEG codec
+<style color=#00ffffff size=1>.</style>            PriLocodec     Audio codec
+<style color=#00ffffff size=1>.</style>            PriHi          Any task with keen time constraints.
+<style color=#00ffffff size=1>.</style>            PriNormal      The priority of most processes in the system.
+<style color=#00ffffff size=1>.</style>            PriLo
+<style color=#00ffffff size=1>.</style>            PriBackground
+
+<style color=#00ffffff size=1>.</style>            Swiproc sends a software interrupt to process p, causing it
+<style color=#00ffffff size=1>.</style>            to wake from sleep(10.2) with an error(10.2) `interrupted'.
+<style color=#00ffffff size=1>.</style>            Unless interp is non-zero (ie, the Dis interpreter is the
+<style color=#00ffffff size=1>.</style>            caller), the process is also marked `killed'.
+
+<style color=#00ffffff size=1>.</style>            An Inferno process terminates only when it calls pexit,
+<style color=#00ffffff size=1>.</style>            thereby terminating itself. There is no mechanism for one
+<style color=#00ffffff size=1>.</style>            process to force the termination of another, although it can
+<style color=#00ffffff size=1>.</style>            send a software interrupt using swiproc. The arguments to
+<style color=#00ffffff size=1>.</style>            pexit are ignored in Inferno, but are included for
+<style color=#00ffffff size=1>.</style>            compatibility with kernel components of Plan 9\; use
+
+<style color=#00ffffff size=1>.</style>                 pexit("", 0)\;
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

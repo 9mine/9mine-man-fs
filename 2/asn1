@@ -1,0 +1,490 @@
+<action name=ASN1(2)>ASN1(2)</action>                                                   <action name=ASN1(2)>ASN1(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            asn1: decode, encode - ASN.1 (X.208), BER (X.209) encoding
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "asn1.m"\;
+<style color=#00ffffff size=1>.</style>            asn1 := load ASN1 ASN1->PATH\;
+<style color=#00ffffff size=1>.</style>            asn1->init()\;
+
+<style color=#00ffffff size=1>.</style>            Elem: adt {
+<style color=#00ffffff size=1>.</style>                tag: Tag\;
+<style color=#00ffffff size=1>.</style>                val: ref Value\;
+
+<style color=#00ffffff size=1>.</style>                is_seq:         fn(e: self ref Elem): (int, list of ref Elem)\;
+<style color=#00ffffff size=1>.</style>                is_set:         fn(e: self ref Elem): (int, list of ref Elem)\;
+<style color=#00ffffff size=1>.</style>                is_int:         fn(e: self ref Elem): (int, int)\;
+<style color=#00ffffff size=1>.</style>                is_bigint:      fn(e: self ref Elem): (int, array of byte)\;
+<style color=#00ffffff size=1>.</style>                is_bitstring:   fn(e: self ref Elem): (int, int, array of byte)\;
+<style color=#00ffffff size=1>.</style>                is_octetstring: fn(e: self ref Elem): (int, array of byte)\;
+<style color=#00ffffff size=1>.</style>                is_oid:         fn(e: self ref Elem): (int, ref Oid)\;
+<style color=#00ffffff size=1>.</style>                is_string:      fn(e: self ref Elem): (int, string)\;
+<style color=#00ffffff size=1>.</style>                is_time:        fn(e: self ref Elem): (int, string)\;
+<style color=#00ffffff size=1>.</style>                tostring:       fn(e: self ref Elem): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Tag: adt {
+<style color=#00ffffff size=1>.</style>                class: int\;
+<style color=#00ffffff size=1>.</style>                num: int\;
+<style color=#00ffffff size=1>.</style>                constr: int\;
+
+<style color=#00ffffff size=1>.</style>                tostring: fn(t: self Tag): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Value: adt {
+<style color=#00ffffff size=1>.</style>                pick {
+<style color=#00ffffff size=1>.</style>                    Bool or Int =>
+<style color=#00ffffff size=1>.</style>                        v: int\;
+<style color=#00ffffff size=1>.</style>                    Octets or BigInt or Real or Other =>
+<style color=#00ffffff size=1>.</style>                        bytes: array of byte\;
+<style color=#00ffffff size=1>.</style>                    BitString =>
+<style color=#00ffffff size=1>.</style>                        unusedbits: int\;
+<style color=#00ffffff size=1>.</style>                        bits: array of byte\;
+<style color=#00ffffff size=1>.</style>                    Null or EOC =>
+<style color=#00ffffff size=1>.</style>                        \;
+<style color=#00ffffff size=1>.</style>                    ObjId =>
+<style color=#00ffffff size=1>.</style>                        id: ref Oid\;
+<style color=#00ffffff size=1>.</style>                    String =>
+<style color=#00ffffff size=1>.</style>                        s: string\;
+<style color=#00ffffff size=1>.</style>                    Seq or Set =>
+<style color=#00ffffff size=1>.</style>                        l: list of ref Elem\;
+<style color=#00ffffff size=1>.</style>                }
+
+<style color=#00ffffff size=1>.</style>                tostring: fn(v: self ref Value): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Oid: adt {
+<style color=#00ffffff size=1>.</style>                nums: array of int\;
+<style color=#00ffffff size=1>.</style>                tostring: fn(o: self ref Oid): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init: fn()\;
+<style color=#00ffffff size=1>.</style>            decode:       fn(a: array of byte): (string, ref Elem)\;
+<style color=#00ffffff size=1>.</style>            decode_seq:   fn(a: array of byte): (string, list of ref Elem)\;
+<style color=#00ffffff size=1>.</style>            decode_value: fn(a: array of byte, kind, constr: int):
+<style color=#00ffffff size=1>.</style>                          (string, ref Value)\;
+<style color=#00ffffff size=1>.</style>            encode:       fn(e: ref Elem): (string, array of byte)\;
+<style color=#00ffffff size=1>.</style>            oid_lookup:   fn(o: ref Oid, tab: array of Oid): int\;
+<style color=#00ffffff size=1>.</style>            print_elem:   fn(e: ref Elem)\;
+
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            ASN1 supports decoding and encoding of the ASN.1 Basic
+<style color=#00ffffff size=1>.</style>            Encoding Rules (BER, ITU-T Recommendation X.209). Despite
+<style color=#00ffffff size=1>.</style>            its name, the module is not a parser for Abstract Syntax
+<style color=#00ffffff size=1>.</style>            Notation One (ASN.1, ITU-T Recommendation X.208).
+
+<style color=#00ffffff size=1>.</style>            ASN1 handles the BER encodings of all types from the ASN.1
+<style color=#00ffffff size=1>.</style>            Universal class, and provides a simple OBJECT IDENTIFIER
+<style color=#00ffffff size=1>.</style>            comparison facility.
+
+<style color=#00ffffff size=1>.</style>            For simplicity, ASN1 does not take a description of the
+<style color=#00ffffff size=1>.</style>            ASN.1 module of the data being processed. Consequently, the
+<style color=#00ffffff size=1>.</style>            (de)composition of tagged types must be performed by the
+<style color=#00ffffff size=1>.</style>            application. ASN1 does not know the context of tagged values
+<style color=#00ffffff size=1>.</style>            and so cannot determine the underlying Universal type to be
+<style color=#00ffffff size=1>.</style>            able to encode or decode the value automatically. See the
+<style color=#00ffffff size=1>.</style>            section on Tagging for details on how the application should
+<style color=#00ffffff size=1>.</style>            handle both implicit and explicit tagging.
+
+<style color=#00ffffff size=1>.</style>            init()
+<style color=#00ffffff size=1>.</style>                 The module must be initialised by calling this function
+<style color=#00ffffff size=1>.</style>                 before any other module functions or associated adt
+<style color=#00ffffff size=1>.</style>                 member functions are called.
+
+<style color=#00ffffff size=1>.</style>            decode(a)
+<style color=#00ffffff size=1>.</style>                 Convert the BER encoding given by the byte array a into
+<style color=#00ffffff size=1>.</style>                 an Elem representing the ASN.1 value. The byte array
+<style color=#00ffffff size=1>.</style>                 must contain the entire BER encoding of the value and
+<style color=#00ffffff size=1>.</style>                 any component values.
+
+<style color=#00ffffff size=1>.</style>                 Item values not tagged as a Universal type are
+<style color=#00ffffff size=1>.</style>                 converted to an Elem comprised of the decoded Tag and a
+<style color=#00ffffff size=1>.</style>                 value given by the Value.Octets variant, which contains
+<style color=#00ffffff size=1>.</style>                 the original encoding of the value stripped of the BER
+<style color=#00ffffff size=1>.</style>                 tag and length header.
+
+<style color=#00ffffff size=1>.</style>                 The function returns a tuple composed of an error
+<style color=#00ffffff size=1>.</style>                 string and the decoded Elem. If no errors are
+<style color=#00ffffff size=1>.</style>                 encountered the error string is nil.
+
+<style color=#00ffffff size=1>.</style>            decode_seq(a)
+<style color=#00ffffff size=1>.</style>                 Like decode except that the data in a is the encoding
+<style color=#00ffffff size=1>.</style>                 of an item of type SEQUENCE, SEQUENCE OF, SET or SET OF
+<style color=#00ffffff size=1>.</style>                 which has been stripped of its tag and length header.
+<style color=#00ffffff size=1>.</style>                 The function decodes all of the items in the SEQUENCE
+<style color=#00ffffff size=1>.</style>                 or SET.
+
+<style color=#00ffffff size=1>.</style>                 The return value is a tuple composed of an error string
+<style color=#00ffffff size=1>.</style>                 and the list of Elems forming the SEQUENCE or SET.
+
+<style color=#00ffffff size=1>.</style>            decode_value(a, kind, constr)
+<style color=#00ffffff size=1>.</style>                 Convert the encoding of a single item value to a Value
+<style color=#00ffffff size=1>.</style>                 data structure.
+
+<style color=#00ffffff size=1>.</style>                 The array a does not include the tag and length header.
+<style color=#00ffffff size=1>.</style>                 Instead, the value's Universal type is given by the
+<style color=#00ffffff size=1>.</style>                 kind argument and length is given by that of the array.
+<style color=#00ffffff size=1>.</style>                 The constr argument indicates if the encoding is in the
+<style color=#00ffffff size=1>.</style>                 BER constructed form or not. A value of 0 indicates
+<style color=#00ffffff size=1>.</style>                 that the primitive encoding is used, all other values
+<style color=#00ffffff size=1>.</style>                 indicate the constructed encoding.
+
+<style color=#00ffffff size=1>.</style>                 The function returns a tuple composed of an error
+<style color=#00ffffff size=1>.</style>                 string and a Value reference.
+
+<style color=#00ffffff size=1>.</style>            encode(e)
+<style color=#00ffffff size=1>.</style>                 Convert the Elem e to a BER encoding of the element. If
+<style color=#00ffffff size=1>.</style>                 the element is of a structured type, such as SEQUENCE
+<style color=#00ffffff size=1>.</style>                 or SET, then all component values are also exhaustively
+<style color=#00ffffff size=1>.</style>                 encoded.
+
+<style color=#00ffffff size=1>.</style>                 The encoding can fail if the Tag and Value of the
+<style color=#00ffffff size=1>.</style>                 element are not compatible. The constr field of the Tag
+<style color=#00ffffff size=1>.</style>                 is currently ignored.
+
+<style color=#00ffffff size=1>.</style>                 The function returns a tuple comprising an error string
+<style color=#00ffffff size=1>.</style>                 and the BER encoding.  If no errors are encountered the
+<style color=#00ffffff size=1>.</style>                 error string is nil and the second part of the returned
+<style color=#00ffffff size=1>.</style>                 tuple is a byte array of the BER encoding.
+
+<style color=#00ffffff size=1>.</style>            oid_lookup(o, tab)
+<style color=#00ffffff size=1>.</style>                 Lookup an OBJECT IDENTIFIER value in an array of such
+<style color=#00ffffff size=1>.</style>                 values. Returns the index of the first exact match of o
+<style color=#00ffffff size=1>.</style>                 in the tab array. Returns -1 if no match is found.
+
+<style color=#00ffffff size=1>.</style>            print_elem(e)
+<style color=#00ffffff size=1>.</style>                 Print a textual representation of the element to
+<style color=#00ffffff size=1>.</style>                 standard output. The output is that given by
+<style color=#00ffffff size=1>.</style>                 Elem.tostring(), followed by a newline character.
+
+<style color=#00ffffff size=1>.</style>         Elem adt
+<style color=#00ffffff size=1>.</style>            This is the principal data structure, representing the value
+<style color=#00ffffff size=1>.</style>            of an ASN.1 item. The adt couples a data representation, the
+<style color=#00ffffff size=1>.</style>            Value, with its type specifier, the Tag.
+
+<style color=#00ffffff size=1>.</style>            Elem.tag
+<style color=#00ffffff size=1>.</style>                 Specifies the ASN.1 type of the element value. See the
+<style color=#00ffffff size=1>.</style>                 description of the Tag adt for more details.
+
+<style color=#00ffffff size=1>.</style>            Elem.val
+<style color=#00ffffff size=1>.</style>                 The value of the element. See the description of the
+<style color=#00ffffff size=1>.</style>                 Value adt for more details.
+
+<style color=#00ffffff size=1>.</style>            All of the e.is_Type member functions test whether the
+<style color=#00ffffff size=1>.</style>            specific Value pick variant of Elem.val and the ASN.1
+<style color=#00ffffff size=1>.</style>            Universal type, given by the tag, match and are of the
+<style color=#00ffffff size=1>.</style>            requested form. A successful match yields the type specific
+<style color=#00ffffff size=1>.</style>            data from the Value pick variant. The association of
+<style color=#00ffffff size=1>.</style>            Universal types to Value pick variants is given in the
+<style color=#00ffffff size=1>.</style>            section on the Value adt.
+
+<style color=#00ffffff size=1>.</style>            The function e.is_int succeeds for BOOLEAN and INTEGER ASN.1
+<style color=#00ffffff size=1>.</style>            types. The function e.is_string succeeds for all of the
+<style color=#00ffffff size=1>.</style>            ASN.1 Universal string types.
+
+<style color=#00ffffff size=1>.</style>            Except for is_bitstring, each function returns a tuple of
+<style color=#00ffffff size=1>.</style>            two values. The first tuple item is an integer, 1 for
+<style color=#00ffffff size=1>.</style>            success, 0 for failure. The second item is the type specific
+<style color=#00ffffff size=1>.</style>            data from the Value pick variant.
+
+<style color=#00ffffff size=1>.</style>            e.is_bitstring()
+<style color=#00ffffff size=1>.</style>                 Like the is_Type functions described above. Tests that
+<style color=#00ffffff size=1>.</style>                 the element is a BIT STRING and returns its data.
+
+<style color=#00ffffff size=1>.</style>                 The return value is a tuple comprised of two integers
+<style color=#00ffffff size=1>.</style>                 and an array of bytes. The byte array represents the
+<style color=#00ffffff size=1>.</style>                 bit string. The first integer is 1 for success, 0 for
+<style color=#00ffffff size=1>.</style>                 failure. The second integer is the number of unused
+<style color=#00ffffff size=1>.</style>                 bits in the last byte of the data array. See the
+<style color=#00ffffff size=1>.</style>                 description of the Value.BitString variant for more
+<style color=#00ffffff size=1>.</style>                 information.
+
+<style color=#00ffffff size=1>.</style>            e.tostring()
+<style color=#00ffffff size=1>.</style>                 returns a textual representation of the element formed
+<style color=#00ffffff size=1>.</style>                 by joining the strings returned from e.tag.tostring()
+<style color=#00ffffff size=1>.</style>                 and e.val.tostring().
+
+<style color=#00ffffff size=1>.</style>         Tag adt
+<style color=#00ffffff size=1>.</style>            The Tag adt denotes the ASN.1 type of a Value instance.
+
+<style color=#00ffffff size=1>.</style>            Tag.class
+<style color=#00ffffff size=1>.</style>                 Specifies the class of the type and can take one of the
+<style color=#00ffffff size=1>.</style>                 values: ASN1->Universal, ASN1->Application,
+<style color=#00ffffff size=1>.</style>                 ASN1->Context or ASN1->Private.
+
+<style color=#00ffffff size=1>.</style>            Tag.num
+<style color=#00ffffff size=1>.</style>                 Identifies the particular type, or tag, within the
+<style color=#00ffffff size=1>.</style>                 specified class. Tag numbers for the Universal class
+<style color=#00ffffff size=1>.</style>                 are given in the asn1.m header file. The inconsistent
+<style color=#00ffffff size=1>.</style>                 use of upper-case and mixed-case identifiers comes
+<style color=#00ffffff size=1>.</style>                 straight from the ITU-T Recommendation.
+
+<style color=#00ffffff size=1>.</style>            Tag.constr
+<style color=#00ffffff size=1>.</style>                 This flag is set by the ASN1 decode functions to mark
+<style color=#00ffffff size=1>.</style>                 if the BER constructed encoding was used for the value.
+<style color=#00ffffff size=1>.</style>                 A zero value indicates the BER primitive encoding,
+<style color=#00ffffff size=1>.</style>                 non-zero indicates the constructed encoding.
+
+<style color=#00ffffff size=1>.</style>            t.tostring()
+<style color=#00ffffff size=1>.</style>                 Returns a string representation of the Tag. For
+<style color=#00ffffff size=1>.</style>                 Universal class tags the function returns the string ``
+<style color=#00ffffff size=1>.</style>                 UNIVERSAL Name'', where Name is the standard name of
+<style color=#00ffffff size=1>.</style>                 the specified Universal type. For other classes the
+<style color=#00ffffff size=1>.</style>                 function returns the class name, in upper-case,
+<style color=#00ffffff size=1>.</style>                 followed by the tag number.
+
+<style color=#00ffffff size=1>.</style>         Value adt
+<style color=#00ffffff size=1>.</style>            This pick adt provides the representation for values of each
+<style color=#00ffffff size=1>.</style>            of the various Universal class types. Values of all other
+<style color=#00ffffff size=1>.</style>            classes are represented by the Value.Octets branch of the
+<style color=#00ffffff size=1>.</style>            pick.
+
+<style color=#00ffffff size=1>.</style>            v.tostring()
+<style color=#00ffffff size=1>.</style>                 Returns a string representation of the Value.
+
+<style color=#00ffffff size=1>.</style>            The following table lists each variant of the pick,
+<style color=#00ffffff size=1>.</style>            indicating the ASN.1 Universal type values it represents,
+<style color=#00ffffff size=1>.</style>            followed by a brief description. For each variant of the
+<style color=#00ffffff size=1>.</style>            pick, v is taken to be of that particular type.
+
+<style color=#00ffffff size=1>.</style>            Value.Bool
+<style color=#00ffffff size=1>.</style>                 BOOLEAN
+
+<style color=#00ffffff size=1>.</style>                 v.v equals zero for FALSE, non-zero values represent
+<style color=#00ffffff size=1>.</style>                 TRUE.
+
+<style color=#00ffffff size=1>.</style>            Value.Int
+<style color=#00ffffff size=1>.</style>                 INTEGER, ENUMERATED
+
+<style color=#00ffffff size=1>.</style>                 The value is given by v.v
+
+<style color=#00ffffff size=1>.</style>            Value.BigInt
+<style color=#00ffffff size=1>.</style>                 Used for INTEGER values too large to fit a Limbo int.
+
+<style color=#00ffffff size=1>.</style>                 The array v.bytes contains the encoding of the value.
+<style color=#00ffffff size=1>.</style>                 The array does not include the tag and length prefix.
+
+<style color=#00ffffff size=1>.</style>            Value.Octets
+<style color=#00ffffff size=1>.</style>                 OCTET_STRING, ObjectDescriptor
+
+<style color=#00ffffff size=1>.</style>                 The octet string is given by the v.bytes array.
+
+<style color=#00ffffff size=1>.</style>            Value.Null
+<style color=#00ffffff size=1>.</style>                 NULL
+
+<style color=#00ffffff size=1>.</style>            Value.ObjId
+<style color=#00ffffff size=1>.</style>                 OBJECT_ID
+
+<style color=#00ffffff size=1>.</style>                 The OBJECT_ID value is represented by the Oid adt given
+<style color=#00ffffff size=1>.</style>                 by v.id.
+
+<style color=#00ffffff size=1>.</style>            Value.Real
+<style color=#00ffffff size=1>.</style>                 REAL
+
+<style color=#00ffffff size=1>.</style>                 ASN1 does not convert the value into the Limbo real
+<style color=#00ffffff size=1>.</style>                 data type. The encoding of the value is given by the v
+<style color=#00ffffff size=1>.</style>                 .bytes array, which does not include the tag and length
+<style color=#00ffffff size=1>.</style>                 prefix.
+
+<style color=#00ffffff size=1>.</style>            Value.Other
+<style color=#00ffffff size=1>.</style>                 EXTERNAL, EMBEDDED_PDV and Unknown Universal types
+
+<style color=#00ffffff size=1>.</style>                 The raw bytes of the value, excluding the tag nad
+<style color=#00ffffff size=1>.</style>                 length header, are given by the v.bytes array.
+
+<style color=#00ffffff size=1>.</style>            Value.BitString
+<style color=#00ffffff size=1>.</style>                 BIT_STRING
+
+<style color=#00ffffff size=1>.</style>                 The number of bits in the BIT_STRING value does not
+<style color=#00ffffff size=1>.</style>                 have to be a multiple of 8. Bits are packed into bytes
+<style color=#00ffffff size=1>.</style>                 MSB first. The bytes representing the BIT_STRING value,
+<style color=#00ffffff size=1>.</style>                 including the potentially incomplete last byte, are
+<style color=#00ffffff size=1>.</style>                 given by the v.bits array. The number of unused bits in
+<style color=#00ffffff size=1>.</style>                 the last byte of the array is given by v.unused,
+<style color=#00ffffff size=1>.</style>                 counting from the LSB.
+
+<style color=#00ffffff size=1>.</style>                 The BER constructed encoding of values other than
+<style color=#00ffffff size=1>.</style>                 zero-length is not implemented.
+
+<style color=#00ffffff size=1>.</style>            Value.EOC
+<style color=#00ffffff size=1>.</style>                 End of Contents octets marker.
+
+<style color=#00ffffff size=1>.</style>                 This value is not normally returned to the application\;
+<style color=#00ffffff size=1>.</style>                 it is used privately by BER to support indefinite
+<style color=#00ffffff size=1>.</style>                 length value encodings.
+
+<style color=#00ffffff size=1>.</style>            Value.String
+<style color=#00ffffff size=1>.</style>                 NumericString, PrintableString, TeletexString,
+<style color=#00ffffff size=1>.</style>                 VideotexString, IA5String, UTCTime, GeneralizedTime,
+<style color=#00ffffff size=1>.</style>                 GraphicString, VisibleString, GeneralString,
+<style color=#00ffffff size=1>.</style>                 UniversalString or BMPString.
+
+<style color=#00ffffff size=1>.</style>                 The text is given by the v.s Limbo string. Currently no
+<style color=#00ffffff size=1>.</style>                 character-set conversion is performed between the ASN.1
+<style color=#00ffffff size=1>.</style>                 string byte codes and the Unicode code-points of the
+<style color=#00ffffff size=1>.</style>                 Limbo string.
+
+<style color=#00ffffff size=1>.</style>            Value.Seq
+<style color=#00ffffff size=1>.</style>                 SEQUENCE, SEQUENCE OF
+
+<style color=#00ffffff size=1>.</style>                 ASN.1 assigns both constructs the same type tag. The
+<style color=#00ffffff size=1>.</style>                 difference between them is that, within the ASN.1
+<style color=#00ffffff size=1>.</style>                 notation, the elements of a SEQUENCE OF structure are
+<style color=#00ffffff size=1>.</style>                 constrained to be of the same type. BER and,
+<style color=#00ffffff size=1>.</style>                 consequently, ASN1 do not directly enforce the
+<style color=#00ffffff size=1>.</style>                 restriction.
+
+<style color=#00ffffff size=1>.</style>                 The elements of the sequence are given by the v.l list.
+
+<style color=#00ffffff size=1>.</style>            Value.Set
+<style color=#00ffffff size=1>.</style>                 SET, SET OF
+
+<style color=#00ffffff size=1>.</style>                 ASN.1 assigns both constructs the same type tag. The
+<style color=#00ffffff size=1>.</style>                 difference between them is that, within the ASN.1
+<style color=#00ffffff size=1>.</style>                 notation, SET items are formed from an unordered list
+<style color=#00ffffff size=1>.</style>                 of distinct types, whereas SET OF items are formed from
+<style color=#00ffffff size=1>.</style>                 an unordered list of the same type. BER and ASN1 do not
+<style color=#00ffffff size=1>.</style>                 enforce these constraints.
+
+<style color=#00ffffff size=1>.</style>                 The elements of the set are given by the v.l list.
+
+<style color=#00ffffff size=1>.</style>         Oid adt
+<style color=#00ffffff size=1>.</style>            The Oid adt provides the value representation for OBJECT
+<style color=#00ffffff size=1>.</style>            IDENTIFERs. Within the ASN.1 notation OBJECT IDENTIFIERs
+<style color=#00ffffff size=1>.</style>            ultimately map to an ordered list of INTEGERs.
+
+<style color=#00ffffff size=1>.</style>            Oid.nums
+<style color=#00ffffff size=1>.</style>                 The value of the OBJECT IDENTIFIER, given as an array
+<style color=#00ffffff size=1>.</style>                 of int.
+
+<style color=#00ffffff size=1>.</style>            o.tostring()
+<style color=#00ffffff size=1>.</style>                 Returns a textual representation of the OBJECT
+<style color=#00ffffff size=1>.</style>                 IDENTIFIER in the form of a `.' separated list of
+<style color=#00ffffff size=1>.</style>                 numbers.
+
+<style color=#00ffffff size=1>.</style>         Tagging
+<style color=#00ffffff size=1>.</style>            Tagging is an ASN.1 mechanism for disambiguating values. It
+<style color=#00ffffff size=1>.</style>            is usually applied to component types, where several
+<style color=#00ffffff size=1>.</style>            components of a structured type have the same underlying
+<style color=#00ffffff size=1>.</style>            Universal class type. Tagging allows the client application
+<style color=#00ffffff size=1>.</style>            to determine to which item of the structured type a value
+<style color=#00ffffff size=1>.</style>            instance belongs.
+
+<style color=#00ffffff size=1>.</style>            There are two types of tagging, implicit and explicit,
+<style color=#00ffffff size=1>.</style>            defining the manner in which the values are encoded.
+
+<style color=#00ffffff size=1>.</style>            Implicitly tagged values are encoded in the same way as the
+<style color=#00ffffff size=1>.</style>            underlying type, but with the tag class and number replaced
+<style color=#00ffffff size=1>.</style>            by that specified.
+
+<style color=#00ffffff size=1>.</style>            Explicitly tagged values are encoded in a nested fashion.
+<style color=#00ffffff size=1>.</style>            The outermost item bears the specified tag and its contents
+<style color=#00ffffff size=1>.</style>            is the full encoding of the original value using the tag of
+<style color=#00ffffff size=1>.</style>            its underlying type.
+
+<style color=#00ffffff size=1>.</style>            The following examples of how to decode and encode simple
+<style color=#00ffffff size=1>.</style>            tagged types should make the distinction clear.
+
+<style color=#00ffffff size=1>.</style>         Decoding Tagged Values
+<style color=#00ffffff size=1>.</style>            Consider the following ASN.1 type definitions:
+
+<style color=#00ffffff size=1>.</style>                Type1 ::= INTEGER
+<style color=#00ffffff size=1>.</style>                Type2 ::= \[Application 2\] Type1     -- Explicitly tagged
+<style color=#00ffffff size=1>.</style>                Type3 ::= \[3\] IMPLICIT Type1        -- Implicitly tagged
+
+<style color=#00ffffff size=1>.</style>            For each of the types the value 16r55 will be decoded as
+<style color=#00ffffff size=1>.</style>            follows:
+
+<style color=#00ffffff size=1>.</style>            	(error, elem) := asn1->decode(data)\;
+
+<style color=#00ffffff size=1>.</style>            Type1 (primitive type)
+<style color=#00ffffff size=1>.</style>                 elem.tag.class == Universal
+<style color=#00ffffff size=1>.</style>                 elem.tag.num == INTEGER
+<style color=#00ffffff size=1>.</style>                 tagof elem.val == tagof Value.Int
+<style color=#00ffffff size=1>.</style>                 elem.is_int() == (1, 16r55)
+
+<style color=#00ffffff size=1>.</style>            Type2 (explicitly tagged)
+<style color=#00ffffff size=1>.</style>                 elem.tag.class == Application
+<style color=#00ffffff size=1>.</style>                 elem.tag.num == 2
+<style color=#00ffffff size=1>.</style>                 tagof elem.val == tagof Value.Octets
+
+<style color=#00ffffff size=1>.</style>                 The bytes array of the Value.Octets value contains the
+<style color=#00ffffff size=1>.</style>                 complete encoding of the Type1 value. The actual value
+<style color=#00ffffff size=1>.</style>                 can be obtained as follows:
+
+<style color=#00ffffff size=1>.</style>                 pick v := elem.val {
+<style color=#00ffffff size=1>.</style>                 Octets =>
+<style color=#00ffffff size=1>.</style>                 	(err2, e2) := asn1->decode(v.bytes)\;
+<style color=#00ffffff size=1>.</style>                 }
+<style color=#00ffffff size=1>.</style>                 with e2 having exactly the same properties as elem in
+<style color=#00ffffff size=1>.</style>                 the Type1 case above.
+
+<style color=#00ffffff size=1>.</style>            Type3 (implicitly tagged)
+<style color=#00ffffff size=1>.</style>                 elem.tag.class == Context
+<style color=#00ffffff size=1>.</style>                 elem.tag.num == 3
+<style color=#00ffffff size=1>.</style>                 tagof elem.val == tagof Value.Octets
+
+<style color=#00ffffff size=1>.</style>                 In this case the bytes array of the Value.Octets value
+<style color=#00ffffff size=1>.</style>                 contains the encoding of just the value part of the
+<style color=#00ffffff size=1>.</style>                 Type1 value, not the complete encoding. The actual
+<style color=#00ffffff size=1>.</style>                 value can be obtained as follows:
+
+<style color=#00ffffff size=1>.</style>                 pick v := e.val {
+<style color=#00ffffff size=1>.</style>                 Octets =>
+<style color=#00ffffff size=1>.</style>                     constr := e.tag.constr\;
+<style color=#00ffffff size=1>.</style>                     (err, val) := asn1->decode_value(v.bytes, INTEGER, constr)\;
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>                 Note that the application has to infer the type of the
+<style color=#00ffffff size=1>.</style>                 value from the context in which it occurs. The
+<style color=#00ffffff size=1>.</style>                 resultant val is of the type Value.Int with the value
+<style color=#00ffffff size=1>.</style>                 16r55 stored in the v member variable.
+
+<style color=#00ffffff size=1>.</style>         Encoding Tagged Values
+<style color=#00ffffff size=1>.</style>            To encode the value 16r55 in each of the above types, the
+<style color=#00ffffff size=1>.</style>            following data structures are required.
+
+<style color=#00ffffff size=1>.</style>            Type1(primitive type)
+<style color=#00ffffff size=1>.</style>                 tag := Tag(Universal, INTEGER, 0)\;
+<style color=#00ffffff size=1>.</style>                 val := Value.Int(16r55)\;
+<style color=#00ffffff size=1>.</style>                 elem := ref Elem(tag, val)\;
+<style color=#00ffffff size=1>.</style>                 (err, data) := asn1->encode(elem)\;
+
+<style color=#00ffffff size=1>.</style>            Type2(explicitly tagged)
+<style color=#00ffffff size=1>.</style>                 tag1          := Tag(Universal, INTEGER, 0)\;
+<style color=#00ffffff size=1>.</style>                 val1          := Value.Int(16r55)\;
+<style color=#00ffffff size=1>.</style>                 elem1         := ref Elem(tag1, val1)\;
+<style color=#00ffffff size=1>.</style>                 (err1, data1) := asn1->encode(elem1)\;
+<style color=#00ffffff size=1>.</style>                 tag2          := Tag(Application, 2, 0)\;
+<style color=#00ffffff size=1>.</style>                 val2          := Value.Octets(data1)\;
+<style color=#00ffffff size=1>.</style>                 elem2         := ref Elem(tag2, val2)\;
+<style color=#00ffffff size=1>.</style>                 (err, data)   := asn1->encode(elem2)\;
+
+<style color=#00ffffff size=1>.</style>            Type3(implicitly tagged)
+<style color=#00ffffff size=1>.</style>                 tag         := Tag(Context, 3, 0)\;
+<style color=#00ffffff size=1>.</style>                 val         := Value.Int(16r55)\;
+<style color=#00ffffff size=1>.</style>                 elem        := ref Elem(tag, val)\;
+<style color=#00ffffff size=1>.</style>                 (err, data) := asn1->encode(elem)\;
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/asn1.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            It is irritating that REAL values are not converted by the
+<style color=#00ffffff size=1>.</style>            module. This forces the application to do the conversion to
+<style color=#00ffffff size=1>.</style>            and from the raw BER encoding.  Fortunately they are rarely
+<style color=#00ffffff size=1>.</style>            used.
+
+<style color=#00ffffff size=1>.</style>            String encodings are converted as UTF-8 byte sequences. This
+<style color=#00ffffff size=1>.</style>            will result in strings comprising any character codes above
+<style color=#00ffffff size=1>.</style>            127 being incorrectly converted.
+
+<style color=#00ffffff size=1>.</style>            There is a particular form of BER encoding that the module
+<style color=#00ffffff size=1>.</style>            will handle incorrectly, resulting in a decoding error. The
+<style color=#00ffffff size=1>.</style>            error occurs when a tagged value is encoded using the
+<style color=#00ffffff size=1>.</style>            indefinite length specifier and the constructed
+<style color=#00ffffff size=1>.</style>            representation.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

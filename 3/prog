@@ -1,0 +1,223 @@
+<action name=PROG(3)>PROG(3)</action>                                                   <action name=PROG(3)>PROG(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            prog - running programs
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind #p /prog
+
+<style color=#00ffffff size=1>.</style>            /prog/n/ctl
+<style color=#00ffffff size=1>.</style>            /prog/n/dbgctl
+<style color=#00ffffff size=1>.</style>            /prog/n/exception
+<style color=#00ffffff size=1>.</style>            /prog/n/fd
+<style color=#00ffffff size=1>.</style>            /prog/n/heap
+<style color=#00ffffff size=1>.</style>            /prog/n/ns
+<style color=#00ffffff size=1>.</style>            /prog/n/nsgrp
+<style color=#00ffffff size=1>.</style>            /prog/n/pgrp
+<style color=#00ffffff size=1>.</style>            /prog/n/stack
+<style color=#00ffffff size=1>.</style>            /prog/n/status
+<style color=#00ffffff size=1>.</style>            /prog/n/text
+<style color=#00ffffff size=1>.</style>            /prog/n/wait
+<style color=#00ffffff size=1>.</style>            ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The prog device serves a two-level directory structure. The
+<style color=#00ffffff size=1>.</style>            first level contains numbered directories corresponding to
+<style color=#00ffffff size=1>.</style>            pids of live Limbo processes\; each such directory contains a
+<style color=#00ffffff size=1>.</style>            set of files representing the corresponding process. All
+<style color=#00ffffff size=1>.</style>            files operate on UTF (see <action name=utf(6)>utf(6)</action>) strings.
+
+<style color=#00ffffff size=1>.</style>            The read-only status file contains seven space-separated
+<style color=#00ffffff size=1>.</style>            fields. The fields are: the process and process group
+<style color=#00ffffff size=1>.</style>            identifiers, each 8 characters right justified\; the user
+<style color=#00ffffff size=1>.</style>            name, at least 10 characters left justified\; cpu time in
+<style color=#00ffffff size=1>.</style>            minutes, seconds and tenths of seconds\; the process state,
+<style color=#00ffffff size=1>.</style>            10 characters left justified\; the amount of memory used by
+<style color=#00ffffff size=1>.</style>            the process in units of 1024 bytes, at least 5 characters,
+<style color=#00ffffff size=1>.</style>            right justified, followed by a K\; and the name of the
+<style color=#00ffffff size=1>.</style>            current program module, up to 28 characters, left justified.
+
+<style color=#00ffffff size=1>.</style>            The read-only pgrp file contains the process group
+<style color=#00ffffff size=1>.</style>            identifier, in decimal.
+
+<style color=#00ffffff size=1>.</style>            The read-only nsgrp file contains the namespace group
+<style color=#00ffffff size=1>.</style>            identifier, in decimal.
+
+<style color=#00ffffff size=1>.</style>            The read-only ns file contains a set of mount and bind
+<style color=#00ffffff size=1>.</style>            commands which describe the <action name=sys-bind(2)>sys-bind(2)</action> and mount operations
+<style color=#00ffffff size=1>.</style>            used to construct the name space, in the format of namespace
+<style color=#00ffffff size=1>.</style>            (6). The last line of the file is a cd command indicating
+<style color=#00ffffff size=1>.</style>            the working directory.
+
+<style color=#00ffffff size=1>.</style>            The read-only wait file may be read to recover information
+<style color=#00ffffff size=1>.</style>            about the exiting children of the process. A read of wait
+<style color=#00ffffff size=1>.</style>            will block until a child of the process, created after wait
+<style color=#00ffffff size=1>.</style>            was opened, exits. When such a child exits, it produces a
+<style color=#00ffffff size=1>.</style>            string with three fields: the pid of the exiting process, a
+<style color=#00ffffff size=1>.</style>            space, module name enclosed in  "'s, a colon, and a possibly
+<style color=#00ffffff size=1>.</style>            empty error message. The error message will contain at most
+<style color=#00ffffff size=1>.</style>            64 characters.
+
+<style color=#00ffffff size=1>.</style>            The read-only fd file describes the open file descriptors in
+<style color=#00ffffff size=1>.</style>            the file descriptor group of the process. Each line
+<style color=#00ffffff size=1>.</style>            describes an open file. The fields are: the file descriptor
+<style color=#00ffffff size=1>.</style>            index, the open mode (r, w, rw)\; the type and number of the
+<style color=#00ffffff size=1>.</style>            device\; the path, version and type of the file's qid (see
+<style color=#00ffffff size=1>.</style>            <action name=intro(5)>intro(5)</action>)\; the file's atomic I/O unit, as defined in
+<style color=#00ffffff size=1>.</style>            <action name=sys-iounit(2)>sys-iounit(2)</action>)\; the file I/O offset in bytes\; and the name
+<style color=#00ffffff size=1>.</style>            with which it was opened.
+
+<style color=#00ffffff size=1>.</style>            The read-only exception file gives details of the last
+<style color=#00ffffff size=1>.</style>            exception to occur in the process, if any. The fields are
+<style color=#00ffffff size=1>.</style>            the program counter value when the exception occurred, the
+<style color=#00ffffff size=1>.</style>            module it occurred in and the exception itself, each
+<style color=#00ffffff size=1>.</style>            separated by a space. If none, the result is the empty
+<style color=#00ffffff size=1>.</style>            string.
+
+<style color=#00ffffff size=1>.</style>            Messages written to the ctl file control the execution of
+<style color=#00ffffff size=1>.</style>            the process.
+
+<style color=#00ffffff size=1>.</style>            kill     Kill the process.
+
+<style color=#00ffffff size=1>.</style>            killgrp  Kill all processes in the same group as the
+<style color=#00ffffff size=1>.</style>                     process. A process writing to its own ctl file does
+<style color=#00ffffff size=1>.</style>                     not kill itself.
+
+<style color=#00ffffff size=1>.</style>            exceptions propagate
+<style color=#00ffffff size=1>.</style>                     Applies to process group leaders only (ie any
+<style color=#00ffffff size=1>.</style>                     process that executes a system call
+<style color=#00ffffff size=1>.</style>                     sys->pctl(Sys->NEWPGRP, ... ). If any process in
+<style color=#00ffffff size=1>.</style>                     the same group as the leader incurs an exception
+<style color=#00ffffff size=1>.</style>                     which it does not handle, atomically raise the
+<style color=#00ffffff size=1>.</style>                     exception in all processes in the group. In this
+<style color=#00ffffff size=1>.</style>                     case exceptions are generated for killed processes
+<style color=#00ffffff size=1>.</style>                     as well. This mechanism allows all processes in a
+<style color=#00ffffff size=1>.</style>                     process group to perfom error recovery when one of
+<style color=#00ffffff size=1>.</style>                     them faults.
+
+<style color=#00ffffff size=1>.</style>            exceptions notifyleader
+<style color=#00ffffff size=1>.</style>                     Applies to process group leaders only. If any
+<style color=#00ffffff size=1>.</style>                     process in the same group as the leader incurs an
+<style color=#00ffffff size=1>.</style>                     exception which it does not handle, atomically
+<style color=#00ffffff size=1>.</style>                     destroy all processes in the group except for the
+<style color=#00ffffff size=1>.</style>                     leader and raise the exception in the leader. This
+<style color=#00ffffff size=1>.</style>                     error recovery mechanism might be appropriate when
+<style color=#00ffffff size=1>.</style>                     a fault occurs amongst a group of processes and the
+<style color=#00ffffff size=1>.</style>                     group leader takes sole responsibilty for recovery.
+
+<style color=#00ffffff size=1>.</style>            restricted
+<style color=#00ffffff size=1>.</style>                     Mark all processes that the process spawns in
+<style color=#00ffffff size=1>.</style>                     future as restricted. A restricted process is one
+<style color=#00ffffff size=1>.</style>                     which can run out of memory when a configured limit
+<style color=#00ffffff size=1>.</style>                     has been reached and before total memory is
+<style color=#00ffffff size=1>.</style>                     exhausted. An unrestricted process can allocate
+<style color=#00ffffff size=1>.</style>                     memory until memory is truly exhausted. Typically a
+<style color=#00ffffff size=1>.</style>                     window manager or server might be unrestricted as
+<style color=#00ffffff size=1>.</style>                     they are processes fundamental to the running of a
+<style color=#00ffffff size=1>.</style>                     system.
+
+<style color=#00ffffff size=1>.</style>            The dbgctl file provides facilities for debugging a process.
+<style color=#00ffffff size=1>.</style>            Messages written to the file control the execution of the
+<style color=#00ffffff size=1>.</style>            process.
+
+<style color=#00ffffff size=1>.</style>            step n    Step the interpreter for at most n instructions,
+<style color=#00ffffff size=1>.</style>                      or until a breakpoint is reached.
+
+<style color=#00ffffff size=1>.</style>            toret     Step the interpreter until a return from the
+<style color=#00ffffff size=1>.</style>                      current activation frame or a breakpoint is
+<style color=#00ffffff size=1>.</style>                      reached.
+
+<style color=#00ffffff size=1>.</style>            cont      Step the interpreter until a breakpoint is
+<style color=#00ffffff size=1>.</style>                      reached.
+
+<style color=#00ffffff size=1>.</style>            stop      Stop the process as soon as possible. Do not allow
+<style color=#00ffffff size=1>.</style>                      the process to execute again until an unstop
+<style color=#00ffffff size=1>.</style>                      message is received.
+
+<style color=#00ffffff size=1>.</style>            unstop    Cancel the effect of any previous stop.
+
+<style color=#00ffffff size=1>.</style>            bpt set path pc
+<style color=#00ffffff size=1>.</style>                      Set a breakpoint at pc for the module given by
+<style color=#00ffffff size=1>.</style>                      path.
+
+<style color=#00ffffff size=1>.</style>            bpt del path pc
+<style color=#00ffffff size=1>.</style>                      Clear a breakpoint if one exists.
+
+<style color=#00ffffff size=1>.</style>            Reading dbgctl gives updates for some state transitions
+<style color=#00ffffff size=1>.</style>            while the process is being debugged. Each update is
+<style color=#00ffffff size=1>.</style>            terminated by a newline.
+
+<style color=#00ffffff size=1>.</style>            exited    The process exited without error.
+
+<style color=#00ffffff size=1>.</style>            broken: error
+<style color=#00ffffff size=1>.</style>                      The process died due to error, a string with up to
+<style color=#00ffffff size=1>.</style>                      64 characters.
+
+<style color=#00ffffff size=1>.</style>            send      The process is blocked sending on a channel.
+
+<style color=#00ffffff size=1>.</style>            recv      The process is blocked receiving on a channel.
+
+<style color=#00ffffff size=1>.</style>            alt       The process is blocked in an alt statement.
+
+<style color=#00ffffff size=1>.</style>            run       The process is unblocked and now ready to run.
+
+<style color=#00ffffff size=1>.</style>            new pid   The process has spawned a new process identified
+<style color=#00ffffff size=1>.</style>                      by pid.
+
+<style color=#00ffffff size=1>.</style>            The read-only stack file contains the dynamic call stack
+<style color=#00ffffff size=1>.</style>            trace. Each activation frame is described by one line with
+<style color=#00ffffff size=1>.</style>            six fields, separated by a space: the frame pointer, program
+<style color=#00ffffff size=1>.</style>            counter, module data pointer, and module code pointer, each
+<style color=#00ffffff size=1>.</style>            8 hexadecimal digits\; the execution method for the module (0
+<style color=#00ffffff size=1>.</style>            means interpreted, 1 compiled)\; and the path name of the
+<style color=#00ffffff size=1>.</style>            module. The top activation frame starts at offset 0.
+
+<style color=#00ffffff size=1>.</style>            The heap file may be queried to examine the state of the
+<style color=#00ffffff size=1>.</style>            process. A data query contains an address, a period, a
+<style color=#00ffffff size=1>.</style>            format character, and a count. An instruction query contains
+<style color=#00ffffff size=1>.</style>            a pc, a plus, a mode address, a period, the format I, and a
+<style color=#00ffffff size=1>.</style>            count. The addresses in the query may be decimal,
+<style color=#00ffffff size=1>.</style>            hexadecimal preceded by 0x or 0X, or octal preceded by 0.
+<style color=#00ffffff size=1>.</style>            Count gives the number of consecutive data items retrieved
+<style color=#00ffffff size=1>.</style>            by reading heap starting at offset 0\; the format varies
+<style color=#00ffffff size=1>.</style>            according to the format character. All data items other than
+<style color=#00ffffff size=1>.</style>            strings are terminated by a newline.
+
+<style color=#00ffffff size=1>.</style>            W         32-bit decimal ints.
+
+<style color=#00ffffff size=1>.</style>            B         8-bit unsigned decimal bytes.
+
+<style color=#00ffffff size=1>.</style>            V         64-bit decimal bytes.
+
+<style color=#00ffffff size=1>.</style>            R         64-bit reals.
+
+<style color=#00ffffff size=1>.</style>            I         Disassembled Dis instructions.
+
+<style color=#00ffffff size=1>.</style>            P         32-bit hexadecimal address, or nil.
+
+<style color=#00ffffff size=1>.</style>            The following formats examine properties of specific 32-bit
+<style color=#00ffffff size=1>.</style>            pointers.
+
+<style color=#00ffffff size=1>.</style>            L         Examine a list, yielding a pair of hexadecimal
+<style color=#00ffffff size=1>.</style>                      addresses separated by a period, giving the
+<style color=#00ffffff size=1>.</style>                      address of the head and tail of a list. It is an
+<style color=#00ffffff size=1>.</style>                      error to use L on nil.
+
+<style color=#00ffffff size=1>.</style>            A         Examine an array, yielding a decimal length, a
+<style color=#00ffffff size=1>.</style>                      period, and the address of the 0th element of an
+<style color=#00ffffff size=1>.</style>                      array, or nil.
+
+<style color=#00ffffff size=1>.</style>            C         Examine a string, yielding the decimal length in
+<style color=#00ffffff size=1>.</style>                      characters, a period, and the <action name=utf(6)>utf(6)</action>
+<style color=#00ffffff size=1>.</style>                      representation of the string.
+
+<style color=#00ffffff size=1>.</style>            M         Examine a module reference, yielding the address
+<style color=#00ffffff size=1>.</style>                      of its global data or nil.
+
+<style color=#00ffffff size=1>.</style>            The text file is currently unimplemented.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/devprog.c
+<style color=#00ffffff size=1>.</style>            /os/port/devprog.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

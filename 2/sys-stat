@@ -1,0 +1,154 @@
+<action name=SYS-STAT(2)>SYS-STAT(2)</action>                                           <action name=SYS-STAT(2)>SYS-STAT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            fstat, fwstat, stat, wstat - get and put file status
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            fstat:  fn(fd: ref FD): (int, Dir)\;
+<style color=#00ffffff size=1>.</style>            fwstat: fn(fd: ref FD\; d: Dir): int\;
+<style color=#00ffffff size=1>.</style>            stat:   fn(name: string): (int, Dir)\;
+<style color=#00ffffff size=1>.</style>            wstat:  fn(name: string, d: Dir): int\;
+
+<style color=#00ffffff size=1>.</style>            nulldir: con Dir(special don't care values)\;
+<style color=#00ffffff size=1>.</style>            zerodir: con Dir(all elements set to zero)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Given a file's name, or an open file descriptor fd, these
+<style color=#00ffffff size=1>.</style>            routines retrieve or modify file status information. Stat
+<style color=#00ffffff size=1>.</style>            and fstat retrieve information about name or fd into the Dir
+<style color=#00ffffff size=1>.</style>            member of the return tuple. The int member will be zero for
+<style color=#00ffffff size=1>.</style>            success and -1 for failure. wstat and fwstat write
+<style color=#00ffffff size=1>.</style>            information back, thus changing file attributes according to
+<style color=#00ffffff size=1>.</style>            d. Both functions return zero for success and -1 for
+<style color=#00ffffff size=1>.</style>            failure.
+
+<style color=#00ffffff size=1>.</style>            File status is recorded as a Dir type:
+
+<style color=#00ffffff size=1>.</style>            Qid: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                path:   big\;     # unique id for file on server
+<style color=#00ffffff size=1>.</style>                vers:   int\;     # write version number
+<style color=#00ffffff size=1>.</style>                qtype:  int\;     # file type (see below)
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Dir: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                name:   string\;  # last element of path
+<style color=#00ffffff size=1>.</style>                uid:    string\;  # owner name
+<style color=#00ffffff size=1>.</style>                gid:    string\;  # group name
+<style color=#00ffffff size=1>.</style>                muid:   string\;  # last modifier name
+<style color=#00ffffff size=1>.</style>                qid:    Qid\;     # unique id from server
+<style color=#00ffffff size=1>.</style>                mode:   int\;     # permissions
+<style color=#00ffffff size=1>.</style>                atime:  int\;     # last read time
+<style color=#00ffffff size=1>.</style>                mtime:  int\;     # last write time
+<style color=#00ffffff size=1>.</style>                length: big\;     # file length
+<style color=#00ffffff size=1>.</style>                dtype:  int\;     # server type
+<style color=#00ffffff size=1>.</style>                dev:    int\;     # server subtype
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            If the file resides on permanent storage and is not a
+<style color=#00ffffff size=1>.</style>            directory, the length field returned in Dir by stat is the
+<style color=#00ffffff size=1>.</style>            number of bytes in the file. For directories, the length
+<style color=#00ffffff size=1>.</style>            returned is zero. Some devices, in particular files that are
+<style color=#00ffffff size=1>.</style>            streams such as pipes and network connections, report a
+<style color=#00ffffff size=1>.</style>            length that is the number of bytes that may be read from the
+<style color=#00ffffff size=1>.</style>            device without blocking.
+
+<style color=#00ffffff size=1>.</style>            Each file is the responsibility of some server: it could be
+<style color=#00ffffff size=1>.</style>            a file server, a kernel device, or a user process. Dtype
+<style color=#00ffffff size=1>.</style>            identifies the server type, and dev says which of a group of
+<style color=#00ffffff size=1>.</style>            servers of the same type is the one responsible for this
+<style color=#00ffffff size=1>.</style>            file. Qid is a type containing path, vers and qtype members,
+<style color=#00ffffff size=1>.</style>            each an integer: path is guaranteed to be unique among all
+<style color=#00ffffff size=1>.</style>            path names currently on the file server\; vers changes each
+<style color=#00ffffff size=1>.</style>            time the file is modified\; and qtype gives the file's
+<style color=#00ffffff size=1>.</style>            characteristics (eg, directory or file). The path is 64 bits
+<style color=#00ffffff size=1>.</style>            (big), and the vers is 32 bits (int). Thus, if two files
+<style color=#00ffffff size=1>.</style>            have the same dtype, dev, and qid, they are the same file.
+<style color=#00ffffff size=1>.</style>            (Except when checking that the contents are the same, as in
+<style color=#00ffffff size=1>.</style>            a file cache, the version is often considered irrelevant in
+<style color=#00ffffff size=1>.</style>            that comparison.) The bits in qtype are defined by
+
+<style color=#00ffffff size=1>.</style>                 16r80 # directory (Sys->QTDIR)
+<style color=#00ffffff size=1>.</style>                 16r40 # append-only (Sys->QTAPPEND)
+<style color=#00ffffff size=1>.</style>                 16r20 # exclusive-use (Sys->QTEXCL)
+<style color=#00ffffff size=1>.</style>                 16r08 # authentication file (Sys->QTAUTH)
+<style color=#00ffffff size=1>.</style>                 16r00 # any other file (Sys->QTFILE)
+
+<style color=#00ffffff size=1>.</style>            (They are the top 8 bits of Dir.mode for the file, as
+<style color=#00ffffff size=1>.</style>            discussed below.) Sys defines constants for the bits:
+<style color=#00ffffff size=1>.</style>            Sys->QTDIR, Sys->QTAPPEND, and so on, as shown above. The
+<style color=#00ffffff size=1>.</style>            value Sys->QTFILE is not a particular bit\; it is defined to
+<style color=#00ffffff size=1>.</style>            be zero, to allow a symbolic name to be used when creating
+<style color=#00ffffff size=1>.</style>            Qid values for ordinary files.
+
+<style color=#00ffffff size=1>.</style>            The bits in mode are defined by
+
+<style color=#00ffffff size=1>.</style>                 16r80000000 #directory (Sys->DMDIR)
+<style color=#00ffffff size=1>.</style>                 16r40000000 #append-only (Sys->DMAPPEND)
+<style color=#00ffffff size=1>.</style>                 16r20000000 #exclusive-use (Sys->DMEXCL)
+<style color=#00ffffff size=1>.</style>                 16r08000000 #authentication file (Sys->DMAUTH)
+<style color=#00ffffff size=1>.</style>                       8r400 #read    permission by owner
+<style color=#00ffffff size=1>.</style>                       8r200 #write   permission by owner
+<style color=#00ffffff size=1>.</style>                       8r100 #execute permission (search on directory) by owner
+<style color=#00ffffff size=1>.</style>                       8r070 #read, write, execute (search) by group
+<style color=#00ffffff size=1>.</style>                       8r007 #read, write, execute (search) by others
+
+<style color=#00ffffff size=1>.</style>            There are constants defined in Sys for the first four bits:
+<style color=#00ffffff size=1>.</style>            Sys->DMDIR, Sys->DMAPPEND and Sys->DMEXCL for normal files,
+<style color=#00ffffff size=1>.</style>            and Sys->DMAUTH only for the special authentication file
+<style color=#00ffffff size=1>.</style>            opened by <action name=sys-fauth(2)>sys-fauth(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            The two time fields are measured in seconds since the epoch
+<style color=#00ffffff size=1>.</style>            (Jan 1 00:00 1970 GMT). Mtime is the time of the last change
+<style color=#00ffffff size=1>.</style>            of content. Similarly, atime is set whenever the contents
+<style color=#00ffffff size=1>.</style>            are accessed\; also, it is set whenever mtime is set.
+
+<style color=#00ffffff size=1>.</style>            Uid and gid are the names of the owner and group (of owners)
+<style color=#00ffffff size=1>.</style>            of the file\; muid is the name of the user that last modified
+<style color=#00ffffff size=1>.</style>            the file (setting mtime). Groups are also users, but each
+<style color=#00ffffff size=1>.</style>            server is free to associate a list of users with any user
+<style color=#00ffffff size=1>.</style>            name g, and that list is the set of users in the group g.
+<style color=#00ffffff size=1>.</style>            When an initial attachment is made to a server, the user
+<style color=#00ffffff size=1>.</style>            string in the process group is communicated to the server.
+<style color=#00ffffff size=1>.</style>            Thus, the server knows, for any given file access, whether
+<style color=#00ffffff size=1>.</style>            the accessing process is the owner of, or in the group of,
+<style color=#00ffffff size=1>.</style>            the file. This selects which sets of three bits in mode is
+<style color=#00ffffff size=1>.</style>            used to check permissions.
+
+<style color=#00ffffff size=1>.</style>            Only some of the fields may be changed by wstat calls. The
+<style color=#00ffffff size=1>.</style>            name can be changed by anyone with write permission in the
+<style color=#00ffffff size=1>.</style>            parent directory. The mode and mtime can be changed by the
+<style color=#00ffffff size=1>.</style>            owner or the group leader of the file's current group. The
+<style color=#00ffffff size=1>.</style>            gid can be changed by the owner if he or she is a member of
+<style color=#00ffffff size=1>.</style>            the new group. The gid can be changed by the group leader of
+<style color=#00ffffff size=1>.</style>            the file's current group if he or she is the leader of the
+<style color=#00ffffff size=1>.</style>            new group. The length can be changed by anyone with write
+<style color=#00ffffff size=1>.</style>            permission, provided the operation is implemented by the
+<style color=#00ffffff size=1>.</style>            server. (See <action name=intro(5)>intro(5)</action> and <action name=stat(5)>stat(5)</action> for more information about
+<style color=#00ffffff size=1>.</style>            permissions, and <action name=users(6)>users(6)</action> for how to configure users and
+<style color=#00ffffff size=1>.</style>            groups when using <action name=kfs(4)>kfs(4)</action>).
+
+<style color=#00ffffff size=1>.</style>            Special values in the fields of the Dir passed to wstat
+<style color=#00ffffff size=1>.</style>            indicate that the field is not intended to be changed by the
+<style color=#00ffffff size=1>.</style>            call. The values are the maximum unsigned integer of
+<style color=#00ffffff size=1>.</style>            appropriate size for integral values (usually ~0, but beware
+<style color=#00ffffff size=1>.</style>            of conversions and size mismatches when comparing values)
+<style color=#00ffffff size=1>.</style>            and the empty or nil string for string values. The constant
+<style color=#00ffffff size=1>.</style>            nulldir in Sys has all its elements initialised to these
+<style color=#00ffffff size=1>.</style>            ``don't care'' values. Thus one may change the mode, for
+<style color=#00ffffff size=1>.</style>            example, by assigning sys->nulldir to initialize a Dir, then
+<style color=#00ffffff size=1>.</style>            setting the mode, and then doing wstat\; it is not necessary
+<style color=#00ffffff size=1>.</style>            to use stat to retrieve the initial values first.
+
+<style color=#00ffffff size=1>.</style>            The constant zerodir has all its elements initialised to
+<style color=#00ffffff size=1>.</style>            zero. It can be used to initialise a Dir structure, for use
+<style color=#00ffffff size=1>.</style>            with <action name=styx(2)>styx(2)</action> or <action name=styxservers-nametree(2)>styxservers-nametree(2)</action>, for instance.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-dirread(2)>sys-dirread(2)</action>, <action name=sys-open(2)>sys-open(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

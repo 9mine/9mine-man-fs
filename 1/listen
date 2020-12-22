@@ -1,0 +1,113 @@
+<action name=LISTEN(1)>LISTEN(1)</action>                                               <action name=LISTEN(1)>LISTEN(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            listen, styxlisten, dial - network connections
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            listen \[ -Ats \] \[ -a alg \]... \[ -k keyfile \] \[ -i {
+<style color=#00ffffff size=1>.</style>            initscript} \] addr command \[ arg... \]
+<style color=#00ffffff size=1>.</style>            styxlisten \[ -Ats \] \[ -a alg \]... \[ -k keyfile \] addr
+<style color=#00ffffff size=1>.</style>            command \[ arg... \]
+<style color=#00ffffff size=1>.</style>            dial \[ -A \] \[ -a alg \] \[ -k keyfile \] addr command \[ arg...
+<style color=#00ffffff size=1>.</style>            \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Listen waits for an incoming network connection on addr, (as
+<style color=#00ffffff size=1>.</style>            accepted by announce in <action name=dial(2)>dial(2)</action>) and then invokes <action name=sh(1)>sh(1)</action> to
+<style color=#00ffffff size=1>.</style>            run the associated command. If the -A option is specified,
+<style color=#00ffffff size=1>.</style>            no authentication or encryption will take place on the
+<style color=#00ffffff size=1>.</style>            connection\; otherwise listen will attempt to authenticate
+<style color=#00ffffff size=1>.</style>            the party at the other end of the connection, allowing any
+<style color=#00ffffff size=1>.</style>            given alg to be used to encrypt and/or digest the
+<style color=#00ffffff size=1>.</style>            connection's data. If neither -A or any -a option is given,
+<style color=#00ffffff size=1>.</style>            then listen will allow any algorithm allowed by the local
+<style color=#00ffffff size=1>.</style>            <action name=ssl(3)>ssl(3)</action> device. If keyfile is specified, then that will be
+<style color=#00ffffff size=1>.</style>            used as the server's certificate\; otherwise /usr/user
+<style color=#00ffffff size=1>.</style>            /keyring/default will be used.
+
+<style color=#00ffffff size=1>.</style>            If an initscript is provided, it is executed by each
+<style color=#00ffffff size=1>.</style>            listener after announcing its network connection, with the
+<style color=#00ffffff size=1>.</style>            shell variable net set to the name of the corresponding
+<style color=#00ffffff size=1>.</style>            network directory (see <action name=dial(2)>dial(2)</action>), before listening for
+<style color=#00ffffff size=1>.</style>            incoming calls. This can be used to change, or find out the
+<style color=#00ffffff size=1>.</style>            characteristics of an announced port (for instance to find
+<style color=#00ffffff size=1>.</style>            out the actual port number that has been announced).
+
+<style color=#00ffffff size=1>.</style>            By default, listen backgrounds itself (after checking that
+<style color=#00ffffff size=1>.</style>            the port announcement proceeded ok)\; giving it the -s option
+<style color=#00ffffff size=1>.</style>            causes it to run synchronously.
+
+<style color=#00ffffff size=1>.</style>            Listen currently makes available the whole of its current
+<style color=#00ffffff size=1>.</style>            name space visible to the command, which might be
+<style color=#00ffffff size=1>.</style>            undesirable, and perhaps should be optional, with a new name
+<style color=#00ffffff size=1>.</style>            space constructed for an incoming call. The -t option
+<style color=#00ffffff size=1>.</style>            declares the command to be `trusted' giving it access to
+<style color=#00ffffff size=1>.</style>            elements of the current name space such as /mnt/keys on an
+<style color=#00ffffff size=1>.</style>            authentication server. By default it has not got that
+<style color=#00ffffff size=1>.</style>            access.
+
+<style color=#00ffffff size=1>.</style>            Styxlisten is similar to listen, except that it multiplexes
+<style color=#00ffffff size=1>.</style>            a single styx (see <action name=intro(5)>intro(5)</action>) server between multiple
+<style color=#00ffffff size=1>.</style>            clients. Styxlisten starts its cmd only once\; it assumes it
+<style color=#00ffffff size=1>.</style>            will serve styx messages through file descriptor 0 when
+<style color=#00ffffff size=1>.</style>            started. For each client that attaches to address, the
+<style color=#00ffffff size=1>.</style>            command will see a new <action name=attach(5)>attach(5)</action> message indicating the new
+<style color=#00ffffff size=1>.</style>            connection. Unless the -A option has been given, the uname
+<style color=#00ffffff size=1>.</style>            field in the attach message will be the name of the
+<style color=#00ffffff size=1>.</style>            authenticated user. When the command exits, the process
+<style color=#00ffffff size=1>.</style>            listening on address is stopped.
+
+<style color=#00ffffff size=1>.</style>            Dial is the complement of listen. It tries to make a
+<style color=#00ffffff size=1>.</style>            connection to addr. If the -A option is given, no
+<style color=#00ffffff size=1>.</style>            authentication or encryption will take place\; otherwise
+<style color=#00ffffff size=1>.</style>            Inferno authentication and encryption will be performed as
+<style color=#00ffffff size=1>.</style>            usual, using alg if given, or a default algorithm otherwise.
+<style color=#00ffffff size=1>.</style>            Keyfile is used for the certificate if given, otherwise
+<style color=#00ffffff size=1>.</style>            /usr/user/keyring/addr, if it exists, and failing that,
+<style color=#00ffffff size=1>.</style>            /usr/user/keyring/default. Alg is used for the
+<style color=#00ffffff size=1>.</style>            encryption/digest algorithm on the connection. When the
+<style color=#00ffffff size=1>.</style>            connection is made, command is run in the context of that
+<style color=#00ffffff size=1>.</style>            connection, as described below.
+
+<style color=#00ffffff size=1>.</style>            For both dial and listen, when the command is run, $user is
+<style color=#00ffffff size=1>.</style>            set to the name of the authenticated user at the other end
+<style color=#00ffffff size=1>.</style>            of the connection (if authentication is being used), and
+<style color=#00ffffff size=1>.</style>            $net is set to the /net directory corresponding to the
+<style color=#00ffffff size=1>.</style>            connection. The standard input and output of the command is
+<style color=#00ffffff size=1>.</style>            redirected to the network connection (standard error is
+<style color=#00ffffff size=1>.</style>            unaffected).
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Run a custom login daemon and an echo server that logs
+<style color=#00ffffff size=1>.</style>            incoming connections:
+
+<style color=#00ffffff size=1>.</style>                 listen 'tcp!*!echo' {
+<style color=#00ffffff size=1>.</style>                 	echo connection from `{cat $net/remote} >\[1=2\]
+<style color=#00ffffff size=1>.</style>                 	echo user is $user >\[1=2\]
+<style color=#00ffffff size=1>.</style>                 	cat &
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>            Dial up the above echo server:
+
+<style color=#00ffffff size=1>.</style>                 dial tcp!somehost!echo {
+<style color=#00ffffff size=1>.</style>                 	echo made connection >\[1=2\]\; echo hello\; cat >\[1=2\]
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>            Make the current name-space available to all:
+
+<style color=#00ffffff size=1>.</style>                 styxlisten 'tcp!*!styx' export /
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/dial.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/listen.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The way that styxlisten is implemented means that the aname
+<style color=#00ffffff size=1>.</style>            from the remote <action name=mount(2)>mount(2)</action> request cannot be passed through to
+<style color=#00ffffff size=1>.</style>            the attach message seen by the command that has been started
+<style color=#00ffffff size=1>.</style>            by styxlisten.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=dial(2)>dial(2)</action>, <action name=ssl(3)>ssl(3)</action>, <action name=auth(6)>auth(6)</action>, <action name=svc(8)>svc(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

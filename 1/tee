@@ -1,0 +1,21 @@
+<action name=TEE(1)>TEE(1)</action>                                                     <action name=TEE(1)>TEE(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tee - pipe fitting
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            tee \[ -a \] \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Tee reads the standard input and writes a copy of each block
+<style color=#00ffffff size=1>.</style>            read to each file in turn, and then to the standard output.
+<style color=#00ffffff size=1>.</style>            Normally tee rewrites each file\; the -a option causes data
+<style color=#00ffffff size=1>.</style>            to be appended instead.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/tee.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cat(1)>cat(1)</action>, <action name=tail(1)>tail(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

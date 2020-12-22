@@ -1,0 +1,29 @@
+<action name=SORT(1)>SORT(1)</action>                                                   <action name=SORT(1)>SORT(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            sort - sort file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            sort \[ -nr \] \[ file \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Sort sorts the lines of file (default: standard input) and
+<style color=#00ffffff size=1>.</style>            writes the sorted output to standard output.
+
+<style color=#00ffffff size=1>.</style>            Whole lines are sorted into increasing order, using
+<style color=#00ffffff size=1>.</style>            lexicographic ordering of Unicode characters by default. The
+<style color=#00ffffff size=1>.</style>            sort is stable, so that lines that compare equal will appear
+<style color=#00ffffff size=1>.</style>            in the output in the same order as in the original file. The
+<style color=#00ffffff size=1>.</style>            sort order is affected by the following options:
+
+<style color=#00ffffff size=1>.</style>            -n   Each line is assumed to have an initial numeric string
+<style color=#00ffffff size=1>.</style>                 representing an integer, with optional plus or minus
+<style color=#00ffffff size=1>.</style>                 sign, and the lines are sorted by those numeric values
+<style color=#00ffffff size=1>.</style>                 into increasing order.
+
+<style color=#00ffffff size=1>.</style>            -r   Reverses the sense of comparisons.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The entire file is read into memory to be sorted.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

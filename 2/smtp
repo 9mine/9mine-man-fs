@@ -1,0 +1,46 @@
+<action name=SMTP(2)>SMTP(2)</action>                                                   <action name=SMTP(2)>SMTP(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            smtp - Simple Mail Transfer Protocol
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "smtp.m"\;
+<style color=#00ffffff size=1>.</style>            smtp := load Smtp Smtp->PATH\;
+
+<style color=#00ffffff size=1>.</style>            open:     fn(server: string): (int, string)\;
+<style color=#00ffffff size=1>.</style>            sendmail: fn(fromwhom: string, 
+<style color=#00ffffff size=1>.</style>                         towhom: list of string, 
+<style color=#00ffffff size=1>.</style>                         cc: list of string,
+<style color=#00ffffff size=1>.</style>                         msg: list of string): (int, string)\;
+<style color=#00ffffff size=1>.</style>            close:    fn(): (int, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Smtp provides an interface to the mail transport protocol
+<style color=#00ffffff size=1>.</style>            SMTP.
+
+<style color=#00ffffff size=1>.</style>            Open opens a connection to the given SMTP server. If server
+<style color=#00ffffff size=1>.</style>            is nil, open uses the default mail server $smtp, which must
+<style color=#00ffffff size=1>.</style>            be defined in <action name=ndb(6)>ndb(6)</action>. It returns -1 and an error message if
+<style color=#00ffffff size=1>.</style>            the connection fails.
+
+<style color=#00ffffff size=1>.</style>            Sendmail sends mail to the SMTP server for subsequent
+<style color=#00ffffff size=1>.</style>            delivery. The first argument names the sender, the list
+<style color=#00ffffff size=1>.</style>            towhom names the recipients, cc is a list of CC's, and msg
+<style color=#00ffffff size=1>.</style>            has the text of the message. The latter may simply be a list
+<style color=#00ffffff size=1>.</style>            of one item containing the whole message, a list of lines of
+<style color=#00ffffff size=1>.</style>            the message or any intermediate format. It returns -1 and an
+<style color=#00ffffff size=1>.</style>            error message on failure.
+
+<style color=#00ffffff size=1>.</style>            Close closes the connection to the SMTP server.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/smtp.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sendmail(1)>sendmail(1)</action>, <action name=acme(1)>acme(1)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Too much copying of strings is done, especially with large
+<style color=#00ffffff size=1>.</style>            messages.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

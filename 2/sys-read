@@ -1,0 +1,57 @@
+<action name=SYS-READ(2)>SYS-READ(2)</action>                                           <action name=SYS-READ(2)>SYS-READ(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            read, write, pread, pwrite, stream - read or write file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            read:   fn(fd: ref FD, buf: array of byte, nbytes: int): int\;
+<style color=#00ffffff size=1>.</style>            readn:  fn(fd: ref FD, buf: array of byte, nbytes: int): int\;
+<style color=#00ffffff size=1>.</style>            write:  fn(fd: ref FD, buf: array of byte, nbytes: int): int\;
+
+<style color=#00ffffff size=1>.</style>            pread:  fn(fd: ref FD, buf: array of byte, nbytes: int,
+<style color=#00ffffff size=1>.</style>                       offset: big): int\;
+<style color=#00ffffff size=1>.</style>            pwrite: fn(fd: ref FD, buf: array of byte, nbytes: int,
+<style color=#00ffffff size=1>.</style>                       offset: big): int\;
+
+<style color=#00ffffff size=1>.</style>            stream: fn(src, dst: ref FD, bufsiz: int): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Read reads nbytes bytes of data from the offset in the file
+<style color=#00ffffff size=1>.</style>            associated with fd into memory at buf. The file offset is
+<style color=#00ffffff size=1>.</style>            advanced by the number of bytes read. It is not guaranteed
+<style color=#00ffffff size=1>.</style>            that all nbytes bytes will be read\; for example if the file
+<style color=#00ffffff size=1>.</style>            refers to the console, at most one line will be returned. In
+<style color=#00ffffff size=1>.</style>            any event the number of bytes read is returned. A return
+<style color=#00ffffff size=1>.</style>            value of 0 is conventionally interpreted as end of file.
+
+<style color=#00ffffff size=1>.</style>            Readn continues to read from fd sequentially into buf, until
+<style color=#00ffffff size=1>.</style>            nbytes have been read, or read returns a non-positive count.
+
+<style color=#00ffffff size=1>.</style>            Write writes nbytes bytes of data starting at buf to the
+<style color=#00ffffff size=1>.</style>            file associated with fd at the file offset. The offset is
+<style color=#00ffffff size=1>.</style>            advanced by the number of bytes written. The number of bytes
+<style color=#00ffffff size=1>.</style>            actually written is returned. It should be regarded as an
+<style color=#00ffffff size=1>.</style>            error if this is not the same as requested.
+
+<style color=#00ffffff size=1>.</style>            Pread and pwrite take an explicit file offset as a
+<style color=#00ffffff size=1>.</style>            parameter, leaving fd's current offset untouched\; they are
+<style color=#00ffffff size=1>.</style>            otherwise identical in behaviour to read and write. They are
+<style color=#00ffffff size=1>.</style>            particulary useful when several processes must access the
+<style color=#00ffffff size=1>.</style>            same fd concurrently and it is inconvenient or undesirable
+<style color=#00ffffff size=1>.</style>            to synchronise their activity to avoid interference.
+
+<style color=#00ffffff size=1>.</style>            Stream continually reads data from src, using a buffer of
+<style color=#00ffffff size=1>.</style>            bufsiz bytes, and writes the data to dst. It copies data
+<style color=#00ffffff size=1>.</style>            until a read fails (returning zero bytes or an error) or a
+<style color=#00ffffff size=1>.</style>            write fails. Stream returns the number of bytes actually
+<style color=#00ffffff size=1>.</style>            copied. The implementation may be more efficient than a read
+<style color=#00ffffff size=1>.</style>            /write loop in the application, but is otherwise equivalent
+<style color=#00ffffff size=1>.</style>            to calling read and write directly.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bufio(2)>bufio(2)</action>, <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-dup(2)>sys-dup(2)</action>, <action name=sys-open(2)>sys-open(2)</action>, <action name=read(5)>read(5)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,78 @@
+<action name=FRAME(9)>FRAME(9)</action>                                                 <action name=FRAME(9)>FRAME(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            frame - Create and manipulate frame widgets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            frame pathName ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -borderwidth -relief
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -background colour
+<style color=#00ffffff size=1>.</style>                 This option is the same as the standard background
+<style color=#00ffffff size=1>.</style>                 option except that its value may also be specified as
+<style color=#00ffffff size=1>.</style>                 an empty string. In this case, the widget will display
+<style color=#00ffffff size=1>.</style>                 no background or border, and no colours will be
+<style color=#00ffffff size=1>.</style>                 consumed from its colourmap for its background and
+<style color=#00ffffff size=1>.</style>                 border.
+
+<style color=#00ffffff size=1>.</style>            -height dist
+<style color=#00ffffff size=1>.</style>                 Specifies the desired height for the window. If this
+<style color=#00ffffff size=1>.</style>                 option is less than or equal to zero then the window
+<style color=#00ffffff size=1>.</style>                 will not request any size at all.
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies the desired width for the window. If this
+<style color=#00ffffff size=1>.</style>                 option is less than or equal to zero then the window
+<style color=#00ffffff size=1>.</style>                 will not request any size at all.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The frame command creates a new window (given by the
+<style color=#00ffffff size=1>.</style>            pathName argument) and makes it into a frame widget.
+<style color=#00ffffff size=1>.</style>            Additional options, described above, may be specified on the
+<style color=#00ffffff size=1>.</style>            command line to configure aspects of the frame such as its
+<style color=#00ffffff size=1>.</style>            background colour and relief.  The frame command returns the
+<style color=#00ffffff size=1>.</style>            path name of the new window.
+
+<style color=#00ffffff size=1>.</style>            A frame is a simple widget.  Its primary purpose is to act
+<style color=#00ffffff size=1>.</style>            as a spacer or container for complex window layouts.  The
+<style color=#00ffffff size=1>.</style>            only features of a frame are its background colour and an
+<style color=#00ffffff size=1>.</style>            optional 3-D border to make the frame appear raised or
+<style color=#00ffffff size=1>.</style>            sunken.
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The frame command creates a new Tk command whose name is 
+<style color=#00ffffff size=1>.</style>            pathName.. This command may be used to invoke various
+<style color=#00ffffff size=1>.</style>            operations on the widget.  It has the following general
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathName option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            PathName is the name of the command, which is the same as
+<style color=#00ffffff size=1>.</style>            the frame widget's path name.  Option and the args determine
+<style color=#00ffffff size=1>.</style>            the exact behaviour of the command.  The following commands
+<style color=#00ffffff size=1>.</style>            are possible for frame widgets:
+
+<style color=#00ffffff size=1>.</style>            pathName cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the frame command.
+
+<style color=#00ffffff size=1>.</style>            pathName configure ?option? ?value option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathName.  If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, then the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the frame command.
+
+BINDINGS
+<style color=#00ffffff size=1>.</style>            When a new frame is created, it has no default event
+<style color=#00ffffff size=1>.</style>            bindings: frames are not intended to be interactive.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=options(9)>options(9)</action>, <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

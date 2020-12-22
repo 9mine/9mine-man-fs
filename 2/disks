@@ -1,0 +1,190 @@
+<action name=DISKS(2)>DISKS(2)</action>                                                 <action name=DISKS(2)>DISKS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            disks: Disk, PCpart, readn, chstext - generic disk and
+<style color=#00ffffff size=1>.</style>            partition interface
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "disks.m"\;
+
+<style color=#00ffffff size=1>.</style>            disks := load Disks Disks->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Disk: adt {
+<style color=#00ffffff size=1>.</style>                prefix:  string\;    # prefix before partition name
+<style color=#00ffffff size=1>.</style>                part:    string\;    # partition name (nil if not partition)
+<style color=#00ffffff size=1>.</style>                fd:      ref Sys->FD\;
+<style color=#00ffffff size=1>.</style>                wfd:     ref Sys->FD\;
+<style color=#00ffffff size=1>.</style>                ctlfd:   ref Sys->FD\;
+<style color=#00ffffff size=1>.</style>                rdonly:  int\;       # non-zero if readonly
+<style color=#00ffffff size=1>.</style>                dtype:   string\;    # device type
+
+<style color=#00ffffff size=1>.</style>                secs:    big\;    # number of sectors in device or partition
+<style color=#00ffffff size=1>.</style>                secsize: int\;    # device's sector size
+<style color=#00ffffff size=1>.</style>                size:    big\;    # size of device or partition
+<style color=#00ffffff size=1>.</style>                offset:  big\;    # within larger disk, perhaps
+<style color=#00ffffff size=1>.</style>                width:   int\;    # of disk size in bytes as decimal string
+<style color=#00ffffff size=1>.</style>                c:       int\;    # geometry: cyl, head, sectors
+<style color=#00ffffff size=1>.</style>                h:       int\;
+<style color=#00ffffff size=1>.</style>                s:       int\;
+<style color=#00ffffff size=1>.</style>                chssrc:  string\; # source of c/h/s values
+
+<style color=#00ffffff size=1>.</style>                open:    fn(f: string, mode: int, noctl: int): ref Disk\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            PCpart: adt {
+<style color=#00ffffff size=1>.</style>                active: int\;    # Active or 0
+<style color=#00ffffff size=1>.</style>                ptype:  int\;
+<style color=#00ffffff size=1>.</style>                base:   big\;    # base block address
+<style color=#00ffffff size=1>.</style>                offset: big\;    # block offset from base to partition
+<style color=#00ffffff size=1>.</style>                size:   big\;    # in sectors
+
+<style color=#00ffffff size=1>.</style>                extract: fn(a: array of byte, d: ref Disk): PCpart\;
+<style color=#00ffffff size=1>.</style>                bytes:   fn(p: self PCpart, d: ref Disk): array of byte\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:	 fn()\;
+<style color=#00ffffff size=1>.</style>            readn:   fn(fd: ref Sys->FD, buf: array of byte, n: int): int\;
+<style color=#00ffffff size=1>.</style>            chstext: fn(p: array of byte): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Disks provides a simple way to gather and use information
+<style color=#00ffffff size=1>.</style>            about <action name=floppy(3)>floppy(3)</action> and <action name=sd(3)>sd(3)</action> disks and disk partitions, as well
+<style color=#00ffffff size=1>.</style>            as plain files.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before invoking any other operations of
+<style color=#00ffffff size=1>.</style>            the module
+
+<style color=#00ffffff size=1>.</style>            Disk.open opens file and returns a reference to a Disk value
+<style color=#00ffffff size=1>.</style>            to represent the disk. Mode should be either Sys->OREAD or
+<style color=#00ffffff size=1>.</style>            Sys->ORDWR to establish the open mode. Open always opens
+<style color=#00ffffff size=1>.</style>            file for reading and stores that file descriptor in the
+<style color=#00ffffff size=1>.</style>            element fd. If the mode is not Sys->OREAD, opendisk also
+<style color=#00ffffff size=1>.</style>            opens file for writing and stores that file descriptor in
+<style color=#00ffffff size=1>.</style>            wfd. The two file descriptors are kept separate to help
+<style color=#00ffffff size=1>.</style>            prevent accidents. If noctl is not set, open looks for a ctl
+<style color=#00ffffff size=1>.</style>            file in the same directory as the disk file\; if it finds
+<style color=#00ffffff size=1>.</style>            one, it declares the disk to be an <action name=sd(3)>sd(3)</action> device, setting
+<style color=#00ffffff size=1>.</style>            dtype to "sd". If the passed file is named fdndisk, it looks
+<style color=#00ffffff size=1>.</style>            for a file fdnctl, and if it finds that, declares the disk
+<style color=#00ffffff size=1>.</style>            to be a floppy disk, of type "floppy". If either control
+<style color=#00ffffff size=1>.</style>            file is found, it is opened for reading and writing, and the
+<style color=#00ffffff size=1>.</style>            resulting file descriptor is saved as ctlfd. Otherwise the
+<style color=#00ffffff size=1>.</style>            returned disk has type "file".
+
+<style color=#00ffffff size=1>.</style>            Open then stores the file's length (as given by <action name=sys-stat(2)>sys-stat(2)</action>)
+<style color=#00ffffff size=1>.</style>            in size. If the disk is an <action name=sd(3)>sd(3)</action> partition, open reads the
+<style color=#00ffffff size=1>.</style>            sector size from the control file and stores it in secsize\;
+<style color=#00ffffff size=1>.</style>            otherwise the sector size is assumed to be 512, as is the
+<style color=#00ffffff size=1>.</style>            case for floppy disks. Open stores the disk size measured in
+<style color=#00ffffff size=1>.</style>            sectors in secs.
+
+<style color=#00ffffff size=1>.</style>            If the disk is an <action name=sd(3)>sd(3)</action> partition, open parses the control
+<style color=#00ffffff size=1>.</style>            file to find the partition's offset within its disk\;
+<style color=#00ffffff size=1>.</style>            otherwise it sets offset to zero. If the disk is an ATA
+<style color=#00ffffff size=1>.</style>            disk, open reads the disk geometry (number of cylinders,
+<style color=#00ffffff size=1>.</style>            heads, and sectors) from the geometry line in the sd control
+<style color=#00ffffff size=1>.</style>            file\; otherwise it sets these to zero as well. Name is
+<style color=#00ffffff size=1>.</style>            initialized with the base name of the disk partition, and is
+<style color=#00ffffff size=1>.</style>            useful for forming messages to the sd control file. Prefix
+<style color=#00ffffff size=1>.</style>            is set to the original file name without the name suffix.
+
+<style color=#00ffffff size=1>.</style>            The IBM PC BIOS interface allocates 10 bits for the number
+<style color=#00ffffff size=1>.</style>            of cylinders, 8 for the number of heads, and 6 for the
+<style color=#00ffffff size=1>.</style>            number of sectors per track. Disk geometries are not quite
+<style color=#00ffffff size=1>.</style>            so simple anymore, but to keep the interface useful, modern
+<style color=#00ffffff size=1>.</style>            disks and BIOSes present geometries that still fit within
+<style color=#00ffffff size=1>.</style>            these constraints. These numbers are still used when
+<style color=#00ffffff size=1>.</style>            partitioning and formatting disks. Open employs a number of
+<style color=#00ffffff size=1>.</style>            heuristics to discover this supposed geometry and store it
+<style color=#00ffffff size=1>.</style>            in the c, h, and s elements of Disk. Disk offsets in
+<style color=#00ffffff size=1>.</style>            partition tables and in FAT descriptors are stored in a form
+<style color=#00ffffff size=1>.</style>            dependent upon these numbers, so opendisk works hard to
+<style color=#00ffffff size=1>.</style>            report numbers that agree with those used by other operating
+<style color=#00ffffff size=1>.</style>            systems\; the numbers bear little or no resemblance to
+<style color=#00ffffff size=1>.</style>            reality.
+
+<style color=#00ffffff size=1>.</style>            Chssrc names the source of the geometry values: disk (values
+<style color=#00ffffff size=1>.</style>            returned by disk itself)\; part (values stored in PC
+<style color=#00ffffff size=1>.</style>            partition table)\; or guess (calculated by module's
+<style color=#00ffffff size=1>.</style>            heuristics).
+
+<style color=#00ffffff size=1>.</style>            Readn attempts to read exactly n bytes from file fd into buf
+<style color=#00ffffff size=1>.</style>            , using as many <action name=sys-read(2)>sys-read(2)</action> calls as required. It helps
+<style color=#00ffffff size=1>.</style>            insulate a program from any peculiar underlying IO
+<style color=#00ffffff size=1>.</style>            boundaries of a device. It returns less than n only if
+<style color=#00ffffff size=1>.</style>            end-of-file is reached. It returns -1 if the first read
+<style color=#00ffffff size=1>.</style>            fails.
+
+<style color=#00ffffff size=1>.</style>            The PC BIOS and operating systems support an arcane system
+<style color=#00ffffff size=1>.</style>            of disk partitions: a partition table at the end of the
+<style color=#00ffffff size=1>.</style>            master boot record defines up to four partitions. One (or
+<style color=#00ffffff size=1>.</style>            perhaps more) of those can be an extended partition that
+<style color=#00ffffff size=1>.</style>            heads a chain (or perhaps roots a tree) of partition tables
+<style color=#00ffffff size=1>.</style>            elsewhere on disk, allowing many more than four partitions
+<style color=#00ffffff size=1>.</style>            in all. Disks represents a partition table entry by a value
+<style color=#00ffffff size=1>.</style>            of type PCpart. It provides the following operations and
+<style color=#00ffffff size=1>.</style>            values:
+
+<style color=#00ffffff size=1>.</style>            active
+<style color=#00ffffff size=1>.</style>                 Has the value Disks->Active if it is bootable, and zero
+<style color=#00ffffff size=1>.</style>                 otherwise.
+
+<style color=#00ffffff size=1>.</style>            ptype
+<style color=#00ffffff size=1>.</style>                 Partition type\; Disks->Type9 is used by Plan 9 and
+<style color=#00ffffff size=1>.</style>                 Inferno (see <action name=prep(8)>prep(8)</action>).
+
+<style color=#00ffffff size=1>.</style>            base Address of the extended partition that started the
+<style color=#00ffffff size=1>.</style>                 chain (or rooted the tree) containing this partition.
+<style color=#00ffffff size=1>.</style>                 Zero for primary partitions defined by the master boot
+<style color=#00ffffff size=1>.</style>                 record.
+
+<style color=#00ffffff size=1>.</style>            offset
+<style color=#00ffffff size=1>.</style>                 Block address of the start of the partition relative to
+<style color=#00ffffff size=1>.</style>                 the base.
+
+<style color=#00ffffff size=1>.</style>            size Size of the partition in sectors.
+
+<style color=#00ffffff size=1>.</style>            extract(a, d)
+<style color=#00ffffff size=1>.</style>                 Extracts the relevant data from an array of bytes a
+<style color=#00ffffff size=1>.</style>                 containing a PC-format partition table entry on Disk d,
+<style color=#00ffffff size=1>.</style>                 and returns a PCpart value that represents the
+<style color=#00ffffff size=1>.</style>                 partition.
+
+<style color=#00ffffff size=1>.</style>            pc.bytes(d)
+<style color=#00ffffff size=1>.</style>                 Return an array of bytes containing the PC-format
+<style color=#00ffffff size=1>.</style>                 partition table entry corresponding to pc. It will
+<style color=#00ffffff size=1>.</style>                 always be TentrySize bytes long.
+
+<style color=#00ffffff size=1>.</style>            Several other values are defined here for convenience:
+
+<style color=#00ffffff size=1>.</style>            Active
+<style color=#00ffffff size=1>.</style>                 Value for PCpart.active if the partition is bootable.
+
+<style color=#00ffffff size=1>.</style>            Type9
+<style color=#00ffffff size=1>.</style>                 Partition type used by Plan 9 and Inferno.
+
+<style color=#00ffffff size=1>.</style>            Toffset
+<style color=#00ffffff size=1>.</style>                 Offset (in bytes) of the partition table in a master
+<style color=#00ffffff size=1>.</style>                 boot record or extended partition start sector.
+
+<style color=#00ffffff size=1>.</style>            TentrySize
+<style color=#00ffffff size=1>.</style>                 Size in bytes of a partition table entry.
+
+<style color=#00ffffff size=1>.</style>            NTentry
+<style color=#00ffffff size=1>.</style>                 Number of table entries.
+
+<style color=#00ffffff size=1>.</style>            Magic0
+<style color=#00ffffff size=1>.</style>            Magic1
+<style color=#00ffffff size=1>.</style>                 Each sector containing a partition table should end
+<style color=#00ffffff size=1>.</style>                 with these two bytes (a master boot record must end
+<style color=#00ffffff size=1>.</style>                 with them).
+<style color=#00ffffff size=1>.</style>            Chstext takes a 3-byte array containing the packed
+<style color=#00ffffff size=1>.</style>            cylinder/head/sector representation of a disk address and
+<style color=#00ffffff size=1>.</style>            returns the corresponding text in the form c/h/s.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/disks.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=scsiio(2)>scsiio(2)</action>, <action name=floppy(3)>floppy(3)</action>, <action name=sd(3)>sd(3)</action>, <action name=prep(3)>prep(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

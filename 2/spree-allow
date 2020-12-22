@@ -1,0 +1,79 @@
+<action name=SPREE-ALLOW(2)>SPREE-ALLOW(2)</action>                                     <action name=SPREE-ALLOW(2)>SPREE-ALLOW(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Allow - filter client actions
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "spree.m"\;
+<style color=#00ffffff size=1>.</style>            include "spree/allow.m"\;
+<style color=#00ffffff size=1>.</style>            Clique, Member, Object: import Spree\;
+<style color=#00ffffff size=1>.</style>            allow := load Allow Allow->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:		fn(m: Spree, c: ref Clique)\;
+<style color=#00ffffff size=1>.</style>            add:		fn(tag: int, member: ref Member, pattern: string)\;
+<style color=#00ffffff size=1>.</style>            del:		fn(tag: int, member: ref Member)\;
+<style color=#00ffffff size=1>.</style>            action:	fn(member: ref Member, cmd: string): (string, int, list of string)\;
+<style color=#00ffffff size=1>.</style>            archive:	fn(archiveobj: ref Object)\;
+<style color=#00ffffff size=1>.</style>            unarchive: fn(archiveobj: ref Object)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A <action name=spree(2)>spree(2)</action> client can send arbitrary actions to a running
+<style color=#00ffffff size=1>.</style>            engine.  The Allow module enables an engine to filter
+<style color=#00ffffff size=1>.</style>            clients' actions, permitting only actions matching certain
+<style color=#00ffffff size=1>.</style>            provided patterns to get through.
+
+<style color=#00ffffff size=1>.</style>            An action is conventionally formatted as a sequence of
+<style color=#00ffffff size=1>.</style>            space-separated words. A pattern is a string consisting of a
+<style color=#00ffffff size=1>.</style>            sequence of such words. For a pattern to match a client's
+<style color=#00ffffff size=1>.</style>            action, each word in the pattern must match each word in the
+<style color=#00ffffff size=1>.</style>            action. Most pattern words are not special: they must match
+<style color=#00ffffff size=1>.</style>            literally. The exceptions are:
+
+<style color=#00ffffff size=1>.</style>            *    An asterisk matches any single word.
+
+<style color=#00ffffff size=1>.</style>            &    An ampersand matches any set of words. Any words in the
+<style color=#00ffffff size=1>.</style>                 pattern after this are ignored.
+
+<style color=#00ffffff size=1>.</style>            %d   Matches a decimal integer.
+
+<style color=#00ffffff size=1>.</style>            %p   Matches a valid player id (decimal integer).
+
+<style color=#00ffffff size=1>.</style>            %o   Matches any valid object id (decimal integer). The
+<style color=#00ffffff size=1>.</style>                 corresponding word in the list returned by action will
+<style color=#00ffffff size=1>.</style>                 be changed to the local object id from the member's
+<style color=#00ffffff size=1>.</style>                 external representation.
+
+<style color=#00ffffff size=1>.</style>            Init must be called first with the spree module, m, and the
+<style color=#00ffffff size=1>.</style>            current clique, c, to initialise the module.
+
+<style color=#00ffffff size=1>.</style>            Add adds the new pattern to the list of allowed actions\; tag
+<style color=#00ffffff size=1>.</style>            is an integer tag that the caller can later use to identify
+<style color=#00ffffff size=1>.</style>            the action, and I member is the clique member that is
+<style color=#00ffffff size=1>.</style>            allowed to perform the action (if nil, then any member will
+<style color=#00ffffff size=1>.</style>            be allowed to perform the action). Del deletes patterns
+<style color=#00ffffff size=1>.</style>            tagged with tag from the list of allowed actions. If member
+<style color=#00ffffff size=1>.</style>            is non-nil, then only patterns specific to that member will
+<style color=#00ffffff size=1>.</style>            be deleted.
+
+<style color=#00ffffff size=1>.</style>            Action matches cmd, an action performed by member, against
+<style color=#00ffffff size=1>.</style>            the list of all the allowed patterns. It returns a tuple,
+<style color=#00ffffff size=1>.</style>            say (err, tag, toks). If cmd does not match any pattern,
+<style color=#00ffffff size=1>.</style>            then err will be non-nil and holds a string describing the
+<style color=#00ffffff size=1>.</style>            nature of the failure. If a match is made, then tag holds
+<style color=#00ffffff size=1>.</style>            the matched pattern's tag, as passed to add, and toks holds
+<style color=#00ffffff size=1>.</style>            the list of words in the action, with object ids matched by
+<style color=#00ffffff size=1>.</style>            %o changed to their local representation using member.obj.
+
+<style color=#00ffffff size=1>.</style>            Archive stores all the allow module's internal state as
+<style color=#00ffffff size=1>.</style>            attributes on archiveobj (for card game engines, this is
+<style color=#00ffffff size=1>.</style>            usually the object returned from cardlib->archive (see
+<style color=#00ffffff size=1>.</style>            <action name=cardlib(2)>cardlib(2)</action>)). Unarchive reverses this, restoring the
+<style color=#00ffffff size=1>.</style>            module's internal state from archiveobj.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/spree/lib/allow.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=spree(2)>spree(2)</action>, spree-<action name=cardlib(2)>cardlib(2)</action>, <action name=spree-objstore(2)>spree-objstore(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

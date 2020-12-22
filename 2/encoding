@@ -1,0 +1,60 @@
+<action name=ENCODING(2)>ENCODING(2)</action>                                           <action name=ENCODING(2)>ENCODING(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Encoding: enc, dec - encoding and decoding of byte arrays as
+<style color=#00ffffff size=1>.</style>            text
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "encoding.m"\;
+<style color=#00ffffff size=1>.</style>            base16 := load Encoding Encoding->BASE16PATH\;
+<style color=#00ffffff size=1>.</style>            base32 := load Encoding Encoding->BASE32PATH\;
+<style color=#00ffffff size=1>.</style>            base32a := load Encoding Encoding->BASE32APATH\;
+<style color=#00ffffff size=1>.</style>            base64 := load Encoding Encoding->BASE64PATH\;
+
+<style color=#00ffffff size=1>.</style>            enc: fn(a: array of byte): string\;
+<style color=#00ffffff size=1>.</style>            dec: fn(s: string): array of byte
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Encoding presents a common interface to several ways of
+<style color=#00ffffff size=1>.</style>            encoding binary data (represented in arrays of bytes) as
+<style color=#00ffffff size=1>.</style>            printable text, to be included in essentially textual data
+<style color=#00ffffff size=1>.</style>            (such as XML) or sent through e-mail systems (as in MIME).
+
+<style color=#00ffffff size=1>.</style>            Enc returns a string with a textual encoding of the binary
+<style color=#00ffffff size=1>.</style>            data in a.
+
+<style color=#00ffffff size=1>.</style>            Dec returns an array of bytes containing the binary data
+<style color=#00ffffff size=1>.</style>            encoded in s.
+
+<style color=#00ffffff size=1>.</style>            Four encodings are provided, including all those defined by
+<style color=#00ffffff size=1>.</style>            RFC3548\; load the one required from the given path.
+
+<style color=#00ffffff size=1>.</style>            BASE16PATH
+<style color=#00ffffff size=1>.</style>                 Encode in base 16, representing each byte as a pair of
+<style color=#00ffffff size=1>.</style>                 hexadecimal digits, using upper-case letters (RFC3548).
+
+<style color=#00ffffff size=1>.</style>            BASE32PATH
+<style color=#00ffffff size=1>.</style>                 Encode in base 32, encoding 5 bits per character, using
+<style color=#00ffffff size=1>.</style>                 upper-case letters, digits `2' to `7', padded with `=',
+<style color=#00ffffff size=1>.</style>                 as per RFC3548.
+
+<style color=#00ffffff size=1>.</style>            BASE32APATH
+<style color=#00ffffff size=1>.</style>                 Alternative encoding in base 32, encoding 5 bits per
+<style color=#00ffffff size=1>.</style>                 character, using digits `2' to `7', letters (either
+<style color=#00ffffff size=1>.</style>                 case) except `l' and `o', not padded.
+
+<style color=#00ffffff size=1>.</style>            BASE64PATH
+<style color=#00ffffff size=1>.</style>                 Encode in base 64, encoding 6 bits per character, using
+<style color=#00ffffff size=1>.</style>                 upper- and lower-case letters, digits, `+' and `/',
+<style color=#00ffffff size=1>.</style>                 padded with `=' (RFC3548).
+
+<style color=#00ffffff size=1>.</style>            When decoding, white space and illegal characters are
+<style color=#00ffffff size=1>.</style>            ignored\; base 16 and base 32 decoders are case-insensitive.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/encoding
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=convcs(2)>convcs(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

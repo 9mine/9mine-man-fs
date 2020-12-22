@@ -1,0 +1,135 @@
+<action name=MDB(1)>MDB(1)</action>                                                     <action name=MDB(1)>MDB(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mdb - binary file editor
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            mdb \[ -w \] file \[ command \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Mdb allows inspection of the contents of file. If the -w
+<style color=#00ffffff size=1>.</style>            option is given, then modification of the contents is also
+<style color=#00ffffff size=1>.</style>            allowed. Mdb accepts commands of the form
+
+<style color=#00ffffff size=1>.</style>                 \[address\] \[, count\] \[command\]
+
+<style color=#00ffffff size=1>.</style>            If a command is given as an argument, then mdb will execute
+<style color=#00ffffff size=1>.</style>            that command, otherwise it will read and execute commands
+<style color=#00ffffff size=1>.</style>            from the standard input. If address is present then the
+<style color=#00ffffff size=1>.</style>            current position, called `dot', is set to address. Initially
+<style color=#00ffffff size=1>.</style>            dot is set to 0. Command is repeated count times with dot
+<style color=#00ffffff size=1>.</style>            advancing between repetitions. The default count is 1.
+<style color=#00ffffff size=1>.</style>            Address and count are expressions.
+
+<style color=#00ffffff size=1>.</style>         Expressions
+<style color=#00ffffff size=1>.</style>            Expressions take one of the following forms:
+
+<style color=#00ffffff size=1>.</style>            .         The value of dot.
+
+<style color=#00ffffff size=1>.</style>            +         The value of dot.
+
+<style color=#00ffffff size=1>.</style>            ^         The value of dot.
+
+<style color=#00ffffff size=1>.</style>            "         The value of the last address typed.
+
+<style color=#00ffffff size=1>.</style>            integer   A number, decimal by default. A `0' prefix causes
+<style color=#00ffffff size=1>.</style>                      it to be interpreted as octal\; a `0x' prefix
+<style color=#00ffffff size=1>.</style>                      causes it to be interpreted as hexadecimal.
+
+<style color=#00ffffff size=1>.</style>            (expr)    The value of the expression expr.
+
+<style color=#00ffffff size=1>.</style>            Operators
+
+<style color=#00ffffff size=1>.</style>            e1+e2
+<style color=#00ffffff size=1>.</style>                 Integer addition.
+
+<style color=#00ffffff size=1>.</style>            e1-e2
+<style color=#00ffffff size=1>.</style>                 Integer subtraction.
+
+<style color=#00ffffff size=1>.</style>            e1*e2
+<style color=#00ffffff size=1>.</style>                 Integer multiplication.
+
+<style color=#00ffffff size=1>.</style>            e1%e2
+<style color=#00ffffff size=1>.</style>                 Integer division. (N.B. not modulus).
+
+<style color=#00ffffff size=1>.</style>            e1|e2
+<style color=#00ffffff size=1>.</style>                 Bitwise disjunction.
+
+<style color=#00ffffff size=1>.</style>            e1&e2
+<style color=#00ffffff size=1>.</style>                 Bitwise conjunction.
+
+<style color=#00ffffff size=1>.</style>         Commands
+<style color=#00ffffff size=1>.</style>            Commands have the following syntax:
+
+<style color=#00ffffff size=1>.</style>            /f   Locations starting at address in file are printed
+<style color=#00ffffff size=1>.</style>                 according to the format f.
+
+<style color=#00ffffff size=1>.</style>            ?f   Same as `/'.
+
+<style color=#00ffffff size=1>.</style>            =f   The value of address itself is printed according to the
+<style color=#00ffffff size=1>.</style>                 format f.
+
+<style color=#00ffffff size=1>.</style>            A format consists of one or more characters that specify a
+<style color=#00ffffff size=1>.</style>            style of printing. Each format fetches some data, prints it,
+<style color=#00ffffff size=1>.</style>            and if the command is not `=', advances dot by the amount of
+<style color=#00ffffff size=1>.</style>            data fetched. All data is assumed to be held in
+<style color=#00ffffff size=1>.</style>            little-endian form (least significant byte first).
+
+<style color=#00ffffff size=1>.</style>                 o Print a two-byte integer in octal.
+<style color=#00ffffff size=1>.</style>            O    Print a four-byte integer in octal.
+<style color=#00ffffff size=1>.</style>            d    Print a two-byte integer in decimal.
+<style color=#00ffffff size=1>.</style>            D    Print a four-byte integer in decimal.
+<style color=#00ffffff size=1>.</style>            u    Print a two-byte integer in unsigned decimal.
+<style color=#00ffffff size=1>.</style>            U    Print a four-byte integer in unsigned decimal.
+<style color=#00ffffff size=1>.</style>            b    Print a single byte in hexadecimal.
+<style color=#00ffffff size=1>.</style>            x    Print a two-byte integer in hexadecimal.
+<style color=#00ffffff size=1>.</style>            X    Print a four-byte integer in hexadecimal.
+<style color=#00ffffff size=1>.</style>            n    Prints a newline. No data is fetched.
+<style color=#00ffffff size=1>.</style>            +    Increments dot by 1. No data is printed.
+<style color=#00ffffff size=1>.</style>            -    Decrements dot by 1. No data is printed.
+<style color=#00ffffff size=1>.</style>            ^    Increments dot by the size of the last format
+<style color=#00ffffff size=1>.</style>                 encountered.
+<style color=#00ffffff size=1>.</style>            c    Prints a single byte as a character.
+<style color=#00ffffff size=1>.</style>            C    Prints a single byte as a printable character,
+<style color=#00ffffff size=1>.</style>                 converting it to backslash escaped hex if necessary.
+<style color=#00ffffff size=1>.</style>            Other commands include:
+
+<style color=#00ffffff size=1>.</style>            \[?/\]w value
+<style color=#00ffffff size=1>.</style>                      Write the two-byte value to the addressed
+<style color=#00ffffff size=1>.</style>                      location.
+
+<style color=#00ffffff size=1>.</style>            \[?/\]W value
+<style color=#00ffffff size=1>.</style>                      Write the four-byte value to the addressed
+<style color=#00ffffff size=1>.</style>                      location.
+
+<style color=#00ffffff size=1>.</style>            \[?/\]i     Disassemble count instructions starting at address
+<style color=#00ffffff size=1>.</style>                      (dot by default).
+
+<style color=#00ffffff size=1>.</style>            $modifier File must be a <action name=dis(6)>dis(6)</action> file. Modifier is one of the
+<style color=#00ffffff size=1>.</style>                      following subcommands:
+
+<style color=#00ffffff size=1>.</style>                           D Print the descriptor section.
+<style color=#00ffffff size=1>.</style>                      h    Print the file header.
+<style color=#00ffffff size=1>.</style>                      l    Print the links section.
+<style color=#00ffffff size=1>.</style>                      i    Print the import section.
+<style color=#00ffffff size=1>.</style>                      d    Print the data section.
+<style color=#00ffffff size=1>.</style>                      H    Print exception handler tables.
+<style color=#00ffffff size=1>.</style>                      s    Print the name of the source file.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/mdb.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=dis(6)>dis(6)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Most of the more useful features of mdb's antecedent db are
+<style color=#00ffffff size=1>.</style>            unimplemented.
+
+<style color=#00ffffff size=1>.</style>            It is not possible to print strings or UTF-8 characters.
+
+<style color=#00ffffff size=1>.</style>            As there is no ``native'' word format in Inferno, the
+<style color=#00ffffff size=1>.</style>            assumption that all words are little-endian is hard to
+<style color=#00ffffff size=1>.</style>            justify.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

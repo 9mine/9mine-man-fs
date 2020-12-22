@@ -1,0 +1,47 @@
+<action name=DISDEP(1)>DISDEP(1)</action>                                               <action name=DISDEP(1)>DISDEP(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            disdep - print load dependencies for Dis file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            disdep \[ -a \] \[ -d \] \[ -o \] \[ -p \] \[ -s \] file ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Disdep reads each file, which must be a Dis object file, and
+<style color=#00ffffff size=1>.</style>            finds all unique strings in it that end in .dis. It takes
+<style color=#00ffffff size=1>.</style>            each such string as the name of a Dis file, and if the file
+<style color=#00ffffff size=1>.</style>            exists, it does the same for it, and so on, recursively. It
+<style color=#00ffffff size=1>.</style>            writes each unique name to the standard output. The result
+<style color=#00ffffff size=1>.</style>            is a list of all statically-named Dis files that might be
+<style color=#00ffffff size=1>.</style>            referenced by an application, typically as the operand of a
+<style color=#00ffffff size=1>.</style>            Limbo load operator. Several options change or extend the
+<style color=#00ffffff size=1>.</style>            output:
+
+<style color=#00ffffff size=1>.</style>            -a   Print all names as they are encountered in the search,
+<style color=#00ffffff size=1>.</style>                 including duplicates.
+
+<style color=#00ffffff size=1>.</style>            -d   Indent to show the dependency structure.
+
+<style color=#00ffffff size=1>.</style>            -o   Show only the immediate (outermost) dependencies of
+<style color=#00ffffff size=1>.</style>                 each file.
+
+<style color=#00ffffff size=1>.</style>            -p   Print the dependency relation as pairs: a file, a
+<style color=#00ffffff size=1>.</style>                 space, and the name of a file on which it depends. Only
+<style color=#00ffffff size=1>.</style>                 the the first name is printed when a file depends on no
+<style color=#00ffffff size=1>.</style>                 other. This format is useful as input to mk(10.1)
+<style color=#00ffffff size=1>.</style>                 dependency generators, or dependency graphing programs.
+
+<style color=#00ffffff size=1>.</style>            -s   Include strings of the form "$\[A-Z\].*" on the
+<style color=#00ffffff size=1>.</style>                 assumption they are the names of system modules loaded
+<style color=#00ffffff size=1>.</style>                 by the application.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/disdep.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=limbo(1)>limbo(1)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            It cannot see file names that the program calculates.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

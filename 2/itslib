@@ -1,0 +1,98 @@
+<action name=ITSLIB(2)>ITSLIB(2)</action>                                               <action name=ITSLIB(2)>ITSLIB(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            itslib - test library
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "itslib.m"\;
+<style color=#00ffffff size=1>.</style>            itslib := load Itslib Itslib->PATH\;
+
+<style color=#00ffffff size=1>.</style>            S_INFO: con 0\;
+<style color=#00ffffff size=1>.</style>            S_WARN: con 1\;
+<style color=#00ffffff size=1>.</style>            S_ERROR: con 2\;
+<style color=#00ffffff size=1>.</style>            S_FATAL: con 3\;
+<style color=#00ffffff size=1>.</style>            S_STIME: con 4\;
+<style color=#00ffffff size=1>.</style>            S_ETIME: con 5\;
+<style color=#00ffffff size=1>.</style>            ENV_VERBOSITY: con "ITS_VERBOSITY"\;
+<style color=#00ffffff size=1>.</style>            ENV_MFD: con "ITS_MFD"\;
+
+<style color=#00ffffff size=1>.</style>            Tconfig: adt {
+<style color=#00ffffff size=1>.</style>            	verbosity: int\;
+<style color=#00ffffff size=1>.</style>            	mfd: ref Sys->FD\;
+<style color=#00ffffff size=1>.</style>            	report: fn(t: self ref Tconfig, sev: int, verb: int, msg: string)\;
+<style color=#00ffffff size=1>.</style>            	done: fn(t: self ref Tconfig)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init: fn(): ref Tconfig\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Itslib provides a simple error reporting facility for tests
+<style color=#00ffffff size=1>.</style>            which can be run by <action name=itest(1)>itest(1)</action>.
+
+<style color=#00ffffff size=1>.</style>            The module must first be initialised by calling init which
+<style color=#00ffffff size=1>.</style>            returns an adt containing the verbosity setting specified
+<style color=#00ffffff size=1>.</style>            for this test run, and the message file descriptor used to
+<style color=#00ffffff size=1>.</style>            pass messages back to itest. These two items of information
+<style color=#00ffffff size=1>.</style>            are passed to the test via the environment variables
+<style color=#00ffffff size=1>.</style>            ITS_VERBOSITY and ITS_MFD.
+
+<style color=#00ffffff size=1>.</style>            Tconf.report(severity,verbosity,message)
+<style color=#00ffffff size=1>.</style>                 Report a message with specified severity and verbosity.
+<style color=#00ffffff size=1>.</style>                 Severity must be one of S_INFO, S_WARN, S_ERROR or
+<style color=#00ffffff size=1>.</style>                 S_FATAL for Information, warnings, errors and fatal
+<style color=#00ffffff size=1>.</style>                 errors respectively. Verbosity is an integer between 0
+<style color=#00ffffff size=1>.</style>                 and 9. For informatory messages (severity S_INFO), the
+<style color=#00ffffff size=1>.</style>                 message will only be displayed if the current verbosity
+<style color=#00ffffff size=1>.</style>                 level is greater than or equal to verbosity.
+
+<style color=#00ffffff size=1>.</style>            Tconf.done()
+<style color=#00ffffff size=1>.</style>                 Tell the test system that all significant work has been
+<style color=#00ffffff size=1>.</style>                 completed. This useful when for example results are
+<style color=#00ffffff size=1>.</style>                 displayed in an interactive manner following the test
+<style color=#00ffffff size=1>.</style>                 proper. For recording purposes the test will be
+<style color=#00ffffff size=1>.</style>                 regarded as having finished when this function is
+<style color=#00ffffff size=1>.</style>                 called, rather than when the test finally exits.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            A very simple test program.
+
+<style color=#00ffffff size=1>.</style>            implement T\;
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            	sys: Sys\;
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            	draw: Draw\;
+<style color=#00ffffff size=1>.</style>            include "itslib.m"\;
+<style color=#00ffffff size=1>.</style>            	itslib: Itslib\;
+<style color=#00ffffff size=1>.</style>            	Tconfig, S_INFO, S_WARN, S_ERROR, S_FATAL: import itslib\;
+
+<style color=#00ffffff size=1>.</style>            T: module
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	init:	fn(ctxt: ref Draw->Context, argv: list of string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            tconf: ref Tconfig\;
+
+<style color=#00ffffff size=1>.</style>            init(ctxt: ref Draw->Context, argv: list of string)
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	sys = load Sys Sys->PATH\;
+<style color=#00ffffff size=1>.</style>            	itslib = load Itslib Itslib->PATH\;
+<style color=#00ffffff size=1>.</style>            	if (itslib != nil) tconf = itslib->init()\;
+<style color=#00ffffff size=1>.</style>            	report(S_INFO, 5, "Testing addition of 1 + 2")\;
+<style color=#00ffffff size=1>.</style>            	x := 1 + 2\;
+<style color=#00ffffff size=1>.</style>            	if (x == 3)
+<style color=#00ffffff size=1>.</style>            		report(S_INFO, 6, "Addition of 1 + 2 OK")\;
+<style color=#00ffffff size=1>.</style>            	else
+<style color=#00ffffff size=1>.</style>            		report(S_ERROR, 5, sys->sprint("Addition of 1 + 2 gave %d", x))\;
+<style color=#00ffffff size=1>.</style>            }
+
+<style color=#00ffffff size=1>.</style>            report(sev: int, verb: int, msg: string)
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	if (tconf != nil) tconf.report(sev, verb, msg)\;
+<style color=#00ffffff size=1>.</style>            	else sys->print("%d:%s\n", sev, msg)\;
+<style color=#00ffffff size=1>.</style>            }
+
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=itest(1)>itest(1)</action>, <action name=sh-test(2)>sh-test(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

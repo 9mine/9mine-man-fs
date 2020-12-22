@@ -1,0 +1,47 @@
+<action name=AUDIO(6)>AUDIO(6)</action>                                                 <action name=AUDIO(6)>AUDIO(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            audio - Inferno audio file format
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Inferno audio files accepted by commands such as <action name=auplay(1)>auplay(1)</action>
+<style color=#00ffffff size=1>.</style>            have a simple format. The file contains a header consisting
+<style color=#00ffffff size=1>.</style>            of non-empty lines of text specifying the data format and
+<style color=#00ffffff size=1>.</style>            characteristics, followed by an empty line, followed by the
+<style color=#00ffffff size=1>.</style>            audio data in binary form. The data can be copied directly
+<style color=#00ffffff size=1>.</style>            to a suitable audio device (see <action name=audio(3)>audio(3)</action>) correctly
+<style color=#00ffffff size=1>.</style>            configured, using read, write or stream (see <action name=sys-read(2)>sys-read(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            Each header line corresponds to a command that can be
+<style color=#00ffffff size=1>.</style>            written to the control file audioctl of the <action name=audio(3)>audio(3)</action> device.
+<style color=#00ffffff size=1>.</style>            The first line of the header must be a rate command\; other
+<style color=#00ffffff size=1>.</style>            commands can appear in any order. The commands available
+<style color=#00ffffff size=1>.</style>            are:
+
+<style color=#00ffffff size=1>.</style>            rate n
+<style color=#00ffffff size=1>.</style>                 The data was recorded at n Hz, typically one of 44100,
+<style color=#00ffffff size=1>.</style>                 22050, 11025 or 8000 but other values are legal.
+
+<style color=#00ffffff size=1>.</style>            chans n
+<style color=#00ffffff size=1>.</style>                 There are n channels of audio data (eg, 1 for mono and
+<style color=#00ffffff size=1>.</style>                 2 for stereo).
+
+<style color=#00ffffff size=1>.</style>            bits n
+<style color=#00ffffff size=1>.</style>                 Each sample is n bits (typically 8 or 16).
+
+<style color=#00ffffff size=1>.</style>            enc e
+<style color=#00ffffff size=1>.</style>                 The string e gives the recording format, and will
+<style color=#00ffffff size=1>.</style>                 usually be one of the following: ulaw, alaw, pcm or
+<style color=#00ffffff size=1>.</style>                 adpcm.
+
+<style color=#00ffffff size=1>.</style>            The audio data is stored with a sample from each channel in
+<style color=#00ffffff size=1>.</style>            turn (`left' sample first if stereo, regardless of encoding
+<style color=#00ffffff size=1>.</style>            or data size). Data encoded as pcm is little-endian, 2's
+<style color=#00ffffff size=1>.</style>            complement  if 16-bit, but unsigned if 8 bit. The adpcm
+<style color=#00ffffff size=1>.</style>            encoding uses 4-bit samples (two mono samples or one stereo
+<style color=#00ffffff size=1>.</style>            sample per byte, again little-endian).
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=auplay(1)>auplay(1)</action>, <action name=audio(3)>audio(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

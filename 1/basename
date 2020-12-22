@@ -1,0 +1,25 @@
+<action name=BASENAME(1)>BASENAME(1)</action>                                           <action name=BASENAME(1)>BASENAME(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            basename - strip file name affixes
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            basename \[ -d \] string \[ suffix \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Basename deletes any prefix ending in slash (/) and the
+<style color=#00ffffff size=1>.</style>            suffix, if present in string, from string, and prints the
+<style color=#00ffffff size=1>.</style>            result on the standard output.
+
+<style color=#00ffffff size=1>.</style>            The -d option instead prints the directory component, that
+<style color=#00ffffff size=1>.</style>            is, string up to but not including the final slash. If the
+<style color=#00ffffff size=1>.</style>            string contains no slash, the current directory name ``.''
+<style color=#00ffffff size=1>.</style>            is printed.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/basename.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cleanname(1)>cleanname(1)</action>, <action name=pwd(1)>pwd(1)</action>, <action name=names(2)>names(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

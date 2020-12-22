@@ -1,0 +1,38 @@
+<action name=I82365(3)>I82365(3)</action>                                               <action name=I82365(3)>I82365(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            i82365 - Personal Computer Memory Card Interface Association
+<style color=#00ffffff size=1>.</style>            (PCMCIA) device
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #y /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/pcm0attr
+<style color=#00ffffff size=1>.</style>            /dev/pcm0ctl
+<style color=#00ffffff size=1>.</style>            /dev/pcm0mem
+<style color=#00ffffff size=1>.</style>            /dev/pcm1attr
+<style color=#00ffffff size=1>.</style>            /dev/pcm1ctl
+<style color=#00ffffff size=1>.</style>            /dev/pcm1mem
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The i82365 driver provides an interface to an Intel
+<style color=#00ffffff size=1>.</style>            82365-compatible PCMCIA interface chip. This chip supports
+<style color=#00ffffff size=1>.</style>            up to 2 PCMCIA slots, 0 and 1. Reading pcm\[01\]attr returns
+<style color=#00ffffff size=1>.</style>            the contents of attribute memory. Reading or writing
+<style color=#00ffffff size=1>.</style>            pcm\[01\]mem reads or writes RAM on the card. Reading
+<style color=#00ffffff size=1>.</style>            pcm\[01\]ctl returns the card's status.
+
+<style color=#00ffffff size=1>.</style>            This driver must be included to use PCMCIA devices such as
+<style color=#00ffffff size=1>.</style>            the NE4100 Ethernet card. The individual card drivers make
+<style color=#00ffffff size=1>.</style>            calls to routines in the PCMCIA driver.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/pc/devi82365.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            plan9.ini(10.8)
+
+BUGS
+<style color=#00ffffff size=1>.</style>            There is no driver for the Databook PCMCIA interface chip.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,64 @@
+<action name=MNT(3)>MNT(3)</action>                                                     <action name=MNT(3)>MNT(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mnt - attach to 9P servers
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            #M
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The mount driver is used by Sys->mount (but not Sys->bind\;
+<style color=#00ffffff size=1>.</style>            see <action name=sys-bind(2)>sys-bind(2)</action>) to connect the name space of a process to
+<style color=#00ffffff size=1>.</style>            the service provided by a 9P server over a communications
+<style color=#00ffffff size=1>.</style>            channel. After the mount, file operations in that portion of
+<style color=#00ffffff size=1>.</style>            the name space will be converted by the mount driver into
+<style color=#00ffffff size=1>.</style>            the appropriate 9P messages to the server, and its 9P
+<style color=#00ffffff size=1>.</style>            replies returned as the status of the system calls.
+
+<style color=#00ffffff size=1>.</style>            Any authentication must precede mount, which does none
+<style color=#00ffffff size=1>.</style>            itself\; see <action name=security-intro(2)>security-intro(2)</action> for a discussion of the
+<style color=#00ffffff size=1>.</style>            authentication and security mechanisms provided `ready made'
+<style color=#00ffffff size=1>.</style>            by Inferno, but any other scheme can be agreed between
+<style color=#00ffffff size=1>.</style>            client and server. The mount system call does, however,
+<style color=#00ffffff size=1>.</style>            issue an <action name=attach(5)>attach(5)</action> message to the server to identify the
+<style color=#00ffffff size=1>.</style>            user of the connection. Each distinct user of a connection
+<style color=#00ffffff size=1>.</style>            must mount it separately\; the mount driver multiplexes the
+<style color=#00ffffff size=1>.</style>            access of the various users and their processes to the
+<style color=#00ffffff size=1>.</style>            service.
+
+<style color=#00ffffff size=1>.</style>            File-oriented system calls are converted by the kernel into
+<style color=#00ffffff size=1>.</style>            messages in the 9P protocol. Within the kernel, 9P is
+<style color=#00ffffff size=1>.</style>            implemented by procedure calls to the various kernel device
+<style color=#00ffffff size=1>.</style>            drivers, as described in intro(10) and dev(10.2). The mount
+<style color=#00ffffff size=1>.</style>            driver translates these procedure calls into remote
+<style color=#00ffffff size=1>.</style>            procedure calls to be transmitted as messages over the
+<style color=#00ffffff size=1>.</style>            communication channel to the server. Each message is
+<style color=#00ffffff size=1>.</style>            implemented by a write of the corresponding protocol message
+<style color=#00ffffff size=1>.</style>            to the server channel followed by a read on the server
+<style color=#00ffffff size=1>.</style>            channel to get the reply. Errors in the reply message are
+<style color=#00ffffff size=1>.</style>            turned into system call error returns.
+
+<style color=#00ffffff size=1>.</style>            A <action name=sys-read(2)>sys-read(2)</action> or Sys->write system call on a file served by
+<style color=#00ffffff size=1>.</style>            the mount driver may be translated into more than one
+<style color=#00ffffff size=1>.</style>            message, since there is a maximum data size for a 9P
+<style color=#00ffffff size=1>.</style>            message. The system call will return when the specified
+<style color=#00ffffff size=1>.</style>            number of bytes have been transferred or a short reply is
+<style color=#00ffffff size=1>.</style>            returned.
+
+<style color=#00ffffff size=1>.</style>            The string ``#M'' is an illegal file name, so this device
+<style color=#00ffffff size=1>.</style>            can be accessed directly only by the kernel.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bind(1)>bind(1)</action>, <action name=sys-bind(2)>sys-bind(2)</action>
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/devmnt.c
+<style color=#00ffffff size=1>.</style>            /os/port/devmnt.c
+
+BUGS
+<style color=#00ffffff size=1>.</style>            When mounting a service through the mount driver, that is,
+<style color=#00ffffff size=1>.</style>            when the channel being multiplexed is itself a file being
+<style color=#00ffffff size=1>.</style>            served by the mount driver, large messages may be broken in
+<style color=#00ffffff size=1>.</style>            two.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

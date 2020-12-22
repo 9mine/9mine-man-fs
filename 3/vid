@@ -1,0 +1,54 @@
+<action name=VID(3)>VID(3)</action>                                                     <action name=VID(3)>VID(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            vid - Motorola 823 video output
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -b #v /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/viddata
+<style color=#00ffffff size=1>.</style>            /dev/vidctl
+<style color=#00ffffff size=1>.</style>            /dev/vidcram
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The vid device serves two files giving basic access to the
+<style color=#00ffffff size=1>.</style>            on-chip video output of the Motorola 823. It assumes a video
+<style color=#00ffffff size=1>.</style>            hardware configuration exactly like that of the 823FADS
+<style color=#00ffffff size=1>.</style>            board, with an I²C interface to an off-chip ADV7176 NTSC/PAL
+<style color=#00ffffff size=1>.</style>            converter at I²C address 0x54.
+
+<style color=#00ffffff size=1>.</style>            The control device vidctl accepts the following commands:
+
+<style color=#00ffffff size=1>.</style>            on   Disable LCD panel (if present) and enable output from
+<style color=#00ffffff size=1>.</style>                 the video frame buffer.
+
+<style color=#00ffffff size=1>.</style>            off  Stop display from the video frame buffer and re-enable
+<style color=#00ffffff size=1>.</style>                 the LCD panel (if present).
+
+<style color=#00ffffff size=1>.</style>            mode m
+<style color=#00ffffff size=1>.</style>                 Set the video output format to m, which is one of: ntsc
+<style color=#00ffffff size=1>.</style>                 , pal-i, pal-m or pal-n. This command is only effective
+<style color=#00ffffff size=1>.</style>                 when video output is off. When next switched on, the
+<style color=#00ffffff size=1>.</style>                 both the video controller RAM and ADV7176 are
+<style color=#00ffffff size=1>.</style>                 reprogrammed to the new format.
+
+<style color=#00ffffff size=1>.</style>            Video data can be written to the video frame buffer by
+<style color=#00ffffff size=1>.</style>            writes of the viddata file. The file offset selects the
+<style color=#00ffffff size=1>.</style>            starting byte within the frame buffer. Reads return the
+<style color=#00ffffff size=1>.</style>            corresponding data from the frame buffer. The application is
+<style color=#00ffffff size=1>.</style>            responsible for formatting the data as the 823's video
+<style color=#00ffffff size=1>.</style>            encoder requires, for the selected video format.
+
+<style color=#00ffffff size=1>.</style>            The file vidcram gives read and write access to the contents
+<style color=#00ffffff size=1>.</style>            of the video control RAM. The file offset addresses bytes in
+<style color=#00ffffff size=1>.</style>            the RAM\; values can be read from or written to the RAM in
+<style color=#00ffffff size=1>.</style>            groups of 4-byte big-endian words.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/mpc/devvid.c
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Square pixel mode cannot be used on the FADS board: no
+<style color=#00ffffff size=1>.</style>            suitable video clock source is available.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

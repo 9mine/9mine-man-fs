@@ -1,0 +1,25 @@
+<action name=LOGWINDOW(1)>LOGWINDOW(1)</action>                                         <action name=LOGWINDOW(1)>LOGWINDOW(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            logwindow - window that pops up when data becomes available.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wm/logwindow \[title\] <logfile
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Logwindow reads data from its standard input (often a file
+<style color=#00ffffff size=1>.</style>            served by <action name=logfile(4)>logfile(4)</action>) and shows it in a text widget. If the
+<style color=#00ffffff size=1>.</style>            window is hidden (it is hidden initially), it will reappear
+<style color=#00ffffff size=1>.</style>            when data appears on its standard input. If title is given,
+<style color=#00ffffff size=1>.</style>            it will be used as the title of the window.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/logwindow.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=logfile(4)>logfile(4)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The text buffer grows without bound.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

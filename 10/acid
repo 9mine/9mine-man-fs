@@ -1,0 +1,225 @@
+ACID(10.1)                                             ACID(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            acid - debugger
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            acid \[ -l libfile \] \[ -wq \] \[ -m machine \] \[ pid \] \[
+<style color=#00ffffff size=1>.</style>            textfile \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Acid is a programmable symbolic debugger. It can inspect one
+<style color=#00ffffff size=1>.</style>            or more processes that share an address space. A program to
+<style color=#00ffffff size=1>.</style>            be debugged may be specified by the process id of a running
+<style color=#00ffffff size=1>.</style>            or defunct process, or by the name of the program's text
+<style color=#00ffffff size=1>.</style>            file (v.out by default). At the prompt, acid will store
+<style color=#00ffffff size=1>.</style>            function definitions or print the value of expressions.
+<style color=#00ffffff size=1>.</style>            Options are
+
+<style color=#00ffffff size=1>.</style>            -w
+<style color=#00ffffff size=1>.</style>             Allow the textfile to be modified.
+
+<style color=#00ffffff size=1>.</style>            -q
+<style color=#00ffffff size=1>.</style>             Don't print variable renamings at startup.
+
+<style color=#00ffffff size=1>.</style>            -l library
+<style color=#00ffffff size=1>.</style>             Load from library at startup\; see below.
+
+<style color=#00ffffff size=1>.</style>            -m machine
+<style color=#00ffffff size=1>.</style>             Assume instructions are for the given CPU type (one of 386,
+<style color=#00ffffff size=1>.</style>             86, 68020, 960, power, arm, mips, mipsco, sparc, or
+<style color=#00ffffff size=1>.</style>             sunsparc) instead of using the magic number to select the
+<style color=#00ffffff size=1>.</style>             CPU type.
+
+<style color=#00ffffff size=1>.</style>            At startup, acid obtains standard function definitions from
+<style color=#00ffffff size=1>.</style>            the library file /lib/acid/port, architecture-dependent
+<style color=#00ffffff size=1>.</style>            functions from /lib/acid/$objtype, user-specified functions
+<style color=#00ffffff size=1>.</style>            from $home/lib/acid, and further functions from -l files.
+<style color=#00ffffff size=1>.</style>            Definitions in any file may override previously defined
+<style color=#00ffffff size=1>.</style>            functions. If the function acidinit() is defined, it will be
+<style color=#00ffffff size=1>.</style>            invoked after all modules have been loaded. See 2c(10.1) for
+<style color=#00ffffff size=1>.</style>            information about creating acid functions for examining data
+<style color=#00ffffff size=1>.</style>            structures.
+
+<style color=#00ffffff size=1>.</style>         Language
+<style color=#00ffffff size=1>.</style>            Symbols of the program being debugged become integer 
+<style color=#00ffffff size=1>.</style>            variables whose values are addresses. Contents of addresses
+<style color=#00ffffff size=1>.</style>            are obtained by indirection. Local variables are qualified
+<style color=#00ffffff size=1>.</style>            by function name, for example main:argv. When program
+<style color=#00ffffff size=1>.</style>            symbols conflict with acid words, distinguishing $ signs are
+<style color=#00ffffff size=1>.</style>            prefixed. Such renamings are reported at startup\; option -q
+<style color=#00ffffff size=1>.</style>            suppresses them.
+
+<style color=#00ffffff size=1>.</style>            Variable types (integer, float, list, string) and formats
+<style color=#00ffffff size=1>.</style>            are inferred from assignments. Truth values false/true are
+<style color=#00ffffff size=1>.</style>            attributed to zero/nonzero integers or floats and to
+<style color=#00ffffff size=1>.</style>            empty/nonempty lists or strings. Lists are sequences of
+<style color=#00ffffff size=1>.</style>            expressions surrounded by {\^} and separated by commas.
+
+<style color=#00ffffff size=1>.</style>            Expressions are much as in C, but yield both a value and a
+<style color=#00ffffff size=1>.</style>            format. Casts to complex types are allowed. Lists admit the
+<style color=#00ffffff size=1>.</style>            following operators, with subscripts counted from 0.
+
+<style color=#00ffffff size=1>.</style>                 head list
+<style color=#00ffffff size=1>.</style>                 tail list
+<style color=#00ffffff size=1>.</style>                 append list, element
+<style color=#00ffffff size=1>.</style>                 delete list, subscript
+
+<style color=#00ffffff size=1>.</style>            Format codes are the same as in db(10.1). Formats may be
+<style color=#00ffffff size=1>.</style>            attached to (unary) expressions with \, e.g. (32*7)\D. There
+<style color=#00ffffff size=1>.</style>            are two indirection operators, * to address a core image, @
+<style color=#00ffffff size=1>.</style>            to address a text file. The type and format of the result
+<style color=#00ffffff size=1>.</style>            are determined by the format of the operand, whose type must
+<style color=#00ffffff size=1>.</style>            be integer.
+
+<style color=#00ffffff size=1>.</style>            Statements are
+
+<style color=#00ffffff size=1>.</style>                 if expr then statement \[ else statement \]
+<style color=#00ffffff size=1>.</style>                 while expr do statement
+<style color=#00ffffff size=1>.</style>                 loop expr, expr do statement
+<style color=#00ffffff size=1>.</style>                 defn name(args) { statement }
+<style color=#00ffffff size=1>.</style>                 local name
+<style color=#00ffffff size=1>.</style>                 return expr
+<style color=#00ffffff size=1>.</style>                 whatis \[  name \]
+
+<style color=#00ffffff size=1>.</style>            Here is a partial list of functions\; see the manual for a
+<style color=#00ffffff size=1>.</style>            complete list.
+<style color=#00ffffff size=1>.</style>            stk()         Print a stack trace for current process.
+<style color=#00ffffff size=1>.</style>            lstk()        Print a stack trace with values of local
+<style color=#00ffffff size=1>.</style>                          variables.
+<style color=#00ffffff size=1>.</style>            gpr()         Print general registers. Registers can also be
+<style color=#00ffffff size=1>.</style>                          accessed by name, for example *R0.
+<style color=#00ffffff size=1>.</style>            spr()         Print special registers such as program
+<style color=#00ffffff size=1>.</style>                          counter and stack pointer.
+<style color=#00ffffff size=1>.</style>            fpr()         Print floating-point registers.
+<style color=#00ffffff size=1>.</style>            regs()        Same as spr()\;gpr().
+<style color=#00ffffff size=1>.</style>            fmt(expr,format)
+<style color=#00ffffff size=1>.</style>                          Expression expr with format given by the
+<style color=#00ffffff size=1>.</style>                          character value of expression format.
+<style color=#00ffffff size=1>.</style>            src(address)  Print 10 lines of source around the program
+<style color=#00ffffff size=1>.</style>                          address.
+<style color=#00ffffff size=1>.</style>            Bsrc(address) Get the source line for the program address
+<style color=#00ffffff size=1>.</style>                          into a window of a running editor and select
+<style color=#00ffffff size=1>.</style>                          it. (This works only on Plan 9, or a Unix-like
+<style color=#00ffffff size=1>.</style>                          system running `Plan 9 Ports'.)
+<style color=#00ffffff size=1>.</style>            line(address) Print source line nearest to the program
+<style color=#00ffffff size=1>.</style>                          address.
+<style color=#00ffffff size=1>.</style>            source()      List current source directories.
+<style color=#00ffffff size=1>.</style>            addsrcdir(string)
+<style color=#00ffffff size=1>.</style>                          Add a source directory to the list.
+<style color=#00ffffff size=1>.</style>            filepc(where) Convert a string of the form sourcefile:
+<style color=#00ffffff size=1>.</style>                          linenumber to a machine address.
+<style color=#00ffffff size=1>.</style>            pcfile(address)
+<style color=#00ffffff size=1>.</style>                          Convert a machine address to a source file
+<style color=#00ffffff size=1>.</style>                          name.
+<style color=#00ffffff size=1>.</style>            pcline(address)
+<style color=#00ffffff size=1>.</style>                          Convert a machine address to a source line
+<style color=#00ffffff size=1>.</style>                          number.
+<style color=#00ffffff size=1>.</style>            bptab()       List breakpoints set in the current process.
+<style color=#00ffffff size=1>.</style>            bpset(address)
+<style color=#00ffffff size=1>.</style>                          Set a breakpoint in the current process at the
+<style color=#00ffffff size=1>.</style>                          given address.
+<style color=#00ffffff size=1>.</style>            bpdel(address)
+<style color=#00ffffff size=1>.</style>                          Delete a breakpoint from the current process.
+<style color=#00ffffff size=1>.</style>            cont()        Continue execution of current process and wait
+<style color=#00ffffff size=1>.</style>                          for it to stop.
+<style color=#00ffffff size=1>.</style>            step()        Execute a single machine instruction in the
+<style color=#00ffffff size=1>.</style>                          current process.
+<style color=#00ffffff size=1>.</style>            func()        Step repeatedly until after a function return.
+<style color=#00ffffff size=1>.</style>            stopped(pid)  This replaceable function is called
+<style color=#00ffffff size=1>.</style>                          automatically when the given process stops. It
+<style color=#00ffffff size=1>.</style>                          normally prints the program counter and
+<style color=#00ffffff size=1>.</style>                          returns to the prompt.
+<style color=#00ffffff size=1>.</style>            asm(address)  Disassemble 30 machine instructions beginning
+<style color=#00ffffff size=1>.</style>                          at the given address.
+<style color=#00ffffff size=1>.</style>            mem(address,string)
+<style color=#00ffffff size=1>.</style>                          Print a block of memory interpreted according
+<style color=#00ffffff size=1>.</style>                          to a string of format codes.
+<style color=#00ffffff size=1>.</style>            dump(address,n,string)
+<style color=#00ffffff size=1>.</style>                          Like mem(), repeated for n consecutive blocks.
+<style color=#00ffffff size=1>.</style>            print(expr,...)
+<style color=#00ffffff size=1>.</style>                          Print the values of the expressions.
+<style color=#00ffffff size=1>.</style>            newproc(arguments)
+<style color=#00ffffff size=1>.</style>                          Start a new process with arguments given as a
+<style color=#00ffffff size=1>.</style>                          string and halt at the first instruction.
+<style color=#00ffffff size=1>.</style>            new()         Like newproc(), but take arguments (except
+<style color=#00ffffff size=1>.</style>                          argv\[0\]) from string variable progargs.
+<style color=#00ffffff size=1>.</style>            win()         Like new(), but run the process in a separate
+<style color=#00ffffff size=1>.</style>                          window.
+<style color=#00ffffff size=1>.</style>            start(pid)    Start a stopped process.
+<style color=#00ffffff size=1>.</style>            kill(pid)     Kill the given process.
+<style color=#00ffffff size=1>.</style>            setproc(pid)  Make the given process current.
+<style color=#00ffffff size=1>.</style>            rc(string)    Escape to the shell, to execute the command
+<style color=#00ffffff size=1>.</style>                          string.
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Start to debug /bin/ls\; set some breakpoints\; run up to the
+<style color=#00ffffff size=1>.</style>            first one:
+
+<style color=#00ffffff size=1>.</style>                 % acid /bin/ls
+<style color=#00ffffff size=1>.</style>                 /bin/ls: mips plan 9 executable
+<style color=#00ffffff size=1>.</style>                 /lib/acid/port
+<style color=#00ffffff size=1>.</style>                 /lib/acid/mips
+<style color=#00ffffff size=1>.</style>                 acid: new()
+<style color=#00ffffff size=1>.</style>                 70094: system call  _main       ADD     $-0x14,R29
+<style color=#00ffffff size=1>.</style>                 70094: breakpoint   main+0x4    MOVW    R31,0x0(R29)
+<style color=#00ffffff size=1>.</style>                 acid: pid
+<style color=#00ffffff size=1>.</style>                 70094
+<style color=#00ffffff size=1>.</style>                 acid: argv0 = **main:argv\s
+<style color=#00ffffff size=1>.</style>                 acid: whatis argv0
+<style color=#00ffffff size=1>.</style>                 integer variable format s
+<style color=#00ffffff size=1>.</style>                 acid: *argv0
+<style color=#00ffffff size=1>.</style>                 /bin/ls
+<style color=#00ffffff size=1>.</style>                 acid: bpset(ls)
+<style color=#00ffffff size=1>.</style>                 acid: cont()
+<style color=#00ffffff size=1>.</style>                 70094: breakpoint  ls   ADD $-0x16c8,R29
+<style color=#00ffffff size=1>.</style>                 acid: 
+
+<style color=#00ffffff size=1>.</style>            Display elements of a linked list of structures:
+
+<style color=#00ffffff size=1>.</style>                 complex Str { 'D' 0 val\; 'X' 4 next\; }\;
+<style color=#00ffffff size=1>.</style>                 complex Str s\;
+<style color=#00ffffff size=1>.</style>                 s = *headstr\;
+<style color=#00ffffff size=1>.</style>                 while s != 0 do{
+<style color=#00ffffff size=1>.</style>                 	print(s.val, "\n")\;
+<style color=#00ffffff size=1>.</style>                 	s = s.next\;
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>            Note the use of the . operator instead of ->.
+
+<style color=#00ffffff size=1>.</style>            Display an array of bytes declared in C as char array\[\].
+
+<style color=#00ffffff size=1>.</style>                 *(array\s)
+
+<style color=#00ffffff size=1>.</style>            This example gives array string format, then prints the
+<style color=#00ffffff size=1>.</style>            string beginning at the address (in acid notation) *array.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /proc/*/text
+<style color=#00ffffff size=1>.</style>            /proc/*/mem
+<style color=#00ffffff size=1>.</style>            /proc/*/ctl
+<style color=#00ffffff size=1>.</style>            /proc/*/note
+<style color=#00ffffff size=1>.</style>            /lib/acid/$objtype
+<style color=#00ffffff size=1>.</style>            /lib/acid/port
+<style color=#00ffffff size=1>.</style>            $home/lib/acid
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /utils/acid
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            2a(10.1), 2c(10.1), 2l(10.1), mk(10.1), db(10.1)
+<style color=#00ffffff size=1>.</style>            Phil Winterbottom, ``Acid Manual''.
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            At termination, kill commands are proposed for processes
+<style color=#00ffffff size=1>.</style>            that are still active.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            There is no way to redirect the standard input and standard
+<style color=#00ffffff size=1>.</style>            output of a new process.
+<style color=#00ffffff size=1>.</style>            Source line selection near the beginning of a file may pick
+<style color=#00ffffff size=1>.</style>            an adjacent file.
+<style color=#00ffffff size=1>.</style>            With the extant stepping commands, one cannot step through
+<style color=#00ffffff size=1>.</style>            instructions outside the text segment and it is hard to
+<style color=#00ffffff size=1>.</style>            debug across process forks.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

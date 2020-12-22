@@ -1,0 +1,57 @@
+<action name=CP(1)>CP(1)</action>                                                       <action name=CP(1)>CP(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            cp, fcp - copy files
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            cp \[ -gux \] fromfile tofile
+<style color=#00ffffff size=1>.</style>            cp \[ -gux \] fromfile ... todir
+<style color=#00ffffff size=1>.</style>            cp -r \[ -gux \] fromdir ... todir
+
+<style color=#00ffffff size=1>.</style>            fcp \[ -R nr \] \[ -W nw \] fromfile tofile
+<style color=#00ffffff size=1>.</style>            fcp \[ -R nr \] \[ -W nw \] fromfile ... todir
+<style color=#00ffffff size=1>.</style>            fcp -r \[ -R nr \] \[ -W nw \] fromdir ... todir
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            In the first form, fromfile is any name and tofile is any
+<style color=#00ffffff size=1>.</style>            name except an existing directory. In the second form, the
+<style color=#00ffffff size=1>.</style>            commands copy one or more fromfiles into dir under their
+<style color=#00ffffff size=1>.</style>            original file names, as if by a sequence of commands in the
+<style color=#00ffffff size=1>.</style>            first form. For example:
+
+<style color=#00ffffff size=1>.</style>                 cp f1 f2 dir
+
+<style color=#00ffffff size=1>.</style>            is equivalent to:
+
+<style color=#00ffffff size=1>.</style>                 cp f1 dir/f1\;  cp f2 dir/f2
+
+<style color=#00ffffff size=1>.</style>            Cp copies the contents of plain (non-directory) file
+<style color=#00ffffff size=1>.</style>            fromfile to tofile. The mode and owner of tofile are
+<style color=#00ffffff size=1>.</style>            preserved if it already exists\; the permissions of fromfile
+<style color=#00ffffff size=1>.</style>            is used otherwise. The -x option sets the full mode and
+<style color=#00ffffff size=1>.</style>            modified time of file2 from file1\; -g sets the group id\; and
+<style color=#00ffffff size=1>.</style>            -u sets the group id and user id (which is usually only
+<style color=#00ffffff size=1>.</style>            possible if the file server is in an administrative mode).
+
+<style color=#00ffffff size=1>.</style>            The -r option directs cp to copy recursively the named
+<style color=#00ffffff size=1>.</style>            directories fromdir ... to the target directory todir.
+
+<style color=#00ffffff size=1>.</style>            Fcp behaves like cp, but copies many blocks in parallel. It
+<style color=#00ffffff size=1>.</style>            works only with files that respect read and write offsets
+<style color=#00ffffff size=1>.</style>            (see pread and pwrite in <action name=sys-read(2)>sys-read(2)</action>), which usually
+<style color=#00ffffff size=1>.</style>            excludes files representing devices or services. When it
+<style color=#00ffffff size=1>.</style>            applies, however, it is often much faster than cp. The -R
+<style color=#00ffffff size=1>.</style>            and -W options set the number of readers and writers
+<style color=#00ffffff size=1>.</style>            (default for each: 8).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/cp.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/fcp.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cat(1)>cat(1)</action>, <action name=mv(1)>mv(1)</action>, <action name=sys-stat(2)>sys-stat(2)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Cp and fcp refuse to copy a file onto itself.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

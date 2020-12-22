@@ -1,0 +1,99 @@
+<action name=AI2KEY(8)>AI2KEY(8)</action>                                               <action name=AI2KEY(8)>AI2KEY(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ai2key, dsagen, rsagen - generate and reformat public keys
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ai2key \[ -t tag \] keyfile ...
+
+<style color=#00ffffff size=1>.</style>            dsagen \[ -t tag \]
+
+<style color=#00ffffff size=1>.</style>            rsagen \[ -b nbits \] \[ -t tag \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            <action name=Factotum(4)>Factotum(4)</action> represents public keys as lists of
+<style color=#00ffffff size=1>.</style>            attribute-value pairs, each key on a single line prefixed
+<style color=#00ffffff size=1>.</style>            with the string key.
+
+<style color=#00ffffff size=1>.</style>            Ai2key converts the original Inferno representation of
+<style color=#00ffffff size=1>.</style>            authentication data, in the format defined for authinfo by
+<style color=#00ffffff size=1>.</style>            <action name=keytext(6)>keytext(6)</action>, to an attribute-value format accepted by
+<style color=#00ffffff size=1>.</style>            <action name=factotum(4)>factotum(4)</action> for the infauth authentication protocol. For
+<style color=#00ffffff size=1>.</style>            each keyfile it writes a single line on standard output,
+<style color=#00ffffff size=1>.</style>            containing the following fields:
+
+<style color=#00ffffff size=1>.</style>                 key proto=infauth \[ tag \] sigalg=pkalg-hashalg \[ dom=
+<style color=#00ffffff size=1>.</style>                 host \] server=host \[ service=svc \] user=name signer=
+<style color=#00ffffff size=1>.</style>                 name pk=pk !sk=sk spk=pk cert=cert dh-alpha=hex dh-p=
+<style color=#00ffffff size=1>.</style>                 hex
+
+<style color=#00ffffff size=1>.</style>            where
+
+<style color=#00ffffff size=1>.</style>            pkalg          is dsa, elgamal or rsa
+<style color=#00ffffff size=1>.</style>            hashalg        is md5 or sha1
+<style color=#00ffffff size=1>.</style>            user           is the user name associated with the key, as
+<style color=#00ffffff size=1>.</style>                           vouched for by the supporting certificate
+<style color=#00ffffff size=1>.</style>                           cert
+<style color=#00ffffff size=1>.</style>            signer         is the user name associated with the key that
+<style color=#00ffffff size=1>.</style>                           signed the certificate
+<style color=#00ffffff size=1>.</style>            pk             is the user's public key
+<style color=#00ffffff size=1>.</style>            !sk            is the user's private (secret) key
+<style color=#00ffffff size=1>.</style>            spk            is the signer's public key
+<style color=#00ffffff size=1>.</style>            cert           is the certificate
+<style color=#00ffffff size=1>.</style>            dh-alpha, dh-p are the Diffie-Hellman parameters shared by
+<style color=#00ffffff size=1>.</style>                           the user and file servers.
+
+<style color=#00ffffff size=1>.</style>            The key is tagged by one or more of dom, server and service,
+<style color=#00ffffff size=1>.</style>            derived from the file name keyfile. The server is `*' if
+<style color=#00ffffff size=1>.</style>            keyfile is default. Otherwise keyfile has the form
+
+<style color=#00ffffff size=1>.</style>                 \[ net! \] host \[ !srv \]
+
+<style color=#00ffffff size=1>.</style>            and server and service are set accordingly\; dom is set if
+<style color=#00ffffff size=1>.</style>            host looks like a domain name. Key and certificate values
+<style color=#00ffffff size=1>.</style>            have the form defined in <action name=keytext(6)>keytext(6)</action>\; hex is a large number
+<style color=#00ffffff size=1>.</style>            in hexadecimal.
+
+<style color=#00ffffff size=1>.</style>            Dsagen prints a randomly-generated DSA private key using the
+<style color=#00ffffff size=1>.</style>            NIST-recommended algorithm. If tag text is specified, it is
+<style color=#00ffffff size=1>.</style>            printed after the proto attribute-value pair. Typically, tag
+<style color=#00ffffff size=1>.</style>            is a sequence of attribute-value comments describing the
+<style color=#00ffffff size=1>.</style>            key. A DSA key has the following attributes
+
+<style color=#00ffffff size=1>.</style>            p       prime public modulus
+<style color=#00ffffff size=1>.</style>            q       prime group order\; divides p-1
+<style color=#00ffffff size=1>.</style>            alpha   group generator
+<style color=#00ffffff size=1>.</style>            key     alpha^!secret mod p
+<style color=#00ffffff size=1>.</style>            !secret the secret exponent
+
+<style color=#00ffffff size=1>.</style>            Rsagen prints a randomly generated RSA private key whose n
+<style color=#00ffffff size=1>.</style>            has exactly nbits (default 1024) significant bits. The key
+<style color=#00ffffff size=1>.</style>            has the following attributes:
+
+<style color=#00ffffff size=1>.</style>            size the number of significant bits in n
+<style color=#00ffffff size=1>.</style>            ek   the encryption exponent
+<style color=#00ffffff size=1>.</style>            n    the product of !p and !q
+<style color=#00ffffff size=1>.</style>            !dk  the decryption exponent
+<style color=#00ffffff size=1>.</style>            !p   a large prime
+<style color=#00ffffff size=1>.</style>            !q   another large prime
+<style color=#00ffffff size=1>.</style>            !kp , !kq , !c2
+<style color=#00ffffff size=1>.</style>                 parameters derived from the other attributes, cached to
+<style color=#00ffffff size=1>.</style>                 speed decryption
+
+<style color=#00ffffff size=1>.</style>            All the numbers in dsagen and rsagen output are in
+<style color=#00ffffff size=1>.</style>            hexadecimal except RSA's size, which is decimal. A public
+<style color=#00ffffff size=1>.</style>            key omits the attributes beginning with ``! .'' A key may
+<style color=#00ffffff size=1>.</style>            have other attributes as well, for example a service
+<style color=#00ffffff size=1>.</style>            attribute identifying how this key is typically used, but to
+<style color=#00ffffff size=1>.</style>            these utilities such attributes are merely comments. They
+<style color=#00ffffff size=1>.</style>            can be provided in a tag argument.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auth/ai2key.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auth/dsagen.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auth/rsagen.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=factotum(4)>factotum(4)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

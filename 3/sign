@@ -1,0 +1,72 @@
+<action name=SIGN(3)>SIGN(3)</action>                                                   <action name=SIGN(3)>SIGN(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            sign - control use of signed modules
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #Σ /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/signerkey
+<style color=#00ffffff size=1>.</style>            /dev/signctl
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Sign is a device, still experimental, to control the use of
+<style color=#00ffffff size=1>.</style>            signed Dis modules. After system initialisation, any process
+<style color=#00ffffff size=1>.</style>            can load any module. Using sign, load operations can
+<style color=#00ffffff size=1>.</style>            subsequently be restricted for a process and its
+<style color=#00ffffff size=1>.</style>            descendents.
+
+<style color=#00ffffff size=1>.</style>            Signerkey is a file that can be opened for writing only  by
+<style color=#00ffffff size=1>.</style>            the host owner (see eve(10.2)) (but any process holding the
+<style color=#00ffffff size=1>.</style>            file descriptor can write to it). The data written must be
+<style color=#00ffffff size=1>.</style>            the textual representation of a public key in the form
+<style color=#00ffffff size=1>.</style>            produced by Keyring->pktostr (see <action name=keyring-certtostr(2)>keyring-certtostr(2)</action>).
+<style color=#00ffffff size=1>.</style>            After a successful write, subsequent load operations will be
+<style color=#00ffffff size=1>.</style>            limited to Dis modules in any of the following sets:
+
+<style color=#00ffffff size=1>.</style>            •    built-in modules
+
+<style color=#00ffffff size=1>.</style>            •    unsigned modules found in the kernel's <action name=root(3)>root(3)</action> file
+<style color=#00ffffff size=1>.</style>                 system
+
+<style color=#00ffffff size=1>.</style>            •    currently loaded unsigned modules
+
+<style color=#00ffffff size=1>.</style>            •    acceptable signed modules
+
+<style color=#00ffffff size=1>.</style>            A signed Dis module contains a signature in its header, as
+<style color=#00ffffff size=1>.</style>            specified by <action name=dis(6)>dis(6)</action>. The signature contains the result of
+<style color=#00ffffff size=1>.</style>            signing the remaining data in the file (or more precisely, a
+<style color=#00ffffff size=1>.</style>            cryptographically secure hash of it), using a configured
+<style color=#00ffffff size=1>.</style>            public key algorithm and the signer's secret key (for
+<style color=#00ffffff size=1>.</style>            instance using Keyring->sign, see <action name=keyring-sha1(2)>keyring-sha1(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            A signed module is `acceptable' if it was signed by the
+<style color=#00ffffff size=1>.</style>            secret key corresponding to one of the public keys written
+<style color=#00ffffff size=1>.</style>            to signerkey. There can be up to 8 such keys. The set of
+<style color=#00ffffff size=1>.</style>            keys and the secured status is shared across spawn.
+
+<style color=#00ffffff size=1>.</style>            Signerkey is generally readable, and when read yields a list
+<style color=#00ffffff size=1>.</style>            of the keys installed, one per line, showing owner, alg, and
+<style color=#00ffffff size=1>.</style>            other attributes in attr=value format, space separated. The
+<style color=#00ffffff size=1>.</style>            actual key value is not currently shown.
+
+<style color=#00ffffff size=1>.</style>            Signctl can be read or written only by the host owner. Each
+<style color=#00ffffff size=1>.</style>            write contains a textual control request. (Currently there
+<style color=#00ffffff size=1>.</style>            are none such.) If security is not enabled, it is empty when
+<style color=#00ffffff size=1>.</style>            read. Otherwise, it contains the number of keys loaded, as a
+<style color=#00ffffff size=1>.</style>            decimal integer.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/devsign.c
+<style color=#00ffffff size=1>.</style>            /os/port/devsign.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            wm/rt in <action name=wm-misc(2)>wm-misc(2)</action>, <action name=sys-pctl(2)>sys-pctl(2)</action>, <action name=dis(6)>dis(6)</action>, createsignerkey
+<style color=#00ffffff size=1>.</style>            (8), eve(10.2)
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            If the text is not a valid public key or uses an algorithm
+<style color=#00ffffff size=1>.</style>            that is not configured, a write to signer fails and sets the
+<style color=#00ffffff size=1>.</style>            error string.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,27 @@
+<action name=RM(1)>RM(1)</action>                                                       <action name=RM(1)>RM(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            rm - remove file(s)
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            rm \[ -fr \] file ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Rm removes the specified files or directories. A directory
+<style color=#00ffffff size=1>.</style>            is removed only if it is empty (but see the -r option).
+<style color=#00ffffff size=1>.</style>            Removal of a file requires write permission in its
+<style color=#00ffffff size=1>.</style>            directory, but requires neither read nor write permission on
+<style color=#00ffffff size=1>.</style>            the file itself.  The options are:
+
+<style color=#00ffffff size=1>.</style>            -f   Suppress diagnostics
+
+<style color=#00ffffff size=1>.</style>            -r   Recursively remove a directory's substructure before
+<style color=#00ffffff size=1>.</style>                 removing the directory.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/rm.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=tiny(1)>tiny(1)</action>, <action name=sys-remove(2)>sys-remove(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

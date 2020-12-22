@@ -1,0 +1,49 @@
+<action name=DEVPOINTER(2)>DEVPOINTER(2)</action>                                       <action name=DEVPOINTER(2)>DEVPOINTER(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            devpointer - I/O interface for the pointer device
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;   # for Draw->Pointer
+<style color=#00ffffff size=1>.</style>            include "devpointer.m"\;
+<style color=#00ffffff size=1>.</style>            ptr := load Devpointer Devpointer->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:      fn()\;
+<style color=#00ffffff size=1>.</style>            reader:    fn(file: string, posn: chan of ref Draw->Pointer,
+<style color=#00ffffff size=1>.</style>                          pid: chan of (int, string))\;
+<style color=#00ffffff size=1>.</style>            bytes2ptr: fn(buf: array of byte)    : ref Draw->Pointer\;
+<style color=#00ffffff size=1>.</style>            ptr2bytes: fn(ptr: ref Draw->Pointer): array of byte\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Devpointer reads messages from pointer devices with the same
+<style color=#00ffffff size=1>.</style>            data format as /dev/pointer, converting them to Pointer
+<style color=#00ffffff size=1>.</style>            adts.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other operation of the
+<style color=#00ffffff size=1>.</style>            module.
+
+<style color=#00ffffff size=1>.</style>            Reader should be spawned by the caller. It opens the pointer
+<style color=#00ffffff size=1>.</style>            device specified by file, and sends a value (id, err) on
+<style color=#00ffffff size=1>.</style>            channel pid. On success, id is the process ID of the spawned
+<style color=#00ffffff size=1>.</style>            process and err is nil\; on an error, err is a diagnostic,
+<style color=#00ffffff size=1>.</style>            and id is undefined. If the file was opened successfully,
+<style color=#00ffffff size=1>.</style>            reader continually reads the pointer device and sends
+<style color=#00ffffff size=1>.</style>            Pointer adts over the channel posn. If file is nil, the
+<style color=#00ffffff size=1>.</style>            default device is /dev/pointer.
+
+<style color=#00ffffff size=1>.</style>            Bytes2ptr converts the array of bytes buf to a Pointer and
+<style color=#00ffffff size=1>.</style>            returns a reference to it. Buf should consist of exactly
+<style color=#00ffffff size=1>.</style>            Devpointer->Size bytes and be in the format returned by
+<style color=#00ffffff size=1>.</style>            /dev/pointer.
+
+<style color=#00ffffff size=1>.</style>            Ptr2bytes provides the inverse transformation of bytes2ptr:
+<style color=#00ffffff size=1>.</style>            it packs the data into an array of bytes of appropriate
+<style color=#00ffffff size=1>.</style>            format, which it returns.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /dev/pointer
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=draw-intro(2)>draw-intro(2)</action>, <action name=draw-pointer(2)>draw-pointer(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

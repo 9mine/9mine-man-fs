@@ -1,0 +1,80 @@
+<action name=SH-ARG(1)>SH-ARG(1)</action>                                               <action name=SH-ARG(1)>SH-ARG(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            arg - shell command-line argument parsing
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load arg
+<style color=#00ffffff size=1>.</style>            arg \[ opts command \]... - args
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Arg is a loadable module for <action name=sh(1)>sh(1)</action> that parses command-line
+<style color=#00ffffff size=1>.</style>            arguments in the same form as <action name=arg(2)>arg(2)</action>. It accepts a list of (
+<style color=#00ffffff size=1>.</style>            opts, command) pairs, where each character in opts is an
+<style color=#00ffffff size=1>.</style>            acceptable option, and command is a shell command to be run
+<style color=#00ffffff size=1>.</style>            if any character in opts is found. Any trailing plus (+)
+<style color=#00ffffff size=1>.</style>            characters in opts cause arg to extract the same number of
+<style color=#00ffffff size=1>.</style>            arguments associated with the option before running command.
+
+<style color=#00ffffff size=1>.</style>            For the duration of command, the environment variable $opt
+<style color=#00ffffff size=1>.</style>            will be set to the option that has been found, and $arg will
+<style color=#00ffffff size=1>.</style>            be set to the option's arguments (if the correct number of
+<style color=#00ffffff size=1>.</style>            arguments have been extracted\; otherwise a message will be
+<style color=#00ffffff size=1>.</style>            printed, and a usage exception raised). The option character
+<style color=#00ffffff size=1>.</style>            asterisk (*) matches any option letter (this must be quoted,
+<style color=#00ffffff size=1>.</style>            to avoid the usual special interpretation by the shell).
+<style color=#00ffffff size=1>.</style>            Only one command will be run for any option found\; if there
+<style color=#00ffffff size=1>.</style>            is no matching option letter, then a default error message
+<style color=#00ffffff size=1>.</style>            will be printed, and a usage exception raised.
+
+<style color=#00ffffff size=1>.</style>            The list of option specifications is terminated with a
+<style color=#00ffffff size=1>.</style>            single minus (-)\; the arguments to be parsed follow this.
+<style color=#00ffffff size=1>.</style>            When the argument parsing has finished the environment
+<style color=#00ffffff size=1>.</style>            variable $* is set to the remaining list of arguments.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            The following shell script, script, takes options b, c and f
+<style color=#00ffffff size=1>.</style>            , where f takes a file name argument.
+<style color=#00ffffff size=1>.</style>            #!/dis/sh
+<style color=#00ffffff size=1>.</style>            load arg
+<style color=#00ffffff size=1>.</style>            bflag := cflag := 0
+<style color=#00ffffff size=1>.</style>            file  := ()
+<style color=#00ffffff size=1>.</style>            args  := $*
+<style color=#00ffffff size=1>.</style>            (arg 
+<style color=#00ffffff size=1>.</style>                bc  {$opt^flag = 1}
+<style color=#00ffffff size=1>.</style>                f+  {file=$arg}
+<style color=#00ffffff size=1>.</style>                r++++ {rect=$arg}
+<style color=#00ffffff size=1>.</style>                '*' {echo unknown option $opt}
+<style color=#00ffffff size=1>.</style>                - $args
+<style color=#00ffffff size=1>.</style>            )
+<style color=#00ffffff size=1>.</style>            echo $0 $bflag $cflag $file
+<style color=#00ffffff size=1>.</style>            echo rect $rect
+<style color=#00ffffff size=1>.</style>            echo arguments are $*
+
+<style color=#00ffffff size=1>.</style>            When invoked as follows:
+
+<style color=#00ffffff size=1>.</style>                 script -bc -r 0 10 50 100 -ffile a b c
+
+<style color=#00ffffff size=1>.</style>            the output is:
+
+<style color=#00ffffff size=1>.</style>                 ./script 1 1 file
+<style color=#00ffffff size=1>.</style>                 rect 0 10 50 100
+<style color=#00ffffff size=1>.</style>                 arguments are a b c
+
+<style color=#00ffffff size=1>.</style>            and when invoked by:
+
+<style color=#00ffffff size=1>.</style>                 script -b -f file -z -- -bc
+
+<style color=#00ffffff size=1>.</style>            the output is:
+
+<style color=#00ffffff size=1>.</style>                 unknown option z
+<style color=#00ffffff size=1>.</style>                 ./script 1 0 file
+<style color=#00ffffff size=1>.</style>                 arguments are -bc
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sh/arg.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=arg(2)>arg(2)</action>, <action name=sh-std(1)>sh-std(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

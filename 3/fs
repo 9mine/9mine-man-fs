@@ -1,0 +1,82 @@
+<action name=FS(3)>FS(3)</action>                                                       <action name=FS(3)>FS(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            fs - host file system interface
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind #Uspec /
+
+<style color=#00ffffff size=1>.</style>            sys->bind("#Uspec", "/", Sys->MAFTER|Sys->MCREATE)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Fs provides an interface to the host file system when
+<style color=#00ffffff size=1>.</style>            running <action name=emu(1)>emu(1)</action>. The device is automatically bound to the
+<style color=#00ffffff size=1>.</style>            root of the Inferno namespace when emu starts. Fs maps
+<style color=#00ffffff size=1>.</style>            filenames from the Inferno namespace to the real host
+<style color=#00ffffff size=1>.</style>            filesystem namespace. The mapping is determined by the host
+<style color=#00ffffff size=1>.</style>            system directory that emu serves (see the description of the
+<style color=#00ffffff size=1>.</style>            -r option in <action name=emu(1)>emu(1)</action>).
+
+<style color=#00ffffff size=1>.</style>            The plain name #U always refers to the root of the Inferno
+<style color=#00ffffff size=1>.</style>            tree within the host file system. An optional spec string
+<style color=#00ffffff size=1>.</style>            can select a different tree using conventions peculiar to
+<style color=#00ffffff size=1>.</style>            the host system type. Currently, on Unix and Plan 9, a spec
+<style color=#00ffffff size=1>.</style>            of * (ie, #U*) refers to the root of the host system\; on
+<style color=#00ffffff size=1>.</style>            Windows, the spec can give a device letter (eg, #Uc:) to
+<style color=#00ffffff size=1>.</style>            refer to the Windows tree on that device.
+
+<style color=#00ffffff size=1>.</style>            When there is nothing but <action name=root(3)>root(3)</action> in the name space, the
+<style color=#00ffffff size=1>.</style>            device can only be bound from Limbo using <action name=sys-bind(2)>sys-bind(2)</action> as
+<style color=#00ffffff size=1>.</style>            shown above, since there is nothing in the name space to
+<style color=#00ffffff size=1>.</style>            support either <action name=bind(1)>bind(1)</action> or <action name=newns(2)>newns(2)</action>. It can later be rebound
+<style color=#00ffffff size=1>.</style>            elsewhere in the name space using <action name=bind(1)>bind(1)</action>.
+
+<style color=#00ffffff size=1>.</style>            Fs provides only an approximation to the file ownership and
+<style color=#00ffffff size=1>.</style>            permissions checking defined in <action name=intro(5)>intro(5)</action> and other entries
+<style color=#00ffffff size=1>.</style>            in this manual. <action name=Emu(1)>Emu(1)</action> typically runs as the user that
+<style color=#00ffffff size=1>.</style>            starts it, and that user will own all newly-created files
+<style color=#00ffffff size=1>.</style>            and directories, and that user's host system access rights
+<style color=#00ffffff size=1>.</style>            control access to any file. Other details are specific to
+<style color=#00ffffff size=1>.</style>            the host system, as given below.
+
+<style color=#00ffffff size=1>.</style>            The set of characters visible in file names within fs is
+<style color=#00ffffff size=1>.</style>            also determined by the host operating system, not Inferno.
+<style color=#00ffffff size=1>.</style>            For instance, names might contain control characters, or
+<style color=#00ffffff size=1>.</style>            even `/', which might render them unusable in Inferno.
+
+<style color=#00ffffff size=1>.</style>         Unix
+<style color=#00ffffff size=1>.</style>            When checking owner, group and other permissions, the intent
+<style color=#00ffffff size=1>.</style>            in Inferno is that each is tried in turn, in that order.
+<style color=#00ffffff size=1>.</style>            Unix checks just the first that applies, so that if group
+<style color=#00ffffff size=1>.</style>            permission disallows access but other allows it, the access
+<style color=#00ffffff size=1>.</style>            is still denied. If <action name=emu(1)>emu(1)</action> is run as the super-user,
+<style color=#00ffffff size=1>.</style>            Inferno's rules for ownership and permission checking are
+<style color=#00ffffff size=1>.</style>            enforced by fs itself\; otherwise, Unix's permission checking
+<style color=#00ffffff size=1>.</style>            prevails.
+
+<style color=#00ffffff size=1>.</style>            On MacOS X, file names might be case insensitive, depending
+<style color=#00ffffff size=1>.</style>            on file system settings.
+
+<style color=#00ffffff size=1>.</style>         FAT file system (Windows9x and Windows/NT)
+<style color=#00ffffff size=1>.</style>            The values of uid and gid are Everyone.
+
+<style color=#00ffffff size=1>.</style>            Files and directories always have read and execute
+<style color=#00ffffff size=1>.</style>            permission, which cannot be changed. Files without write
+<style color=#00ffffff size=1>.</style>            permission cannot be removed.
+
+<style color=#00ffffff size=1>.</style>         NTFS file system (Windows/NT, 2000, XP)
+<style color=#00ffffff size=1>.</style>            Permissions for read, write and execute operates as
+<style color=#00ffffff size=1>.</style>            described in <action name=sys-stat(2)>sys-stat(2)</action>. <action name=Emu(1)>Emu(1)</action> attempts to maintain a
+<style color=#00ffffff size=1>.</style>            limited but consistent map between Inferno and NT worlds,
+<style color=#00ffffff size=1>.</style>            specifically between Inferno names and NT security IDs.
+<style color=#00ffffff size=1>.</style>            Special NT group Everyone represents `other' for file
+<style color=#00ffffff size=1>.</style>            permissions. The Inferno uid is the file owner under NT\; the
+<style color=#00ffffff size=1>.</style>            Inferno gid reported is the first user in the file's ACL
+<style color=#00ffffff size=1>.</style>            that is neither the owner nor Everyone\; failing that, the
+<style color=#00ffffff size=1>.</style>            gid is the file's owner.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/*/devfs.c
+<style color=#00ffffff size=1>.</style>            /emu/port/devfs-posix.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

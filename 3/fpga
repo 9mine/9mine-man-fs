@@ -1,0 +1,67 @@
+<action name=FPGA(3)>FPGA(3)</action>                                                   <action name=FPGA(3)>FPGA(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            fpga - interface to on-board FPGA
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #F /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/fpgaclk
+<style color=#00ffffff size=1>.</style>            /dev/fpgactl
+<style color=#00ffffff size=1>.</style>            /dev/fpgamemb
+<style color=#00ffffff size=1>.</style>            /dev/fpgamemw
+<style color=#00ffffff size=1>.</style>            /dev/fpgaprog
+<style color=#00ffffff size=1>.</style>            /dev/fpgastatus
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Fpga allows configuration of an on-board FPGA (eg, the
+<style color=#00ffffff size=1>.</style>            Altera Flex6000 on the Bright Star Engineering ip-Engine),
+<style color=#00ffffff size=1>.</style>            control of its clocks and environment, and raw access to any
+<style color=#00ffffff size=1>.</style>            devices presented in the FPGA address space. On booting, the
+<style color=#00ffffff size=1>.</style>            FPGA subsystem is normally left powered down and the
+<style color=#00ffffff size=1>.</style>            system's external clocks are not directed to the processor's
+<style color=#00ffffff size=1>.</style>            output pins, to conserve power if the subsystem is unused.
+
+<style color=#00ffffff size=1>.</style>            The control file fpgactl accepts the following requests:
+<style color=#00ffffff size=1>.</style>            bclk n     Set BCLK output to n MHz, where n must be a
+<style color=#00ffffff size=1>.</style>                       divisor of the system clock frequency (eg, of 48
+<style color=#00ffffff size=1>.</style>                       if the system is running at 48 MHz).
+<style color=#00ffffff size=1>.</style>            power      Power up the FPGA subsystem (that is
+<style color=#00ffffff size=1>.</style>                       automatically done when fpgaprog is accessed).
+<style color=#00ffffff size=1>.</style>            power off  Power down the FPGA subsystem.
+<style color=#00ffffff size=1>.</style>            reset      Reset the FPGA, forcing it into configuration
+<style color=#00ffffff size=1>.</style>                       mode (automatically done when fpgaprog is
+<style color=#00ffffff size=1>.</style>                       accessed).
+<style color=#00ffffff size=1>.</style>            vclk n m v r
+<style color=#00ffffff size=1>.</style>                       Program the clock synthesiser with the given
+<style color=#00ffffff size=1>.</style>                       parameters, and enable its output as VCLK.
+<style color=#00ffffff size=1>.</style>            vclk off   Disable output from the clock synthesiser.
+
+<style color=#00ffffff size=1>.</style>            The files fpgamemb and fpgamemw give 8-bit and 16-bit access
+<style color=#00ffffff size=1>.</style>            respectively to the address space interpreted by the FPGA.
+<style color=#00ffffff size=1>.</style>            The file offset is the address read or written within that
+<style color=#00ffffff size=1>.</style>            space\; offset and count must both be even for fpgamemw. The
+<style color=#00ffffff size=1>.</style>            interpretation of the data, including the data format and
+<style color=#00ffffff size=1>.</style>            whether byte or word access is required, is completely
+<style color=#00ffffff size=1>.</style>            determined by the program configured into the FPGA.
+
+<style color=#00ffffff size=1>.</style>            The write-only file fpgaprog configures the device. A single
+<style color=#00ffffff size=1>.</style>            write provides an FPGA configuration in raw binary format.
+<style color=#00ffffff size=1>.</style>            The FPGA subsystem is given power, the processor's clocks
+<style color=#00ffffff size=1>.</style>            are made visible externally, and the device is configured
+<style color=#00ffffff size=1>.</style>            with the data written. The write returns an error if
+<style color=#00ffffff size=1>.</style>            configuration fails.
+
+<style color=#00ffffff size=1>.</style>            The read-only file fpgastatus contains a single line of text
+<style color=#00ffffff size=1>.</style>            giving the state of the two status bits in the FPGA
+<style color=#00ffffff size=1>.</style>            interface. The word config appears if CONFIG_DONE is set,
+<style color=#00ffffff size=1>.</style>            and !config otherwise\; the word status appears if nSTATUS is
+<style color=#00ffffff size=1>.</style>            set, and !status otherwise.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/ipengine/devfpga.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=fpgaload(8)>fpgaload(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

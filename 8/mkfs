@@ -1,0 +1,104 @@
+<action name=MKFS(8)>MKFS(8)</action>                                                   <action name=MKFS(8)>MKFS(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mkfs, mkext - archive or update a file system
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            disk/mkfs \[-aprvxS\] \[-d dest\] \[-n name\] \[-s source\] \[-u
+<style color=#00ffffff size=1>.</style>            users\] \[-z n\] \[-G group\] \[-U user\] proto ...
+
+<style color=#00ffffff size=1>.</style>            disk/mkext \[-d name\] \[-f\] \[-h\] \[-T\] \[-u\] \[-v\] \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Mkfs copies files from the file tree source (default /) to a
+<style color=#00ffffff size=1>.</style>            kfs file system (see <action name=kfs(4)>kfs(4)</action>) assumed to be mounted on dest
+<style color=#00ffffff size=1>.</style>            (default: /n/kfs). The proto files are read, and any files
+<style color=#00ffffff size=1>.</style>            specified in them that are out of date are copied to dest.
+<style color=#00ffffff size=1>.</style>            See <action name=proto(6)>proto(6)</action> for the description of file system prototype
+<style color=#00ffffff size=1>.</style>            files.
+
+<style color=#00ffffff size=1>.</style>            Mkfs by default copies only those files that are out of
+<style color=#00ffffff size=1>.</style>            date. Such a file is first copied into a temporary file in
+<style color=#00ffffff size=1>.</style>            the appropriate destination directory and then moved to the
+<style color=#00ffffff size=1>.</style>            destination file. Files in the kfs file system that are not
+<style color=#00ffffff size=1>.</style>            specified in the proto file are not updated and not removed.
+
+<style color=#00ffffff size=1>.</style>            The options to mkfs are:
+<style color=#00ffffff size=1>.</style>            -a         Instead of writing to a kfs file system, write an
+<style color=#00ffffff size=1>.</style>                       archive file to standard output, suitable for
+<style color=#00ffffff size=1>.</style>                       mkext. All files in proto are archived, not just
+<style color=#00ffffff size=1>.</style>                       those out of date.
+<style color=#00ffffff size=1>.</style>            -x         For use with -a, this option writes a list of
+<style color=#00ffffff size=1>.</style>                       file names, dates, and sizes to standard output
+<style color=#00ffffff size=1>.</style>                       rather than producing an archive file.
+<style color=#00ffffff size=1>.</style>            -n name    Use kfs.name.cmd as the name of the command file
+<style color=#00ffffff size=1>.</style>                       for the <action name=kfs(4)>kfs(4)</action> assumed to be mounted on dest.
+<style color=#00ffffff size=1>.</style>            -p         Update the permissions of a file even if it is up
+<style color=#00ffffff size=1>.</style>                       to date.
+<style color=#00ffffff size=1>.</style>            -r         Copy all files.
+<style color=#00ffffff size=1>.</style>            -s source  Copy from files rooted at the tree source.
+<style color=#00ffffff size=1>.</style>            -u users   Before copying any other file, copy file users
+<style color=#00ffffff size=1>.</style>                       into dest/adm/users, and if the -n option was
+<style color=#00ffffff size=1>.</style>                       given, also issue the <action name=kfs(4)>kfs(4)</action> command users to
+<style color=#00ffffff size=1>.</style>                       update kfs's own user list.
+<style color=#00ffffff size=1>.</style>            -v         Print the names of all of the files as they are
+<style color=#00ffffff size=1>.</style>                       copied.
+<style color=#00ffffff size=1>.</style>            -z n       Copy files assuming kfs is using a block size of
+<style color=#00ffffff size=1>.</style>                       n bytes (default 1024). If a block contains only
+<style color=#00ffffff size=1>.</style>                       0-valued bytes, it is not copied.
+<style color=#00ffffff size=1>.</style>            -S         For use with the -d option, make owner and group
+<style color=#00ffffff size=1>.</style>                       of each file copied match the original.
+<style color=#00ffffff size=1>.</style>            -G group   Force all files copied to have the given group.
+<style color=#00ffffff size=1>.</style>            -U user    Force all files copied to be owned by the given
+<style color=#00ffffff size=1>.</style>                       user.
+
+<style color=#00ffffff size=1>.</style>            Mkext unpacks an archive created by the -a option of mkfs,
+<style color=#00ffffff size=1>.</style>            read from the standard input. If one or more files are
+<style color=#00ffffff size=1>.</style>            specified on the command line, only those files are
+<style color=#00ffffff size=1>.</style>            unpacked. If a file is a directory, all files and
+<style color=#00ffffff size=1>.</style>            subdirectories of that directory are also unpacked. When a
+<style color=#00ffffff size=1>.</style>            file is unpacked, the entire path is created if it does not
+<style color=#00ffffff size=1>.</style>            exist. If no files are specified, the entire archive is
+<style color=#00ffffff size=1>.</style>            unpacked\; in this case, missing intermediate directories are
+<style color=#00ffffff size=1>.</style>            not created. The options are:
+
+<style color=#00ffffff size=1>.</style>            -d dir
+<style color=#00ffffff size=1>.</style>                 Treat dir (default `/') as the root directory when
+<style color=#00ffffff size=1>.</style>                 unpacking the archive.
+
+<style color=#00ffffff size=1>.</style>            -h   Print headers for the files on standard output instead
+<style color=#00ffffff size=1>.</style>                 of unpacking the files.
+
+<style color=#00ffffff size=1>.</style>            -T   Restore the modification times of the files.
+
+<style color=#00ffffff size=1>.</style>            -u   Set the owners of the files created to correspond to
+<style color=#00ffffff size=1>.</style>                 those in the archive and restore the modification times
+<style color=#00ffffff size=1>.</style>                 of the files.
+
+<style color=#00ffffff size=1>.</style>            -v   Print the names and sizes of files as they are
+<style color=#00ffffff size=1>.</style>                 extracted.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Make an archive to establish a new file system (assuming
+<style color=#00ffffff size=1>.</style>            that the output file arch is not referenced by proto):
+
+<style color=#00ffffff size=1>.</style>                 bind '#U' /n/local
+<style color=#00ffffff size=1>.</style>                 disk/mkfs -a -s /n/local proto > arch
+
+<style color=#00ffffff size=1>.</style>            Unpack that archive on another machine:
+
+<style color=#00ffffff size=1>.</style>                 mount tcp!server /n/remote
+<style color=#00ffffff size=1>.</style>                 disk/mkext -u -d /n/remote < arch
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/proto            directory of prototype files.
+<style color=#00ffffff size=1>.</style>            /lib/proto/all        contains a single + (archive any
+<style color=#00ffffff size=1>.</style>                                  directory structure)
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/disk/mkfs.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/disk/mkext.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=fs(1)>fs(1)</action>, <action name=kfs(4)>kfs(4)</action>, <action name=proto(6)>proto(6)</action>, <action name=kfscmd(8)>kfscmd(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

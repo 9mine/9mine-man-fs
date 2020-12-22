@@ -1,0 +1,50 @@
+<action name=GRID-REGISTER(1)>GRID-REGISTER(1)</action>                                 <action name=GRID-REGISTER(1)>GRID-REGISTER(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            grid: register - registers a resource with a known registry
+<style color=#00ffffff size=1>.</style>            (4)
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            grid/register \[ option ... \] { command ... }
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Register takes a program that serves a namespace using the
+<style color=#00ffffff size=1>.</style>            9P protocol on its standard input and registers it with a
+<style color=#00ffffff size=1>.</style>            known <action name=registery(4)>registery(4)</action>. (See <action name=intro(5)>intro(5)</action> for a description of the
+<style color=#00ffffff size=1>.</style>            protocol.) It then marshals the service by listening for
+<style color=#00ffffff size=1>.</style>            incoming connections and exporting the namespace across
+<style color=#00ffffff size=1>.</style>            them. Register prints out various status messages to stdout
+<style color=#00ffffff size=1>.</style>            in the form which may be read by <action name=grid-monitor(1)>grid-monitor(1)</action>.
+
+OPTIONS
+<style color=#00ffffff size=1>.</style>            -u maxusers      Specifies the maximum number of connections
+<style color=#00ffffff size=1>.</style>                             to the resource at any one time. If not
+<style color=#00ffffff size=1>.</style>                             given, any number of connections are
+<style color=#00ffffff size=1>.</style>                             allowed.
+
+<style color=#00ffffff size=1>.</style>            -e n             Tells register to exit after the last
+<style color=#00ffffff size=1>.</style>                             connection has gone away. N is a threshold
+<style color=#00ffffff size=1>.</style>                             value, so that register will not exit upon
+<style color=#00ffffff size=1>.</style>                             the last connection going away until the
+<style color=#00ffffff size=1>.</style>                             number of incoming connections has reached
+<style color=#00ffffff size=1>.</style>                             at least n.
+
+<style color=#00ffffff size=1>.</style>            -a 'name=value'  Specifies the name and value of an
+<style color=#00ffffff size=1>.</style>                             attribute to be listed as belonging to the
+<style color=#00ffffff size=1>.</style>                             resource when registered with the registry
+<style color=#00ffffff size=1>.</style>                             (4).
+
+<style color=#00ffffff size=1>.</style>            -A address       Allows the user to specify the address for
+<style color=#00ffffff size=1>.</style>                             the service to announce on. Address takes
+<style color=#00ffffff size=1>.</style>                             the form tcp!machine!port
+
+<style color=#00ffffff size=1>.</style>            -m               Includes the amount of free main memory as
+<style color=#00ffffff size=1>.</style>                             part of the attributes list.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/grid/register.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=registries(2)>registries(2)</action>, <action name=registry(4)>registry(4)</action>, <action name=grid-localreg(1)>grid-localreg(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

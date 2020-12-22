@@ -1,0 +1,80 @@
+<action name=SRV9(3)>SRV9(3)</action>                                                   <action name=SRV9(3)>SRV9(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            srv9 - plan 9 server registry
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -c #₪ /srv
+
+<style color=#00ffffff size=1>.</style>            /srv/service1
+<style color=#00ffffff size=1>.</style>            /srv/service2
+<style color=#00ffffff size=1>.</style>             ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            On Inferno hosted on Plan 9, srv9 serves a one-level
+<style color=#00ffffff size=1>.</style>            directory that gives Inferno applications direct access to
+<style color=#00ffffff size=1>.</style>            Plan 9 services posted in its #s server registry, and allows
+<style color=#00ffffff size=1>.</style>            Inferno applications to post services for access by Plan 9
+<style color=#00ffffff size=1>.</style>            applications. A service is represented by a file descriptor,
+<style color=#00ffffff size=1>.</style>            usually serving the common file service protocol described
+<style color=#00ffffff size=1>.</style>            in <action name=intro(5)>intro(5)</action>, allowing it to be mounted (see <action name=bind(1)>bind(1)</action> and
+<style color=#00ffffff size=1>.</style>            <action name=sys-bind(2)>sys-bind(2)</action>) in the name space of an application in the
+<style color=#00ffffff size=1>.</style>            other system.
+
+<style color=#00ffffff size=1>.</style>            To access a Plan 9 service in Inferno, open the desired
+<style color=#00ffffff size=1>.</style>            service file\; the resulting file descriptor is connected to
+<style color=#00ffffff size=1>.</style>            the associated Plan 9 service. When that service is a shared
+<style color=#00ffffff size=1>.</style>            Plan 9 file service, srv9 automatically starts Plan 9's
+<style color=#00ffffff size=1>.</style>            exportfs with appropriate options to make the service
+<style color=#00ffffff size=1>.</style>            accessible from Inferno. It can safely be shared with Plan 9
+<style color=#00ffffff size=1>.</style>            applications, but note that any path names mentioned in the
+<style color=#00ffffff size=1>.</style>            attach specifier (see <action name=mount(1)>mount(1)</action> and <action name=attach(5)>attach(5)</action>) will be in the
+<style color=#00ffffff size=1>.</style>            Plan 9 application's name space, not the Inferno
+<style color=#00ffffff size=1>.</style>            application's. (Indeed, a similar caveat applies in Plan 9
+<style color=#00ffffff size=1>.</style>            itself.)
+
+<style color=#00ffffff size=1>.</style>            To export an Inferno service to Plan 9, create a new file
+<style color=#00ffffff size=1>.</style>            such as /srv/myserv using Sys->create with mode Sys->ORDWR
+<style color=#00ffffff size=1>.</style>            (see <action name=sys-open(2)>sys-open(2)</action>) and any desired permissions for the new
+<style color=#00ffffff size=1>.</style>            service file. (Note that the #₪ device must have been bound
+<style color=#00ffffff size=1>.</style>            in with the -c option, as shown above, to allow file
+<style color=#00ffffff size=1>.</style>            creation.) If the create is successful, Plan 9's service
+<style color=#00ffffff size=1>.</style>            registry will have a new entry myserv, and the file
+<style color=#00ffffff size=1>.</style>            descriptor returned from create acts as a pipe to any Plan 9
+<style color=#00ffffff size=1>.</style>            application that opens the associated service file in Plan
+<style color=#00ffffff size=1>.</style>            9. Typically on the Inferno side the file descriptor is
+<style color=#00ffffff size=1>.</style>            passed to <action name=sys-export(2)>sys-export(2)</action> or made the standard input of an
+<style color=#00ffffff size=1>.</style>            Inferno file service (see <action name=intro(4)>intro(4)</action>). The Plan 9 service file
+<style color=#00ffffff size=1>.</style>            is automatically removed when the Inferno file descriptor is
+<style color=#00ffffff size=1>.</style>            no longer referenced.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            To make Plan 9's factotum available in Inferno:
+
+<style color=#00ffffff size=1>.</style>                 mount -Aa /srv/factotum /mnt
+
+<style color=#00ffffff size=1>.</style>            (Note the -A option to suppress Inferno authentication.)
+
+<style color=#00ffffff size=1>.</style>            To mount the Plan 9 file service from which a Plan 9 machine
+<style color=#00ffffff size=1>.</style>            booted:
+
+<style color=#00ffffff size=1>.</style>                 mount -9 /srv/boot /n/local
+
+<style color=#00ffffff size=1>.</style>            The -9 option to <action name=mount(1)>mount(1)</action> requests Plan 9 authentication\;
+<style color=#00ffffff size=1>.</style>            that could also have been used instead of -A in the previous
+<style color=#00ffffff size=1>.</style>            example.
+
+<style color=#00ffffff size=1>.</style>            To make the environment variables of the current Inferno
+<style color=#00ffffff size=1>.</style>            name space available to Plan 9:
+
+<style color=#00ffffff size=1>.</style>                 fd := sys->create("/srv/infenv", Sys->ORDWR, 8r600)\;
+<style color=#00ffffff size=1>.</style>                 sys->export(fd, "/env", Sys->EXPWAIT)\;
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/Plan9/devsrv9.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-bind(2)>sys-bind(2)</action>, <action name=sys-open(2)>sys-open(2)</action>, <action name=sys-export(2)>sys-export(2)</action>, <action name=import(4)>import(4)</action>, 9srvfs
+<style color=#00ffffff size=1>.</style>            (4)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

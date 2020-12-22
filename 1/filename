@@ -1,0 +1,47 @@
+<action name=FILENAME(1)>FILENAME(1)</action>                                           <action name=FILENAME(1)>FILENAME(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            filename - interactively select a file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wm/filename \[ -d startdir \] \[ -g geom \] \[ -t title \] \[
+<style color=#00ffffff size=1>.</style>            pattern... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Filename pops up a file browser window, allows the user to
+<style color=#00ffffff size=1>.</style>            select a file and prints the name of that file to the
+<style color=#00ffffff size=1>.</style>            standard output. The optional list of patterns gives a list
+<style color=#00ffffff size=1>.</style>            of wildcard patterns as understood by <action name=filepat(2)>filepat(2)</action>\; the file
+<style color=#00ffffff size=1>.</style>            browser will initially show only files matching one or more
+<style color=#00ffffff size=1>.</style>            of the patterns. (N.B. patterns must be quoted to prevent
+<style color=#00ffffff size=1>.</style>            the shell from interpreting them). The following options are
+<style color=#00ffffff size=1>.</style>            recognised:
+
+<style color=#00ffffff size=1>.</style>            -d        Startdir gives the initial directory shown by the
+<style color=#00ffffff size=1>.</style>                      file browser.
+
+<style color=#00ffffff size=1>.</style>            -g        Geom is given as a tk argument to the file browser
+<style color=#00ffffff size=1>.</style>                      window.
+
+<style color=#00ffffff size=1>.</style>            -t        Title specifies the title of the file browser
+<style color=#00ffffff size=1>.</style>                      window.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            The following <action name=sh(1)>sh(1)</action> command compiles an interactively chosen
+<style color=#00ffffff size=1>.</style>            Limbo source file, placing the file browser window at a
+<style color=#00ffffff size=1>.</style>            particular spot on the screen and starting at joe's home
+<style color=#00ffffff size=1>.</style>            directory.
+<style color=#00ffffff size=1>.</style>            limbo `{wm/filename -t 'Select a source file' -g '-x 50 -y 50'
+<style color=#00ffffff size=1>.</style>            	-d/usr/joe '*.b' '*.m'}
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/filename.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=wmlib(2)>wmlib(2)</action>, <action name=sh(1)>sh(1)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The file browser window actually appears 20 pixels below and
+<style color=#00ffffff size=1>.</style>            to the right of the position specified.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

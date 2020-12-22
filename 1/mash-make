@@ -1,0 +1,111 @@
+<action name=MASH-MAKE(1)>MASH-MAKE(1)</action>                                         <action name=MASH-MAKE(1)>MASH-MAKE(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mash-make - builtin `make' functionality
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load make
+
+<style color=#00ffffff size=1>.</style>            make \[ -clear \]
+<style color=#00ffffff size=1>.</style>            depends \[ target \]
+<style color=#00ffffff size=1>.</style>            match pattern
+<style color=#00ffffff size=1>.</style>            rules \[ pattern \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Make is a loadable builtin for mash. It can be taught about
+<style color=#00ffffff size=1>.</style>            dependencies that exist between components of a program and
+<style color=#00ffffff size=1>.</style>            rules for reconstructing the components of a program.
+
+<style color=#00ffffff size=1>.</style>            Make will examine file modification times to determine which
+<style color=#00ffffff size=1>.</style>            components need to be updated and will issue commands to
+<style color=#00ffffff size=1>.</style>            reconstruct them in the correct sequence. It will update a
+<style color=#00ffffff size=1>.</style>            target if any of its prerequisites are more up to date than
+<style color=#00ffffff size=1>.</style>            the target or if the target does not exist.
+
+<style color=#00ffffff size=1>.</style>            Typically, dependencies and rules are kept in a file called
+<style color=#00ffffff size=1>.</style>            mashfile. The sequence
+
+<style color=#00ffffff size=1>.</style>            	load make
+<style color=#00ffffff size=1>.</style>            	run mashfile
+
+<style color=#00ffffff size=1>.</style>            is used to load the make builtin and read the rules from
+<style color=#00ffffff size=1>.</style>            mashfile. Thereafter, the command
+
+<style color=#00ffffff size=1>.</style>                 make target
+
+<style color=#00ffffff size=1>.</style>            will perform the correct sequence of operations to
+<style color=#00ffffff size=1>.</style>            reconstruct target and its dependents.
+
+<style color=#00ffffff size=1>.</style>            A dependency is specified in mash with a line of the form:
+
+<style color=#00ffffff size=1>.</style>                 target-list : dependent-list \; 
+
+<style color=#00ffffff size=1>.</style>            or
+
+<style color=#00ffffff size=1>.</style>                 target-list : dependent-list { rules }  \;
+
+<style color=#00ffffff size=1>.</style>            Each of the targets in target-list depends upon each of the
+<style color=#00ffffff size=1>.</style>            dependents in dependent-list. The optional rules specify how
+<style color=#00ffffff size=1>.</style>            to build the targets. For example
+<style color=#00ffffff size=1>.</style>            	lflags = -Cg\;
+<style color=#00ffffff size=1>.</style>            	rotta.dis : rotta.b rotta.m { limbo $lflags rotta.b }\;
+<style color=#00ffffff size=1>.</style>            If the rules are omitted make must be able to infer them
+<style color=#00ffffff size=1>.</style>            from implicit rules.
+
+<style color=#00ffffff size=1>.</style>            An implicit rule is defined with a line of the form:
+
+<style color=#00ffffff size=1>.</style>                 pattern :~ dependency { rules }
+
+<style color=#00ffffff size=1>.</style>            If pattern matches a target that make needs to build then
+<style color=#00ffffff size=1>.</style>            make will build the target by first making the dependency
+<style color=#00ffffff size=1>.</style>            and then applying the rules. The wildcard components of the
+<style color=#00ffffff size=1>.</style>            matched target are available in the dependency and the rules
+<style color=#00ffffff size=1>.</style>            as variables $1, $2, $3... with $1 containing the text
+<style color=#00ffffff size=1>.</style>            matched by the first wildcard, $2 the second wildcard and so
+<style color=#00ffffff size=1>.</style>            on. The whole of the target is available in the variable $0.
+<style color=#00ffffff size=1>.</style>            For example,
+
+<style color=#00ffffff size=1>.</style>                /*/*.m :~ $2.m  { cp $2.m /$1/$2.m }\;
+<style color=#00ffffff size=1>.</style>                /module/rotta.m: rotta.m\;
+<style color=#00ffffff size=1>.</style>                /altmodule/frame.m: frame.m\;
+
+<style color=#00ffffff size=1>.</style>            More commonly, implicit rules are defined to provide make
+<style color=#00ffffff size=1>.</style>            with knowledge of how to compile limbo source to produce Dis
+<style color=#00ffffff size=1>.</style>            format binaries. Typically,
+
+<style color=#00ffffff size=1>.</style>                *.dis       :~ $1.b     { limbo $lflags $1.b}\;
+<style color=#00ffffff size=1>.</style>                /dis/*.dis  :~ $1.dis   { cp $1.dis /dis}\;
+
+<style color=#00ffffff size=1>.</style>            A target is built with the command
+
+<style color=#00ffffff size=1>.</style>                 make target
+
+<style color=#00ffffff size=1>.</style>            The list of rules can be reset with
+
+<style color=#00ffffff size=1>.</style>                 make -clear
+
+<style color=#00ffffff size=1>.</style>            The list of dependencies for a target or for all targets can
+<style color=#00ffffff size=1>.</style>            be displayed with the command
+
+<style color=#00ffffff size=1>.</style>                 depends \[ target \]
+
+<style color=#00ffffff size=1>.</style>            The rules that match a pattern and the components of the
+<style color=#00ffffff size=1>.</style>            pattern can be displayed with
+
+<style color=#00ffffff size=1>.</style>                 match 'pattern'
+
+<style color=#00ffffff size=1>.</style>            Taking care to hide the pattern from mash file name pattern
+<style color=#00ffffff size=1>.</style>            matching with quotes. The command
+
+<style color=#00ffffff size=1>.</style>                 rules \[ pattern \]
+
+<style color=#00ffffff size=1>.</style>            will display all the rules or the rules that apply to
+<style color=#00ffffff size=1>.</style>            pattern pattern (if given).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/mash/make.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=mash(1)>mash(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

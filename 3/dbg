@@ -1,0 +1,222 @@
+<action name=DBG(3)>DBG(3)</action>                                                     <action name=DBG(3)>DBG(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dbg - remote kernel debugging
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -b '#b' /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/dbgctl
+<style color=#00ffffff size=1>.</style>            /dev/dbglog
+
+<style color=#00ffffff size=1>.</style>            echo r >/dev/dbgctl
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dbg allows a native kernel to be debugged remotely, by means
+<style color=#00ffffff size=1>.</style>            of a simple protocol, typically run on a serial port (see
+<style color=#00ffffff size=1>.</style>            <action name=eia(3)>eia(3)</action>). The acid(10.1) debugger uses the protocol for
+<style color=#00ffffff size=1>.</style>            instance\; see its -R option.
+
+<style color=#00ffffff size=1>.</style>            Dbg uses the values of several global variables set by the
+<style color=#00ffffff size=1>.</style>            kernel configuration file (see conf(10.6)), all of which
+<style color=#00ffffff size=1>.</style>            default values. The variables and default values are listed
+<style color=#00ffffff size=1>.</style>            below:
+
+<style color=#00ffffff size=1>.</style>                 int dbgstart = 0\;
+<style color=#00ffffff size=1>.</style>                 char	*dbgdata = "#t/eia0"\;
+<style color=#00ffffff size=1>.</style>                 char	*dbgctl = "#t/eia0ctl"\;
+<style color=#00ffffff size=1>.</style>                 char	*dbgctlstart = "b19200"\;
+<style color=#00ffffff size=1>.</style>                 char	*dbgctlstop = "h"\;
+<style color=#00ffffff size=1>.</style>                 char	*dbgctlflush = "f"\;
+
+<style color=#00ffffff size=1>.</style>            Different values can be set by including similar
+<style color=#00ffffff size=1>.</style>            declarations, with values as desired, in the code section of
+<style color=#00ffffff size=1>.</style>            the configuration file. Dbg uses the values as follows:
+
+<style color=#00ffffff size=1>.</style>                 dbgstart if non-zero, start the debugger protocol on
+<style color=#00ffffff size=1>.</style>                 the configured connection during driver initialisation
+<style color=#00ffffff size=1>.</style>                 (system startup)\; otherwise it must be started
+<style color=#00ffffff size=1>.</style>                 explicitly by the r control request (see below)
+<style color=#00ffffff size=1>.</style>            dbgdata
+<style color=#00ffffff size=1>.</style>                 data file for the debugging connection
+<style color=#00ffffff size=1>.</style>            dbgctl
+<style color=#00ffffff size=1>.</style>                 control file for the debugging connection
+<style color=#00ffffff size=1>.</style>            dbgctlstart
+<style color=#00ffffff size=1>.</style>                 control request to initialise link (eg, baud rate)
+<style color=#00ffffff size=1>.</style>            dbgctlstop
+<style color=#00ffffff size=1>.</style>                 control request to hang up link
+<style color=#00ffffff size=1>.</style>            dbgctlflush
+<style color=#00ffffff size=1>.</style>                 control request to write to flush input and output on
+<style color=#00ffffff size=1>.</style>                 link
+
+<style color=#00ffffff size=1>.</style>            Dbg serves two files that control and monitor its operation.
+
+<style color=#00ffffff size=1>.</style>            Dbgctl accepts several textual commands\; normally only r is
+<style color=#00ffffff size=1>.</style>            needed:
+
+<style color=#00ffffff size=1>.</style>            d dbgdata
+<style color=#00ffffff size=1>.</style>                 set the value of dbgdata to the value given as an
+<style color=#00ffffff size=1>.</style>                 argument
+
+<style color=#00ffffff size=1>.</style>            c dbgctl
+<style color=#00ffffff size=1>.</style>            i dbgctlstart
+<style color=#00ffffff size=1>.</style>            h dbgctlstop
+<style color=#00ffffff size=1>.</style>            f dbgctlflush
+<style color=#00ffffff size=1>.</style>                 set the value of the corresponding control variable to
+<style color=#00ffffff size=1>.</style>                 the value of the first argument
+
+<style color=#00ffffff size=1>.</style>            r    start running the debugger protocol (not needed if
+<style color=#00ffffff size=1>.</style>                 dbgstart was non-zero at boot)
+
+<style color=#00ffffff size=1>.</style>            s    stop running the debugger protocol\; stop and flush the
+<style color=#00ffffff size=1>.</style>                 link
+
+<style color=#00ffffff size=1>.</style>            When read, dbgctl yields a single line showing the status of
+<style color=#00ffffff size=1>.</style>            the device (`running' or `stopped') and the current values
+<style color=#00ffffff size=1>.</style>            of the debugger control variables listed above.
+
+<style color=#00ffffff size=1>.</style>            Dbglog is a read-only text file containing lines
+<style color=#00ffffff size=1>.</style>            representing debugger events, one per line. It is mainly
+<style color=#00ffffff size=1>.</style>            useful for checking the operation of the device, or
+<style color=#00ffffff size=1>.</style>            debugging new acid(10.1) functions.
+
+<style color=#00ffffff size=1>.</style>         Debug protocol
+<style color=#00ffffff size=1>.</style>            The protocol is subject to change. The host running the
+<style color=#00ffffff size=1>.</style>            debugger and the target to be debugged exchange 10-byte
+<style color=#00ffffff size=1>.</style>            messages containing a one byte message type and 9 bytes of
+<style color=#00ffffff size=1>.</style>            data. Bytes unused by a given type are set to zero. Normally
+<style color=#00ffffff size=1>.</style>            the host sends one of the T-messages below and receives the
+<style color=#00ffffff size=1>.</style>            corresponding R-message, or Rerr. (These are unrelated to
+<style color=#00ffffff size=1>.</style>            the T-messages and R-messages of <action name=intro(5)>intro(5)</action>.) Exceptionally,
+<style color=#00ffffff size=1>.</style>            the target sends the first message, an Rerr to reset the
+<style color=#00ffffff size=1>.</style>            protocol, and thus the debugger is notified if the target is
+<style color=#00ffffff size=1>.</style>            rebooted during a debugging session and can reset its own
+<style color=#00ffffff size=1>.</style>            state. Values, including addresses, are sometimes
+<style color=#00ffffff size=1>.</style>            represented textually in hexadecimal, but are usually in
+<style color=#00ffffff size=1>.</style>            binary as a single byte, or an array of 4 bytes, high-order
+<style color=#00ffffff size=1>.</style>            byte first (big endian).
+
+<style color=#00ffffff size=1>.</style>            The term process here refers exclusively to those created
+<style color=#00ffffff size=1>.</style>            directly or indirectly by kproc(10.2), not to Limbo
+<style color=#00ffffff size=1>.</style>            processes, which are not visible directly through the
+<style color=#00ffffff size=1>.</style>            protocol (although it is possible to write acid(10.1)
+<style color=#00ffffff size=1>.</style>            functions that interact through dbg with the Inferno data
+<style color=#00ffffff size=1>.</style>            structures representing the state of the Dis virtual
+<style color=#00ffffff size=1>.</style>            machine). Many requests read or write the memory or state of
+<style color=#00ffffff size=1>.</style>            the current process set by the Tproc message (see below).
+<style color=#00ffffff size=1>.</style>            Addresses are always 32 bits. An address below the size of
+<style color=#00ffffff size=1>.</style>            Ureg (saved register state) for the target is interpreted as
+<style color=#00ffffff size=1>.</style>            an offset within the saved state for the current process.
+<style color=#00ffffff size=1>.</style>            Otherwise it refers to an address in kernel virtual memory.
+<style color=#00ffffff size=1>.</style>            Currently in native Inferno all processes share the same
+<style color=#00ffffff size=1>.</style>            address space.
+
+<style color=#00ffffff size=1>.</style>            The message type names used below are assigned values by
+<style color=#00ffffff size=1>.</style>            declarations in /include/rdbg.h. The following messages are
+<style color=#00ffffff size=1>.</style>            currently implemented:
+
+<style color=#00ffffff size=1>.</style>                 Terr unused
+<style color=#00ffffff size=1>.</style>            Rerr reason\[9\]
+<style color=#00ffffff size=1>.</style>                 The last message failed for the given reason, a text
+<style color=#00ffffff size=1>.</style>                 string: reset, the target or debug driver was
+<style color=#00ffffff size=1>.</style>                 restarted\; count, bad count\; unk, unknown command\;
+<style color=#00ffffff size=1>.</style>                 inval, invalid parameter\; pid, no such process\; unsup,
+<style color=#00ffffff size=1>.</style>                 unsupported action\; notstop, action requires process to
+<style color=#00ffffff size=1>.</style>                 be stopped first.
+<style color=#00ffffff size=1>.</style>            Tmget addr\[4\] n\[1\]
+<style color=#00ffffff size=1>.</style>                 Request n bytes of memory from addr\; n must be no
+<style color=#00ffffff size=1>.</style>                 greater than 9
+<style color=#00ffffff size=1>.</style>            Rmget data\[9\]
+<style color=#00ffffff size=1>.</style>                 Return data requested by Tmget
+<style color=#00ffffff size=1>.</style>            Tmput addr\[4\] n\[1\] data\[4\]
+<style color=#00ffffff size=1>.</style>                 Write the first n bytes of data to memory at addr, and
+<style color=#00ffffff size=1>.</style>                 flush the data and instruction caches for that region\;
+<style color=#00ffffff size=1>.</style>                 n must be no greater than 4
+<style color=#00ffffff size=1>.</style>            Rmput
+<style color=#00ffffff size=1>.</style>                 Reply to a successful Tmput
+<style color=#00ffffff size=1>.</style>            Tproc pid\[4\]
+<style color=#00ffffff size=1>.</style>                 Set the current process to the one with integer process
+<style color=#00ffffff size=1>.</style>                 ID pid for subsequent requests.
+<style color=#00ffffff size=1>.</style>            Rproc addr\[8\]
+<style color=#00ffffff size=1>.</style>                 Addr is the address in hexadecimal text of the Proc
+<style color=#00ffffff size=1>.</style>                 structure for process pid in the corresponding Tproc.
+<style color=#00ffffff size=1>.</style>            Tstatus pid\[4\]
+<style color=#00ffffff size=1>.</style>                 Request the status of process pid leaving the current
+<style color=#00ffffff size=1>.</style>                 process ID unchanged.
+<style color=#00ffffff size=1>.</style>            Rstatus status\[9\]
+<style color=#00ffffff size=1>.</style>                 Return the textual status of the process as a text
+<style color=#00ffffff size=1>.</style>                 string, currently one of: Dead, Moribund, Ready,
+<style color=#00ffffff size=1>.</style>                 Scheding, Running, Queueing, Wakeme, Broken, Stopped,
+<style color=#00ffffff size=1>.</style>                 Rendezvous, or if invalid, the state value as a
+<style color=#00ffffff size=1>.</style>                 hexadecimal number.
+<style color=#00ffffff size=1>.</style>            Trnote pid\[4\]
+<style color=#00ffffff size=1>.</style>                 Retrieve the note (trap status) for the given pid
+<style color=#00ffffff size=1>.</style>            Rrnote status\[9\]
+<style color=#00ffffff size=1>.</style>                 Provide the textual trap status for the requested
+<style color=#00ffffff size=1>.</style>                 process (currently always returns null status)
+<style color=#00ffffff size=1>.</style>            Tstop pid\[4\]
+<style color=#00ffffff size=1>.</style>                 Tell the kernel to stop running process pid in
+<style color=#00ffffff size=1>.</style>                 debugging state Stopped when it next appears in the
+<style color=#00ffffff size=1>.</style>                 scheduler.
+<style color=#00ffffff size=1>.</style>            Rstop
+<style color=#00ffffff size=1>.</style>                 Reply to successful Tstop
+<style color=#00ffffff size=1>.</style>            Tstart
+<style color=#00ffffff size=1>.</style>                 Cancel a previous Tstop\; if the process has already
+<style color=#00ffffff size=1>.</style>                 stopped, make it ready to run.
+<style color=#00ffffff size=1>.</style>            Rstart
+<style color=#00ffffff size=1>.</style>                 Reply to successful Tstart
+<style color=#00ffffff size=1>.</style>            Tcondbreak val\[4\] op\[4\]
+<style color=#00ffffff size=1>.</style>                 If op is d, remove and delete the breakpoint with ID
+<style color=#00ffffff size=1>.</style>                 val. All other operations help create a conditional
+<style color=#00ffffff size=1>.</style>                 breakpoint, providing a possibly empty list of
+<style color=#00ffffff size=1>.</style>                 operations representing a conditional expression in
+<style color=#00ffffff size=1>.</style>                 Reverse Polish is followed by a breakpoint request,
+<style color=#00ffffff size=1>.</style>                 each expression element represented by a single
+<style color=#00ffffff size=1>.</style>                 Tcondbreak message. Op is a single character
+<style color=#00ffffff size=1>.</style>                 representing an operation, with val (integer, address,
+<style color=#00ffffff size=1>.</style>                 process ID) as a parameter. The operator n should
+<style color=#00ffffff size=1>.</style>                 appear first\; it assigns the breakpoint an ID number
+<style color=#00ffffff size=1>.</style>                 val (no greater than 255). Expression primaries are: k
+<style color=#00ffffff size=1>.</style>                 val, true if process val is at this breakpoint\; b val,
+<style color=#00ffffff size=1>.</style>                 true if program counter is val\; and p val, val as a
+<style color=#00ffffff size=1>.</style>                 32-bit literal. Expression operators are: unary *
+<style color=#00ffffff size=1>.</style>                 (indirect, yielding 32-bit value)\; & (bit-wise AND)\; =
+<style color=#00ffffff size=1>.</style>                 (values equal)\; ! (values not equal)\; a (logical AND)\;
+<style color=#00ffffff size=1>.</style>                 o (logical OR). Although the expression is interpreted
+<style color=#00ffffff size=1>.</style>                 following Reverse Polish notation, when transmitted,
+<style color=#00ffffff size=1>.</style>                 the b operation is sent last (to mark the end of the
+<style color=#00ffffff size=1>.</style>                 sequence and create the breakpoint), but is moved to
+<style color=#00ffffff size=1>.</style>                 the start of the expression before evaluation.
+<style color=#00ffffff size=1>.</style>            Rcondbreak
+<style color=#00ffffff size=1>.</style>                 Reply to successful Tcondbreak.
+<style color=#00ffffff size=1>.</style>            Tstartstop pid\[4\]
+<style color=#00ffffff size=1>.</style>                 If the process pid is not stopped, return Rerr notstop.
+<style color=#00ffffff size=1>.</style>                 Otherwise, if the process is not stopped at a
+<style color=#00ffffff size=1>.</style>                 breakpoint, start it, and wait for it to reach a
+<style color=#00ffffff size=1>.</style>                 breakpoint that evaluates `true'
+<style color=#00ffffff size=1>.</style>            Rstartstop id\[1\]
+<style color=#00ffffff size=1>.</style>                 Process has stopped at breakpoint with the given id
+<style color=#00ffffff size=1>.</style>            Twaitstop
+<style color=#00ffffff size=1>.</style>                 Unimplemented. See Tstartstop.
+<style color=#00ffffff size=1>.</style>            Rwaitstop
+<style color=#00ffffff size=1>.</style>                 Unused.
+<style color=#00ffffff size=1>.</style>            Tkill pid\[4\] note\[5\]
+<style color=#00ffffff size=1>.</style>                 Kill process pid with the given textual note.
+<style color=#00ffffff size=1>.</style>                 Unimplemented.
+<style color=#00ffffff size=1>.</style>            Rkill
+<style color=#00ffffff size=1>.</style>                 Reply to successful Tkill. Unused.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/devdbg.c
+<style color=#00ffffff size=1>.</style>            /os/*/*break.c
+<style color=#00ffffff size=1>.</style>            /os/*/trap.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            acid(10.1)
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The protocol is not itself error-detecting let alone
+<style color=#00ffffff size=1>.</style>            error-correcting, although that normally does not matter for
+<style color=#00ffffff size=1>.</style>            debugging even over a serial line, provided the connection
+<style color=#00ffffff size=1>.</style>            is reasonably sound.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

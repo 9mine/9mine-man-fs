@@ -1,0 +1,93 @@
+<action name=PLAP(3)>PLAP(3)</action>                                                   <action name=PLAP(3)>PLAP(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            plap - USR/3Com Edgeserver packet bus link access protocol
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a '#X' /net
+
+<style color=#00ffffff size=1>.</style>            /net/plap/clone
+<style color=#00ffffff size=1>.</style>            /net/plap/n/ctl
+<style color=#00ffffff size=1>.</style>            /net/plap/n/data
+<style color=#00ffffff size=1>.</style>            /net/plap/n/local
+<style color=#00ffffff size=1>.</style>            /net/plap/n/remote
+<style color=#00ffffff size=1>.</style>            /net/plap/n/status
+<style color=#00ffffff size=1>.</style>            /net/plap/n/listen
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The plap driver serves a three-level directory giving access
+<style color=#00ffffff size=1>.</style>            to the link level protocol used by an Edgeserver card to
+<style color=#00ffffff size=1>.</style>            communicate with other cards in a USR/3Com chassis. On first
+<style color=#00ffffff size=1>.</style>            attach (usually by a <action name=bind(1)>bind(1)</action> to /net) the driver opens a
+<style color=#00ffffff size=1>.</style>            connection to the packet bus device #Y described in <action name=pbus(3)>pbus(3)</action>.
+<style color=#00ffffff size=1>.</style>            It multiplexes that connection using a specialised member of
+<style color=#00ffffff size=1>.</style>            the LAP family of protocols.
+
+<style color=#00ffffff size=1>.</style>            The top level directory contains a single directory naming
+<style color=#00ffffff size=1>.</style>            the protocol, plap. It contains a clone file and a set of
+<style color=#00ffffff size=1>.</style>            conversation directories numbered from 0 to 127\; only active
+<style color=#00ffffff size=1>.</style>            conversation directories are present.
+
+<style color=#00ffffff size=1>.</style>            Opening the clone file allocates a new conversation
+<style color=#00ffffff size=1>.</style>            directory n. The file descriptor will point to the control
+<style color=#00ffffff size=1>.</style>            file, ctl, of that directory. Reading the file returns a
+<style color=#00ffffff size=1>.</style>            text string giving the conversation number.
+
+<style color=#00ffffff size=1>.</style>            Each conversation directory contains six files. The
+<style color=#00ffffff size=1>.</style>            connection is controlled by writing text strings to the ctl
+<style color=#00ffffff size=1>.</style>            file. Once a connection has been established, data is
+<style color=#00ffffff size=1>.</style>            exchanged with the remote peer by reading and writing the
+<style color=#00ffffff size=1>.</style>            data file.
+
+<style color=#00ffffff size=1>.</style>            A plap address has the form:
+
+<style color=#00ffffff size=1>.</style>                 \[ slot. \] chan!sap
+
+<style color=#00ffffff size=1>.</style>            where slot is a chassis slot number, chan is a logical
+<style color=#00ffffff size=1>.</style>            channel (eg, a modem number), and sap is a number
+<style color=#00ffffff size=1>.</style>            representing a `service access point'.
+
+<style color=#00ffffff size=1>.</style>            The following control messages are supported:
+
+<style color=#00ffffff size=1>.</style>            connect remoteaddr \[ localaddr \] 
+<style color=#00ffffff size=1>.</style>                 Make a connection to the given remote address (of the
+<style color=#00ffffff size=1>.</style>                 form given above). If a local address is not specified,
+<style color=#00ffffff size=1>.</style>                 the system will assign an unused address dynamically
+<style color=#00ffffff size=1>.</style>                 (the local chassis slot number is of course fixed).
+<style color=#00ffffff size=1>.</style>                 Connect fails if the connection is already announced or
+<style color=#00ffffff size=1>.</style>                 connected, or localaddr is already in use.
+
+<style color=#00ffffff size=1>.</style>            announceaddress
+<style color=#00ffffff size=1>.</style>                 Set the local address to address and accept incoming
+<style color=#00ffffff size=1>.</style>                 calls to that address. If no address is specified, all
+<style color=#00ffffff size=1>.</style>                 incoming calls to addresses not explicitly announced
+<style color=#00ffffff size=1>.</style>                 will be accepted by this connection. Announce fails if
+<style color=#00ffffff size=1>.</style>                 the connection is already announced or connected, or
+<style color=#00ffffff size=1>.</style>                 the local address specified is already in use.
+
+<style color=#00ffffff size=1>.</style>            The remote and local files contain the remote and local
+<style color=#00ffffff size=1>.</style>            addresses for the connection in the full address form slot.
+<style color=#00ffffff size=1>.</style>            chan!sap. The status file returns a line giving the
+<style color=#00ffffff size=1>.</style>            directory name, number of active opens, and the state of the
+<style color=#00ffffff size=1>.</style>            connection.
+
+<style color=#00ffffff size=1>.</style>            A process listens for incoming calls by opening the listen
+<style color=#00ffffff size=1>.</style>            file using <action name=sys-open(2)>sys-open(2)</action>. The open will block until a call
+<style color=#00ffffff size=1>.</style>            arrives, when it will return a file descriptor open on the
+<style color=#00ffffff size=1>.</style>            ctl file of the newly accepted connection, which can be read
+<style color=#00ffffff size=1>.</style>            to find the directory number and thus the other files.
+
+<style color=#00ffffff size=1>.</style>            The device follows the conventions that allow dial, announce
+<style color=#00ffffff size=1>.</style>            and listen of <action name=dial(2)>dial(2)</action> to do the work needed to establish and
+<style color=#00ffffff size=1>.</style>            manipulate network connections.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/pc/devplap.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=pbus(3)>pbus(3)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The driver cannot be included in the public distribution.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

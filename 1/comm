@@ -1,0 +1,29 @@
+<action name=COMM(1)>COMM(1)</action>                                                   <action name=COMM(1)>COMM(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            comm - select or reject lines common to two sorted files
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            comm \[ -123 \] file1 file2
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Comm reads lines from file1 and file2, which are in
+<style color=#00ffffff size=1>.</style>            lexicographical order, and produces a three column output:
+<style color=#00ffffff size=1>.</style>            lines only in file1\; lines only in file2\; and lines in both
+<style color=#00ffffff size=1>.</style>            files. The file name ``-'' means the standard input.
+
+<style color=#00ffffff size=1>.</style>            Each option digit `1', `2', or `3' suppresses printing of
+<style color=#00ffffff size=1>.</style>            the corresponding column.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>                 comm -12 file1 file2
+
+<style color=#00ffffff size=1>.</style>                 Print lines common to two sorted files.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/comm.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sort(1)>sort(1)</action>, <action name=cmp(1)>cmp(1)</action>, <action name=diff(1)>diff(1)</action>, <action name=uniq(1)>uniq(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

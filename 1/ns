@@ -1,0 +1,31 @@
+<action name=NS(1)>NS(1)</action>                                                       <action name=NS(1)>NS(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ns - display current namespace
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ns \[ -r \] \[ pid \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ns displays the construction of the namespace of the given
+<style color=#00ffffff size=1>.</style>            pid, or its own (as inherited) by default. Based on the
+<style color=#00ffffff size=1>.</style>            contents of /prog/pid/ns, it prints on standard output a
+<style color=#00ffffff size=1>.</style>            sequence of bind and mount commands (see <action name=bind(1)>bind(1)</action>) that might
+<style color=#00ffffff size=1>.</style>            reconstruct the same name space if executed. In practice,
+<style color=#00ffffff size=1>.</style>            mounts of services such as <action name=ftpfs(4)>ftpfs(4)</action> often refer to the names
+<style color=#00ffffff size=1>.</style>            of pipe ends that are now inaccessible. Furthermore, if any
+<style color=#00ffffff size=1>.</style>            file involved has been renamed since the mount or bind, the
+<style color=#00ffffff size=1>.</style>            original name of the file is shown.
+
+<style color=#00ffffff size=1>.</style>            Mounts of file services on a network show the network
+<style color=#00ffffff size=1>.</style>            address as given to <action name=dial(2)>dial(2)</action> instead of the name of the data
+<style color=#00ffffff size=1>.</style>            file for the connection\; the -r option causes ns to show the
+<style color=#00ffffff size=1>.</style>            raw file name instead.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ns.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bind(1)>bind(1)</action>, <action name=prog(3)>prog(3)</action>, <action name=namespace(4)>namespace(4)</action>, <action name=namespace(6)>namespace(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

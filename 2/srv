@@ -1,0 +1,48 @@
+<action name=SRV(2)>SRV(2)</action>                                                     <action name=SRV(2)>SRV(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            srv - network name and address translation when hosted
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "srv.m"
+<style color=#00ffffff size=1>.</style>            srv := load Srv Srv->PATH\;
+<style color=#00ffffff size=1>.</style>            Srv: module
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>              init:  fn()\;
+<style color=#00ffffff size=1>.</style>              iph2a: fn(host: string): list of string\;
+<style color=#00ffffff size=1>.</style>              ipa2h: fn(addr: string): list of string\;
+<style color=#00ffffff size=1>.</style>              ipn2p: fn(protocol, service: string): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Srv provides access to the host operating system's name and
+<style color=#00ffffff size=1>.</style>            address translation when Inferno is running hosted. The
+<style color=#00ffffff size=1>.</style>            module's implementation is usually built-in to <action name=emu(1)>emu(1)</action>, and
+<style color=#00ffffff size=1>.</style>            then only on some platforms. It uses the Internet name
+<style color=#00ffffff size=1>.</style>            resolution services of the host operating system (eg,
+<style color=#00ffffff size=1>.</style>            gethostbyname on Unix systems). Its services are normally
+<style color=#00ffffff size=1>.</style>            only used internally by <action name=cs(8)>cs(8)</action> and <action name=dns(8)>dns(8)</action>, and even they give
+<style color=#00ffffff size=1>.</style>            priority to data in <action name=services(6)>services(6)</action> and <action name=dns(6)>dns(6)</action> if available.
+<style color=#00ffffff size=1>.</style>            Other Inferno applications normally give network addresses
+<style color=#00ffffff size=1>.</style>            to the functions of <action name=dial(2)>dial(2)</action>, and they are then translated
+<style color=#00ffffff size=1>.</style>            automatically, using the services of <action name=cs(8)>cs(8)</action>.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other function is used.
+
+<style color=#00ffffff size=1>.</style>            Given a host name, iph2a returns a list of its Internet
+<style color=#00ffffff size=1>.</style>            addresses (if any). Given an Internet address, ipa2h returns
+<style color=#00ffffff size=1>.</style>            a list of host names (if any) that have that address. The
+<style color=#00ffffff size=1>.</style>            results are only as accurate as the host system's name
+<style color=#00ffffff size=1>.</style>            service.
+
+<style color=#00ffffff size=1>.</style>            Ipn2p returns the port number (as a string) for the given
+<style color=#00ffffff size=1>.</style>            service when accessed using a particular protocol protocol
+<style color=#00ffffff size=1>.</style>            (typically tcp or udp).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/srv.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-file2chan(2)>sys-file2chan(2)</action>, <action name=cs(8)>cs(8)</action>, <action name=dns(8)>dns(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

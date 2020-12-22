@@ -1,0 +1,35 @@
+<action name=USERS(6)>USERS(6)</action>                                                 <action name=USERS(6)>USERS(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            users - kfs file server user list format
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The permanent file server <action name=kfs(4)>kfs(4)</action> maintains a private list of
+<style color=#00ffffff size=1>.</style>            users and groups, in /adm/users by convention. Each line in
+<style color=#00ffffff size=1>.</style>            the file has the format
+
+<style color=#00ffffff size=1>.</style>                 num:name:leader:members
+
+<style color=#00ffffff size=1>.</style>            where num is a decimal integer, name and leader are
+<style color=#00ffffff size=1>.</style>            printable strings excluding the characters `?', `=', `+',
+<style color=#00ffffff size=1>.</style>            `-', `/', and `:', and members is a comma-separated list of
+<style color=#00ffffff size=1>.</style>            such strings. Such a line defines a user and a group with
+<style color=#00ffffff size=1>.</style>            the given name\; the group has a group leader given by leader
+<style color=#00ffffff size=1>.</style>            and group members given by the user names in members. The
+<style color=#00ffffff size=1>.</style>            leader field may be empty, in which case any group member is
+<style color=#00ffffff size=1>.</style>            a group leader. The members field may be empty.
+
+<style color=#00ffffff size=1>.</style>            Lines beginning with ``#'' are ignored.
+
+<style color=#00ffffff size=1>.</style>            The num in a line is a number used internally by a file
+<style color=#00ffffff size=1>.</style>            server\; there should be no duplicate nums in the file. A
+<style color=#00ffffff size=1>.</style>            negative num is special: a user with a negative num cannot
+<style color=#00ffffff size=1>.</style>            attach to the file server. The file /adm/users itself is
+<style color=#00ffffff size=1>.</style>            owned by user adm, having a negative num, and write
+<style color=#00ffffff size=1>.</style>            protected to others, so it can only be changed via console
+<style color=#00ffffff size=1>.</style>            commands.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=kfs(4)>kfs(4)</action>, <action name=intro(5)>intro(5)</action>, <action name=stat(5)>stat(5)</action>, <action name=kfscmd(8)>kfscmd(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

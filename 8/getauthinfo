@@ -1,0 +1,99 @@
+<action name=GETAUTHINFO(8)>GETAUTHINFO(8)</action>                                     <action name=GETAUTHINFO(8)>GETAUTHINFO(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            getauthinfo - obtain a certificate for authentication
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            getauthinfo keyname
+
+<style color=#00ffffff size=1>.</style>            wm/getauthinfo
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Getauthinfo makes contact with <action name=logind(8)>logind(8)</action> on a `signer', or
+<style color=#00ffffff size=1>.</style>            certifying authority, with which the user has previously
+<style color=#00ffffff size=1>.</style>            been registered using <action name=changelogin(8)>changelogin(8)</action>, to obtain a
+<style color=#00ffffff size=1>.</style>            certificate that can later be presented to other Inferno
+<style color=#00ffffff size=1>.</style>            services to authenticate the user. If keyname starts with a
+<style color=#00ffffff size=1>.</style>            `/', the certificate is stored there\; otherwise, it is
+<style color=#00ffffff size=1>.</style>            stored in the file /usr/user/keyring/keyname, where user is
+<style color=#00ffffff size=1>.</style>            the name in /dev/user (see <action name=cons(3)>cons(3)</action>). The directory /usr/user
+<style color=#00ffffff size=1>.</style>            /keyring must exist.
+
+<style color=#00ffffff size=1>.</style>            The user is prompted for the following:
+
+<style color=#00ffffff size=1>.</style>            signer
+<style color=#00ffffff size=1>.</style>                 The name of the signing server, for example
+<style color=#00ffffff size=1>.</style>                 signer.froop.com. The default is the default signer for
+<style color=#00ffffff size=1>.</style>                 the site: the value of SIGNER in the local network
+<style color=#00ffffff size=1>.</style>                 configuration database (see <action name=ndb(6)>ndb(6)</action>).
+
+<style color=#00ffffff size=1>.</style>            remote user name
+<style color=#00ffffff size=1>.</style>                 The name of the user for whom a certificate is to be
+<style color=#00ffffff size=1>.</style>                 obtained. The default is the current user name in
+<style color=#00ffffff size=1>.</style>                 /dev/user.
+
+<style color=#00ffffff size=1>.</style>            password
+<style color=#00ffffff size=1>.</style>                 The user's password. The password entered on the client
+<style color=#00ffffff size=1>.</style>                 must match the password previously stored on the server
+<style color=#00ffffff size=1>.</style>                 using <action name=changelogin(8)>changelogin(8)</action>, or a certificate will be refused.
+
+<style color=#00ffffff size=1>.</style>            save in file?
+<style color=#00ffffff size=1>.</style>                 The default is `no'. If the user responds `yes', the
+<style color=#00ffffff size=1>.</style>                 certificate is written directly to the file. Otherwise,
+<style color=#00ffffff size=1>.</style>                 getauthinfo becomes a file server, serving a secure
+<style color=#00ffffff size=1>.</style>                 temporary file bound over the file name above (because
+<style color=#00ffffff size=1>.</style>                 that is where applications look for it). The temporary
+<style color=#00ffffff size=1>.</style>                 will disappear if the name is unmounted, or Inferno is
+<style color=#00ffffff size=1>.</style>                 rebooted.
+
+<style color=#00ffffff size=1>.</style>            Note that the certificate will expire at or before expiry of
+<style color=#00ffffff size=1>.</style>            the password entry on the signer.
+
+<style color=#00ffffff size=1>.</style>            The signer needs its own key to endorse the certificates
+<style color=#00ffffff size=1>.</style>            that it gives to clients. If a user requests a certificate
+<style color=#00ffffff size=1>.</style>            with <action name=getauthinfo(8)>getauthinfo(8)</action> before the signer's key is created on
+<style color=#00ffffff size=1>.</style>            the signer (eg, using <action name=createsignerkey(8)>createsignerkey(8)</action>), then the request
+<style color=#00ffffff size=1>.</style>            will be rejected with a suitable diagnostic by <action name=logind(8)>logind(8)</action>.
+
+<style color=#00ffffff size=1>.</style>         File servers
+<style color=#00ffffff size=1>.</style>            Machines that will be file servers must obtain a certificate
+<style color=#00ffffff size=1>.</style>            and save the certificate in a key file named default, thus:
+
+<style color=#00ffffff size=1>.</style>                 getauthinfo default
+
+<style color=#00ffffff size=1>.</style>            The user invoking getauthinfo must be the same user who
+<style color=#00ffffff size=1>.</style>            later runs <action name=svc(8)>svc(8)</action> to start the machine's services.
+
+<style color=#00ffffff size=1>.</style>         File server clients
+<style color=#00ffffff size=1>.</style>            Machines that wish to be authenticated clients of file
+<style color=#00ffffff size=1>.</style>            servers must obtain a certificate and store the certificate
+<style color=#00ffffff size=1>.</style>            in a file named net!machine. The file name must match
+<style color=#00ffffff size=1>.</style>            exactly the server address given to mount (see <action name=bind(1)>bind(1)</action>). To
+<style color=#00ffffff size=1>.</style>            set the key, use
+
+<style color=#00ffffff size=1>.</style>                 getauthinfo net!host
+
+<style color=#00ffffff size=1>.</style>         Window system interface
+<style color=#00ffffff size=1>.</style>            Getauthinfo has a visual counterpart wm/getauthinfo for use
+<style color=#00ffffff size=1>.</style>            under <action name=wm(1)>wm(1)</action>. It takes no arguments. It displays a window
+<style color=#00ffffff size=1>.</style>            prompting for all the information it needs, and offering
+<style color=#00ffffff size=1>.</style>            apparently sensible defaults. Apart from the different
+<style color=#00ffffff size=1>.</style>            interface, its function is otherwise the same as the command
+<style color=#00ffffff size=1>.</style>            line version.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /usr/user/keyring/net!machine      where a certificate is
+<style color=#00ffffff size=1>.</style>                                               stored on a client
+<style color=#00ffffff size=1>.</style>                                               machine
+<style color=#00ffffff size=1>.</style>            /usr/user/keyring/default          where a certificate is
+<style color=#00ffffff size=1>.</style>                                               stored on a file server
+<style color=#00ffffff size=1>.</style>            /lib/ndb/local                     contains the default host
+<style color=#00ffffff size=1>.</style>                                               name of the signer
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/getauthinfo.b
+<style color=#00ffffff size=1>.</style>            /appl/wm/getauthinfo.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bind(1)>bind(1)</action>, <action name=changelogin(8)>changelogin(8)</action>, <action name=createsignerkey(8)>createsignerkey(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,208 @@
+<action name=FACTOTUM(2)>FACTOTUM(2)</action>                                           <action name=FACTOTUM(2)>FACTOTUM(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Factotum: attrtext, challenge, copyattrs, delattr, findattr,
+<style color=#00ffffff size=1>.</style>            findattrval, getuserpassd, mount, open, parseattrs, proxy,
+<style color=#00ffffff size=1>.</style>            publicattrs, takeattrs, respond, response, rpc, rpcattrs -
+<style color=#00ffffff size=1>.</style>            client interface to factotum
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "factotum.m"\;
+<style color=#00ffffff size=1>.</style>            auth := load Factotum Factotum->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Authinfo: adt{
+<style color=#00ffffff size=1>.</style>                cuid: string\;    # ID on caller
+<style color=#00ffffff size=1>.</style>                suid: string\;    # ID on server
+<style color=#00ffffff size=1>.</style>                cap:  string\;    # capability (only valid on server side)
+<style color=#00ffffff size=1>.</style>                secret: array of byte\;   # key for encryption
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            AuthRpcMax: con ...\;
+
+<style color=#00ffffff size=1>.</style>            init:          fn()\;
+<style color=#00ffffff size=1>.</style>            mount:  fn(fd: ref Sys->FD, mnt: string, flags: int,
+<style color=#00ffffff size=1>.</style>                        aname: string, keyspec: string): (int, ref Authinfo)\;
+
+<style color=#00ffffff size=1>.</style>            getuserpasswd:	fn(keyspec: string): (string, string)\;
+
+<style color=#00ffffff size=1>.</style>            Challenge: adt {
+<style color=#00ffffff size=1>.</style>                user:  string\;      # user (some protocols)
+<style color=#00ffffff size=1>.</style>                chal:  string\;      # challenge string
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            challenge: fn(keyspec: string): ref Challenge\;
+<style color=#00ffffff size=1>.</style>            response:  fn(c: ref Challenge, resp: string): ref Authinfo\;
+<style color=#00ffffff size=1>.</style>            respond:   fn(chal: string, keyspec: string): (string, string)\;
+
+<style color=#00ffffff size=1>.</style>            open:      fn(): ref Sys->FD\;
+<style color=#00ffffff size=1>.</style>            rpc:       fn(facfd: ref Sys->FD, verb: string, a: array of byte):
+<style color=#00ffffff size=1>.</style>                          (string, array of byte)\;
+<style color=#00ffffff size=1>.</style>            proxy:     fn(afd: ref Sys->FD, facfd: ref Sys->FD, arg: string):
+<style color=#00ffffff size=1>.</style>                          ref Authinfo\;
+<style color=#00ffffff size=1>.</style>            rpcattrs:  fn(facfd: ref Sys->FD): list of ref Attr\;
+
+<style color=#00ffffff size=1>.</style>            Attr: adt {
+<style color=#00ffffff size=1>.</style>                tag:    int\;      # Aattr, Aval, or Aquery
+<style color=#00ffffff size=1>.</style>                name:   string\;
+<style color=#00ffffff size=1>.</style>                val:    string\;
+
+<style color=#00ffffff size=1>.</style>                text:   fn(a: self ref Attr): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            parseattrs:  fn(s: string): list of ref Attr\;
+<style color=#00ffffff size=1>.</style>            copyattrs:   fn(l: list of ref Attr): list of ref Attr\;
+<style color=#00ffffff size=1>.</style>            delattr:     fn(l: list of ref Attr, n: string): list of ref Attr\;
+<style color=#00ffffff size=1>.</style>            takeattrs:   fn(l: list of ref Attr, names: list of string): list of ref Attr\;
+<style color=#00ffffff size=1>.</style>            findattr:    fn(l: list of ref Attr, n: string): ref Attr\;
+<style color=#00ffffff size=1>.</style>            findattrval: fn(l: list of ref Attr, n: string): string\;
+<style color=#00ffffff size=1>.</style>            publicattrs: fn(l: list of ref Attr): list of ref Attr\;
+<style color=#00ffffff size=1>.</style>            attrtext:    fn(l: list of ref Attr): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Factotum interacts with an instance of the authentication
+<style color=#00ffffff size=1>.</style>            agent <action name=factotum(4)>factotum(4)</action> to authenticate a client to a server. It
+<style color=#00ffffff size=1>.</style>            can also interact with Plan 9's factotum if that is in the
+<style color=#00ffffff size=1>.</style>            name space (as well as or instead of <action name=factotum(4)>factotum(4)</action>).
+
+<style color=#00ffffff size=1>.</style>            Factotum supports both the basic RPC interface to factotum
+<style color=#00ffffff size=1>.</style>            and various high-level operations built on that. The
+<style color=#00ffffff size=1>.</style>            high-level functions will be described first.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other function.
+
+<style color=#00ffffff size=1>.</style>            Mount is similar to Sys->mount (see <action name=sys-bind(2)>sys-bind(2)</action>), but uses
+<style color=#00ffffff size=1>.</style>            factotum to authenticate, if the server requires it.
+<style color=#00ffffff size=1>.</style>            Factotum->mount should be used instead of Sys->mount when
+<style color=#00ffffff size=1>.</style>            mounting file servers that use <action name=attach(5)>attach(5)</action> to authenticate.
+<style color=#00ffffff size=1>.</style>            (If the server on fd does not require authentication,
+<style color=#00ffffff size=1>.</style>            Factotum->mount simply calls Sys->mount.) Mount returns (v,
+<style color=#00ffffff size=1>.</style>            ai). If the integer v is non-negative, the mount succeeded\;
+<style color=#00ffffff size=1>.</style>            on error, v is negative, either the authentication or the
+<style color=#00ffffff size=1>.</style>            mount failed, ai is nil, and the system error string
+<style color=#00ffffff size=1>.</style>            contains a diagnostic. If the server required authentication
+<style color=#00ffffff size=1>.</style>            and that was successful, ai is a non-nil reference to an
+<style color=#00ffffff size=1>.</style>            Authinfo value containing the agreed user IDs, a capability
+<style color=#00ffffff size=1>.</style>            for <action name=cap(3)>cap(3)</action> that is valid only on the server, and an array of
+<style color=#00ffffff size=1>.</style>            bytes containing a shared secret that can be used by client
+<style color=#00ffffff size=1>.</style>            and server to create encryption and hashing keys for the
+<style color=#00ffffff size=1>.</style>            conversation.
+
+<style color=#00ffffff size=1>.</style>            Getuserpasswd returns a tuple (user,password) containing the
+<style color=#00ffffff size=1>.</style>            values for the user and !password attributes of a factotum
+<style color=#00ffffff size=1>.</style>            entry that has proto=pass and matches the given keyspec. The
+<style color=#00ffffff size=1>.</style>            tuple values are nil if no entry matches or the caller lacks
+<style color=#00ffffff size=1>.</style>            permission to see them.
+
+<style color=#00ffffff size=1>.</style>            The pair of functions challenge and response give servers
+<style color=#00ffffff size=1>.</style>            access to challenge/response protocols provided by factotum.
+<style color=#00ffffff size=1>.</style>            All such authentication protocols are embedded in an
+<style color=#00ffffff size=1>.</style>            application-level protocol such as FTP, IMAP, POP3 and so
+<style color=#00ffffff size=1>.</style>            on, in a way specific to that protocol. These functions
+<style color=#00ffffff size=1>.</style>            calculate parameters for application-specific messages.
+
+<style color=#00ffffff size=1>.</style>            A server calls challenge to get a challenge value to present
+<style color=#00ffffff size=1>.</style>            to the user who will answer the challenge. The server
+<style color=#00ffffff size=1>.</style>            verifies the user's response by calling response, which
+<style color=#00ffffff size=1>.</style>            returns an Authinfo value (as described above) if the
+<style color=#00ffffff size=1>.</style>            response is correct. The specific challenge/response
+<style color=#00ffffff size=1>.</style>            protocol is selected by the proto attribute in the keyspec
+<style color=#00ffffff size=1>.</style>            for challenge, which opens a connection to factotum, obtains
+<style color=#00ffffff size=1>.</style>            a string representing a challenge value, and returns a
+<style color=#00ffffff size=1>.</style>            reference to a Challenge adt that gives the challenge and a
+<style color=#00ffffff size=1>.</style>            user name. Some protocols take the user name from a user
+<style color=#00ffffff size=1>.</style>            attribute in the keyspec, and others negotiate it within the
+<style color=#00ffffff size=1>.</style>            authentication protocol. In the latter case, the user field
+<style color=#00ffffff size=1>.</style>            of the resulting Challenge gives the name negotiated.
+
+<style color=#00ffffff size=1>.</style>            In the other direction, a process uses respond to calculate
+<style color=#00ffffff size=1>.</style>            the correct response to a given challenge. Chal is the
+<style color=#00ffffff size=1>.</style>            challenge presented by a server, and keyspec gives the
+<style color=#00ffffff size=1>.</style>            attributes of the relevant key in the local factotum.
+<style color=#00ffffff size=1>.</style>            Respond interacts with factotum and returns a tuple (
+<style color=#00ffffff size=1>.</style>            response, user) that gives the response string to return to
+<style color=#00ffffff size=1>.</style>            the server, and an optional user name, depending on the
+<style color=#00ffffff size=1>.</style>            protocol. On error, the response is nil, and the system
+<style color=#00ffffff size=1>.</style>            error string contains a diagnostic.
+
+<style color=#00ffffff size=1>.</style>            <action name=Factotum(4)>Factotum(4)</action> represents keys as attribute value pairs in
+<style color=#00ffffff size=1>.</style>            textual form, with space-separated fields. A field can be a
+<style color=#00ffffff size=1>.</style>            value-less attribute, an attribute=value pair, or attribute?
+<style color=#00ffffff size=1>.</style>            to mark a required attribute with unknown value. An
+<style color=#00ffffff size=1>.</style>            attribute name that begins with an exclamation mark (!) is
+<style color=#00ffffff size=1>.</style>            to be considered hidden or secret. Values containing white
+<style color=#00ffffff size=1>.</style>            space or special characters can be quoted using the
+<style color=#00ffffff size=1>.</style>            conventions of <action name=sh(1)>sh(1)</action>.
+
+<style color=#00ffffff size=1>.</style>            Parseattrs parses a string s of that form into a list of
+<style color=#00ffffff size=1>.</style>            Attr references. Each Attr has a tag that identifies the
+<style color=#00ffffff size=1>.</style>            value as Aattr (a value-less attribute), a Aval (an
+<style color=#00ffffff size=1>.</style>            attribute-value pair), or Aquery (an attribute for which a
+<style color=#00ffffff size=1>.</style>            value is needed). Other operations include:
+
+<style color=#00ffffff size=1>.</style>            copyattrs      Return a copy of attribute list l.
+
+<style color=#00ffffff size=1>.</style>            delattr        Return a copy of l removing all attributes
+<style color=#00ffffff size=1>.</style>                           with name n.
+
+<style color=#00ffffff size=1>.</style>            takeattrs      Return the subset of list l that contains
+<style color=#00ffffff size=1>.</style>                           only the attributes listed in names.
+
+<style color=#00ffffff size=1>.</style>            findattr       Return a reference to the first Attr in l
+<style color=#00ffffff size=1>.</style>                           with the name n.
+
+<style color=#00ffffff size=1>.</style>            findattrval    Return the value of the first attribute in l
+<style color=#00ffffff size=1>.</style>                           with name n\; return nil if the attribute is
+<style color=#00ffffff size=1>.</style>                           not found or has no value.
+
+<style color=#00ffffff size=1>.</style>            publicattrs    Return a copy of l in which all secret
+<style color=#00ffffff size=1>.</style>                           attributes have been removed.
+
+<style color=#00ffffff size=1>.</style>            attrtext       Return the textual representation of
+<style color=#00ffffff size=1>.</style>                           attribute list l, acceptable to parseattrs.
+
+<style color=#00ffffff size=1>.</style>            The low-level interfaces to factotum are as follows.
+
+<style color=#00ffffff size=1>.</style>            Proxy links an authenticating server on afd with the
+<style color=#00ffffff size=1>.</style>            factotum agent on facfd. Typically facfd is the result of
+<style color=#00ffffff size=1>.</style>            calling Factotum->open, which is equivalent to
+
+<style color=#00ffffff size=1>.</style>                 sys->open("/mnt/factotum/rpc", Sys->ORDWR)
+
+<style color=#00ffffff size=1>.</style>            Afd is a file descriptor that represents a connection to the
+<style color=#00ffffff size=1>.</style>            service that requires authentication. It is typically the
+<style color=#00ffffff size=1>.</style>            result of <action name=sys-open(2)>sys-open(2)</action>, <action name=dial(2)>dial(2)</action>, or <action name=sys-fauth(2)>sys-fauth(2)</action>. Params
+<style color=#00ffffff size=1>.</style>            gives any parameters for factotum, as a string containing
+<style color=#00ffffff size=1>.</style>            space-separated attr=value pairs. Proxy ferries messages
+<style color=#00ffffff size=1>.</style>            between the server and factotum until the end of the
+<style color=#00ffffff size=1>.</style>            selected authentication protocol. If authentication failed,
+<style color=#00ffffff size=1>.</style>            proxy returns nil\; otherwise on success it always returns a
+<style color=#00ffffff size=1>.</style>            non-nil reference to an Authinfo value with contents as
+<style color=#00ffffff size=1>.</style>            above, but if the protocol does not supply that
+<style color=#00ffffff size=1>.</style>            authentication data, all the values are nil.
+
+<style color=#00ffffff size=1>.</style>            Rpcattrs returns the initial attributes provided in the
+<style color=#00ffffff size=1>.</style>            start request, and any others added later by the protocol.
+
+<style color=#00ffffff size=1>.</style>            Rpc does one message exchange with the factotum on facfd. It
+<style color=#00ffffff size=1>.</style>            writes a message containing the given verb and optional
+<style color=#00ffffff size=1>.</style>            binary parameter a, and returns (v,a) where v is the
+<style color=#00ffffff size=1>.</style>            response string from factotum and a is an optional binary
+<style color=#00ffffff size=1>.</style>            parameter for that response. Exceptionally, v is the string
+<style color=#00ffffff size=1>.</style>            "rpc failure" if communication fails or a message is
+<style color=#00ffffff size=1>.</style>            garbled, or "no key" if rpc cannot find a suitable key. See
+<style color=#00ffffff size=1>.</style>            <action name=factotum(4)>factotum(4)</action> for details of the protocol.
+
+<style color=#00ffffff size=1>.</style>            AuthRpcMax is an integer constant giving the maximum size of
+<style color=#00ffffff size=1>.</style>            a message in an rpc exchange.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/factotum.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-bind(2)>sys-bind(2)</action>, <action name=sys-fauth(2)>sys-fauth(2)</action>, <action name=factotum(4)>factotum(4)</action>, <action name=attach(5)>attach(5)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Functions that  return nil references on error also set the
+<style color=#00ffffff size=1>.</style>            system error string.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

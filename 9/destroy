@@ -1,0 +1,26 @@
+<action name=DESTROY(9)>DESTROY(9)</action>                                             <action name=DESTROY(9)>DESTROY(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            destroy - Destroy one or more windows
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            destroy ?window window ...?
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This command deletes the windows given by the window
+<style color=#00ffffff size=1>.</style>            arguments, plus all of their descendants. The windows are
+<style color=#00ffffff size=1>.</style>            destroyed in order, and if an error occurs in destroying a
+<style color=#00ffffff size=1>.</style>            window the command aborts without destroying the remaining
+<style color=#00ffffff size=1>.</style>            windows.
+
+<style color=#00ffffff size=1>.</style>            The Destroy event is fired for each window destroyed,
+<style color=#00ffffff size=1>.</style>            including descendants.
+
+<style color=#00ffffff size=1>.</style>            If the window ``.'' is specified, it is unmapped rather than
+<style color=#00ffffff size=1>.</style>            destroyed and the Destroy event is not fired on it. However,
+<style color=#00ffffff size=1>.</style>            all of its decendants are destroyed as normal.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bind(9)>bind(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

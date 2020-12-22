@@ -1,0 +1,52 @@
+<action name=DOSSRV(4)>DOSSRV(4)</action>                                               <action name=DOSSRV(4)>DOSSRV(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dossrv, 9660srv - DOS/Windows and ISO 9660 file systems
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            dossrv \[-v\] \[-s\] \[-F\] \[-c\] \[ -f devicefile \] \[ -m mountpoint
+<style color=#00ffffff size=1>.</style>            \] \[ -S sectors/track \]
+
+<style color=#00ffffff size=1>.</style>            9660srv \[-rab\] cdfile dir
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dossrv makes the contents of a DOS/Windows file system
+<style color=#00ffffff size=1>.</style>            visible in the Inferno name space. The options are:
+
+<style color=#00ffffff size=1>.</style>            -v   print a debugging trace, including 9P messages, on
+<style color=#00ffffff size=1>.</style>                 standard error
+
+<style color=#00ffffff size=1>.</style>            -F   display FAT information
+
+<style color=#00ffffff size=1>.</style>            -c   display cluster data and I/O activity
+
+<style color=#00ffffff size=1>.</style>            -s   standard ouput is connected to a client\; serve that
+
+<style color=#00ffffff size=1>.</style>            -f devicefile
+<style color=#00ffffff size=1>.</style>                 the DOS/Windows file system image\; defaults to
+<style color=#00ffffff size=1>.</style>                 /dev/hd0disk.
+
+<style color=#00ffffff size=1>.</style>            -m mountpoint
+<style color=#00ffffff size=1>.</style>                 The directory where the contents of the file system
+<style color=#00ffffff size=1>.</style>                 should appear\; defaults to /n/dos.
+
+<style color=#00ffffff size=1>.</style>            -S sectors/track
+<style color=#00ffffff size=1>.</style>                 The number of sectors per track. The default is 9.
+
+<style color=#00ffffff size=1>.</style>            9660srv performs a similar function for files (notably
+<style color=#00ffffff size=1>.</style>            CDROMs) in ISO9660 format, including the Rock Ridge
+<style color=#00ffffff size=1>.</style>            extension and its Plan 9 variant. It makes the contents of
+<style color=#00ffffff size=1>.</style>            cdfile visible in the name space at dir. The options are
+<style color=#00ffffff size=1>.</style>            those of <action name=bind(1)>bind(1)</action>: -r, to replace the contents of dir\; -a, to
+<style color=#00ffffff size=1>.</style>            make a union directory with the CD contents after the
+<style color=#00ffffff size=1>.</style>            contents of dir\; -b, to make a union directory with the CD
+<style color=#00ffffff size=1>.</style>            contents before the contents of dir.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/dossrv.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/9660srv.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Dossrv cannot handle all the FAT32 extensions.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

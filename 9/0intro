@@ -1,0 +1,104 @@
+<action name=INTRO(9)>INTRO(9)</action>                                                 <action name=INTRO(9)>INTRO(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            intro - introduction to Inferno Tk
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This section of the manual provides a reference for the
+<style color=#00ffffff size=1>.</style>            Inferno Tk implementation, which is accessed by Limbo
+<style color=#00ffffff size=1>.</style>            programs via <action name=tk(2)>tk(2)</action>, and from <action name=sh(1)>sh(1)</action> via <action name=sh-tk(1)>sh-tk(1)</action>.
+
+<style color=#00ffffff size=1>.</style>            The following pages were derived by Vita Nuova from
+<style color=#00ffffff size=1>.</style>            documentation that is
+
+<style color=#00ffffff size=1>.</style>                 Copyright © 1990 The Regents of the University of
+<style color=#00ffffff size=1>.</style>                 California
+<style color=#00ffffff size=1>.</style>                 Copyright © 1994-1996 Sun Microsystems, Inc.
+<style color=#00ffffff size=1>.</style>                 See <action name=copyright(9)>copyright(9)</action> for the full copyright notice.
+
+<style color=#00ffffff size=1>.</style>            The format of the pages has changed to follow the format of
+<style color=#00ffffff size=1>.</style>            the rest of this manual, but more important, the content has
+<style color=#00ffffff size=1>.</style>            been changed (typically in small ways) to reflect the
+<style color=#00ffffff size=1>.</style>            variant of Tk implemented by Inferno.
+
+<style color=#00ffffff size=1>.</style>         Programming Interface
+<style color=#00ffffff size=1>.</style>            The interface to Inferno Tk is exclusively through the <action name=tk(2)>tk(2)</action>
+<style color=#00ffffff size=1>.</style>            module\; all the Tk commands described in this section of the
+<style color=#00ffffff size=1>.</style>            manual are excecuted by passing them as strings to the cmd
+<style color=#00ffffff size=1>.</style>            function in that module. The Inferno Tk implementation is
+<style color=#00ffffff size=1>.</style>            based on the Tk 4.0 documentation, but there are many
+<style color=#00ffffff size=1>.</style>            differences, probably the greatest of which is that there is
+<style color=#00ffffff size=1>.</style>            no associated Tcl implementation, so almost every Inferno
+<style color=#00ffffff size=1>.</style>            application using Tk will need to have some Limbo code
+<style color=#00ffffff size=1>.</style>            associated with it (the <action name=sh-tk(1)>sh-tk(1)</action> shell module can also
+<style color=#00ffffff size=1>.</style>            fulful this rôle). See ``An Overview of Limbo/Tk'' in Volume
+<style color=#00ffffff size=1>.</style>            2 for a tutorial-style introduction to the use of Inferno Tk
+<style color=#00ffffff size=1>.</style>            which summarises the differences from Tk 4.0.
+
+<style color=#00ffffff size=1>.</style>         Tk Commands
+<style color=#00ffffff size=1>.</style>            The command string passed to tk->cmd may contain one or more
+<style color=#00ffffff size=1>.</style>            Tk commands, separated by semicolons. A semicolon is not a
+<style color=#00ffffff size=1>.</style>            command separator when it is nested in braces ({}) or
+<style color=#00ffffff size=1>.</style>            brackets (\[\]) or it is escaped by a backslash (\). Each
+<style color=#00ffffff size=1>.</style>            command is divided into words: sequences of characters
+<style color=#00ffffff size=1>.</style>            separated by one or more blanks and tabs.
+
+<style color=#00ffffff size=1>.</style>            There is also a `super quote' convention: at any point in
+<style color=#00ffffff size=1>.</style>            the command string a single quote mark (') means that the
+<style color=#00ffffff size=1>.</style>            entire rest of the string should be treated as one word.
+
+<style color=#00ffffff size=1>.</style>            A word beginning with an opening brace ({) continues until
+<style color=#00ffffff size=1>.</style>            the balancing closing brace (}) is reached. The outer brace
+<style color=#00ffffff size=1>.</style>            characters are stripped. A backslash can be used to escape a
+<style color=#00ffffff size=1>.</style>            brace in this context. Backslash characters not used to
+<style color=#00ffffff size=1>.</style>            escape braces are left unchanged.
+
+<style color=#00ffffff size=1>.</style>            A word beginning with an opening bracket (\[) continues until
+<style color=#00ffffff size=1>.</style>            the balancing closing bracket (\]) is reached. The enclosed
+<style color=#00ffffff size=1>.</style>            string is then evaluated as if it were a command string, and
+<style color=#00ffffff size=1>.</style>            the resulting value is used as the contents of the word.
+
+<style color=#00ffffff size=1>.</style>            Single commands are executed in order until they are all
+<style color=#00ffffff size=1>.</style>            done or an error is encountered. By convention, an error is
+<style color=#00ffffff size=1>.</style>            signaled by a return value starting with an exclamation mark
+<style color=#00ffffff size=1>.</style>            (!). The return value from tk->cmd is the return value of
+<style color=#00ffffff size=1>.</style>            the first error-producing command or else the return value
+<style color=#00ffffff size=1>.</style>            of the final single command.
+
+<style color=#00ffffff size=1>.</style>            To execute a single command, the first word is examined. It
+<style color=#00ffffff size=1>.</style>            must either begin with dot (.) in which case it must name an
+<style color=#00ffffff size=1>.</style>            existing widget, which will interpret the rest of the
+<style color=#00ffffff size=1>.</style>            command according to its type, or one of the following
+<style color=#00ffffff size=1>.</style>            words, each of which is documented in a manual page of that
+<style color=#00ffffff size=1>.</style>            name in this section:
+
+<style color=#00ffffff size=1>.</style>            bind         focus        lower        scrollbar
+<style color=#00ffffff size=1>.</style>            button       frame        menu         see
+<style color=#00ffffff size=1>.</style>            canvas       grab         menubutton   send
+<style color=#00ffffff size=1>.</style>            checkbutton  grid         pack         text
+<style color=#00ffffff size=1>.</style>            cursor       image        radiobutton  update
+<style color=#00ffffff size=1>.</style>            destroy      label        raise        variable
+<style color=#00ffffff size=1>.</style>            entry        listbox      scale
+
+<style color=#00ffffff size=1>.</style>         Widget Options
+<style color=#00ffffff size=1>.</style>            Each manual page in this section documents the options that
+<style color=#00ffffff size=1>.</style>            a particular command will accept. A number of options are
+<style color=#00ffffff size=1>.</style>            common to several of the widgets and are named as ``standard
+<style color=#00ffffff size=1>.</style>            options'' near the beginning of the manual page for each
+<style color=#00ffffff size=1>.</style>            widget. These options are documented in <action name=options(9)>options(9)</action>. The
+<style color=#00ffffff size=1>.</style>            types of value required as arguments to options within
+<style color=#00ffffff size=1>.</style>            Inferno Tk are documented under <action name=types(9)>types(9)</action>.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=options(9)>options(9)</action>, <action name=types(9)>types(9)</action>, <action name=tk(2)>tk(2)</action>, <action name=sh-tk(1)>sh-tk(1)</action>, <action name=tkcmd(1)>tkcmd(1)</action>, <action name=wmlib(2)>wmlib(2)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=draw-intro(2)>draw-intro(2)</action>, ``An Overview of Limbo/Tk'' in Volume 2.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The bracket (\[\]) command interpretation is not applied
+<style color=#00ffffff size=1>.</style>            consistently throughout the Inferno Tk commands (notably,
+<style color=#00ffffff size=1>.</style>            the argument to the <action name=send(9)>send(9)</action> command will not interpret this
+<style color=#00ffffff size=1>.</style>            correctly). Moreover, if the string to be substituted is
+<style color=#00ffffff size=1>.</style>            significantly bigger than the command it was substituting,
+<style color=#00ffffff size=1>.</style>            then it will be truncated.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

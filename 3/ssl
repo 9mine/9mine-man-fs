@@ -1,0 +1,111 @@
+<action name=SSL(3)>SSL(3)</action>                                                     <action name=SSL(3)>SSL(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ssl - secure sockets layer device
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            #D/clone
+<style color=#00ffffff size=1>.</style>            #D/n
+<style color=#00ffffff size=1>.</style>            #D/n/data
+<style color=#00ffffff size=1>.</style>            #D/n/ctl
+<style color=#00ffffff size=1>.</style>            #D/n/secretin
+<style color=#00ffffff size=1>.</style>            #D/n/secretout
+<style color=#00ffffff size=1>.</style>            #D/n/encalgs
+<style color=#00ffffff size=1>.</style>            #D/n/hashalgs
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The ssl device provides access to a Secure Socket Layer that
+<style color=#00ffffff size=1>.</style>            implements the record layer protocol of SSLv2 (but not its
+<style color=#00ffffff size=1>.</style>            handshaking). The device provides encrypting and digesting
+<style color=#00ffffff size=1>.</style>            for many independent connections. Once associated with a
+<style color=#00ffffff size=1>.</style>            network connection, the ssl device can be thought of as a
+<style color=#00ffffff size=1>.</style>            filter for the connection. Ssl can send data in the clear,
+<style color=#00ffffff size=1>.</style>            digested or encrypted. In all cases, if ssl is associated
+<style color=#00ffffff size=1>.</style>            with both ends of a connection, all messages are delimited.
+<style color=#00ffffff size=1>.</style>            As long as reads always specify buffers that are of equal or
+<style color=#00ffffff size=1>.</style>            greater lengths than the writes at the other end of the
+<style color=#00ffffff size=1>.</style>            connection, one write will correspond to one read. The
+<style color=#00ffffff size=1>.</style>            device is unusual because it is not bound into the name
+<style color=#00ffffff size=1>.</style>            space but named directly by its local name, #D. That is
+<style color=#00ffffff size=1>.</style>            because the interface described below requires writing a
+<style color=#00ffffff size=1>.</style>            local file descriptor number to a file, which will not work
+<style color=#00ffffff size=1>.</style>            remotely.
+
+<style color=#00ffffff size=1>.</style>            The top-level directory contains a clone file and numbered
+<style color=#00ffffff size=1>.</style>            directories, each representing a connection. Opening the
+<style color=#00ffffff size=1>.</style>            clone file reserves a connection\; the file descriptor
+<style color=#00ffffff size=1>.</style>            resulting from the \%<action name=sys-open(2)>sys-open(2)</action> will be open on the control
+<style color=#00ffffff size=1>.</style>            file, ctl, in the directory that represents the new
+<style color=#00ffffff size=1>.</style>            connection. Reading the control file will return a text
+<style color=#00ffffff size=1>.</style>            string giving the connection number n, and thus the
+<style color=#00ffffff size=1>.</style>            directory name.
+
+<style color=#00ffffff size=1>.</style>            Writing to ctl controls the corresponding connection. The
+<style color=#00ffffff size=1>.</style>            following control messages are possible:
+
+<style color=#00ffffff size=1>.</style>            fd m Associate the network connection on existing file
+<style color=#00ffffff size=1>.</style>                 descriptor m with the ssl device.
+
+<style color=#00ffffff size=1>.</style>            alg clear
+<style color=#00ffffff size=1>.</style>                 Allow data to pass in the clear with only message
+<style color=#00ffffff size=1>.</style>                 delimiters added. The device starts in this mode.
+
+<style color=#00ffffff size=1>.</style>            alg sha
+<style color=#00ffffff size=1>.</style>                 Append a SHA digest to each buffer written to data. The
+<style color=#00ffffff size=1>.</style>                 digest covers the outgoing secret (written to secretout
+<style color=#00ffffff size=1>.</style>                 ), the message, and a message number which starts at 0
+<style color=#00ffffff size=1>.</style>                 and increments by one for each message. Messages read
+<style color=#00ffffff size=1>.</style>                 have their appended digests compared to a digest
+<style color=#00ffffff size=1>.</style>                 computed using the incoming secret (written to secretin
+<style color=#00ffffff size=1>.</style>                 ). If the comparison fails, so will the read.
+
+<style color=#00ffffff size=1>.</style>            alg md4
+<style color=#00ffffff size=1>.</style>                 Like sha but using the MD4 message digest algorithm.
+
+<style color=#00ffffff size=1>.</style>            alg md5
+<style color=#00ffffff size=1>.</style>                 Like sha but using the MD5 message digest algorithm.
+
+<style color=#00ffffff size=1>.</style>            alg rc4
+<style color=#00ffffff size=1>.</style>            alg rc4_40
+<style color=#00ffffff size=1>.</style>            alg rc4_128
+<style color=#00ffffff size=1>.</style>            alg rc4_256
+<style color=#00ffffff size=1>.</style>                 RC4 encrypt each message written to data with the key
+<style color=#00ffffff size=1>.</style>                 written to secretout, using the key length as indicated
+<style color=#00ffffff size=1>.</style>                 (40-bit keys by default).
+
+<style color=#00ffffff size=1>.</style>            alg des_56_cbc
+<style color=#00ffffff size=1>.</style>                 Encrypt the stream using DES and Cipher Block Chaining
+<style color=#00ffffff size=1>.</style>                 (CBC)
+
+<style color=#00ffffff size=1>.</style>            alg des_56_ecb
+<style color=#00ffffff size=1>.</style>                 Encrypt the stream using DES and Electronic Code Book
+<style color=#00ffffff size=1>.</style>                 (ECB)
+
+<style color=#00ffffff size=1>.</style>            alg ideacbc
+<style color=#00ffffff size=1>.</style>                 Encrypt the stream using IDEA and CBC
+
+<style color=#00ffffff size=1>.</style>            alg ideaecb
+<style color=#00ffffff size=1>.</style>                 Encrypt the stream using IDEA and ECB
+
+<style color=#00ffffff size=1>.</style>            alg digest/crypt
+<style color=#00ffffff size=1>.</style>                 Combine the use of the given digest algorithm and the
+<style color=#00ffffff size=1>.</style>                 stream encryption algorithm crypt
+
+<style color=#00ffffff size=1>.</style>            Files secretin and secretout must be written before
+<style color=#00ffffff size=1>.</style>            digesting or encryption is turned on. If only one is
+<style color=#00ffffff size=1>.</style>            written, they are both assumed to be the same.
+
+<style color=#00ffffff size=1>.</style>            The mode may be changed at any time during a connection.
+
+<style color=#00ffffff size=1>.</style>            The list of algorithms supported by a given implementation
+<style color=#00ffffff size=1>.</style>            of ssl may be read from the read-only text files encalgs
+<style color=#00ffffff size=1>.</style>            (encryption algorithms) and hashalgs (hashing algorithms for
+<style color=#00ffffff size=1>.</style>            digests). Each contains a space-separated list of algorithm
+<style color=#00ffffff size=1>.</style>            names.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=security-ssl(2)>security-ssl(2)</action>
+<style color=#00ffffff size=1>.</style>            B. Schneier, Applied Cryptography , 1996, J. Wiley & Sons,
+<style color=#00ffffff size=1>.</style>            Inc.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

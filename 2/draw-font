@@ -1,0 +1,74 @@
+<action name=DRAW-FONT(2)>DRAW-FONT(2)</action>                                         <action name=DRAW-FONT(2)>DRAW-FONT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Font - character images for Unicode text
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include	"draw.m"\;
+<style color=#00ffffff size=1>.</style>            draw := load Draw Draw->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Font: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                name:    string\;
+<style color=#00ffffff size=1>.</style>                height:  int\;
+<style color=#00ffffff size=1>.</style>                ascent:  int\;
+<style color=#00ffffff size=1>.</style>                display: ref Display\;
+
+<style color=#00ffffff size=1>.</style>                open:    fn(d: ref Display, file:  string):        ref Font\;
+<style color=#00ffffff size=1>.</style>                build:   fn(d: ref Display, name, desc: string):   ref Font\;
+<style color=#00ffffff size=1>.</style>                width:   fn(f: self ref Font, str: string):        int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Font type defines the appearance of characters drawn
+<style color=#00ffffff size=1>.</style>            with the Image.text primitive (see <action name=draw-image(2)>draw-image(2)</action>). Fonts are
+<style color=#00ffffff size=1>.</style>            usually read from files and are selected based on their
+<style color=#00ffffff size=1>.</style>            size, their style, the portion of Unicode space they
+<style color=#00ffffff size=1>.</style>            represent, and so on.
+
+<style color=#00ffffff size=1>.</style>            Fonts are built from a series of subfonts that define
+<style color=#00ffffff size=1>.</style>            contiguous portions of the Unicode character space, such as
+<style color=#00ffffff size=1>.</style>            the ASCII or the Greek alphabet. Font files are textual
+<style color=#00ffffff size=1>.</style>            descriptions of the allocation of characters in the various
+<style color=#00ffffff size=1>.</style>            regions of the Unicode space\; see <action name=font(6)>font(6)</action> for the format.
+<style color=#00ffffff size=1>.</style>            Subfonts are not visible from Limbo.
+
+<style color=#00ffffff size=1>.</style>            A default font, named *default*, is always available.
+
+<style color=#00ffffff size=1>.</style>            The type incorporates:
+
+<style color=#00ffffff size=1>.</style>            ascent, height
+<style color=#00ffffff size=1>.</style>                      These define the vertical sizes of the font, in
+<style color=#00ffffff size=1>.</style>                      pixels. The ascent is the distance from the font
+<style color=#00ffffff size=1>.</style>                      baseline to the top of a line of text\; height
+<style color=#00ffffff size=1>.</style>                      gives the interline spacing, that is, the distance
+<style color=#00ffffff size=1>.</style>                      from one baseline to the next.
+
+<style color=#00ffffff size=1>.</style>            name      This field identifies the font, either the name of
+<style color=#00ffffff size=1>.</style>                      the file from which the font was read, or
+<style color=#00ffffff size=1>.</style>                      "*default*" for the default font.
+
+<style color=#00ffffff size=1>.</style>            display   Tells on which display the font resides.
+
+<style color=#00ffffff size=1>.</style>            open(d, file)
+<style color=#00ffffff size=1>.</style>                      The open method creates a Font by reading the
+<style color=#00ffffff size=1>.</style>                      contents of the named file. Fonts are cached, so
+<style color=#00ffffff size=1>.</style>                      an open request may return a pointer to an
+<style color=#00ffffff size=1>.</style>                      existing Font, without rereading the file. The
+<style color=#00ffffff size=1>.</style>                      name "*default*" always describes a defined font.
+<style color=#00ffffff size=1>.</style>                      Fonts are created for an instance of a Display
+<style color=#00ffffff size=1>.</style>                      object, even though the creation functions are in
+<style color=#00ffffff size=1>.</style>                      type Font.
+
+<style color=#00ffffff size=1>.</style>            build(d, name, desc)
+<style color=#00ffffff size=1>.</style>                      Build creates a Font object by reading the
+<style color=#00ffffff size=1>.</style>                      description from the string desc rather than a
+<style color=#00ffffff size=1>.</style>                      file. Name specifies the name of the font to be
+<style color=#00ffffff size=1>.</style>                      created.
+
+<style color=#00ffffff size=1>.</style>            f.width( str )
+<style color=#00ffffff size=1>.</style>                      The width method returns the width in pixels that
+<style color=#00ffffff size=1>.</style>                      str would occupy if drawn by Image.text in the
+<style color=#00ffffff size=1>.</style>                      Font f.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

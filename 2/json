@@ -1,0 +1,153 @@
+<action name=JSON(2)>JSON(2)</action>                                                   <action name=JSON(2)>JSON(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            json: readjson, writejson, JValue - read, write and
+<style color=#00ffffff size=1>.</style>            represent values in JavaScript Object Notation
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "json.m"\;
+<style color=#00ffffff size=1>.</style>            json := load JSON JSON->PATH\;
+
+<style color=#00ffffff size=1>.</style>            JValue: adt {
+<style color=#00ffffff size=1>.</style>                pick{
+<style color=#00ffffff size=1>.</style>                Object =>
+<style color=#00ffffff size=1>.</style>                    mem:   cyclic list of (string, ref JValue)\;
+<style color=#00ffffff size=1>.</style>                Array =>
+<style color=#00ffffff size=1>.</style>                    a:     cyclic array of ref JValue\;
+<style color=#00ffffff size=1>.</style>                String =>
+<style color=#00ffffff size=1>.</style>                    s:     string\;
+<style color=#00ffffff size=1>.</style>                Int =>
+<style color=#00ffffff size=1>.</style>                    value: big\;
+<style color=#00ffffff size=1>.</style>                Real =>
+<style color=#00ffffff size=1>.</style>                    value: real\;
+<style color=#00ffffff size=1>.</style>                True or
+<style color=#00ffffff size=1>.</style>                False or
+<style color=#00ffffff size=1>.</style>                Null =>
+<style color=#00ffffff size=1>.</style>                }
+<style color=#00ffffff size=1>.</style>                isarray:   fn(v: self ref JValue): int\;
+<style color=#00ffffff size=1>.</style>                isfalse:   fn(v: self ref JValue): int\;
+<style color=#00ffffff size=1>.</style>                isint:     fn(v: self ref JValue): int\;
+<style color=#00ffffff size=1>.</style>                isnull:    fn(v: self ref JValue): int\;
+<style color=#00ffffff size=1>.</style>                isnumber:  fn(v: self ref JValue): int\;
+<style color=#00ffffff size=1>.</style>                isobject:  fn(v: self ref JValue): int\;
+<style color=#00ffffff size=1>.</style>                isreal:    fn(v: self ref JValue): int\;
+<style color=#00ffffff size=1>.</style>                isstring:  fn(v: self ref JValue): int\;
+<style color=#00ffffff size=1>.</style>                istrue:    fn(v: self ref JValue): int\;
+<style color=#00ffffff size=1>.</style>                copy:      fn(v: self ref JValue): ref Jvalue\;
+<style color=#00ffffff size=1>.</style>                eq:        fn(v: self ref JValue, v: ref JValue): int\;
+<style color=#00ffffff size=1>.</style>                get:       fn(v: self ref JValue, mem: string): ref JValue\;
+<style color=#00ffffff size=1>.</style>                set:       fn(v: self ref JValue, mem: string, value: ref JValue)\;
+<style color=#00ffffff size=1>.</style>                text:      fn(v: self ref JValue): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:      fn(bufio: Bufio)\;
+<style color=#00ffffff size=1>.</style>            readjson:  fn(input: ref Bufio->Iobuf): (ref JValue, string)\;
+<style color=#00ffffff size=1>.</style>            writejson: fn(output: ref Bufio->Iobuf, val: ref JValue): int\;
+
+<style color=#00ffffff size=1>.</style>            jvarray:   fn(a: array of ref JValue): ref JValue.Array\;
+<style color=#00ffffff size=1>.</style>            jvbig:     fn(b: big): ref JValue.Int\;
+<style color=#00ffffff size=1>.</style>            jvfalse:   fn(): ref JValue.False\;
+<style color=#00ffffff size=1>.</style>            jvint:     fn(i: int): ref JValue.Int\;
+<style color=#00ffffff size=1>.</style>            jvnull:    fn(): ref JValue.Null\;
+<style color=#00ffffff size=1>.</style>            jvobject:  fn(m: list of (string, ref JValue)): ref JValue.Object\;
+<style color=#00ffffff size=1>.</style>            jvreal:    fn(r: real): ref JValue.Real\;
+<style color=#00ffffff size=1>.</style>            jvstring:  fn(s: string): ref JValue.String\;
+<style color=#00ffffff size=1>.</style>            jvtrue:    fn(): ref JValue.True\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            JSON provides value representations, and encoding and
+<style color=#00ffffff size=1>.</style>            decoding operations for the JavaScript Object Notation
+<style color=#00ffffff size=1>.</style>            (JSON) described by Internet RFC4627 and summarised in json
+<style color=#00ffffff size=1>.</style>            (6).
+
+<style color=#00ffffff size=1>.</style>            Init must be called before invoking any other operation of
+<style color=#00ffffff size=1>.</style>            the module. The bufio parameter must refer to the instance
+<style color=#00ffffff size=1>.</style>            of <action name=bufio(2)>bufio(2)</action> that provides the Iobuf parameters used for
+<style color=#00ffffff size=1>.</style>            input and output.
+
+<style color=#00ffffff size=1>.</style>            JValue is the internal representation of values transmitted
+<style color=#00ffffff size=1>.</style>            by the JSON encoding. They are distinguished in a pick adt:
+
+<style color=#00ffffff size=1>.</style>            JValue.False
+<style color=#00ffffff size=1>.</style>                 Represents the value false.
+
+<style color=#00ffffff size=1>.</style>            JValue.Null
+<style color=#00ffffff size=1>.</style>                 Represents a null value of any type.
+
+<style color=#00ffffff size=1>.</style>            JValue.True
+<style color=#00ffffff size=1>.</style>                 Represents the value true.
+
+<style color=#00ffffff size=1>.</style>            JValue.Int
+<style color=#00ffffff size=1>.</style>                 Represents as a Limbo big a JavaScript number with no
+<style color=#00ffffff size=1>.</style>                 fractional part.
+
+<style color=#00ffffff size=1>.</style>            JValue.Real
+<style color=#00ffffff size=1>.</style>                 Represents as a Limbo real a JavaScript number with a
+<style color=#00ffffff size=1>.</style>                 fractional part.
+
+<style color=#00ffffff size=1>.</style>            JValue.String
+<style color=#00ffffff size=1>.</style>                 Represents a JavaScript string of Unicode characters
+<style color=#00ffffff size=1>.</style>                 from +U'0000' to +U'FFFF'.
+
+<style color=#00ffffff size=1>.</style>            JValue.Array
+<style color=#00ffffff size=1>.</style>                 Represents a JavaScript array of values of any type.
+
+<style color=#00ffffff size=1>.</style>            JValue.Object
+<style color=#00ffffff size=1>.</style>                 Represents a tuple of (member/property name, value)
+<style color=#00ffffff size=1>.</style>                 pairs corresponding to the value of a JavaScript
+<style color=#00ffffff size=1>.</style>                 object, or an associative array or table, indexed by
+<style color=#00ffffff size=1>.</style>                 strings. The member names must be unique within a
+<style color=#00ffffff size=1>.</style>                 value.
+
+<style color=#00ffffff size=1>.</style>            Readjson reads a single value in JSON format from the input
+<style color=#00ffffff size=1>.</style>            stream and returns a tuple (val, err). On success, val is a
+<style color=#00ffffff size=1>.</style>            JValue that represents the value successfully read. If an
+<style color=#00ffffff size=1>.</style>            error occurs, val is nil and err contains a diagnostic.
+
+<style color=#00ffffff size=1>.</style>            Writejson writes to the output stream in JSON format a
+<style color=#00ffffff size=1>.</style>            representation of the value v. It returns 0 on success and
+<style color=#00ffffff size=1>.</style>            -1 on error (setting the system error string).
+
+<style color=#00ffffff size=1>.</style>            The easiest way to create a new JValue for subsequent output
+<style color=#00ffffff size=1>.</style>            is with one of the module-level functions jvarray, jvint,
+<style color=#00ffffff size=1>.</style>            jvobject, jvstring, and so on. As values of a pick adt, a
+<style color=#00ffffff size=1>.</style>            JValue can be inspected using Limbo's tagof operator and the
+<style color=#00ffffff size=1>.</style>            appropriate variant accessed using a pick statement. JValue
+<style color=#00ffffff size=1>.</style>            also supports several groups of common operations, for
+<style color=#00ffffff size=1>.</style>            smaller, tidier code. First, the set of enquiry functions v
+<style color=#00ffffff size=1>.</style>            .isX() return true if the value v is an instance of the
+<style color=#00ffffff size=1>.</style>            JavaScript type X (array, int, object, real, string, etc). A
+<style color=#00ffffff size=1>.</style>            numeric value is either int or real. The other operations
+<style color=#00ffffff size=1>.</style>            are:
+
+<style color=#00ffffff size=1>.</style>            v.copy()
+<style color=#00ffffff size=1>.</style>                 Return a (reference to) a copy of value v. The copying
+<style color=#00ffffff size=1>.</style>                 is not recursive.
+
+<style color=#00ffffff size=1>.</style>            v.eq(w)
+<style color=#00ffffff size=1>.</style>                 Return true if the values of v and w are equal,
+<style color=#00ffffff size=1>.</style>                 including the values of corresponding subcomponents,
+<style color=#00ffffff size=1>.</style>                 recursively
+
+<style color=#00ffffff size=1>.</style>            v.get(mem)
+<style color=#00ffffff size=1>.</style>                 Return the value associated with the member named mem
+<style color=#00ffffff size=1>.</style>                 in v\; return null if there is none.
+
+<style color=#00ffffff size=1>.</style>            v.set(mem, value)
+<style color=#00ffffff size=1>.</style>                 Adds or changes the value associated with the member
+<style color=#00ffffff size=1>.</style>                 named mem in v, which must be a JValue.Object( raises
+<style color=#00ffffff size=1>.</style>                 exception json: set non-object otherwise).
+
+<style color=#00ffffff size=1>.</style>            v.text()
+<style color=#00ffffff size=1>.</style>                 Return a string containing the JSON representation of v
+<style color=#00ffffff size=1>.</style>                 .
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/json.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sexprs(2)>sexprs(2)</action>, <action name=ubfa(2)>ubfa(2)</action>, <action name=json(6)>json(6)</action>, <action name=sexprs(6)>sexprs(6)</action>, <action name=ubfa(6)>ubfa(6)</action>
+<style color=#00ffffff size=1>.</style>            D Crockford, ``The application/json Media Type for
+<style color=#00ffffff size=1>.</style>            JavaScript Object Notation (JSON)'', RFC4627.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

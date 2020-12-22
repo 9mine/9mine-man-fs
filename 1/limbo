@@ -1,0 +1,118 @@
+LIMBO(1E)                                               LIMBO(1E)
+
+NAME
+<style color=#00ffffff size=1>.</style>            limbo - Limbo compiler
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            limbo \[ option ... \] \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Limbo compiles the named Limbo files into
+<style color=#00ffffff size=1>.</style>            machine-independent object files for the Dis virtual
+<style color=#00ffffff size=1>.</style>            machine. Depending on the options, the compiler may create
+<style color=#00ffffff size=1>.</style>            output files or write information to its standard output.
+<style color=#00ffffff size=1>.</style>            Conventional files and their extensions include the
+<style color=#00ffffff size=1>.</style>            following.
+
+<style color=#00ffffff size=1>.</style>            file.b    Limbo source file.
+
+<style color=#00ffffff size=1>.</style>            file.dis  Object code for the Dis virtual machine.
+
+<style color=#00ffffff size=1>.</style>            file.m    Limbo source file for module declarations.
+
+<style color=#00ffffff size=1>.</style>            file.s    Assembly code.
+
+<style color=#00ffffff size=1>.</style>            file.sbl  Symbolic debugging information.
+
+<style color=#00ffffff size=1>.</style>            With no options, limbo produces a .dis file for each source
+<style color=#00ffffff size=1>.</style>            file.
+
+<style color=#00ffffff size=1>.</style>            The compiler options are:
+
+<style color=#00ffffff size=1>.</style>            -a
+<style color=#00ffffff size=1>.</style>             Print on standard output type definitions and call frames
+<style color=#00ffffff size=1>.</style>             useful for writing C language implementations of Limbo
+<style color=#00ffffff size=1>.</style>             modules. Suppresses normal output file generation.
+
+<style color=#00ffffff size=1>.</style>            -C
+<style color=#00ffffff size=1>.</style>             Mark the Dis object file to prevent run-time compilation.
+
+<style color=#00ffffff size=1>.</style>            -c
+<style color=#00ffffff size=1>.</style>             Mark the Dis object file to guarantee run-time compilation.
+
+<style color=#00ffffff size=1>.</style>            -D flags
+<style color=#00ffffff size=1>.</style>             Turn on debugging flags. Flags include A for arrays, a for
+<style color=#00ffffff size=1>.</style>             alt statements, b for booleans, C for case body statements,
+<style color=#00ffffff size=1>.</style>             c for case statements, D for use descriptors, d for
+<style color=#00ffffff size=1>.</style>             declarations, e for expressions, E for extended
+<style color=#00ffffff size=1>.</style>             expressions, F for function information, f for constant
+<style color=#00ffffff size=1>.</style>             folding, m for modules, n for nil references, P for program
+<style color=#00ffffff size=1>.</style>             counter manipulations, r for reference types, S for type
+<style color=#00ffffff size=1>.</style>             signatures, s for a code generation summary, T for tuples,
+<style color=#00ffffff size=1>.</style>             t for type checking, and v for variable initialization.
+
+<style color=#00ffffff size=1>.</style>            -e
+<style color=#00ffffff size=1>.</style>             Increase the number of errors the compiler will report
+<style color=#00ffffff size=1>.</style>             before exiting.
+
+<style color=#00ffffff size=1>.</style>            -G
+<style color=#00ffffff size=1>.</style>             Annotate assembly language output with debugging
+<style color=#00ffffff size=1>.</style>             information. A no-op unless -S is set.
+
+<style color=#00ffffff size=1>.</style>            -g
+<style color=#00ffffff size=1>.</style>             Generate debugging information for the input files and
+<style color=#00ffffff size=1>.</style>             place it in a file named by stripping any trailing .b from
+<style color=#00ffffff size=1>.</style>             the input file name and appending .sbl.
+
+<style color=#00ffffff size=1>.</style>            -i
+<style color=#00ffffff size=1>.</style>             Disable inlining of functions. Currently functions
+<style color=#00ffffff size=1>.</style>             containing a single return statement or two return
+<style color=#00ffffff size=1>.</style>             statements and an if clause are candidates for inlining.
+
+<style color=#00ffffff size=1>.</style>            -I dir
+<style color=#00ffffff size=1>.</style>             An include file whose name does not begin with slash is
+<style color=#00ffffff size=1>.</style>             sought first relative to the working directory, regardless
+<style color=#00ffffff size=1>.</style>             of the source file argument. If this fails, limbo sequences
+<style color=#00ffffff size=1>.</style>             through directories named in -I options, then searches in
+<style color=#00ffffff size=1>.</style>             /module. An include file contains Limbo source code,
+<style color=#00ffffff size=1>.</style>             normally holding one or more module declarations.
+
+<style color=#00ffffff size=1>.</style>            -o obj
+<style color=#00ffffff size=1>.</style>             Place output in file obj (allowed only if there is a single
+<style color=#00ffffff size=1>.</style>             input file). The output file will hold either object or
+<style color=#00ffffff size=1>.</style>             assembly code, depending on -S. Default is to take the last
+<style color=#00ffffff size=1>.</style>             element of the input file name, strip any trailing .b, and
+<style color=#00ffffff size=1>.</style>             append .dis for object code and .s for assembly code. Thus,
+<style color=#00ffffff size=1>.</style>             the default output file for dir/mod.b would be mod.dis.
+
+<style color=#00ffffff size=1>.</style>            -S
+<style color=#00ffffff size=1>.</style>             Create assembly language output instead of object code.
+
+<style color=#00ffffff size=1>.</style>            -T module
+<style color=#00ffffff size=1>.</style>             Print on standard output C stub functions, useful for
+<style color=#00ffffff size=1>.</style>             implementing Limbo modules in the C language for linkage
+<style color=#00ffffff size=1>.</style>             with the interpreter.
+
+<style color=#00ffffff size=1>.</style>            -t module
+<style color=#00ffffff size=1>.</style>             Print on standard output a table of runtime functions, to
+<style color=#00ffffff size=1>.</style>             link C language implementations of modules with the Limbo
+<style color=#00ffffff size=1>.</style>             interpreter. Suppresses normal output file generation.
+
+<style color=#00ffffff size=1>.</style>            -w
+<style color=#00ffffff size=1>.</style>             Print warning messages about unused variables, etc. More w
+<style color=#00ffffff size=1>.</style>             's (e.g., -ww) increase the pedantry of the checking.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /module  directory for Limbo include modules
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/limbo  compiler source in Limbo
+<style color=#00ffffff size=1>.</style>            /limbo       compiler source in C for host
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=asm(1)>asm(1)</action>, <action name=emu(1)>emu(1)</action>, mk(10.1), <action name=intro(2)>intro(2)</action>, <action name=sys-<action name=intro(2)>intro(2)</action>>sys-<action name=intro(2)>intro(2)</action></action>, <action name=tk(2)>tk(2)</action>
+
+<style color=#00ffffff size=1>.</style>            ``The Limbo Programming Language''
+<style color=#00ffffff size=1>.</style>            ``Program Development in Inferno''
+<style color=#00ffffff size=1>.</style>            ``A Descent into Limbo''
+<style color=#00ffffff size=1>.</style>            in Volume 2.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

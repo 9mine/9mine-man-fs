@@ -1,0 +1,25 @@
+<action name=STRINGS(1)>STRINGS(1)</action>                                             <action name=STRINGS(1)>STRINGS(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            strings - extract printable strings
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            strings \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Strings finds and prints strings containing 6 or more
+<style color=#00ffffff size=1>.</style>            consecutive printable UTF-encoded characters in a
+<style color=#00ffffff size=1>.</style>            (typically) binary file, default standard input. Printable
+<style color=#00ffffff size=1>.</style>            characters are taken to be ASCII characters from blank
+<style color=#00ffffff size=1>.</style>            through tilde (hexadecimal 20 through 7E), inclusive, and
+<style color=#00ffffff size=1>.</style>            all other characters from value 00A0 to FFFF. Strings
+<style color=#00ffffff size=1>.</style>            reports the decimal offset within the file at which the
+<style color=#00ffffff size=1>.</style>            string starts and the text of the string. If the string is
+<style color=#00ffffff size=1>.</style>            longer than 70 runes the line is terminated by three dots
+<style color=#00ffffff size=1>.</style>            and the printing is resumed on the next line with the offset
+<style color=#00ffffff size=1>.</style>            of the continuation line.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/strings.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,95 @@
+<action name=SYS-PCTL(2)>SYS-PCTL(2)</action>                                           <action name=SYS-PCTL(2)>SYS-PCTL(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            pctl - process control
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            pctl: fn(flags: int, movefd: list of int): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A newly spawned Limbo process (also known as a thread)
+<style color=#00ffffff size=1>.</style>            shares with its parent process a number of resources and
+<style color=#00ffffff size=1>.</style>            properties, such as file name space, open file descriptors,
+<style color=#00ffffff size=1>.</style>            current working directory, and so on. Pctl controls this
+<style color=#00ffffff size=1>.</style>            sharing, allowing a process to gain a copy of a resource
+<style color=#00ffffff size=1>.</style>            rather than to share it, to start with a null resource, and
+<style color=#00ffffff size=1>.</style>            so on.
+
+<style color=#00ffffff size=1>.</style>            The set of processes sharing a property are called a group\;
+<style color=#00ffffff size=1>.</style>            for example the set of processes sharing a name space are
+<style color=#00ffffff size=1>.</style>            called a name space group. Each process is a member of a
+<style color=#00ffffff size=1>.</style>            process group, typically the set of threads functioning as a
+<style color=#00ffffff size=1>.</style>            single program. All the members of a process group may be
+<style color=#00ffffff size=1>.</style>            terminated at once using the killgrp control message in the
+<style color=#00ffffff size=1>.</style>            <action name=prog(3)>prog(3)</action> device.
+
+<style color=#00ffffff size=1>.</style>            A call to pctl affects the calling process and, indirectly
+<style color=#00ffffff size=1>.</style>            according to flags, any other processes sharing properties
+<style color=#00ffffff size=1>.</style>            with it. The flags to pctl are:
+
+<style color=#00ffffff size=1>.</style>            NEWFD    Give the process a new file descriptor group. All
+<style color=#00ffffff size=1>.</style>                     file descriptors are closed except those listed in
+<style color=#00ffffff size=1>.</style>                     movefd, which are preserved in the new group. After
+<style color=#00ffffff size=1>.</style>                     this call, changes the process makes to its set of
+<style color=#00ffffff size=1>.</style>                     open file descriptors will not be visible to other
+<style color=#00ffffff size=1>.</style>                     processes.
+
+<style color=#00ffffff size=1>.</style>            FORKFD   Place the process in a new file descriptor group
+<style color=#00ffffff size=1>.</style>                     containing a copy of the current set of file
+<style color=#00ffffff size=1>.</style>                     descriptors. The file descriptors listed in movefd
+<style color=#00ffffff size=1>.</style>                     are closed in the old group. After this call,
+<style color=#00ffffff size=1>.</style>                     changes the process makes to its set of open file
+<style color=#00ffffff size=1>.</style>                     descriptors will not be visible to other processes.
+
+<style color=#00ffffff size=1>.</style>            NEWNS    Place the process in a new file name space group in
+<style color=#00ffffff size=1>.</style>                     which the current directory is made the root
+<style color=#00ffffff size=1>.</style>                     directory, `/', of the new name space. The current
+<style color=#00ffffff size=1>.</style>                     directory is unaffected by this call.
+
+<style color=#00ffffff size=1>.</style>            FORKNS   Place the process in a new file name space group
+<style color=#00ffffff size=1>.</style>                     containing a copy of the current name space. After
+<style color=#00ffffff size=1>.</style>                     this call, changes the process makes to its name
+<style color=#00ffffff size=1>.</style>                     space, including chdir calls, will not affect other
+<style color=#00ffffff size=1>.</style>                     processes.
+
+<style color=#00ffffff size=1>.</style>            NODEVS   Set the current file name space group to prevent
+<style color=#00ffffff size=1>.</style>                     subsequent access to the roots of file trees
+<style color=#00ffffff size=1>.</style>                     implemented by a device driver (ie, the use of path
+<style color=#00ffffff size=1>.</style>                     names beginning with #, as described by <action name=intro(3)>intro(3)</action>).
+<style color=#00ffffff size=1>.</style>                     Even after NODEVS the following devices can be
+<style color=#00ffffff size=1>.</style>                     attached, which are either private or can be
+<style color=#00ffffff size=1>.</style>                     separately controlled: <action name=pipe(3)>pipe(3)</action>, <action name=env(3)>env(3)</action>, <action name=srv(3)>srv(3)</action> and
+<style color=#00ffffff size=1>.</style>                     <action name=ssl(3)>ssl(3)</action>.
+
+<style color=#00ffffff size=1>.</style>            NEWENV   Place the process in a new empty environment group
+<style color=#00ffffff size=1>.</style>                     containing no environment variables. After this
+<style color=#00ffffff size=1>.</style>                     call, changes the process makes to its environment
+<style color=#00ffffff size=1>.</style>                     will not affect other processes.
+
+<style color=#00ffffff size=1>.</style>            FORKENV  Place the process in a new environment group
+<style color=#00ffffff size=1>.</style>                     containing a copy of the current environment
+<style color=#00ffffff size=1>.</style>                     variables. After this call, changes the process
+<style color=#00ffffff size=1>.</style>                     makes to its environment will not affect other
+<style color=#00ffffff size=1>.</style>                     processes.
+
+<style color=#00ffffff size=1>.</style>            NEWPGRP  Establish a new process group with a group id equal
+<style color=#00ffffff size=1>.</style>                     to that of the pid of the calling process.
+
+<style color=#00ffffff size=1>.</style>            The Inferno shell <action name=sh(1)>sh(1)</action> uses FORKFD when starting a command\;
+<style color=#00ffffff size=1>.</style>            its pctl built-in (see <action name=sh-std(1)>sh-std(1)</action>) can invoke the other
+<style color=#00ffffff size=1>.</style>            effects when needed. The window manager <action name=wm(1)>wm(1)</action> uses
+<style color=#00ffffff size=1>.</style>            NEWPGRP|FORKFD when starting a window manager application. A
+<style color=#00ffffff size=1>.</style>            network server might use NEWPGRP|FORKNS|FORKFD|FORKENV to
+<style color=#00ffffff size=1>.</style>            insulate itself completely from services it starts.
+
+<style color=#00ffffff size=1>.</style>            The return value of pctl is the numerical process id of  the
+<style color=#00ffffff size=1>.</style>            calling process, which can be used for example to access its
+<style color=#00ffffff size=1>.</style>            <action name=prog(3)>prog(3)</action> files.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh-std(1)>sh-std(1)</action>, <action name=sys-intro(2)>sys-intro(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

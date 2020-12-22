@@ -1,0 +1,94 @@
+<action name=DD(1)>DD(1)</action>                                                       <action name=DD(1)>DD(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dd - convert and copy a file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            dd \[ option value \] ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dd\^ copies the specified input file to the specified output
+<style color=#00ffffff size=1>.</style>            with possible conversions. The standard input and output are
+<style color=#00ffffff size=1>.</style>            used by default. The input and output block size may be
+<style color=#00ffffff size=1>.</style>            specified to take advantage of raw physical I/O. The options
+<style color=#00ffffff size=1>.</style>            are
+
+<style color=#00ffffff size=1>.</style>            -if f      Open file f for input.
+
+<style color=#00ffffff size=1>.</style>            -of f      Open file f for output.
+
+<style color=#00ffffff size=1>.</style>            -ibs n\^   Set input block size to n\^ bytes (default 512).
+
+<style color=#00ffffff size=1>.</style>            -obs n\^   Set output block size (default 512).
+
+<style color=#00ffffff size=1>.</style>            -bs n\^    Set both input and output block size, superseding
+<style color=#00ffffff size=1>.</style>                       ibs\^ and obs. If no conversion is specified,
+<style color=#00ffffff size=1>.</style>                       preserve the input block size instead of packing
+<style color=#00ffffff size=1>.</style>                       short blocks into the output buffer. This is
+<style color=#00ffffff size=1>.</style>                       particularly efficient since no in-core copy need
+<style color=#00ffffff size=1>.</style>                       be done.
+
+<style color=#00ffffff size=1>.</style>            -cbs n\^   Set conversion buffer size.
+
+<style color=#00ffffff size=1>.</style>            -skip n\^  Skip n input records before copying.
+
+<style color=#00ffffff size=1>.</style>            -iseek n\^ Seek n records forward on input file before
+<style color=#00ffffff size=1>.</style>                       copying.
+
+<style color=#00ffffff size=1>.</style>            -files n\^ Catenate n input files (useful only for magnetic
+<style color=#00ffffff size=1>.</style>                       tape or similar input device).
+
+<style color=#00ffffff size=1>.</style>            -oseek n\^ Seek n\^ records from beginning of output file
+<style color=#00ffffff size=1>.</style>                       before copying.
+
+<style color=#00ffffff size=1>.</style>            -count n\^ Copy only n input records.
+
+<style color=#00ffffff size=1>.</style>            -conv ascii    Convert EBCDIC to ASCII.
+<style color=#00ffffff size=1>.</style>            ebcdic
+<style color=#00ffffff size=1>.</style>                 Convert ASCII to EBCDIC.
+<style color=#00ffffff size=1>.</style>            ibm  Like ebcdic but with a slightly different character
+<style color=#00ffffff size=1>.</style>                 map.
+<style color=#00ffffff size=1>.</style>            block
+<style color=#00ffffff size=1>.</style>                 Convert variable length ASCII records to fixed length.
+<style color=#00ffffff size=1>.</style>            unblock
+<style color=#00ffffff size=1>.</style>                 Convert fixed length ASCII records to variable length.
+<style color=#00ffffff size=1>.</style>            lcase
+<style color=#00ffffff size=1>.</style>                 Map alphabetics to lower case.
+<style color=#00ffffff size=1>.</style>            ucase
+<style color=#00ffffff size=1>.</style>                 Map alphabetics to upper case.
+<style color=#00ffffff size=1>.</style>            swab Swap every pair of bytes.
+<style color=#00ffffff size=1>.</style>            noerror
+<style color=#00ffffff size=1>.</style>                 Do not stop processing on an error.
+<style color=#00ffffff size=1>.</style>            sync Pad every input record to ibs\^ bytes.
+
+<style color=#00ffffff size=1>.</style>            Where sizes are specified, a number of bytes is expected. A
+<style color=#00ffffff size=1>.</style>            number may end with ``k'' or `b' to specify multiplication
+<style color=#00ffffff size=1>.</style>            by 1024 or 512 respectively\; a pair of numbers may be
+<style color=#00ffffff size=1>.</style>            separated by ``x'' to indicate a product. Multiple
+<style color=#00ffffff size=1>.</style>            conversions may be specified in the style: `-conv
+<style color=#00ffffff size=1>.</style>            ebcdic,ucase'.
+
+<style color=#00ffffff size=1>.</style>            ``Cbs\^'' is used only if `ascii\^', `unblock\^', `ebcdic\^'
+<style color=#00ffffff size=1>.</style>            , `ibm\^', or ``block\^'' conversion is specified. In the
+<style color=#00ffffff size=1>.</style>            first two cases, n characters are copied into the conversion
+<style color=#00ffffff size=1>.</style>            buffer, any specified character mapping is done, trailing
+<style color=#00ffffff size=1>.</style>            blanks are trimmed and new-line is added before sending the
+<style color=#00ffffff size=1>.</style>            line to the output. In the latter three cases, characters
+<style color=#00ffffff size=1>.</style>            are read into the conversion buffer and blanks are added to
+<style color=#00ffffff size=1>.</style>            make up an output record of size n. If ``cbs\^'' is
+<style color=#00ffffff size=1>.</style>            unspecified or zero, the `ascii\^', `ebcdic\^', and
+<style color=#00ffffff size=1>.</style>            ``ibm\^'' options convert the character set without changing
+<style color=#00ffffff size=1>.</style>            the block structure of the input file\; the ``unblock\^'' and
+<style color=#00ffffff size=1>.</style>            ``block\^'' options become a simple file copy.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/dd.b
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Dd reports the number of full + partial input and output
+<style color=#00ffffff size=1>.</style>            blocks handled.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cat(1)>cat(1)</action>, <action name=cp(1)>cp(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

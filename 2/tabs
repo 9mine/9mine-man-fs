@@ -1,0 +1,49 @@
+<action name=TABS(2)>TABS(2)</action>                                                   <action name=TABS(2)>TABS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tabs: mktabs, tabsctl - tabbed notebook pseudo-widget
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "tabs.m"\;
+<style color=#00ffffff size=1>.</style>            tabs := load Tabs Tabs->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:        fn()\;
+
+<style color=#00ffffff size=1>.</style>            mktabs:      fn(p: ref Tk->Toplevel, book: string,
+<style color=#00ffffff size=1>.</style>                           tabs: array of (string, string), dflt: int):
+<style color=#00ffffff size=1>.</style>                           chan of string\;
+
+<style color=#00ffffff size=1>.</style>            tabsctl:     fn(p: ref Tk->Toplevel, book: string,
+<style color=#00ffffff size=1>.</style>                           tabs: array of (string, string), curid: int,
+<style color=#00ffffff size=1>.</style>                           newid: string): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Tabs implements a Tk extension: a user-interface device that
+<style color=#00ffffff size=1>.</style>            looks like a tabbed notebook.
+
+<style color=#00ffffff size=1>.</style>            Init should be called once to initialise the internal state.
+
+<style color=#00ffffff size=1>.</style>            Mktabs creates a tabbed notebook pseudo widget, book, for
+<style color=#00ffffff size=1>.</style>            insertion into Tk widget p. Once created, book can be packed
+<style color=#00ffffff size=1>.</style>            like any other Tk widget. Information for specific tab pages
+<style color=#00ffffff size=1>.</style>            is contained in the tabs array. For each page, tabs contains
+<style color=#00ffffff size=1>.</style>            the name displayed in the tab and a Tk widget name. Whenever
+<style color=#00ffffff size=1>.</style>            a page is selected, its widget is packed in book and
+<style color=#00ffffff size=1>.</style>            displayed. The notebook will initially display the page
+<style color=#00ffffff size=1>.</style>            indexed by dflt. Mktabs returns a Tk event channel. Messages
+<style color=#00ffffff size=1>.</style>            received on this channel should be passed as the newid
+<style color=#00ffffff size=1>.</style>            argument to tabsctl.
+
+<style color=#00ffffff size=1>.</style>            Tabsctl controls a tabbed notebook. Curid is the index of
+<style color=#00ffffff size=1>.</style>            the page currently selected in the notebook. Newid is a
+<style color=#00ffffff size=1>.</style>            string containing the index of the new page to be displayed\;
+<style color=#00ffffff size=1>.</style>            this is usually the information received on the tabs
+<style color=#00ffffff size=1>.</style>            channel. The index of the newly selected page is returned. 
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/tabs.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=dividers(2)>dividers(2)</action>, <action name=draw-context(2)>draw-context(2)</action>, <action name=tk(2)>tk(2)</action>, <action name=wmlib(2)>wmlib(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

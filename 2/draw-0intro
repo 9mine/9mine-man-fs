@@ -1,0 +1,168 @@
+<action name=DRAW-INTRO(2)>DRAW-INTRO(2)</action>                                       <action name=DRAW-INTRO(2)>DRAW-INTRO(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            draw - basic graphics facilities module
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            draw := load Draw Draw->PATH\;
+
+<style color=#00ffffff size=1>.</style>            setalpha:  fn(rgba: int, alpha: int): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Inferno's Draw module provides basic graphics facilities,
+<style color=#00ffffff size=1>.</style>            defining drawing contexts, images, character fonts, and
+<style color=#00ffffff size=1>.</style>            rectangular geometric operations. See <action name=wmlib(2)>wmlib(2)</action> and <action name=tk(2)>tk(2)</action> for
+<style color=#00ffffff size=1>.</style>            higher level operations, such as windows and menu handling.
+
+<style color=#00ffffff size=1>.</style>         Pixels
+<style color=#00ffffff size=1>.</style>            Images are defined on a rectangular region of an integer
+<style color=#00ffffff size=1>.</style>            plane with a picture element, or pixel, at each grid point.
+<style color=#00ffffff size=1>.</style>            Pixel values are integers with between 1 and 32 bits per
+<style color=#00ffffff size=1>.</style>            pixel, and all pixels in a given image have the same size,
+<style color=#00ffffff size=1>.</style>            or depth. Some operations allow images with different depths
+<style color=#00ffffff size=1>.</style>            to be combined, for example to do masking. Images have one
+<style color=#00ffffff size=1>.</style>            or more channels: colour channels, greyscale channels,
+<style color=#00ffffff size=1>.</style>            colour map indices, and others, as described in <action name=colour(6)>colour(6)</action>.
+<style color=#00ffffff size=1>.</style>            Each pixel value contains a component of each such channel.
+<style color=#00ffffff size=1>.</style>            All pixels in an image have the same size, or depth, and the
+<style color=#00ffffff size=1>.</style>            same component structure.
+
+<style color=#00ffffff size=1>.</style>            When an image is displayed, the value of each pixel
+<style color=#00ffffff size=1>.</style>            determines the colour of the display, according to the
+<style color=#00ffffff size=1>.</style>            interpretation of the image's channels. For instance, on
+<style color=#00ffffff size=1>.</style>            `true colour' displays, the display image might contain red,
+<style color=#00ffffff size=1>.</style>            blue and green colour channels, and each pixel value will
+<style color=#00ffffff size=1>.</style>            have red, blue and green colour components. For displays
+<style color=#00ffffff size=1>.</style>            with only 8 bits per pixel or less, Inferno uses a fixed
+<style color=#00ffffff size=1>.</style>            colour map for each display depth (see <action name=colour(6)>colour(6)</action>).
+<style color=#00ffffff size=1>.</style>            Facilities exist in <action name=draw-display(2)>draw-display(2)</action> to convert between (red,
+<style color=#00ffffff size=1>.</style>            green, blue) triplets and colour-mapped pixel values, but
+<style color=#00ffffff size=1>.</style>            the mapping is often done automatically by the graphics
+<style color=#00ffffff size=1>.</style>            operations when images with different channel structures are
+<style color=#00ffffff size=1>.</style>            combined.
+
+<style color=#00ffffff size=1>.</style>            Draw uses a standard representation of colour constants in
+<style color=#00ffffff size=1>.</style>            calls to create coloured images or to initialise new images
+<style color=#00ffffff size=1>.</style>            with a given colour. This is referred to as `32-bit RGBA
+<style color=#00ffffff size=1>.</style>            format'. Each constant colour is represented as a 32-bit
+<style color=#00ffffff size=1>.</style>            integer, with 8-bit red, blue and green colour components,
+<style color=#00ffffff size=1>.</style>            and an 8-bit alpha component, in that order from most to
+<style color=#00ffffff size=1>.</style>            least significant byte.
+
+<style color=#00ffffff size=1>.</style>            The RGB values in a colour are premultiplied by the alpha
+<style color=#00ffffff size=1>.</style>            value\; for example, a 50% red is int 16r7F00007F not int
+<style color=#00ffffff size=1>.</style>            16rFF00007F. The function Draw->setalpha performs the alpha
+<style color=#00ffffff size=1>.</style>            computation on a given colour rgba in 32-bit RGBA format,
+<style color=#00ffffff size=1>.</style>            ignoring its initial alpha value, and returning the result
+<style color=#00ffffff size=1>.</style>            of multiplying each colour component by the supplied alpha.
+<style color=#00ffffff size=1>.</style>            For example, to make a 50% red color value, one could
+<style color=#00ffffff size=1>.</style>            execute draw->setalpha(Draw->Red, 16r7F).
+
+<style color=#00ffffff size=1>.</style>         Terminology
+<style color=#00ffffff size=1>.</style>            Point    The graphics plane is defined on an integer grid,
+<style color=#00ffffff size=1>.</style>                     with each (x, y) coordinate identifying the upper
+<style color=#00ffffff size=1>.</style>                     left corner of the corresponding pixel. The plane's
+<style color=#00ffffff size=1>.</style>                     origin, (0, 0), resides at the upper left corner of
+<style color=#00ffffff size=1>.</style>                     the screen\; x and y coordinates increase to the
+<style color=#00ffffff size=1>.</style>                     right and down. The abstract data type, Point
+<style color=#00ffffff size=1>.</style>                     defines a coordinate position.
+
+<style color=#00ffffff size=1>.</style>            Rect     The type Rect defines a rectangular region of the
+<style color=#00ffffff size=1>.</style>                     plane. It comprises two Points, min and max, and
+<style color=#00ffffff size=1>.</style>                     specifies the region defined by pixels with
+<style color=#00ffffff size=1>.</style>                     coordinates greater than or equal to min and
+<style color=#00ffffff size=1>.</style>                     strictly less than max, in both x and y. This
+<style color=#00ffffff size=1>.</style>                     half-open property allows rectangles that share an
+<style color=#00ffffff size=1>.</style>                     edge to have equal coordinates on the edge.
+
+<style color=#00ffffff size=1>.</style>            Display  The type Display represents a physical display,
+<style color=#00ffffff size=1>.</style>                     corresponding to a single connection to a <action name=draw(3)>draw(3)</action>
+<style color=#00ffffff size=1>.</style>                     device. Besides the image of the display itself,
+<style color=#00ffffff size=1>.</style>                     the Display type also stores references to
+<style color=#00ffffff size=1>.</style>                     off-screen images, fonts, and so on. The contents
+<style color=#00ffffff size=1>.</style>                     of such images are stored in the display device,
+<style color=#00ffffff size=1>.</style>                     not in the client of the display, which affects how
+<style color=#00ffffff size=1>.</style>                     they are allocated and used, see for example
+<style color=#00ffffff size=1>.</style>                     <action name=draw-image(2)>draw-image(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            Screen   The Screen type is used to manage a set of windows
+<style color=#00ffffff size=1>.</style>                     on an image, typically but not necessarily that of
+<style color=#00ffffff size=1>.</style>                     a display. Screens and hence windows may be built
+<style color=#00ffffff size=1>.</style>                     recursively upon windows for subwindowing or even
+<style color=#00ffffff size=1>.</style>                     on off-screen images.
+
+<style color=#00ffffff size=1>.</style>            Image    The Image type provides basic operations on groups
+<style color=#00ffffff size=1>.</style>                     of pixels. Through a few simple operations, most
+<style color=#00ffffff size=1>.</style>                     importantly the draw image combination operator
+<style color=#00ffffff size=1>.</style>                     (see <action name=draw-image(2)>draw-image(2)</action>), the Image type provides the
+<style color=#00ffffff size=1>.</style>                     building blocks for Display, Screen, and Font.
+
+<style color=#00ffffff size=1>.</style>            Font     A Font defines which character image to draw for
+<style color=#00ffffff size=1>.</style>                     each character code value. Although all character
+<style color=#00ffffff size=1>.</style>                     drawing operations ultimately use the draw
+<style color=#00ffffff size=1>.</style>                     primitive on the underlying images, Fonts provide
+<style color=#00ffffff size=1>.</style>                     convenient and efficient management of display
+<style color=#00ffffff size=1>.</style>                     text. Inferno uses the 16-bit Unicode character
+<style color=#00ffffff size=1>.</style>                     encoding, so Fonts are managed hierarchically to
+<style color=#00ffffff size=1>.</style>                     control their size and to make common subsets such
+<style color=#00ffffff size=1>.</style>                     as ASCII or Greek efficient in practice. See
+<style color=#00ffffff size=1>.</style>                     <action name=draw-font(2)>draw-font(2)</action>, <action name=utf(6)>utf(6)</action>, and <action name=font(6)>font(6)</action>.
+
+<style color=#00ffffff size=1>.</style>            Context  A Context provides an interface to the system
+<style color=#00ffffff size=1>.</style>                     graphics and interactive devices. The system
+<style color=#00ffffff size=1>.</style>                     creates this context when it starts an application.
+
+<style color=#00ffffff size=1>.</style>            Pointer  The Pointer type conveys information for pointing
+<style color=#00ffffff size=1>.</style>                     devices, such as mice or trackballs.
+
+<style color=#00ffffff size=1>.</style>         More about Images
+<style color=#00ffffff size=1>.</style>            An image occupies a rectangle, Image.r, of the graphics
+<style color=#00ffffff size=1>.</style>            plane. A second rectangle, Image.clipr, defines a clipping
+<style color=#00ffffff size=1>.</style>            region for the image. Typically, the clipping rectangle is
+<style color=#00ffffff size=1>.</style>            the same as the basic image, but they may differ. For
+<style color=#00ffffff size=1>.</style>            example, the clipping region may be made smaller and
+<style color=#00ffffff size=1>.</style>            centered on the basic image to define a protected border.
+
+<style color=#00ffffff size=1>.</style>            The pixel structure of an Image is stored as Chans value
+<style color=#00ffffff size=1>.</style>            Image.chans\; the image's pixel depth in bits is stored as
+<style color=#00ffffff size=1>.</style>            integer Image.depth.
+
+<style color=#00ffffff size=1>.</style>            An image may be marked for replication: when set, the
+<style color=#00ffffff size=1>.</style>            boolean Image.repl causes the image to behave as if
+<style color=#00ffffff size=1>.</style>            replicated across the entire integer plane, thus tiling the
+<style color=#00ffffff size=1>.</style>            destination graphics area with copies of the source image.
+<style color=#00ffffff size=1>.</style>            When replication is turned on, the clipping rectangle limits
+<style color=#00ffffff size=1>.</style>            the extent of the replication and may even usefully be
+<style color=#00ffffff size=1>.</style>            disjoint from Image.r. See <action name=draw-image(2)>draw-image(2)</action> for examples.
+
+<style color=#00ffffff size=1>.</style>            The Image member functions provide facilities for drawing
+<style color=#00ffffff size=1>.</style>            text and geometric objects, manipulating windows, and so on.
+
+<style color=#00ffffff size=1>.</style>            Objects of type Display, Font, Screen, and Image must be
+<style color=#00ffffff size=1>.</style>            allocated by the member functions\; if such objects are
+<style color=#00ffffff size=1>.</style>            created with a regular Limbo definition, they will not
+<style color=#00ffffff size=1>.</style>            behave properly and may generate run-time errors.
+
+<style color=#00ffffff size=1>.</style>            There are no ``free'' routines for graphics objects. Instead
+<style color=#00ffffff size=1>.</style>            Limbo's garbage collection frees them automatically. As is
+<style color=#00ffffff size=1>.</style>            generally so within Limbo, one can eliminate references by
+<style color=#00ffffff size=1>.</style>            assigning nil to reference variables, returning from
+<style color=#00ffffff size=1>.</style>            functions whose local variables hold references, etc.
+
+RETURN VALUES
+<style color=#00ffffff size=1>.</style>            Most drawing operations operate asynchronously, so they have
+<style color=#00ffffff size=1>.</style>            no error return. Functions that allocate objects return nil
+<style color=#00ffffff size=1>.</style>            for failure\; in such cases the system error string may be
+<style color=#00ffffff size=1>.</style>            interrogated (such as by the %r format (see <action name=sys-print(2)>sys-print(2)</action>))
+<style color=#00ffffff size=1>.</style>            for more information.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/draw.c
+<style color=#00ffffff size=1>.</style>            /libdraw/*.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=draw(3)>draw(3)</action>, <action name=ir(2)>ir(2)</action>, <action name=prefab-intro(2)>prefab-intro(2)</action>, <action name=tk(2)>tk(2)</action>, <action name=wmlib(2)>wmlib(2)</action>, <action name=colour(6)>colour(6)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=font(6)>font(6)</action>, <action name=image(6)>image(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

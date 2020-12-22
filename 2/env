@@ -1,0 +1,40 @@
+<action name=ENV(2)>ENV(2)</action>                                                     <action name=ENV(2)>ENV(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            env - environment module
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "env.m"\;
+<style color=#00ffffff size=1>.</style>            env = load Env Env->PATH\;
+
+<style color=#00ffffff size=1>.</style>            getenv: fn(var: string): string\;
+<style color=#00ffffff size=1>.</style>            setenv: fn(var: string, val: string): int\;
+<style color=#00ffffff size=1>.</style>            getall: fn(): list of (string, string)\;
+<style color=#00ffffff size=1>.</style>            clone:  fn(): int\;
+<style color=#00ffffff size=1>.</style>            new:    fn(): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Env provides an interface to manipulate environment
+<style color=#00ffffff size=1>.</style>            variables which may then be shared between processes. Getenv
+<style color=#00ffffff size=1>.</style>            returns the value of the environment variable var passed as
+<style color=#00ffffff size=1>.</style>            a parameter, or nil if the variable is not set. It does this
+<style color=#00ffffff size=1>.</style>            by reading the contents of /env/var. Setenv sets the value
+<style color=#00ffffff size=1>.</style>            of the environment variable var to val. The value may be nil
+<style color=#00ffffff size=1>.</style>            to unset the variable. It does this by writing the string
+<style color=#00ffffff size=1>.</style>            val to /env/var. The routine returns a negative number if it
+<style color=#00ffffff size=1>.</style>            fails to set the variable for any reason. Getall returns all
+<style color=#00ffffff size=1>.</style>            the variables in the current environment as a list of
+<style color=#00ffffff size=1>.</style>            (variable, value) pairs. Clone copies the current
+<style color=#00ffffff size=1>.</style>            environment and places the process in a new environment
+<style color=#00ffffff size=1>.</style>            group. Changes now made to the environment will not affect
+<style color=#00ffffff size=1>.</style>            the environment of other processes. New places the process
+<style color=#00ffffff size=1>.</style>            in a new empty environment group. Changes made in this new
+<style color=#00ffffff size=1>.</style>            environment will not affect other processes.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/env.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=env(1)>env(1)</action>, <action name=sys-pctl(2)>sys-pctl(2)</action>, <action name=env(3)>env(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

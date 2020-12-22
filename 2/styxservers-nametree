@@ -1,0 +1,139 @@
+<action name=STYXSERVERS-NAMETREE(2)>STYXSERVERS-NAMETREE(2)</action>                   <action name=STYXSERVERS-NAMETREE(2)>STYXSERVERS-NAMETREE(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Styxservers: nametree - hierarchical name storage for use
+<style color=#00ffffff size=1>.</style>            with Styxservers.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            include "styx.m"\;
+<style color=#00ffffff size=1>.</style>            include "styxservers.m"\;
+<style color=#00ffffff size=1>.</style>            nametree := load Nametree Nametree->PATH\;
+<style color=#00ffffff size=1>.</style>            	Tree: import nametree\;
+
+<style color=#00ffffff size=1>.</style>            Tree: adt {
+<style color=#00ffffff size=1>.</style>                create: fn(t: self ref Tree, parentpath: big, d: Sys->Dir): string\;
+<style color=#00ffffff size=1>.</style>                remove: fn(t: self ref Tree, path: big): string\;
+<style color=#00ffffff size=1>.</style>                wstat:   fn(t: self ref Tree, path: big, d: Sys->Dir)\;
+<style color=#00ffffff size=1>.</style>                quit:   fn(t: self ref Tree)\;
+<style color=#00ffffff size=1>.</style>            }\;
+<style color=#00ffffff size=1>.</style>            init:       fn()\;
+<style color=#00ffffff size=1>.</style>            start:      fn(): (ref Tree, chan of ref Styxservers->Navop)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Nametree provides the storage for a hierarchical namespace
+<style color=#00ffffff size=1>.</style>            to be used by <action name=styxservers(2)>styxservers(2)</action>. After the module is loaded,
+<style color=#00ffffff size=1>.</style>            the init function should be called to initialise the
+<style color=#00ffffff size=1>.</style>            module's internal variables. Start spawns a new nametree
+<style color=#00ffffff size=1>.</style>            process\; it returns a tuple, say (tree, c), where c is a
+<style color=#00ffffff size=1>.</style>            channel that can be used to create an instance of
+<style color=#00ffffff size=1>.</style>            Styxservers->Navigator, to access files inside nametree, and
+<style color=#00ffffff size=1>.</style>            tree is an adt that allows creation and removal of those
+<style color=#00ffffff size=1>.</style>            files. On failure, these functions return a string
+<style color=#00ffffff size=1>.</style>            describing the error.
+
+<style color=#00ffffff size=1>.</style>            Note that the full set of operations on Nametree (i.e. stat,
+<style color=#00ffffff size=1>.</style>            walk, readdir, wstate, create and remove), is only available
+<style color=#00ffffff size=1>.</style>            in conjunction with Styxserver's Navigator interface. Files
+<style color=#00ffffff size=1>.</style>            in the name space are ultimately identified by a 64-bit path
+<style color=#00ffffff size=1>.</style>            value, which forms the path component of the file's Qid.
+<style color=#00ffffff size=1>.</style>            (See <action name=intro(5)>intro(5)</action> for a description of the system's
+<style color=#00ffffff size=1>.</style>            interpretation of Qids.)
+
+<style color=#00ffffff size=1>.</style>            The Tree operations are:
+
+<style color=#00ffffff size=1>.</style>            t.create(parentpath, d)
+<style color=#00ffffff size=1>.</style>                      Create a new file or directory. D gives the
+<style color=#00ffffff size=1>.</style>                      directory information that will be stored for the
+<style color=#00ffffff size=1>.</style>                      file, including its own path value, given by d
+<style color=#00ffffff size=1>.</style>                      .qid.path. If the file referenced by parentpath
+<style color=#00ffffff size=1>.</style>                      does not exist, creation will not be allowed,
+<style color=#00ffffff size=1>.</style>                      other than in the special case when d.qid.path is
+<style color=#00ffffff size=1>.</style>                      equal to parentpath, in which case it is assumed
+<style color=#00ffffff size=1>.</style>                      to be a root directory and may be created. This
+<style color=#00ffffff size=1>.</style>                      potentially allows a single Nametree instance to
+<style color=#00ffffff size=1>.</style>                      hold many distinct directory hierarchies. Note
+<style color=#00ffffff size=1>.</style>                      that no attempt is made to ensure that parentpath
+<style color=#00ffffff size=1>.</style>                      refers to a directory\; the check is assumed to
+<style color=#00ffffff size=1>.</style>                      have been made previously. When a hierarchy is
+<style color=#00ffffff size=1>.</style>                      traversed, Nametree interprets the name `..'
+<style color=#00ffffff size=1>.</style>                      itself as `parent directory', and that name should
+<style color=#00ffffff size=1>.</style>                      not be created explicitly.
+
+<style color=#00ffffff size=1>.</style>            t.remove(path)
+<style color=#00ffffff size=1>.</style>                      Remove the file referred to by path, and all its
+<style color=#00ffffff size=1>.</style>                      descendants.
+
+<style color=#00ffffff size=1>.</style>            t.wstat(path, d)
+<style color=#00ffffff size=1>.</style>                      Change the directory information held on file path
+<style color=#00ffffff size=1>.</style>                      . The Qid path itself cannot be changed by d.
+
+<style color=#00ffffff size=1>.</style>            t.quit()  Shut down the nametree process.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Here is a complete example that uses Nametree in conjunction
+<style color=#00ffffff size=1>.</style>            with Styxservers in order to serve two files data and ctl
+<style color=#00ffffff size=1>.</style>            ... and do nothing with them:
+<style color=#00ffffff size=1>.</style>            implement Tst\;
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            	sys: Sys\;
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            include "styx.m"\;
+<style color=#00ffffff size=1>.</style>            include "styxservers.m"\;
+<style color=#00ffffff size=1>.</style>            	styxservers: Styxservers\;
+<style color=#00ffffff size=1>.</style>            	Styxserver, Navigator: import styxservers\;
+<style color=#00ffffff size=1>.</style>            	nametree: Nametree\;
+<style color=#00ffffff size=1>.</style>            	Tree: import nametree\;
+
+<style color=#00ffffff size=1>.</style>            Tst: module
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	init: fn(nil: ref Draw->Context, argv: list of string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Qroot, Qctl, Qdata: con big iota\;	# paths
+<style color=#00ffffff size=1>.</style>            init(nil: ref Draw->Context, args: list of string)
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	sys = load Sys Sys->PATH\;
+<style color=#00ffffff size=1>.</style>            	styx := load Styx Styx->PATH\;
+<style color=#00ffffff size=1>.</style>            	styx->init()\;
+<style color=#00ffffff size=1>.</style>            	styxservers = load Styxservers Styxservers->PATH\;
+<style color=#00ffffff size=1>.</style>            	styxservers->init(styx)\;
+<style color=#00ffffff size=1>.</style>            	nametree = load Nametree Nametree->PATH\;
+<style color=#00ffffff size=1>.</style>            	nametree->init()\;
+<style color=#00ffffff size=1>.</style>            	sys->pctl(Sys->FORKNS, nil)\;
+<style color=#00ffffff size=1>.</style>            	(tree, treeop) := nametree->start()\;
+<style color=#00ffffff size=1>.</style>            	tree.create(Qroot, dir(".", 8r555|Sys->DMDIR, Qroot))\;
+<style color=#00ffffff size=1>.</style>            	tree.create(Qroot, dir("ctl", 8r666, Qctl))\;
+<style color=#00ffffff size=1>.</style>            	tree.create(Qroot, dir("data", 8r444, Qdata))\;
+<style color=#00ffffff size=1>.</style>            	(tchan, srv) := Styxserver.new(sys-><action name=fildes(0)>fildes(0)</action>,
+<style color=#00ffffff size=1>.</style>            						Navigator.new(treeop), Qroot)\;
+<style color=#00ffffff size=1>.</style>            	while((gm := <-tchan) != nil) {
+<style color=#00ffffff size=1>.</style>            		# normally a pick on gm would act on
+<style color=#00ffffff size=1>.</style>            		# Tmsg.Read and Tmsg.Write at least
+<style color=#00ffffff size=1>.</style>            		srv.default(gm)\;
+<style color=#00ffffff size=1>.</style>            	}
+<style color=#00ffffff size=1>.</style>            	tree.quit()\;
+<style color=#00ffffff size=1>.</style>            }
+
+<style color=#00ffffff size=1>.</style>            dir(name: string, perm: int, qid: big): Sys->Dir
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	d := sys->zerodir\;
+<style color=#00ffffff size=1>.</style>            	d.name = name\;
+<style color=#00ffffff size=1>.</style>            	d.uid = "me"\;
+<style color=#00ffffff size=1>.</style>            	d.gid = "me"\;
+<style color=#00ffffff size=1>.</style>            	d.qid.path = qid\;
+<style color=#00ffffff size=1>.</style>            	if (perm & Sys->DMDIR)
+<style color=#00ffffff size=1>.</style>            		d.qid.qtype = Sys->QTDIR\;
+<style color=#00ffffff size=1>.</style>            	else
+<style color=#00ffffff size=1>.</style>            		d.qid.qtype = Sys->QTFILE\;
+<style color=#00ffffff size=1>.</style>            	d.mode = perm\;
+<style color=#00ffffff size=1>.</style>            	return d\;
+<style color=#00ffffff size=1>.</style>            }
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/nametree.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=styxservers(2)>styxservers(2)</action>, <action name=intro(5)>intro(5)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,40 @@
+PARSECMD(10.2)                                     PARSECMD(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            parsecmd - parse device commands
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            Cmdbuf*	parsecmd(char *a, int n)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Parsecmd is an interface to tokenize (see getfields(10.2)),
+<style color=#00ffffff size=1>.</style>            that safely parses a command, with blank-separated fields,
+<style color=#00ffffff size=1>.</style>            as might be written to a device's ctl file. The buffer a and
+<style color=#00ffffff size=1>.</style>            count n can be those passed to the driver's write function.
+<style color=#00ffffff size=1>.</style>            Parsecmd converts the byte array (which might not be
+<style color=#00ffffff size=1>.</style>            null-terminated) to a null-terminated string, trimming any
+<style color=#00ffffff size=1>.</style>            trailing new line, before invoking tokenize to break the
+<style color=#00ffffff size=1>.</style>            string into arguments, interpreting blank and tab as field
+<style color=#00ffffff size=1>.</style>            separators when they are not quoted (in the style of <action name=sh(1)>sh(1)</action>).
+<style color=#00ffffff size=1>.</style>            It returns a pointer to a dynamically-allocated Cmdbuf
+<style color=#00ffffff size=1>.</style>            structure, which holds a copy of the string as modified by
+<style color=#00ffffff size=1>.</style>            parsefields, and the resulting fields\; it is defined as
+<style color=#00ffffff size=1>.</style>            follows:
+
+<style color=#00ffffff size=1>.</style>                 typedef
+<style color=#00ffffff size=1>.</style>                 struct Cmdbuf
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                 	char	buf\[128\]\;
+<style color=#00ffffff size=1>.</style>                 	char	*f\[16\]\;
+<style color=#00ffffff size=1>.</style>                 	int	nf\;
+<style color=#00ffffff size=1>.</style>                 } Cmdbuf\;
+
+<style color=#00ffffff size=1>.</style>            The array f holds the field pointers\; nf gives the number of
+<style color=#00ffffff size=1>.</style>            fields. Cmdbuf is allocated by smalloc (see malloc(10.2)),
+<style color=#00ffffff size=1>.</style>            and the caller is responsible for freeing it using free.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/parse.c
+<style color=#00ffffff size=1>.</style>            /emu/port/dev.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

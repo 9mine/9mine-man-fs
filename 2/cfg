@@ -1,0 +1,107 @@
+<action name=CFG(2)>CFG(2)</action>                                                     <action name=CFG(2)>CFG(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Cfg, Record, Tuple, Attr - configuration file parser
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "cfg.m"\;
+<style color=#00ffffff size=1>.</style>            cfg := load Cfg Cfg->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Attr: adt {
+<style color=#00ffffff size=1>.</style>            	name: string\;
+<style color=#00ffffff size=1>.</style>            	value: string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Tuple: adt {
+<style color=#00ffffff size=1>.</style>            	lnum: int\;
+<style color=#00ffffff size=1>.</style>            	attrs: list of Attr\;
+<style color=#00ffffff size=1>.</style>            	lookup: fn(t: self ref Tuple, name: string): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Record: adt {
+<style color=#00ffffff size=1>.</style>            	tuples: list of ref Tuple\;
+<style color=#00ffffff size=1>.</style>            	lookup: fn(r: self ref Record, name: string)
+<style color=#00ffffff size=1>.</style>            		: (string, ref Tuple)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init: fn(path: string): string\;
+<style color=#00ffffff size=1>.</style>            lookup: fn(name: string): list of (string, ref Record)\;
+<style color=#00ffffff size=1>.</style>            getkeys: fn(): list of string\;
+
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Cfg parses its configuration file format into a set of
+<style color=#00ffffff size=1>.</style>            Records.
+
+<style color=#00ffffff size=1>.</style>            Each line of the configuration file is comprised of a tuple
+<style color=#00ffffff size=1>.</style>            of attributes. Comments are introduced by the '#' character
+<style color=#00ffffff size=1>.</style>            and run to the end of the input line. Empty lines and
+<style color=#00ffffff size=1>.</style>            comments are ignored.
+
+<style color=#00ffffff size=1>.</style>            An attribute has a name followed by an optional value. The
+<style color=#00ffffff size=1>.</style>            value is specified by separating the name and value by an '=
+<style color=#00ffffff size=1>.</style>            ' character. Attribute names and values are input words. A
+<style color=#00ffffff size=1>.</style>            word is delimited by spacing characters and the '='
+<style color=#00ffffff size=1>.</style>            character. If a word needs to include any of these
+<style color=#00ffffff size=1>.</style>            characters then the word may be quoted using single or
+<style color=#00ffffff size=1>.</style>            double quotes. The start and end quotes must be the same.
+<style color=#00ffffff size=1>.</style>            The quoting character may be included in the word by
+<style color=#00ffffff size=1>.</style>            appearing twice.
+
+<style color=#00ffffff size=1>.</style>            Examples:
+<style color=#00ffffff size=1>.</style>            	'a b c'	yields	a b c
+<style color=#00ffffff size=1>.</style>            	"a b c"	yields	a b c
+<style color=#00ffffff size=1>.</style>            	'a " c'	yields	a " c
+<style color=#00ffffff size=1>.</style>            	'a '' c'	yields	a ' c
+
+<style color=#00ffffff size=1>.</style>            The name of the first attribute of a tuple is its key. The
+<style color=#00ffffff size=1>.</style>            primary tuple value is the value of its first attribute.
+
+<style color=#00ffffff size=1>.</style>            Tuples whose first attribute name appears at the start of a
+<style color=#00ffffff size=1>.</style>            line (having no preceeding spacing characters) are treated
+<style color=#00ffffff size=1>.</style>            as the start of a new record. A record incorporates all
+<style color=#00ffffff size=1>.</style>            tuples up to the start of the next record. The record key is
+<style color=#00ffffff size=1>.</style>            defined to be the name of its first attribute. The primary
+<style color=#00ffffff size=1>.</style>            record value is the value of the first attribute.
+
+<style color=#00ffffff size=1>.</style>            The adt types Attr, Tuple and Record are direct analogues of
+<style color=#00ffffff size=1>.</style>            the constructs defined above.
+
+<style color=#00ffffff size=1>.</style>            init(path)
+<style color=#00ffffff size=1>.</style>                 Init initialises the Cfg module, causing it to open and
+<style color=#00ffffff size=1>.</style>                 parse the configuration file given by the path
+<style color=#00ffffff size=1>.</style>                 argument. If an error is encountered in processing the
+<style color=#00ffffff size=1>.</style>                 file then an error string is returned. If there are no
+<style color=#00ffffff size=1>.</style>                 errors init returns nil.
+
+<style color=#00ffffff size=1>.</style>            lookup(name)
+<style color=#00ffffff size=1>.</style>                 Lookup returns the set of Records whose key matches the
+<style color=#00ffffff size=1>.</style>                 name argument. The return value is a list of (primary
+<style color=#00ffffff size=1>.</style>                 record value, record) pairs.
+
+<style color=#00ffffff size=1>.</style>            getkeys()
+<style color=#00ffffff size=1>.</style>                 Getkeys returns a list of the record keys that appear
+<style color=#00ffffff size=1>.</style>                 in the configuration file. Note that more than one
+<style color=#00ffffff size=1>.</style>                 record can have the same key. Duplicate key names are
+<style color=#00ffffff size=1>.</style>                 not returned by getkeys().
+
+<style color=#00ffffff size=1>.</style>            record.lookup(name)
+<style color=#00ffffff size=1>.</style>                 Returns the first tuple in record whose key matches
+<style color=#00ffffff size=1>.</style>                 name. The return value is (primary tuple value, tuple).
+<style color=#00ffffff size=1>.</style>                 If no matching tuple is found then the value (nil, nil)
+<style color=#00ffffff size=1>.</style>                 is returned. Note that more than one tuple of the
+<style color=#00ffffff size=1>.</style>                 record could have a key that matches name. Only the
+<style color=#00ffffff size=1>.</style>                 first matching tuple is returned. If an application
+<style color=#00ffffff size=1>.</style>                 makes use of multiple tuples with the same key then the
+<style color=#00ffffff size=1>.</style>                 record.tuple list will have to be handled explicitly by
+<style color=#00ffffff size=1>.</style>                 the application.
+
+<style color=#00ffffff size=1>.</style>            tuple.lookup(name)
+<style color=#00ffffff size=1>.</style>                 Returns the first attribute in tuple whose name matches
+<style color=#00ffffff size=1>.</style>                 name. The return value is the value of the attribute or
+<style color=#00ffffff size=1>.</style>                 nil if no matching attribute was found.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/cfg.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

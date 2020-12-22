@@ -1,0 +1,103 @@
+<action name=OPEN(5)>OPEN(5)</action>                                                   <action name=OPEN(5)>OPEN(5)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            open, create - prepare a fid for I/O on an existing or new
+<style color=#00ffffff size=1>.</style>            file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            size\[4\] Topen tag\[2\] fid\[4\] mode\[1\]
+<style color=#00ffffff size=1>.</style>            size\[4\] Ropen tag\[2\] qid\[13\] iounit\[4\]
+
+<style color=#00ffffff size=1>.</style>            size\[4\] Tcreate tag\[2\] fid\[4\] name\[s\] perm\[4\] mode\[1\]
+<style color=#00ffffff size=1>.</style>            size\[4\] Rcreate tag\[2\] qid\[13\] iounit\[4\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The open request asks the file server to check permissions
+<style color=#00ffffff size=1>.</style>            and prepare a fid for I/O with subsequent read and write
+<style color=#00ffffff size=1>.</style>            messages. The mode field determines the type of I/O: 0
+<style color=#00ffffff size=1>.</style>            (called OREAD in Sys), 1 (OWRITE), 2 (ORDWR), and 3 (OEXEC)
+<style color=#00ffffff size=1>.</style>            mean read access, write access, read and write access, and
+<style color=#00ffffff size=1>.</style>            execute access, to be checked against the permissions for
+<style color=#00ffffff size=1>.</style>            the file. In addition, if mode has the OTRUNC (16r10) bit
+<style color=#00ffffff size=1>.</style>            set, the file is to be truncated, which requires write
+<style color=#00ffffff size=1>.</style>            permission (if the file is append-only, and permission is
+<style color=#00ffffff size=1>.</style>            granted, the open succeeds but the file will not be
+<style color=#00ffffff size=1>.</style>            truncated)\; if the mode has the ORCLOSE (16r40) bit set, the
+<style color=#00ffffff size=1>.</style>            file is to be removed when the fid is clunked, which
+<style color=#00ffffff size=1>.</style>            requires permission to remove the file from its directory.
+<style color=#00ffffff size=1>.</style>            All other bits in mode should be zero. It is illegal to
+<style color=#00ffffff size=1>.</style>            write a directory, truncate it, or attempt to remove it on
+<style color=#00ffffff size=1>.</style>            close. If the file is marked for exclusive use (see stat
+<style color=#00ffffff size=1>.</style>            (5)), only one client can have the file open at any time.
+<style color=#00ffffff size=1>.</style>            That is, after such a file has been opened, further opens
+<style color=#00ffffff size=1>.</style>            will fail until fid has been clunked. All these permissions
+<style color=#00ffffff size=1>.</style>            are checked at the time of the open request\; subsequent
+<style color=#00ffffff size=1>.</style>            changes to the permissions of files do not affect the
+<style color=#00ffffff size=1>.</style>            ability to read, write, or remove an open file.
+
+<style color=#00ffffff size=1>.</style>            The create request asks the file server to create a new file
+<style color=#00ffffff size=1>.</style>            with the name supplied, in the directory (dir) represented
+<style color=#00ffffff size=1>.</style>            by fid, and requires write permission in the directory. The
+<style color=#00ffffff size=1>.</style>            owner of the file is the implied user id of the request, the
+<style color=#00ffffff size=1>.</style>            group of the file is the same as dir, and the permissions
+<style color=#00ffffff size=1>.</style>            are the value of perm & (~8r666 | (dir.perm & 8r666)) if a
+<style color=#00ffffff size=1>.</style>            regular file is being created and perm & (~8r777 | (dir.perm
+<style color=#00ffffff size=1>.</style>            & 8r777)) if a directory is being created. This means, for
+<style color=#00ffffff size=1>.</style>            example, that if the create allows read permission to
+<style color=#00ffffff size=1>.</style>            others, but the containing directory does not, then the
+<style color=#00ffffff size=1>.</style>            created file will not allow others to read the file.
+
+<style color=#00ffffff size=1>.</style>            Finally, the newly created file is opened according to mode,
+<style color=#00ffffff size=1>.</style>            and fid will represent the newly opened file. Mode is not
+<style color=#00ffffff size=1>.</style>            checked against the permissions in perm. The qid for the new
+<style color=#00ffffff size=1>.</style>            file is returned with the create reply message.
+
+<style color=#00ffffff size=1>.</style>            Directories are created by setting the DMDIR bit (
+<style color=#00ffffff size=1>.</style>            16r80000000) in the perm.
+
+<style color=#00ffffff size=1>.</style>            The names . and .. are special\; it is illegal to create
+<style color=#00ffffff size=1>.</style>            files with these names.
+
+<style color=#00ffffff size=1>.</style>            It is an error for either of these messages if the fid is
+<style color=#00ffffff size=1>.</style>            already the product of a successful open or create message.
+
+<style color=#00ffffff size=1>.</style>            An attempt to create a file in a directory where the given
+<style color=#00ffffff size=1>.</style>            name already exists will be rejected\; in this case, the
+<style color=#00ffffff size=1>.</style>            create system call (see <action name=sys-open(2)>sys-open(2)</action>) uses open with
+<style color=#00ffffff size=1>.</style>            truncation. The algorithm used by the create system call is:
+<style color=#00ffffff size=1>.</style>            first walk to the directory to contain the file. If that
+<style color=#00ffffff size=1>.</style>            fails, return an error. Next walk to the specified file. If
+<style color=#00ffffff size=1>.</style>            the walk succeeds, send a request to open and truncate the
+<style color=#00ffffff size=1>.</style>            file and return the result, successful or not. If the walk
+<style color=#00ffffff size=1>.</style>            fails, send a create message. If that fails, it may be
+<style color=#00ffffff size=1>.</style>            because the file was created by another process after the
+<style color=#00ffffff size=1>.</style>            previous walk failed, so (once) try the walk and open again.
+
+<style color=#00ffffff size=1>.</style>            For the behavior of create on a union directory, see
+<style color=#00ffffff size=1>.</style>            <action name=sys-bind(2)>sys-bind(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            The iounit field returned by open and create may be zero. If
+<style color=#00ffffff size=1>.</style>            it is not, it is the maximum number of bytes that are
+<style color=#00ffffff size=1>.</style>            guaranteed to be read from or written to the file without
+<style color=#00ffffff size=1>.</style>            breaking the I/O transfer into multiple 9P messages\; see
+<style color=#00ffffff size=1>.</style>            <action name=read(5)>read(5)</action>.
+
+ENTRY POINTS
+<style color=#00ffffff size=1>.</style>            Open and create both generate open messages\; only create
+<style color=#00ffffff size=1>.</style>            generates a create message. The iounit associated with an
+<style color=#00ffffff size=1>.</style>            open file may be discovered by calling <action name=sys-iounit(2)>sys-iounit(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            For programs that need atomic file creation, without the
+<style color=#00ffffff size=1>.</style>            race that exists in the open-create sequence described
+<style color=#00ffffff size=1>.</style>            above, the kernel does the following. If the OEXCL (16r1000)
+<style color=#00ffffff size=1>.</style>            bit is set in the mode for a create system call, the open
+<style color=#00ffffff size=1>.</style>            message is not sent\; the kernel issues only the create.
+<style color=#00ffffff size=1>.</style>            Thus, if the file exists, create will draw an error, but if
+<style color=#00ffffff size=1>.</style>            it doesn't and the create system call succeeds, the process
+<style color=#00ffffff size=1>.</style>            issuing the create is guaranteed to be the one that created
+<style color=#00ffffff size=1>.</style>            the file.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-bind(2)>sys-bind(2)</action>, <action name=sys-open(2)>sys-open(2)</action>, <action name=stat(5)>stat(5)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

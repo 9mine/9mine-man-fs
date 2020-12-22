@@ -1,0 +1,38 @@
+<action name=9WIN(1)>9WIN(1)</action>                                                   <action name=9WIN(1)>9WIN(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            9win - create a Plan 9 window within Inferno
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            9win \[ -s \] \[ -x width \] \[ -y height \] \[ cmd \[ arg ... \] \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            9win creates a window for a graphical Plan 9 command
+<style color=#00ffffff size=1>.</style>            (default rio) to run in. If provided, width and height give
+<style color=#00ffffff size=1>.</style>            a desired width and height for the new window. Cmd gives the
+<style color=#00ffffff size=1>.</style>            command to run, and arg its arguments.
+
+<style color=#00ffffff size=1>.</style>            The -s option tells 9win to run in server mode. Used by 9cpu
+<style color=#00ffffff size=1>.</style>            (1), it exports on its standard input a namespace suitable
+<style color=#00ffffff size=1>.</style>            for a graphical Plan 9 program to run within. With this
+<style color=#00ffffff size=1>.</style>            option, no command may be given.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/9win.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=9cpu(1)>9cpu(1)</action>, <action name=import(4)>import(4)</action>
+
+FILES
+<style color=#00ffffff size=1>.</style>            /dev/winname
+<style color=#00ffffff size=1>.</style>            /dev/mouse
+<style color=#00ffffff size=1>.</style>            /dev/cons
+<style color=#00ffffff size=1>.</style>            /dev/consctl
+<style color=#00ffffff size=1>.</style>            	Files served by 9win.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            9win does not export a full rio environment, so Plan 9
+<style color=#00ffffff size=1>.</style>            programs that wish to create new windows will not work
+<style color=#00ffffff size=1>.</style>            correctly (unless running inside a rio started by 9win)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

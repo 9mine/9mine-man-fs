@@ -1,0 +1,92 @@
+<action name=SCSIIO(2)>SCSIIO(2)</action>                                               <action name=SCSIIO(2)>SCSIIO(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ScsiIO: Scsi - SCSI device operations
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "scsi.m"\;
+
+<style color=#00ffffff size=1>.</style>            scsiio := load ScsiIO ScsiIO->PATH\;
+<style color=#00ffffff size=1>.</style>            Scsi: adt {
+<style color=#00ffffff size=1>.</style>                inquire:    string\;
+<style color=#00ffffff size=1>.</style>                rawfd:      ref Sys->FD\;
+<style color=#00ffffff size=1>.</style>                nchange:    int\;
+<style color=#00ffffff size=1>.</style>                changetime: int\;
+
+<style color=#00ffffff size=1>.</style>                open:       fn(devdir: string): ref Scsi\;
+<style color=#00ffffff size=1>.</style>                rawcmd:     fn(s: self ref Scsi, cmd: array of byte,
+<style color=#00ffffff size=1>.</style>                               data: array of byte, io: int): int\;
+<style color=#00ffffff size=1>.</style>                cmd:        fn(s: self ref Scsi, cmd: array of byte,
+<style color=#00ffffff size=1>.</style>                               data: array of byte, io: int): int\;
+<style color=#00ffffff size=1>.</style>                ready:      fn(s: self ref Scsi): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Sread, Swrite, Snone: con iota\;
+
+<style color=#00ffffff size=1>.</style>            scsierror:  fn(asc: int, ascq: int): string\;
+
+<style color=#00ffffff size=1>.</style>            init:   fn(verbose: int)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            ScsiIO provides a low-level interface to a SCSI or ATAPI
+<style color=#00ffffff size=1>.</style>            device via <action name=sd(3)>sd(3)</action>.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before using any other operation of the
+<style color=#00ffffff size=1>.</style>            module. If verbose is non-zero the module will produce a
+<style color=#00ffffff size=1>.</style>            fair amount of debugging output on file descriptor 2 when
+<style color=#00ffffff size=1>.</style>            SCSI commands fail.
+
+<style color=#00ffffff size=1>.</style>            Scsi.open attempts to open the file devdir/raw on which to
+<style color=#00ffffff size=1>.</style>            send raw SCSI commands. On success, it reads the device's
+<style color=#00ffffff size=1>.</style>            inquiry string and returns a reference to a Scsi value to
+<style color=#00ffffff size=1>.</style>            represent the connection. It provides the following
+<style color=#00ffffff size=1>.</style>            operations:
+
+<style color=#00ffffff size=1>.</style>            s.ready()
+<style color=#00ffffff size=1>.</style>                 Sends the ``unit ready'' command up to three times,
+<style color=#00ffffff size=1>.</style>                 returning zero once the unit responds that it is ready,
+<style color=#00ffffff size=1>.</style>                 or -1 on error.
+
+<style color=#00ffffff size=1>.</style>            s.rawcmd(cmd, data, io)
+<style color=#00ffffff size=1>.</style>            s.cmd(cmd, data, io)
+<style color=#00ffffff size=1>.</style>                 Both these functions execute a single SCSI command on
+<style color=#00ffffff size=1>.</style>                 the named device. The command data is in the byte array
+<style color=#00ffffff size=1>.</style>                 cmd. If io is Sread, a successful operation will store
+<style color=#00ffffff size=1>.</style>                 the resulting bytes in data, up to its length,
+<style color=#00ffffff size=1>.</style>                 returning the number of bytes stored. If io is Swrite,
+<style color=#00ffffff size=1>.</style>                 the bytes in data are transmitted as the data argument
+<style color=#00ffffff size=1>.</style>                 to the command, and the number of bytes written is
+<style color=#00ffffff size=1>.</style>                 returned. If io is Snone, data is ignored and may be
+<style color=#00ffffff size=1>.</style>                 nil. Rawcmd simply issues the command and returns the
+<style color=#00ffffff size=1>.</style>                 result\; cmd works a bit harder and is the more commonly
+<style color=#00ffffff size=1>.</style>                 used routine. It attempts to send the commmand\; if it
+<style color=#00ffffff size=1>.</style>                 is successful, cmd returns the result. Otherwise, cmd
+<style color=#00ffffff size=1>.</style>                 sends a request sense command to obtain the reason for
+<style color=#00ffffff size=1>.</style>                 the failure, sends a unit ready command in an attempt
+<style color=#00ffffff size=1>.</style>                 to bring the unit out of any inconsistent states, and
+<style color=#00ffffff size=1>.</style>                 tries again. It also accounts for media change. If the
+<style color=#00ffffff size=1>.</style>                 second try fails, cmd returns an error. On error, both
+<style color=#00ffffff size=1>.</style>                 functions return -1 and set the system error string.
+
+<style color=#00ffffff size=1>.</style>            The nchange and changetime elements of Scsi the number of
+<style color=#00ffffff size=1>.</style>            times a media change has been detected, and the first time
+<style color=#00ffffff size=1>.</style>            the current media was detected (the first time a SCSI
+<style color=#00ffffff size=1>.</style>            command was issued after it was inserted). They are
+<style color=#00ffffff size=1>.</style>            maintained by Scsi.cmd. The initial SCSI inquiry result is
+<style color=#00ffffff size=1>.</style>            kept in inquire.
+
+<style color=#00ffffff size=1>.</style>            Scsierror returns a textual description of the SCSI status
+<style color=#00ffffff size=1>.</style>            denoted by the ASC and ASCQ sense codes. The description is
+<style color=#00ffffff size=1>.</style>            found by consulting /lib/scsicodes.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/scsicodes
+<style color=#00ffffff size=1>.</style>                 List of textual messages corresponding to SCSI error
+<style color=#00ffffff size=1>.</style>                 codes\; consulted by scsierror.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/scsiio.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=disks(2)>disks(2)</action>, <action name=sd(3)>sd(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

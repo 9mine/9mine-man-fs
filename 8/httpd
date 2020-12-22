@@ -1,0 +1,70 @@
+<action name=HTTPD(8)>HTTPD(8)</action>                                                 <action name=HTTPD(8)>HTTPD(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            httpd, echo, stats - HTTP server
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            svc/httpd/httpd \[ -a addr \] \[ -c cachesize \] \[ -D \]
+
+<style color=#00ffffff size=1>.</style>            svc/httpd/echo meth vers uri search
+
+<style color=#00ffffff size=1>.</style>            svc/httpd/stats meth vers uri search
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Httpd is a simple HTTP daemon, serving version 1.0 of the
+<style color=#00ffffff size=1>.</style>            HTTP protocol. It listens for incoming calls on a given
+<style color=#00ffffff size=1>.</style>            address (default: tcp!*!80). It serves content rooted at
+<style color=#00ffffff size=1>.</style>            ``/services/httpd/root'' in its name space.
+
+<style color=#00ffffff size=1>.</style>            The httpd program supports only the ``GET'' and ``HEAD''
+<style color=#00ffffff size=1>.</style>            methods of the HTTP protocol. The ``Content-type'' (default
+<style color=#00ffffff size=1>.</style>            `application/octet-stream') and ``Content-encoding''
+<style color=#00ffffff size=1>.</style>            (default `binary') of a file are determined by looking for
+<style color=#00ffffff size=1>.</style>            suffixes of the file name in /services/http/http.suff.
+
+<style color=#00ffffff size=1>.</style>            If the requested URI begins with /magic/, httpd loads the
+<style color=#00ffffff size=1>.</style>            module associated with the remaining part of the URI. Take
+<style color=#00ffffff size=1>.</style>            care to configure the name space sensibly. Simple servers
+<style color=#00ffffff size=1>.</style>            echo and stats are provided (see below).
+
+<style color=#00ffffff size=1>.</style>            Httpd has the following options:
+
+<style color=#00ffffff size=1>.</style>            -a address
+<style color=#00ffffff size=1>.</style>                 Listen for calls on the given address, expressed using
+<style color=#00ffffff size=1>.</style>                 the syntax of <action name=dial(2)>dial(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            -c cachesize
+<style color=#00ffffff size=1>.</style>                 Set the size of the daemon's cache to cachesize
+<style color=#00ffffff size=1>.</style>                 kilobytes. The default is a five megabyte cache.
+
+<style color=#00ffffff size=1>.</style>            -D   Debugging information is written to the file
+<style color=#00ffffff size=1>.</style>                 /services/httpd/httpd.debug.
+
+<style color=#00ffffff size=1>.</style>            Echo is a trivial server that just returns the method, URI,
+<style color=#00ffffff size=1>.</style>            any search, and the headers sent by the client.
+
+<style color=#00ffffff size=1>.</style>            Stats is an equally simple server that queries the cache and
+<style color=#00ffffff size=1>.</style>            returns information to the user about pages stored in the
+<style color=#00ffffff size=1>.</style>            cache.
+
+<style color=#00ffffff size=1>.</style>            More complex services can be written to httpd's private
+<style color=#00ffffff size=1>.</style>            interface. The file httpd.m (in /appl/svc/httpd) defines
+<style color=#00ffffff size=1>.</style>            constants and adts used by httpd. The file cgi.m defines the
+<style color=#00ffffff size=1>.</style>            module ``Cgi'' which is the interface for programs called
+<style color=#00ffffff size=1>.</style>            using the URI /magic/.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /services/httpd/root             Root of the served web
+<style color=#00ffffff size=1>.</style>                                             content.
+<style color=#00ffffff size=1>.</style>            /services/httpd/httpd.debug      Logfile for debugging
+<style color=#00ffffff size=1>.</style>                                             information.
+<style color=#00ffffff size=1>.</style>            /services/httpd/httpd.log        httpd logfile.
+<style color=#00ffffff size=1>.</style>            /services/httpd/httpd.rewrite    File to redirect specific
+<style color=#00ffffff size=1>.</style>                                             URI requests.
+<style color=#00ffffff size=1>.</style>            /services/httpd/httpd.suff       File of recognizable
+<style color=#00ffffff size=1>.</style>                                             suffixes and their content
+<style color=#00ffffff size=1>.</style>                                             type.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/svc/httpd
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

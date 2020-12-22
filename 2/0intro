@@ -1,0 +1,141 @@
+<action name=INTRO(2)>INTRO(2)</action>                                                 <action name=INTRO(2)>INTRO(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            intro - introduction to Limbo modules for the Inferno system
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            draw := load Draw Draw->PATH\;
+
+<style color=#00ffffff size=1>.</style>            include "tk.m"\;
+<style color=#00ffffff size=1>.</style>            tk := load Tk Tk->PATH\;
+
+<style color=#00ffffff size=1>.</style>            ... etc.
+
+<style color=#00ffffff size=1>.</style>            Generically:
+<style color=#00ffffff size=1>.</style>            include "module.m"\;
+<style color=#00ffffff size=1>.</style>            module := load Module Module->PATH\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This section introduces the Limbo modules available to the
+<style color=#00ffffff size=1>.</style>            programmer\; see the corresponding manual pages for more
+<style color=#00ffffff size=1>.</style>            information. Each module is declared with a single Limbo
+<style color=#00ffffff size=1>.</style>            include file. Before calling a module's functions, an
+<style color=#00ffffff size=1>.</style>            application must load the module\; the application stores the
+<style color=#00ffffff size=1>.</style>            resulting value in a variable for later use as the module
+<style color=#00ffffff size=1>.</style>            qualifier. The examples above illustrate the style. It will
+<style color=#00ffffff size=1>.</style>            usually be necessary in some cases to qualify names with the
+<style color=#00ffffff size=1>.</style>            appropriate module pointer or to import the types and
+<style color=#00ffffff size=1>.</style>            functions\; the manual pages assume the names are accessible
+<style color=#00ffffff size=1>.</style>            in the current scope.
+
+<style color=#00ffffff size=1>.</style>            Although many modules are self-contained, dependencies may
+<style color=#00ffffff size=1>.</style>            exist. For example, the system module, Sys, provides basic
+<style color=#00ffffff size=1>.</style>            services that many other modules require. These are the
+<style color=#00ffffff size=1>.</style>            Inferno equivalent to `system calls'.
+
+<style color=#00ffffff size=1>.</style>            In a few cases, several related modules share a single
+<style color=#00ffffff size=1>.</style>            include file\; for instance, security.m.
+
+<style color=#00ffffff size=1>.</style>            The manual pages describe how to include a module definition
+<style color=#00ffffff size=1>.</style>            during compilation and load an implementation during
+<style color=#00ffffff size=1>.</style>            execution. The documentation also lists relevant functions
+<style color=#00ffffff size=1>.</style>            or abstract data types. Although the include files declare
+<style color=#00ffffff size=1>.</style>            these components, the manual pages list them explicitly. In
+<style color=#00ffffff size=1>.</style>            all cases, the enclosing module declaration is assumed so
+<style color=#00ffffff size=1>.</style>            that unqualified identifiers can be used in the text without
+<style color=#00ffffff size=1>.</style>            ambiguity, reducing clutter in the text. In practice when
+<style color=#00ffffff size=1>.</style>            programming, many consider it good style to use an explicit
+<style color=#00ffffff size=1>.</style>            module reference for functions and constants.
+
+<style color=#00ffffff size=1>.</style>            The Limbo modules are identical on any machine that is
+<style color=#00ffffff size=1>.</style>            running Inferno, whether native or hosted, which enables
+<style color=#00ffffff size=1>.</style>            Limbo programs to be written and tested on any Inferno
+<style color=#00ffffff size=1>.</style>            system.
+
+<style color=#00ffffff size=1>.</style>            Many modules are described in a single page, such as regex
+<style color=#00ffffff size=1>.</style>            (2). Several larger modules are explained in several
+<style color=#00ffffff size=1>.</style>            sections, such as <action name=math-intro(2)>math-intro(2)</action>, <action name=math-elem(2)>math-elem(2)</action>, <action name=math-fp(2)>math-fp(2)</action>,
+<style color=#00ffffff size=1>.</style>            and <action name=math-linalg(2)>math-linalg(2)</action>.
+
+<style color=#00ffffff size=1>.</style>         Exceptions
+<style color=#00ffffff size=1>.</style>            Exception handling is now part of the Limbo language,
+<style color=#00ffffff size=1>.</style>            replacing an older scheme that used special system calls.
+<style color=#00ffffff size=1>.</style>            Various exceptions can be raised by the virtual machine when
+<style color=#00ffffff size=1>.</style>            run-time errors are detected. These are the common ones:
+
+<style color=#00ffffff size=1>.</style>            alt send/recv on same chan
+<style color=#00ffffff size=1>.</style>                 It is currently illegal for a channel to appear in two
+<style color=#00ffffff size=1>.</style>                 alt statements if they either both receive or both send
+<style color=#00ffffff size=1>.</style>                 on it. (It is fine to send in one and receive in the
+<style color=#00ffffff size=1>.</style>                 other.)
+
+<style color=#00ffffff size=1>.</style>            array bounds error
+<style color=#00ffffff size=1>.</style>                 Array subscript out of bounds.
+
+<style color=#00ffffff size=1>.</style>            dereference of nil
+<style color=#00ffffff size=1>.</style>                 Attempt to use a ref adt or index an array with value
+<style color=#00ffffff size=1>.</style>                 nil .
+
+<style color=#00ffffff size=1>.</style>            invalid math argument
+<style color=#00ffffff size=1>.</style>                 Inconsistent values provided to functions of math-intro
+<style color=#00ffffff size=1>.</style>                 (2).
+
+<style color=#00ffffff size=1>.</style>            module not loaded
+<style color=#00ffffff size=1>.</style>                 Attempt to use an uninitialised module variable.
+
+<style color=#00ffffff size=1>.</style>            negative array size
+<style color=#00ffffff size=1>.</style>                 The limit in an array constructor was negative.
+
+<style color=#00ffffff size=1>.</style>            out of memory: pool
+<style color=#00ffffff size=1>.</style>                 The given memory pool is exhausted. Pool is currently
+<style color=#00ffffff size=1>.</style>                 one of main (kernel memory including Tk allocations),
+<style color=#00ffffff size=1>.</style>                 heap (most Limbo data), and image memory for <action name=draw(3)>draw(3)</action>.
+
+<style color=#00ffffff size=1>.</style>            zero divide
+<style color=#00ffffff size=1>.</style>                 Integer division (or mod) by zero.
+
+<style color=#00ffffff size=1>.</style>            There are currently two more classes of exception string
+<style color=#00ffffff size=1>.</style>            with a conventional interpretation imposed not by the
+<style color=#00ffffff size=1>.</style>            run-time system proper, but by Limbo components:
+
+<style color=#00ffffff size=1>.</style>            fail:reason
+<style color=#00ffffff size=1>.</style>                 Commands use this exception to provide an `exit status'
+<style color=#00ffffff size=1>.</style>                 to a calling program, particularly the shell <action name=sh(1)>sh(1)</action>\; see
+<style color=#00ffffff size=1>.</style>                 also <action name=sh(2)>sh(2)</action>. The status is given by the reason following
+<style color=#00ffffff size=1>.</style>                 the `fail:' prefix.
+
+<style color=#00ffffff size=1>.</style>            assertion:error
+<style color=#00ffffff size=1>.</style>                 A module detected the specified internal error. This is
+<style color=#00ffffff size=1>.</style>                 most often used for cases where a particular
+<style color=#00ffffff size=1>.</style>                 possibility ``cannot happen'' and there is no other
+<style color=#00ffffff size=1>.</style>                 need for an error value in the interface.
+
+<style color=#00ffffff size=1>.</style>            Otherwise, most module interfaces tend to use explicit error
+<style color=#00ffffff size=1>.</style>            return values, not exceptions.
+
+<style color=#00ffffff size=1>.</style>            Note that a Limbo exception handler can do pattern matching
+<style color=#00ffffff size=1>.</style>            to catch a class of exceptions:
+
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                 	body of code to protect
+<style color=#00ffffff size=1>.</style>                 } exception e {
+<style color=#00ffffff size=1>.</style>                 "out of memory:*" =>
+<style color=#00ffffff size=1>.</style>                 	recovery action
+<style color=#00ffffff size=1>.</style>                 "assertion:*" =>
+<style color=#00ffffff size=1>.</style>                 	fatal_error(e)\;
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>            The effect of an unhandled exception in a process that is
+<style color=#00ffffff size=1>.</style>            part of an error-recovery group can be controlled using the
+<style color=#00ffffff size=1>.</style>            mechanisms described in <action name=prog(3)>prog(3)</action> as accessed using exception
+<style color=#00ffffff size=1>.</style>            (2).
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=draw-intro(2)>draw-intro(2)</action>, <action name=exception(2)>exception(2)</action>, <action name=keyring-intro(2)>keyring-intro(2)</action>, math-intro
+<style color=#00ffffff size=1>.</style>            (2), <action name=prefab-intro(2)>prefab-intro(2)</action>, <action name=security-intro(2)>security-intro(2)</action>, <action name=sys-intro(2)>sys-intro(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

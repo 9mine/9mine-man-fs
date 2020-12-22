@@ -1,0 +1,53 @@
+<action name=FTREE(1)>FTREE(1)</action>                                                 <action name=FTREE(1)>FTREE(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ftree - file tree browser
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wm/ftree \[ \[-e \] \[ -E \] \[ -p \] \[ -d \] \[ root \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ftree displays the given root directory (default: /) in a
+<style color=#00ffffff size=1>.</style>            graphical form as a tree. Files and subdirectories are
+<style color=#00ffffff size=1>.</style>            listed beneath the directory that contains them. Initially,
+<style color=#00ffffff size=1>.</style>            the contents of a subdirectory are not displayed, but
+<style color=#00ffffff size=1>.</style>            selecting the ⊕ symbol next to its name with button 1 causes
+<style color=#00ffffff size=1>.</style>            its contents to be displayed there, and the ⊕ symbol changes
+<style color=#00ffffff size=1>.</style>            to ⊖\; clicking that collapses the subdirectory display back
+<style color=#00ffffff size=1>.</style>            to its name. (If the directory is empty, the circle will be
+<style color=#00ffffff size=1>.</style>            empty.) Selecting a file or directory name with button 1
+<style color=#00ffffff size=1>.</style>            pops up a menu of operations: Open, Copy, Paste into, and
+<style color=#00ffffff size=1>.</style>            Remove. Open plumbs the full path name of the file or
+<style color=#00ffffff size=1>.</style>            directory\; it is up to the <action name=plumber(8)>plumber(8)</action> to act appropriately
+<style color=#00ffffff size=1>.</style>            based on the structure of the file name, as controlled by
+<style color=#00ffffff size=1>.</style>            the user's <action name=plumbing(6)>plumbing(6)</action> file. Typically images will be
+<style color=#00ffffff size=1>.</style>            displayed in a separate window, source files will be opened
+<style color=#00ffffff size=1>.</style>            in an editor, and so on. Directory structure can be copied
+<style color=#00ffffff size=1>.</style>            by invoking Copy on the source, then Paste into on the
+<style color=#00ffffff size=1>.</style>            destination directory. The -d option disallows all
+<style color=#00ffffff size=1>.</style>            operations except Open.
+
+<style color=#00ffffff size=1>.</style>            Normally, ftree displays the usual <action name=wm(1)>wm(1)</action> controls, and
+<style color=#00ffffff size=1>.</style>            interprets them as usual. The other options change that
+<style color=#00ffffff size=1>.</style>            behaviour:
+
+<style color=#00ffffff size=1>.</style>            -e   Ignore `exit' but offer move or resize.
+
+<style color=#00ffffff size=1>.</style>            -E   Ignore exit, and do not offer move or resize.
+
+<style color=#00ffffff size=1>.</style>            -p   Do exit, but do not offer move or resize.
+
+<style color=#00ffffff size=1>.</style>            The different options are used to program a user interface
+<style color=#00ffffff size=1>.</style>            for handheld touch screen devices. For instance, a start
+<style color=#00ffffff size=1>.</style>            panel can be created by invoking ftree with the -E option,
+<style color=#00ffffff size=1>.</style>            ensuring that the ftree screen is always there, and all
+<style color=#00ffffff size=1>.</style>            subsequent interaction can be controlled by the construction
+<style color=#00ffffff size=1>.</style>            of the root namespace and suitable choice of plumbing rules.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/ftree
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=filename(1)>filename(1)</action>, <action name=wm(1)>wm(1)</action>, <action name=plumbing(6)>plumbing(6)</action>, <action name=plumber(8)>plumber(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,56 @@
+<action name=LOOK(1)>LOOK(1)</action>                                                   <action name=LOOK(1)>LOOK(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            look - find lines in a sorted list
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            look \[ -dfnix \] \[ -r endkey \] \[ -tc \] \[ string \] \[ file \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Look consults a sorted file and prints all lines that begin
+<style color=#00ffffff size=1>.</style>            with string. It uses binary search.
+
+<style color=#00ffffff size=1>.</style>            The following options are recognised:
+
+<style color=#00ffffff size=1>.</style>            -i   Interactive. There is no string argument\; instead look
+<style color=#00ffffff size=1>.</style>                 takes lines from the standard input as strings to be
+<style color=#00ffffff size=1>.</style>                 looked up.
+
+<style color=#00ffffff size=1>.</style>            -x   Exact. Print only lines of the file whose key matches
+<style color=#00ffffff size=1>.</style>                 string exactly.
+
+<style color=#00ffffff size=1>.</style>            -d   `Directory' order: only letters, digits, tabs and
+<style color=#00ffffff size=1>.</style>                 blanks participate in comparisons.
+
+<style color=#00ffffff size=1>.</style>            -f   Fold. Upper case letters compare equal to lower case.
+
+<style color=#00ffffff size=1>.</style>            -n   Numeric comparison with initial string of digits,
+<style color=#00ffffff size=1>.</style>                 optional minus sign, and optional decimal point.
+
+<style color=#00ffffff size=1>.</style>            -r endkey
+<style color=#00ffffff size=1>.</style>                 Limit the range of matching values, to include the word
+<style color=#00ffffff size=1>.</style>                 endkey but no larger values.
+
+<style color=#00ffffff size=1>.</style>            -t\[c\]
+<style color=#00ffffff size=1>.</style>                 Character c terminates the sort key in the file. By
+<style color=#00ffffff size=1>.</style>                 default, tab terminates the key.  If c is missing the
+<style color=#00ffffff size=1>.</style>                 entire line comprises the key.
+
+<style color=#00ffffff size=1>.</style>            If no file is specified, /lib/words is assumed, with
+<style color=#00ffffff size=1>.</style>            collating sequence df.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/words
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/look.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sort(1)>sort(1)</action>, <action name=grep(1)>grep(1)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            The exit status is not found if no match is found, and no
+<style color=#00ffffff size=1>.</style>            dictionary if file or the default dictionary cannot be
+<style color=#00ffffff size=1>.</style>            opened.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

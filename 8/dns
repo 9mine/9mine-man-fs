@@ -1,0 +1,70 @@
+<action name=DNS(8)>DNS(8)</action>                                                     <action name=DNS(8)>DNS(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dns, dnsquery - domain name service
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ndb/dns \[ -f dnsfile \] \[ -h \] \[ -r \] \[ -x net \]
+
+<style color=#00ffffff size=1>.</style>            ndb/dnsquery \[ -x net \] \[ -s server \] \[ address ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dns is an Internet Domain Name Service (DNS) resolver. By
+<style color=#00ffffff size=1>.</style>            default it serves a file /net/dns, that clients such as cs
+<style color=#00ffffff size=1>.</style>            (8) write and read to retrieve network data associated with
+<style color=#00ffffff size=1>.</style>            domain names and Internet addresses. The -f option specifies
+<style color=#00ffffff size=1>.</style>            the network database that contains the local DNS data
+<style color=#00ffffff size=1>.</style>            (default: /lib/ndb/local). The -x option specifies an
+<style color=#00ffffff size=1>.</style>            alternative mount point for the network (default: /net).
+<style color=#00ffffff size=1>.</style>            When Inferno is running hosted, dns normally uses the host's
+<style color=#00ffffff size=1>.</style>            own DNS resolver first (via <action name=srv(2)>srv(2)</action>), before searching the
+<style color=#00ffffff size=1>.</style>            DNS itself\; that way domain names can be used in Inferno
+<style color=#00ffffff size=1>.</style>            with minimal configuration. The -h option stops dns from
+<style color=#00ffffff size=1>.</style>            using the host data. In the absence of local data, by
+<style color=#00ffffff size=1>.</style>            default dns consults the external DNS directly using some
+<style color=#00ffffff size=1>.</style>            bootstrap data, but if -r is specified and local resolvers
+<style color=#00ffffff size=1>.</style>            are given in the configuration file, <action name=dns(6)>dns(6)</action>, dns will query
+<style color=#00ffffff size=1>.</style>            them first for all addresses, before resorting to external
+<style color=#00ffffff size=1>.</style>            DNS servers.
+
+<style color=#00ffffff size=1>.</style>            Dnsquery queries the given server (default: /net/dns) for a
+<style color=#00ffffff size=1>.</style>            translation of each address and prints the results, one per
+<style color=#00ffffff size=1>.</style>            line. If no address is given, dnsquery prompts for something
+<style color=#00ffffff size=1>.</style>            to find in the DNS, one per line on the standard input, of
+<style color=#00ffffff size=1>.</style>            the form:
+
+<style color=#00ffffff size=1>.</style>                 name \[attribute\]
+
+<style color=#00ffffff size=1>.</style>            where name is the label of something in the DNS, and
+<style color=#00ffffff size=1>.</style>            attribute is one of its attributes from the list below:
+<style color=#00ffffff size=1>.</style>            all     all data currently known locally for name
+<style color=#00ffffff size=1>.</style>            cname   name for which name is an alias
+<style color=#00ffffff size=1>.</style>            hinfo   host and operating system type
+<style color=#00ffffff size=1>.</style>            ip      for an IP address when name is a domain name
+<style color=#00ffffff size=1>.</style>            mx      mail exchanger
+<style color=#00ffffff size=1>.</style>            ns      for a list of name servers
+<style color=#00ffffff size=1>.</style>            ptr     for the domain name when name is an Internet address
+<style color=#00ffffff size=1>.</style>            soa     statement-of-authority
+
+<style color=#00ffffff size=1>.</style>            Dnsquery queries the server for that name/attribute
+<style color=#00ffffff size=1>.</style>            combination and prints the results, one per line. If an
+<style color=#00ffffff size=1>.</style>            attribute is not given, dnsquery uses ip if name looks like
+<style color=#00ffffff size=1>.</style>            a domain name, and ptr if it looks like an Internet address.
+
+FILES
+<style color=#00ffffff size=1>.</style>            #sdns*          service directory
+<style color=#00ffffff size=1>.</style>            /net/dns        domain name service
+<style color=#00ffffff size=1>.</style>            /lib/ndb/local  network database
+<style color=#00ffffff size=1>.</style>            /lib/ndb/dns    DNS bootstrap data
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ndb/dns.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ndb/dnsquery.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=dns(6)>dns(6)</action>, <action name=cs(8)>cs(8)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Dns does not yet offer an external DNS server, mainly for
+<style color=#00ffffff size=1>.</style>            lack of a suitable database for local zone data.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

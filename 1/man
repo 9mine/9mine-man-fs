@@ -1,0 +1,103 @@
+<action name=MAN(1)>MAN(1)</action>                                                     <action name=MAN(1)>MAN(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            man, wm/man, man2html, man2txt, lookman, sig - print or find
+<style color=#00ffffff size=1>.</style>            manual pages
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            man \[ -b \] \[ -n \] \[ -p \] \[ -S \] \[ -w \] \[ section ... \] title
+<style color=#00ffffff size=1>.</style>            ...
+<style color=#00ffffff size=1>.</style>            man -f file ...
+<style color=#00ffffff size=1>.</style>            wm/man \[ section ... \] title ...
+<style color=#00ffffff size=1>.</style>            wm/man -f file ...
+<style color=#00ffffff size=1>.</style>            man2html \[ -h header \] \[ -i initial \] \[ -t trailer \] file \[
+<style color=#00ffffff size=1>.</style>            section \]
+<style color=#00ffffff size=1>.</style>            man2txt \[ -p width \] \[ file ... \]
+<style color=#00ffffff size=1>.</style>            lookman \[ -f \] keyword ...
+
+<style color=#00ffffff size=1>.</style>            sig function ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Both man and wm/man locate entries in this manual and
+<style color=#00ffffff size=1>.</style>            display them. The pages for entries named title within each
+<style color=#00ffffff size=1>.</style>            specified section are displayed. If no sections are
+<style color=#00ffffff size=1>.</style>            specified, matching pages from all sections are printed.
+<style color=#00ffffff size=1>.</style>            Sections are given by number.
+
+<style color=#00ffffff size=1>.</style>            The -f option to man and wm/man prevent lookup in the manual
+<style color=#00ffffff size=1>.</style>            index. Instead, the remaining arguments are treated as
+<style color=#00ffffff size=1>.</style>            filenames. Man processes each file in turn. Wm/man adds each
+<style color=#00ffffff size=1>.</style>            file to its page history and displays the first document in
+<style color=#00ffffff size=1>.</style>            the list.
+
+<style color=#00ffffff size=1>.</style>            The man command prints the manual pages as formatted plain
+<style color=#00ffffff size=1>.</style>            text to standard output. Manual pages are written using
+<style color=#00ffffff size=1>.</style>            Plan9 troff -man macros for their markup and so some detail
+<style color=#00ffffff size=1>.</style>            is lost in conversion to plain text. Wm/man displays the
+<style color=#00ffffff size=1>.</style>            pages in a graphical Wm window, providing a more faithful
+<style color=#00ffffff size=1>.</style>            reproduction of the intended layout.
+
+<style color=#00ffffff size=1>.</style>            Man also accepts the following options:
+
+<style color=#00ffffff size=1>.</style>            -b   Print the pages and send them to <action name=plumber(1)>plumber(1)</action> for display
+<style color=#00ffffff size=1>.</style>                 in an editor.
+
+<style color=#00ffffff size=1>.</style>            -n   Use man2txt to format the pages (default).
+
+<style color=#00ffffff size=1>.</style>            -p   Display the pages using wm/man.
+
+<style color=#00ffffff size=1>.</style>            -S   Do not search the manual indices for the names: only
+<style color=#00ffffff size=1>.</style>                 print pages whose file names match the titles.
+
+<style color=#00ffffff size=1>.</style>            -w   Print the names of the man page source files instead of
+<style color=#00ffffff size=1>.</style>                 formatting them.
+
+<style color=#00ffffff size=1>.</style>            Man2html converts troff -man macro markup to an
+<style color=#00ffffff size=1>.</style>            approximation in HTML on standard output. Only one file is
+<style color=#00ffffff size=1>.</style>            processed at a time. It is assumed the input file is a
+<style color=#00ffffff size=1>.</style>            manual page, in the given section (default: 1). The optional
+<style color=#00ffffff size=1>.</style>            header string replaces the default header <HTML><HEAD>. The
+<style color=#00ffffff size=1>.</style>            optional initial text will appear immediately after <BODY>.
+<style color=#00ffffff size=1>.</style>            The optional trailer string replaces the default trailer
+<style color=#00ffffff size=1>.</style>            </BODY></HTML>.
+
+<style color=#00ffffff size=1>.</style>            Man2txt converts troff -man macro markup to plain text. Each
+<style color=#00ffffff size=1>.</style>            file is processed separately. If no arguments are given,
+<style color=#00ffffff size=1>.</style>            text from standard input is processed. The converted text is
+<style color=#00ffffff size=1>.</style>            written to standard output. The -p option to man2txt
+<style color=#00ffffff size=1>.</style>            specifies the page width in characters.
+
+<style color=#00ffffff size=1>.</style>            Lookman finds the manual pages, in any section, that contain
+<style color=#00ffffff size=1>.</style>            all of the keywords given as arguments, and prints man
+<style color=#00ffffff size=1>.</style>            commands and manual references for them, one per line. In a
+<style color=#00ffffff size=1>.</style>            <action name=wm-<action name=sh(1)>sh(1)</action>>wm-<action name=sh(1)>sh(1)</action></action> window, any of the man commands can be selected
+<style color=#00ffffff size=1>.</style>            with mouse button 2 and sent as a command\; a manual
+<style color=#00ffffff size=1>.</style>            reference can simply be <action name=plumb(1)>plumb(1)</action>'d using mouse button 3. The
+<style color=#00ffffff size=1>.</style>            -f option causes lookman just to list the file names.
+
+<style color=#00ffffff size=1>.</style>            Sig prints the type signature - parameters and return types
+<style color=#00ffffff size=1>.</style>            - of each function found in section 2 of this manual.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /man/?/*      Source files of manual pages.
+<style color=#00ffffff size=1>.</style>            /man/1/man    The source file for this manual page.
+<style color=#00ffffff size=1>.</style>            /man/?/INDEX  Used by man and wm/man to locate the source
+<style color=#00ffffff size=1>.</style>                          file containing a particular title.
+<style color=#00ffffff size=1>.</style>            /man/index    The lookman index.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/man.b
+<style color=#00ffffff size=1>.</style>            /dis/man <action name=sh(1)>sh(1)</action> script
+<style color=#00ffffff size=1>.</style>            /appl/cmd/man2txt.b
+<style color=#00ffffff size=1>.</style>            /dis/lookman <action name=sh(1)>sh(1)</action> script
+<style color=#00ffffff size=1>.</style>            /dis/sig <action name=sh(1)>sh(1)</action> script
+<style color=#00ffffff size=1>.</style>            /appl/lib/parseman.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=wm(1)>wm(1)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Man2txt only knows about troff -man macros. Other troff
+<style color=#00ffffff size=1>.</style>            macro packages or output from preprocessors such as pic or
+<style color=#00ffffff size=1>.</style>            tbl will not be presented correctly.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

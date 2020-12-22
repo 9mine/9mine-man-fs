@@ -1,0 +1,68 @@
+<action name=SPKI-VERIFIER(2)>SPKI-VERIFIER(2)</action>                                 <action name=SPKI-VERIFIER(2)>SPKI-VERIFIER(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            verifier: verify - verify sequence of SPKI elements
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "bufio.m"\;
+<style color=#00ffffff size=1>.</style>            include "sexprs.m"\;
+<style color=#00ffffff size=1>.</style>            include "spki.m"\;
+
+<style color=#00ffffff size=1>.</style>            sexprs := load Sexprs Sexprs->PATH\;
+<style color=#00ffffff size=1>.</style>            Sexp: import sexprs\;
+
+<style color=#00ffffff size=1>.</style>            spki := load SPKI SPKI->PATH\;
+<style color=#00ffffff size=1>.</style>            Name, Seqel, Subject, Valid: import spki\;
+
+<style color=#00ffffff size=1>.</style>            verifier := load Verifier Verifier->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Speaksfor: adt {
+<style color=#00ffffff size=1>.</style>               subject:   ref Subject\;
+<style color=#00ffffff size=1>.</style>               name:      ref Name\;
+<style color=#00ffffff size=1>.</style>               regarding: ref Sexp\;
+<style color=#00ffffff size=1>.</style>               valid:     ref Valid\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:   fn()\;
+<style color=#00ffffff size=1>.</style>            verify: fn(seq: list of ref Seqel):
+<style color=#00ffffff size=1>.</style>                      (ref Speaksfor, list of ref Seqel, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Verifier checks SPKI proof sequences. This initial
+<style color=#00ffffff size=1>.</style>            implementation provides a single basic operation. Further
+<style color=#00ffffff size=1>.</style>            work will allow (via channels and processes) verification to
+<style color=#00ffffff size=1>.</style>            detect and refresh expired credentials, to support `pull'
+<style color=#00ffffff size=1>.</style>            authentication, for instance.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other operation of the
+<style color=#00ffffff size=1>.</style>            module.
+
+<style color=#00ffffff size=1>.</style>            A Speaksfor value represents a claim that a given subject
+<style color=#00ffffff size=1>.</style>            entity speaks for (on behalf of) a given name regarding a
+<style color=#00ffffff size=1>.</style>            set of statements, with validity optionally limited to a
+<style color=#00ffffff size=1>.</style>            given period. That is, when during the agreed time, subject
+<style color=#00ffffff size=1>.</style>            makes a statement that is in the agreed set, it is treated
+<style color=#00ffffff size=1>.</style>            as if name had said it directly. The set of statements is
+<style color=#00ffffff size=1>.</style>            defined by a SPKI `tag' expression, represented as an
+<style color=#00ffffff size=1>.</style>            S-expression. In particular, the (tag (*)) means that
+<style color=#00ffffff size=1>.</style>            subject speaks for name about everything. A claim can be
+<style color=#00ffffff size=1>.</style>            taken as true if supported by acceptable evidence, for
+<style color=#00ffffff size=1>.</style>            instance a collection of signed certificates.
+
+<style color=#00ffffff size=1>.</style>            Verify does the actual verification of a sequence seq of
+<style color=#00ffffff size=1>.</style>            SPKI certificates, signatures and operations that makes and
+<style color=#00ffffff size=1>.</style>            supports a claim that an entity speaks for another. It
+<style color=#00ffffff size=1>.</style>            returns a tuple (claim, badel, err). On success, claim
+<style color=#00ffffff size=1>.</style>            refers to a Speaksfor value that summaries the statement
+<style color=#00ffffff size=1>.</style>            verified by the sequence. On failure, claim is nil, badel is
+<style color=#00ffffff size=1>.</style>            a list of sequence elements headed by the first element of
+<style color=#00ffffff size=1>.</style>            seq that failed verification, and err is the reason it
+<style color=#00ffffff size=1>.</style>            failed.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/spki/verifier.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sexprs(2)>sexprs(2)</action>, <action name=spki(2)>spki(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

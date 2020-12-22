@@ -1,0 +1,11 @@
+intro 0intro 9srvfs 9srvfs acme acme archfs archfs dbfs dbfs
+<style color=#00ffffff size=1>.</style>            rawdbfs dbfs 9660srv dossrv dossrv dossrv export export
+<style color=#00ffffff size=1>.</style>            factotum factotum feedkey factotum ftpfs ftpfs cpu grid-cpu
+<style color=#00ffffff size=1>.</style>            grid grid-cpu grid-cpu grid-cpu 9export import import import
+<style color=#00ffffff size=1>.</style>            iostats iostats keyfs keyfs keysrv keysrv kfs kfs lockfs
+<style color=#00ffffff size=1>.</style>            lockfs logfile logfile memfs memfs mntgen mntgen namespace
+<style color=#00ffffff size=1>.</style>            namespace palmsrv palmsrv ramfile ramfile registry registry
+<style color=#00ffffff size=1>.</style>            regquery registry spree spree tarfs tarfs trfs trfs vacfs
+<style color=#00ffffff size=1>.</style>            vacfs
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

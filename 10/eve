@@ -1,0 +1,31 @@
+EVE(10.2)                                               EVE(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            eve, iseve - privileged user
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            char	eve\[NAMELEN\] = "inferno"\;
+
+<style color=#00ffffff size=1>.</style>            int	iseve(void)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Eve is a null-terminated string containing the name of the
+<style color=#00ffffff size=1>.</style>            privileged user, often called the `host owner', in the
+<style color=#00ffffff size=1>.</style>            Inferno system. The default identity in native systems is
+<style color=#00ffffff size=1>.</style>            `inferno', and in hosted Inferno it is the user who started
+<style color=#00ffffff size=1>.</style>            <action name=emu(1)>emu(1)</action>. The initial process created by system initialisation
+<style color=#00ffffff size=1>.</style>            is given the eve identity.
+
+<style color=#00ffffff size=1>.</style>            Iseve returns true if the current user is eve. Several
+<style color=#00ffffff size=1>.</style>            drivers use iseve to check the caller's identity before
+<style color=#00ffffff size=1>.</style>            granting permission to perform certain actions. For example,
+<style color=#00ffffff size=1>.</style>            the console driver allows only the user eve to write a new
+<style color=#00ffffff size=1>.</style>            identity into the /dev/user file. The privileges are
+<style color=#00ffffff size=1>.</style>            strictly local and do not extend into the network (in
+<style color=#00ffffff size=1>.</style>            particular, to file servers).
+
+<style color=#00ffffff size=1>.</style>            Note that the comparison performed by iseve is
+<style color=#00ffffff size=1>.</style>            case-sensitive, even when running hosted on systems where
+<style color=#00ffffff size=1>.</style>            usernames are case-insensitive.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

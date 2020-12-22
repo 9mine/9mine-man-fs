@@ -1,0 +1,47 @@
+MASTER(10.6)                                         MASTER(10.6)
+
+NAME
+<style color=#00ffffff size=1>.</style>            master, master.local - list of device specifiers
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            /emu/port/master
+<style color=#00ffffff size=1>.</style>            /emu/port/master.local
+
+<style color=#00ffffff size=1>.</style>            os/port/master
+<style color=#00ffffff size=1>.</style>            os/port/master.local
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Each device has a name of the form #x where x is a single
+<style color=#00ffffff size=1>.</style>            Unicode character, which represents the root of the name
+<style color=#00ffffff size=1>.</style>            space served (generated) by the driver. (There can be a
+<style color=#00ffffff size=1>.</style>            further specifier that selects a particular hierarchy within
+<style color=#00ffffff size=1>.</style>            the device, but that is not relevant here.) These names
+<style color=#00ffffff size=1>.</style>            allow the devices' name spaces to be added to a process's
+<style color=#00ffffff size=1>.</style>            name space (see <action name=sys-intro(2)>sys-intro(2)</action>), using <action name=bind(1)>bind(1)</action> commands,
+<style color=#00ffffff size=1>.</style>            <action name=sys-bind(2)>sys-bind(2)</action> operations and <action name=namespace(6)>namespace(6)</action> files. A given
+<style color=#00ffffff size=1>.</style>            character can represent only one driver in a running system,
+<style color=#00ffffff size=1>.</style>            but the same character might be used by several drivers in
+<style color=#00ffffff size=1>.</style>            the source tree if they are never configured into the same
+<style color=#00ffffff size=1>.</style>            system (eg, different platforms or mutually-exclusive
+<style color=#00ffffff size=1>.</style>            configurations). The file #c/drivers gives the local
+<style color=#00ffffff size=1>.</style>            system's assignment (see <action name=cons(3)>cons(3)</action>). A list of the set of
+<style color=#00ffffff size=1>.</style>            characters used across all drivers on all platforms can be
+<style color=#00ffffff size=1>.</style>            found in the several master files. In the distribution, the
+<style color=#00ffffff size=1>.</style>            master.local files list characters that are reserved for use
+<style color=#00ffffff size=1>.</style>            by locally-written drivers. They are updated by hand at a
+<style color=#00ffffff size=1>.</style>            given installation. The master files by contrast are
+<style color=#00ffffff size=1>.</style>            generated automatically by emu/port/mkfile and
+<style color=#00ffffff size=1>.</style>            os/port/mkfile from the source for all platforms and
+<style color=#00ffffff size=1>.</style>            master.local. In the distribution, they might include names
+<style color=#00ffffff size=1>.</style>            for drivers that exist but are not distributed.
+
+<style color=#00ffffff size=1>.</style>            Except for a few fundamental drivers, the character
+<style color=#00ffffff size=1>.</style>            assignment is arbitrary, can vary between installations, and
+<style color=#00ffffff size=1>.</style>            is notionally subject to change (although that rarely
+<style color=#00ffffff size=1>.</style>            happens). The <action name=indir(3)>indir(3)</action> allows referring to drivers using a
+<style color=#00ffffff size=1>.</style>            longer name that is even less likely to change.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bind(1)>bind(1)</action>, <action name=sys-intro(2)>sys-intro(2)</action>, <action name=indir(3)>indir(3)</action>, <action name=namespace(6)>namespace(6)</action>, dev(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

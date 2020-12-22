@@ -1,0 +1,142 @@
+<action name=CREATE(8)>CREATE(8)</action>                                               <action name=CREATE(8)>CREATE(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            create, inst, info - archive or update a file system
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            install/create \[-u\] \[-U\] \[-v\] \[-x\] \[-o\] \[-p proto\] \[-r root\]
+<style color=#00ffffff size=1>.</style>            \[-s source\] \[-N uid\] \[-G gid\] \[-d description\] name
+
+<style color=#00ffffff size=1>.</style>            install/inst \[-c\] \[-h\] \[-t\] \[-u\] \[-v\] \[-F\] \[-r root\] name \[
+<style color=#00ffffff size=1>.</style>            prefix ...\]
+
+<style color=#00ffffff size=1>.</style>            install/info \[-r\] package
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Create copies files from the file tree source (default /) to
+<style color=#00ffffff size=1>.</style>            an output file in archive format appropriate for a software
+<style color=#00ffffff size=1>.</style>            distribution. The name of the output file is the time that
+<style color=#00ffffff size=1>.</style>            the archive was made. The latter includes wrap headers that
+<style color=#00ffffff size=1>.</style>            describe the distribution. Name is typically the name of the
+<style color=#00ffffff size=1>.</style>            product or software package. The -p option specifies the
+<style color=#00ffffff size=1>.</style>            prototype file proto to use to build the archive.
+
+<style color=#00ffffff size=1>.</style>            Each line of the proto file specifies a file to copy.
+<style color=#00ffffff size=1>.</style>            Indentation is significant, with each level of indentation
+<style color=#00ffffff size=1>.</style>            corresponding to a level in the file tree. Fields within a
+<style color=#00ffffff size=1>.</style>            line are separated by white space. The first field is the
+<style color=#00ffffff size=1>.</style>            last path element in the destination file tree. The second
+<style color=#00ffffff size=1>.</style>            field specifies the permissions. The third field is the
+<style color=#00ffffff size=1>.</style>            owner of the file, and the fourth is the group owning the
+<style color=#00ffffff size=1>.</style>            file. The fifth field is the name of the file from which to
+<style color=#00ffffff size=1>.</style>            copy\; this file is read from the current name space, not the
+<style color=#00ffffff size=1>.</style>            source file tree. All fields except the first are optional.
+
+<style color=#00ffffff size=1>.</style>            Names beginning with a ``$'' are expanded as environment
+<style color=#00ffffff size=1>.</style>            variables. If the first file specified in a directory is `*'
+<style color=#00ffffff size=1>.</style>            , all of the files in that directory are copied. If the
+<style color=#00ffffff size=1>.</style>            first file is `%', all of the non-directory files in that
+<style color=#00ffffff size=1>.</style>            directory are copied. If the first file is `+', all of the
+<style color=#00ffffff size=1>.</style>            files are copied, and all subdirectories are recursively
+<style color=#00ffffff size=1>.</style>            copied.
+
+<style color=#00ffffff size=1>.</style>            Files in the source tree that are not specified in the proto
+<style color=#00ffffff size=1>.</style>            file are not placed in the archive.
+
+<style color=#00ffffff size=1>.</style>            The remaining options to create are:
+
+<style color=#00ffffff size=1>.</style>            -u        Build an update distribution rather than a base
+<style color=#00ffffff size=1>.</style>                      distribution. In this case name should be the name
+<style color=#00ffffff size=1>.</style>                      of the previous archive file built for this
+<style color=#00ffffff size=1>.</style>                      product. Only files that are out of date with
+<style color=#00ffffff size=1>.</style>                      respect to the latter are included in the archive.
+<style color=#00ffffff size=1>.</style>                      Files which no longer exist will be marked for
+<style color=#00ffffff size=1>.</style>                      removal.
+
+<style color=#00ffffff size=1>.</style>            -U        Build an update package distribution instead. This
+<style color=#00ffffff size=1>.</style>                      is a hybrid of a base distribution and an update
+<style color=#00ffffff size=1>.</style>                      distribution.
+
+<style color=#00ffffff size=1>.</style>            -v        Print out the files as they go into the archive.
+
+<style color=#00ffffff size=1>.</style>            -x        Print out the files that would go into the archive
+<style color=#00ffffff size=1>.</style>                      but do not actually archive them.
+
+<style color=#00ffffff size=1>.</style>            -o        Copy the archive file to the standard output
+<style color=#00ffffff size=1>.</style>                      rather than putting it in a date stamped output
+<style color=#00ffffff size=1>.</style>                      file.
+
+<style color=#00ffffff size=1>.</style>            -r root   Specifies the location of any previous archives
+<style color=#00ffffff size=1>.</style>                      for this product.
+
+<style color=#00ffffff size=1>.</style>            -N uid    Give all the files in the archive the user id
+<style color=#00ffffff size=1>.</style>                      specified.
+
+<style color=#00ffffff size=1>.</style>            -G gid    Give all the files in the archive the group id
+<style color=#00ffffff size=1>.</style>                      specified,
+
+<style color=#00ffffff size=1>.</style>            -d description
+<style color=#00ffffff size=1>.</style>                      Give a description of the distribution. This is
+<style color=#00ffffff size=1>.</style>                      placed in the wrap header files.
+
+<style color=#00ffffff size=1>.</style>            Inst installs archive files made by create . Name is the
+<style color=#00ffffff size=1>.</style>            name of the archive file to install. Any further names after
+<style color=#00ffffff size=1>.</style>            this are treated as path prefixes and only files in the
+<style color=#00ffffff size=1>.</style>            archive that have one of the given prefixes are actually
+<style color=#00ffffff size=1>.</style>            installed. The option to inst are :
+
+<style color=#00ffffff size=1>.</style>            -c        Carry on regardless when errors occur. The default
+<style color=#00ffffff size=1>.</style>                      behaviour is to exit on encountering an error.
+
+<style color=#00ffffff size=1>.</style>            -h        Only print the names of the files in the archive.
+
+<style color=#00ffffff size=1>.</style>            -t        Give each installed file the same date stamp as
+<style color=#00ffffff size=1>.</style>                      indicated by that file's entry in the archive.
+
+<style color=#00ffffff size=1>.</style>            -u        Give each installed file the same date stamp, user
+<style color=#00ffffff size=1>.</style>                      id and group id as shown in the archive.
+
+<style color=#00ffffff size=1>.</style>            -v        Print out the names of directories as they are
+<style color=#00ffffff size=1>.</style>                      installed.
+
+<style color=#00ffffff size=1>.</style>            -F        Force the installation of the files in the archive
+<style color=#00ffffff size=1>.</style>                      even when the corresponding local file has
+<style color=#00ffffff size=1>.</style>                      apparently been locally updated or already exists.
+
+<style color=#00ffffff size=1>.</style>            -r root   Specifies the root of destination tree where the
+<style color=#00ffffff size=1>.</style>                      files will be copied to.
+
+<style color=#00ffffff size=1>.</style>            Info prints information about either a specific file
+<style color=#00ffffff size=1>.</style>            produced by create or about all files making up a package in
+<style color=#00ffffff size=1>.</style>            the /wrap tree. In particular base packages, full updates
+<style color=#00ffffff size=1>.</style>            and partial updates are distinguished. The -r option
+<style color=#00ffffff size=1>.</style>            specifies the the root of the tree to look in. This defaults
+<style color=#00ffffff size=1>.</style>            to /.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Make an archive to establish a new base package for an
+<style color=#00ffffff size=1>.</style>            Inferno distribution:
+
+<style color=#00ffffff size=1>.</style>                 install/create -o -N inferno -G inf -d InfernoOS -p PROTO Inferno.1.0 > inferno.arch
+
+<style color=#00ffffff size=1>.</style>            Here the name of the product is Inferno.1.0.
+
+<style color=#00ffffff size=1>.</style>            Install that archive on another machine:
+
+<style color=#00ffffff size=1>.</style>                 install/inst -r / inferno.arch
+
+<style color=#00ffffff size=1>.</style>            Here the product is placed in / with the user and group ids
+<style color=#00ffffff size=1>.</style>            being set to those of the person doing the installation.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/install/arch.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/install/create.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/install/info.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/install/inst.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/install/proto.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/install/wrap.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=archfs(4)>archfs(4)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

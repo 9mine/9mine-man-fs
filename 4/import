@@ -1,0 +1,69 @@
+<action name=IMPORT(4)>IMPORT(4)</action>                                               <action name=IMPORT(4)>IMPORT(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            import, 9export - exchange name spaces with a Plan 9 system
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            import \[ -ab \] \[ -c \] \[ -k keyspec \] \[ -e crypt hash \] host
+<style color=#00ffffff size=1>.</style>            file \[ localfile \]
+
+<style color=#00ffffff size=1>.</style>            9export \[ -A \] \[ -k keyspec \] \[ -e crypt hash \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Import dials the Plan 9 host (which might be the current
+<style color=#00ffffff size=1>.</style>            host) and makes the given file on that system visible in the
+<style color=#00ffffff size=1>.</style>            local name space as localfile (if localfile is not given,
+<style color=#00ffffff size=1>.</style>            file is used as the local name). The authentication agent
+<style color=#00ffffff size=1>.</style>            <action name=factotum(4)>factotum(4)</action> must be active. (When Inferno is running on Plan
+<style color=#00ffffff size=1>.</style>            9, Plan 9's own authentication agent can be used, by binding
+<style color=#00ffffff size=1>.</style>            Plan 9's /mnt/factotum to the same name in Inferno's own
+<style color=#00ffffff size=1>.</style>            name space. See <action name=fs(3)>fs(3)</action>.) The remote files are accessed with
+<style color=#00ffffff size=1>.</style>            the permissions of the user authenticated to the remote
+<style color=#00ffffff size=1>.</style>            system by factotum.
+
+<style color=#00ffffff size=1>.</style>            If the remote file is a directory, the whole file tree
+<style color=#00ffffff size=1>.</style>            rooted at that directory is accessible, the local mount
+<style color=#00ffffff size=1>.</style>            point must also be a directory, and the -a, -b, and -c
+<style color=#00ffffff size=1>.</style>            options control the creation of union directories just as
+<style color=#00ffffff size=1>.</style>            for <action name=bind(1)>bind(1)</action>. By default, the remote file replaces the local
+<style color=#00ffffff size=1>.</style>            one in the name space.
+
+<style color=#00ffffff size=1>.</style>            If the -e option is given, the network connection can be
+<style color=#00ffffff size=1>.</style>            encrypted, or provided with digests to authenticate the
+<style color=#00ffffff size=1>.</style>            contents, or both. Crypt is an encryption algorithm accepted
+<style color=#00ffffff size=1>.</style>            by <action name=ssl(3)>ssl(3)</action>\; hash is one of its digest algorithms. Plan 9's
+<style color=#00ffffff size=1>.</style>            exportfs normally requires 'rc4_256 sha1' on such
+<style color=#00ffffff size=1>.</style>            connections\; it currently provides no negotiation of
+<style color=#00ffffff size=1>.</style>            algorithms.
+
+<style color=#00ffffff size=1>.</style>            The -k option gives a string of space separated attr=value
+<style color=#00ffffff size=1>.</style>            pairs that control factotum's selection of a suitable key
+<style color=#00ffffff size=1>.</style>            for the remote system.
+
+<style color=#00ffffff size=1>.</style>            9export serves the Plan 9 exportfs protocol on its standard
+<style color=#00ffffff size=1>.</style>            input, allowing a Plan 9 system to import parts of the
+<style color=#00ffffff size=1>.</style>            Inferno name space in which 9export is run. If the -A option
+<style color=#00ffffff size=1>.</style>            is given, the caller is not authenticated, line encryption
+<style color=#00ffffff size=1>.</style>            and message authentication are not done, and the Plan 9
+<style color=#00ffffff size=1>.</style>            exportfs protocol starts immediately. Otherwise, <action name=factotum(4)>factotum(4)</action>
+<style color=#00ffffff size=1>.</style>            must be accessible via /mnt/factotum as for import, and it
+<style color=#00ffffff size=1>.</style>            is used to run the Plan 9 authentication protocol. The -e
+<style color=#00ffffff size=1>.</style>            and -k options are as for import. Normally 9export returns
+<style color=#00ffffff size=1>.</style>            when the client closes the connection\; the -a option causes
+<style color=#00ffffff size=1>.</style>            9export to return immediately, leaving a kernel process to
+<style color=#00ffffff size=1>.</style>            serve the name space. 9export might be used as follows:
+
+<style color=#00ffffff size=1>.</style>                 listen -Av 'tcp!*!exportfs' {9export&}
+
+<style color=#00ffffff size=1>.</style>            Beware that currently the name space is served with the
+<style color=#00ffffff size=1>.</style>            permissions of the person running 9export, not those of the
+<style color=#00ffffff size=1>.</style>            caller.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/9export.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/import.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bind(1)>bind(1)</action>, <action name=factotum(2)>factotum(2)</action>, <action name=export(4)>export(4)</action>, <action name=namespace(6)>namespace(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,102 @@
+<action name=GRID-SESSION(1)>GRID-SESSION(1)</action>                                   <action name=GRID-SESSION(1)>GRID-SESSION(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            grid: session - graphical interface for configuring tasks
+<style color=#00ffffff size=1>.</style>            using <action name=grid-cpu(4)>grid-cpu(4)</action> and <action name=grid-ns(1)>grid-ns(1)</action> resources
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            grid/session
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Session allows the user to build up a single namespace from
+<style color=#00ffffff size=1>.</style>            various different namespace resources and configure a set of
+<style color=#00ffffff size=1>.</style>            commands to be executed within this namespace. The execution
+<style color=#00ffffff size=1>.</style>            then takes place on one or more selected <action name=grid-cpu(4)>grid-cpu(4)</action>
+<style color=#00ffffff size=1>.</style>            resources.
+
+<style color=#00ffffff size=1>.</style>            Once started, session presents a heirarchical view of
+<style color=#00ffffff size=1>.</style>            currently registered resources (such as <action name=grid-ns(1)>grid-ns(1)</action>) that
+<style color=#00ffffff size=1>.</style>            serve name spaces using 9P. (See <action name=intro(5)>intro(5)</action> for a description
+<style color=#00ffffff size=1>.</style>            of the protocol.) The top level displays the type of
+<style color=#00ffffff size=1>.</style>            resource, for instance 'CPUresource', whilst the second
+<style color=#00ffffff size=1>.</style>            level shows the name of each individual resource. Descending
+<style color=#00ffffff size=1>.</style>            futher down the tree will reveal the attributes of the
+<style color=#00ffffff size=1>.</style>            selected resource. To mount a resource and see the namespace
+<style color=#00ffffff size=1>.</style>            it exports, click mouse button 3 on the resource name. The
+<style color=#00ffffff size=1>.</style>            view will switch to a split pane view displaying the
+<style color=#00ffffff size=1>.</style>            resource namespace with directories listed on the left and
+<style color=#00ffffff size=1>.</style>            all files in the current directory displayed on the right.
+
+<style color=#00ffffff size=1>.</style>            Clicking mouse button 3 on a file or directory will cause it
+<style color=#00ffffff size=1>.</style>            to be added to the command or namespace list at the bottom
+<style color=#00ffffff size=1>.</style>            of the window. Mouse button 3 is again used on items in
+<style color=#00ffffff size=1>.</style>            either of these lists to display a menu containing the name
+<style color=#00ffffff size=1>.</style>            of the resource on which they are located as well as the
+<style color=#00ffffff size=1>.</style>            option to remove them. The Cmd and Ns buttons located at the
+<style color=#00ffffff size=1>.</style>            top of the window toggle the view between the selected
+<style color=#00ffffff size=1>.</style>            commands and the selected namespace. The Resources button
+<style color=#00ffffff size=1>.</style>            returns to the initial view containing the currently
+<style color=#00ffffff size=1>.</style>            registered resources and Refresh updates the list in case
+<style color=#00ffffff size=1>.</style>            any resources have been added or removed.
+
+<style color=#00ffffff size=1>.</style>         The Command List
+<style color=#00ffffff size=1>.</style>            This contains a list of all commands to be executed. Any
+<style color=#00ffffff size=1>.</style>            arguments may be entered by clicking on the gap after args:
+<style color=#00ffffff size=1>.</style>            and typing into the box. Commands will be executed in order
+<style color=#00ffffff size=1>.</style>            from top (first) to bottom (last).
+
+<style color=#00ffffff size=1>.</style>         The Namespace List
+<style color=#00ffffff size=1>.</style>            This contains a list of all the directories to be imported
+<style color=#00ffffff size=1>.</style>            in order to create the local namespace of the selected 
+<style color=#00ffffff size=1>.</style>            <action name=grid-cpu(4)>grid-cpu(4)</action> resource(s). By default, several directories
+<style color=#00ffffff size=1>.</style>            will be imported from the local machine. To select these,
+<style color=#00ffffff size=1>.</style>            click button 3 on import local namespace and (un)check the
+<style color=#00ffffff size=1>.</style>            directories as required. To toggle this option on and off,
+<style color=#00ffffff size=1>.</style>            click button 1 on import local namespace. These default
+<style color=#00ffffff size=1>.</style>            directories are required by many commands for normal
+<style color=#00ffffff size=1>.</style>            execution so it is recommended that they are not disabled
+<style color=#00ffffff size=1>.</style>            unless they are definitely not needed. Importing a directory
+<style color=#00ffffff size=1>.</style>            of the same name as one of the default directories will
+<style color=#00ffffff size=1>.</style>            automatically overwrite the default. Therefore, it is not
+<style color=#00ffffff size=1>.</style>            necessary to disable a default directory if the same name is
+<style color=#00ffffff size=1>.</style>            to be imported from elsewhere.
+
+<style color=#00ffffff size=1>.</style>            A given directory can only be imported once so it is not
+<style color=#00ffffff size=1>.</style>            possible, for example, to import /usr/inferno from two
+<style color=#00ffffff size=1>.</style>            different machines. Session will automatically import the
+<style color=#00ffffff size=1>.</style>            directories containing each of the selected commands but any
+<style color=#00ffffff size=1>.</style>            others required must be explicitly imported. For example: If
+<style color=#00ffffff size=1>.</style>            one of the commands is:
+
+<style color=#00ffffff size=1>.</style>            	/usr/inferno/runme.dis -f /appl/lib
+
+<style color=#00ffffff size=1>.</style>            Session will import /usr/inferno/ but /appl/lib would have
+<style color=#00ffffff size=1>.</style>            to be specified in the namespace list.
+
+<style color=#00ffffff size=1>.</style>         Execution
+<style color=#00ffffff size=1>.</style>            Once the command and namespace lists have been configured,
+<style color=#00ffffff size=1>.</style>            click Ok on the Session window. This will bring up the 
+<style color=#00ffffff size=1>.</style>            <action name=grid-query(1)>grid-query(1)</action> window containing a list of the available
+<style color=#00ffffff size=1>.</style>            <action name=grid-cpu(4)>grid-cpu(4)</action> resources. To select one or more of these for
+<style color=#00ffffff size=1>.</style>            execution, click on the name with button 3 and it will be
+<style color=#00ffffff size=1>.</style>            added to the list. If a specific <action name=grid-cpu(4)>grid-cpu(4)</action> resource is not
+<style color=#00ffffff size=1>.</style>            required, click button 3 on CPU resource and select the
+<style color=#00ffffff size=1>.</style>            number you require by clicking on the number following the
+<style color=#00ffffff size=1>.</style>            list entry and dragging the mouse up or down.
+
+<style color=#00ffffff size=1>.</style>            Once the required <action name=grid-cpu(4)>grid-cpu(4)</action> resources have been selected,
+<style color=#00ffffff size=1>.</style>            click Ok and execution will commence.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/grid/session.b
+<style color=#00ffffff size=1>.</style>            /appl/grid/ns.b
+<style color=#00ffffff size=1>.</style>            /appl/grid/monitor.b
+<style color=#00ffffff size=1>.</style>            /appl/grid/query.b
+<style color=#00ffffff size=1>.</style>            /appl/grid/lib/browse.b
+<style color=#00ffffff size=1>.</style>            /appl/grid/lib/srvbrowse.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=grid-query(1)>grid-query(1)</action>, <action name=registries(2)>registries(2)</action> <action name=grid-ns(1)>grid-ns(1)</action>, <action name=grid-cpu(4)>grid-cpu(4)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=registry(4)>registry(4)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

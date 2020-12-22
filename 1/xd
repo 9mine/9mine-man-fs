@@ -1,0 +1,62 @@
+<action name=XD(1)>XD(1)</action>                                                       <action name=XD(1)>XD(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            xd - dump file contents in multiple formats
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            xd \[ option ... \] \[ -format ... \] \[ file... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Xd dumps the contents of each file in one or more formats.
+<style color=#00ffffff size=1>.</style>            If no file is specified, standard input is read. Input is
+<style color=#00ffffff size=1>.</style>            processed in 16 byte chunks. Each chunk is output in each of
+<style color=#00ffffff size=1>.</style>            the specified formats, one format per line. Each line of
+<style color=#00ffffff size=1>.</style>            output is prefixed its file offset. This is zero padded for
+<style color=#00ffffff size=1>.</style>            the first format\; subsequent formats are blank padded. If
+<style color=#00ffffff size=1>.</style>            more than one file is specified, the name of each file is
+<style color=#00ffffff size=1>.</style>            output at the start of its dump.
+
+<style color=#00ffffff size=1>.</style>            Output formats are specified by a two character name, 4x by
+<style color=#00ffffff size=1>.</style>            default. The first character defines the byte width of the
+<style color=#00ffffff size=1>.</style>            format\; the second character defines the style of output.
+
+<style color=#00ffffff size=1>.</style>            The available width specifiers are:
+<style color=#00ffffff size=1>.</style>            1 or b  1 byte units.
+<style color=#00ffffff size=1>.</style>            2 or w  2 byte big-endian units.
+<style color=#00ffffff size=1>.</style>            4 or l  4 byte big-endian units.
+<style color=#00ffffff size=1>.</style>            8 or v  8 byte big-endian units.
+
+<style color=#00ffffff size=1>.</style>            The available styles are:
+
+<style color=#00ffffff size=1>.</style>            o    Octal
+<style color=#00ffffff size=1>.</style>            d    Decimal
+<style color=#00ffffff size=1>.</style>            x    Hexadecimal
+
+<style color=#00ffffff size=1>.</style>            In addition to the above format specifiers, -c can be used
+<style color=#00ffffff size=1>.</style>            to denote ASCII format. This is the same as 1x except that
+<style color=#00ffffff size=1>.</style>            codes are printed as printable ASCII characters or Limbo
+<style color=#00ffffff size=1>.</style>            escape sequences where possible.
+
+OPTIONS
+<style color=#00ffffff size=1>.</style>            -u        Unbuffered output.  The output buffer is flushed
+<style color=#00ffffff size=1>.</style>                      after the dump of each 16 byte input chunk has
+<style color=#00ffffff size=1>.</style>                      been generated.
+
+<style color=#00ffffff size=1>.</style>            -r        Mark repeated 16 byte input chunks. The first
+<style color=#00ffffff size=1>.</style>                      chunk is output as per the format specifiers,
+<style color=#00ffffff size=1>.</style>                      followed by an asterisk representing 1 or more
+<style color=#00ffffff size=1>.</style>                      occurrences of identical data.
+
+<style color=#00ffffff size=1>.</style>            -s        Reverse the order of input bytes in chunks of 4
+<style color=#00ffffff size=1>.</style>                      before processing for output.
+
+<style color=#00ffffff size=1>.</style>            -astyle   Print file addresses in the given style.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/xd.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            There is no means of dumping 2 or 8 byte wide values in
+<style color=#00ffffff size=1>.</style>            little-endian form.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

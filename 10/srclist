@@ -1,0 +1,27 @@
+SRCLIST(10.1)                                       SRCLIST(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            srclist - list source files used to build an executable
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            srclist \[ -ce \] \[ -r rootdir ... \] executable
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Srclist prints on standard output, one per line, the names
+<style color=#00ffffff size=1>.</style>            of source files used to build the given executable, which
+<style color=#00ffffff size=1>.</style>            should be in a.out(10.6) format.
+
+<style color=#00ffffff size=1>.</style>            By default, all source file names are listed. The -c option
+<style color=#00ffffff size=1>.</style>            restricts the output to names ending `.c'. The -e option
+<style color=#00ffffff size=1>.</style>            restricts the output to file names that currently exist.
+<style color=#00ffffff size=1>.</style>            Each -r option adds a new root directory rootdir to an
+<style color=#00ffffff size=1>.</style>            internal list. Only the names of source files that appear
+<style color=#00ffffff size=1>.</style>            below one of the root directories will be printed.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /utils/srclist
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            inm(10.1)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

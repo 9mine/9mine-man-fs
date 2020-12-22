@@ -1,0 +1,152 @@
+<action name=W3C-URIS(2)>W3C-URIS(2)</action>                                           <action name=W3C-URIS(2)>W3C-URIS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            w3c-uris - uniform resource identifiers
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "uris.m"\;
+
+<style color=#00ffffff size=1>.</style>            uris := load URIs URIs->PATH\;
+<style color=#00ffffff size=1>.</style>            URI: import uris\;
+
+<style color=#00ffffff size=1>.</style>            URI: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>               scheme:     string\;
+<style color=#00ffffff size=1>.</style>               userinfo:   string\;  # authority, part I
+<style color=#00ffffff size=1>.</style>               host:       string\;  # authority, part II
+<style color=#00ffffff size=1>.</style>               port:       string\;  # authority, part III
+<style color=#00ffffff size=1>.</style>               path:       string\;  # starts with / if absolute
+<style color=#00ffffff size=1>.</style>               query:      string\;  # includes ? if not nil
+<style color=#00ffffff size=1>.</style>               fragment:   string\;  # includes # if not nil
+
+<style color=#00ffffff size=1>.</style>               parse:      fn(s: string): ref URI\;
+<style color=#00ffffff size=1>.</style>               text:       fn(u: self ref URI): string\;
+<style color=#00ffffff size=1>.</style>               addbase:    fn(base: self ref URI, rel: ref URI): ref URI\;
+<style color=#00ffffff size=1>.</style>               authority:  fn(u: self ref URI): string\;
+<style color=#00ffffff size=1>.</style>               copy:       fn(u: self ref URI): ref URI\;
+<style color=#00ffffff size=1>.</style>               eq:         fn(u: self ref URI, v: ref URI): int\;
+<style color=#00ffffff size=1>.</style>               hasauthority: fn(u: self ref URI): int\;
+<style color=#00ffffff size=1>.</style>               isabsolute: fn(u: self ref URI): int\;
+<style color=#00ffffff size=1>.</style>               nodots:     fn(u: self ref URI): ref URI\;
+<style color=#00ffffff size=1>.</style>               userpw:     fn(u: self ref URI): (string, string)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init: fn()\;
+<style color=#00ffffff size=1>.</style>            dec:  fn(s: string): string\;
+<style color=#00ffffff size=1>.</style>            enc:  fn(s: string, safe: string): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            URIs supports the `generic syntax' for `Uniform' Resource
+<style color=#00ffffff size=1>.</style>            Identifiers (URIs), defined by RFC3986. Each URI can have up
+<style color=#00ffffff size=1>.</style>            to five components in the general syntax:
+
+<style color=#00ffffff size=1>.</style>                 scheme: //authority/path ?query #fragment
+
+<style color=#00ffffff size=1>.</style>            where each component is optional, and can have
+<style color=#00ffffff size=1>.</style>            scheme-specific substructure. For instance, in the ftp, http
+<style color=#00ffffff size=1>.</style>            schemes, and perhaps others, the authority component has the
+<style color=#00ffffff size=1>.</style>            further syntax:
+
+<style color=#00ffffff size=1>.</style>                 userinfo@host:port
+
+<style color=#00ffffff size=1>.</style>            The set of characters allowed in most components is also
+<style color=#00ffffff size=1>.</style>            scheme-specific, as is their interpretation, and indeed the
+<style color=#00ffffff size=1>.</style>            interpretation of the component itself.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other operation in the
+<style color=#00ffffff size=1>.</style>            module.
+
+<style color=#00ffffff size=1>.</style>            URI represents a parse of a URI into its components, where
+<style color=#00ffffff size=1>.</style>            the authority has been further split into the
+<style color=#00ffffff size=1>.</style>            scheme-specific but common triple of userinfo, host and port
+<style color=#00ffffff size=1>.</style>            . (The function URI.authority will reproduce the original
+<style color=#00ffffff size=1>.</style>            authority component if required.) The query field starts
+<style color=#00ffffff size=1>.</style>            with the `?' character that introduces the query component,
+<style color=#00ffffff size=1>.</style>            so that an empty query is represented by the string "?", and
+<style color=#00ffffff size=1>.</style>            the absence of a query component is represented by a nil
+<style color=#00ffffff size=1>.</style>            value. The fragment field is handled in a similar way with
+<style color=#00ffffff size=1>.</style>            its delimiting `#'. The fields representing the other
+<style color=#00ffffff size=1>.</style>            components do not include the delimiters in the syntax, and
+<style color=#00ffffff size=1>.</style>            all but query have percent-encoded characters decoded. (The
+<style color=#00ffffff size=1>.</style>            query string is an exception because the set of characters
+<style color=#00ffffff size=1>.</style>            to escape is application-specific. See below for decoding
+<style color=#00ffffff size=1>.</style>            and encoding functions.) URI provides the following
+<style color=#00ffffff size=1>.</style>            operations:
+
+<style color=#00ffffff size=1>.</style>            parse(s)
+<style color=#00ffffff size=1>.</style>                 Return a URI value representing the results of parsing
+<style color=#00ffffff size=1>.</style>                 string s as a URI. There is no error return. The
+<style color=#00ffffff size=1>.</style>                 component values have percent-escapes decoded as
+<style color=#00ffffff size=1>.</style>                 discussed above. The scheme name is converted to lower
+<style color=#00ffffff size=1>.</style>                 case.
+
+<style color=#00ffffff size=1>.</style>            u.text()
+<style color=#00ffffff size=1>.</style>                 Return the textual representation of u in the generic
+<style color=#00ffffff size=1>.</style>                 syntax, adding percent-encoding as required to prevent
+<style color=#00ffffff size=1>.</style>                 characters being misinterpreted as delimiters.
+
+<style color=#00ffffff size=1>.</style>            u.addbase(b)
+<style color=#00ffffff size=1>.</style>                 Resolves URI reference u with respect to a base URI b,
+<style color=#00ffffff size=1>.</style>                 including resolving all `.' and `..' segments in the
+<style color=#00ffffff size=1>.</style>                 URI's path, and returns the resulting URI value. If u
+<style color=#00ffffff size=1>.</style>                 is an absolute URI reference or b is nil, the result is
+<style color=#00ffffff size=1>.</style>                 the same as u except that all `.' and `..' segments
+<style color=#00ffffff size=1>.</style>                 have been resolved in the resulting path, and leading
+<style color=#00ffffff size=1>.</style>                 instances of them removed.
+
+<style color=#00ffffff size=1>.</style>            u.authority()
+<style color=#00ffffff size=1>.</style>                 Returns the text of the authority component of u, in
+<style color=#00ffffff size=1>.</style>                 the generic syntax, created from its userinfo, host and
+<style color=#00ffffff size=1>.</style>                 port components.
+
+<style color=#00ffffff size=1>.</style>            u.copy()
+<style color=#00ffffff size=1>.</style>                 Return a reference to an independent copy of u.
+
+<style color=#00ffffff size=1>.</style>            u.eq(v)
+<style color=#00ffffff size=1>.</style>                 Returns true if u and v are textually equal in all
+<style color=#00ffffff size=1>.</style>                 components except fragment. Note that u and v are
+<style color=#00ffffff size=1>.</style>                 assumed to be in a canonical form for the scheme and
+<style color=#00ffffff size=1>.</style>                 application.
+
+<style color=#00ffffff size=1>.</style>            u.eqf(v)
+<style color=#00ffffff size=1>.</style>                 Returns true if u and v are textually equal in all
+<style color=#00ffffff size=1>.</style>                 components including fragment.
+
+<style color=#00ffffff size=1>.</style>            u.hasauthority()
+<style color=#00ffffff size=1>.</style>                 Returns true if any of the authority subcomponents of u
+<style color=#00ffffff size=1>.</style>                 are not nil\; returns false otherwise.
+
+<style color=#00ffffff size=1>.</style>            u.isabsolute()
+<style color=#00ffffff size=1>.</style>                 Returns true if u has a scheme component\; returns false
+<style color=#00ffffff size=1>.</style>                 otherwise.
+
+<style color=#00ffffff size=1>.</style>            u.nodots()
+<style color=#00ffffff size=1>.</style>                 Returns a new URI value in which all `.' and `..'
+<style color=#00ffffff size=1>.</style>                 segments have been resolved (equivalent to u
+<style color=#00ffffff size=1>.</style>                 .addbase(nil)\c ).
+
+<style color=#00ffffff size=1>.</style>            u.userpw()
+<style color=#00ffffff size=1>.</style>                 Returns a tuple (username, password) derived from
+<style color=#00ffffff size=1>.</style>                 parsing the userinfo subcomponent of authority using
+<style color=#00ffffff size=1>.</style>                 the deprecated but depressingly still common convention
+<style color=#00ffffff size=1>.</style>                 that userinfo has the syntax ``username:password''.
+
+<style color=#00ffffff size=1>.</style>            A reserved or otherwise special character that appears in a
+<style color=#00ffffff size=1>.</style>            URI component must be encoded using a sequence of one or
+<style color=#00ffffff size=1>.</style>            more strings of the form %xx where xx is the hexadecimal
+<style color=#00ffffff size=1>.</style>            value of one byte of the character's encoding in <action name=utf(6)>utf(6)</action>. A
+<style color=#00ffffff size=1>.</style>            string s containing such encodings can be decoded by the
+<style color=#00ffffff size=1>.</style>            function dec. A string s can be encoded by enc, where the
+<style color=#00ffffff size=1>.</style>            parameter safe lists the characters that need not be escaped
+<style color=#00ffffff size=1>.</style>            (where safe may be nil or empty). These functions are
+<style color=#00ffffff size=1>.</style>            normally only needed to decode and encode the values of
+<style color=#00ffffff size=1>.</style>            URI.query, because URI.parse and URI.text above decode and
+<style color=#00ffffff size=1>.</style>            encode the other fields.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/w3c/uris.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=charon(1)>charon(1)</action>, <action name=httpd(8)>httpd(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

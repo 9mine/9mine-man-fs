@@ -1,0 +1,104 @@
+<action name=SECURITY-AUTH(2)>SECURITY-AUTH(2)</action>                                 <action name=SECURITY-AUTH(2)>SECURITY-AUTH(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Auth: init, client, server - authenticated connections
+<style color=#00ffffff size=1>.</style>            between client and server
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "keyring.m"\;
+<style color=#00ffffff size=1>.</style>            include "security.m"\;
+<style color=#00ffffff size=1>.</style>            auth := load Auth Auth->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:   fn(): string\;
+<style color=#00ffffff size=1>.</style>            client: fn(alg: string, ai: ref Keyring->Authinfo,
+<style color=#00ffffff size=1>.</style>                        fd: ref Sys->FD): (ref Sys->FD, string)\;
+<style color=#00ffffff size=1>.</style>            server: fn(algs: list of string, ai: ref Keyring->Authinfo,
+<style color=#00ffffff size=1>.</style>                        fd: ref Sys->FD, setid: int): (ref Sys->FD, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Auth establishes authenticated connections using the station
+<style color=#00ffffff size=1>.</style>            to station protocol described in <action name=auth(6)>auth(6)</action>. It encapsulates
+<style color=#00ffffff size=1>.</style>            the use of the primitives of <action name=keyring-auth(2)>keyring-auth(2)</action> and
+<style color=#00ffffff size=1>.</style>            <action name=security-ssl(2)>security-ssl(2)</action> for the particular case where the stations
+<style color=#00ffffff size=1>.</style>            play the rôles of `client' and `server'. The underlying
+<style color=#00ffffff size=1>.</style>            primitives must still be accessed directly in some cases,
+<style color=#00ffffff size=1>.</style>            for instance when completely symmetric authentication is
+<style color=#00ffffff size=1>.</style>            needed between peers.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before using any other functions in Auth
+<style color=#00ffffff size=1>.</style>            \; it returns nil if successful, and a diagnostic message
+<style color=#00ffffff size=1>.</style>            otherwise.
+
+<style color=#00ffffff size=1>.</style>            Client authenticates a connection with the server on fd
+<style color=#00ffffff size=1>.</style>            using the authentication data in ai. If successful, and alg
+<style color=#00ffffff size=1>.</style>            is neither nil nor the value "none"\c , client will set the
+<style color=#00ffffff size=1>.</style>            connection to digest or encrypt the data, using the digest
+<style color=#00ffffff size=1>.</style>            or encryption algorithm specified in alg. It returns the
+<style color=#00ffffff size=1>.</style>            file descriptor for the connection, and a string with
+<style color=#00ffffff size=1>.</style>            information about the connection. If an authenticated
+<style color=#00ffffff size=1>.</style>            connection cannot be established, client returns a nil file
+<style color=#00ffffff size=1>.</style>            descriptor and an error message.
+
+<style color=#00ffffff size=1>.</style>            Server authenticates a client connection fd, as described in
+<style color=#00ffffff size=1>.</style>            <action name=keyring-auth(2)>keyring-auth(2)</action>, using the server's authentication data in
+<style color=#00ffffff size=1>.</style>            ai. If successful, and the client requested the use of a
+<style color=#00ffffff size=1>.</style>            digest or encryption algorithm, and that algorithm is listed
+<style color=#00ffffff size=1>.</style>            in algs, server enables the security layer <action name=ssl(3)>ssl(3)</action> using the
+<style color=#00ffffff size=1>.</style>            selected algorithm. Furthermore, if setid is non-zero, the
+<style color=#00ffffff size=1>.</style>            current user name is set to the newly authenticated name.
+<style color=#00ffffff size=1>.</style>            Server returns a file descriptor for the connection, and a
+<style color=#00ffffff size=1>.</style>            string with information about the connection. If an
+<style color=#00ffffff size=1>.</style>            authenticated connection cannot be established, or the
+<style color=#00ffffff size=1>.</style>            client's chosen algorithm is not listed, server returns a
+<style color=#00ffffff size=1>.</style>            nil file descriptor and an error message.
+
+<style color=#00ffffff size=1>.</style>            Any string acceptable to <action name=ssl(3)>ssl(3)</action>, including "clear"\c , can
+<style color=#00ffffff size=1>.</style>            be given as an alg to client, or listed in algs for server.
+<style color=#00ffffff size=1>.</style>            Furthermore, the special string "none" tells both functions
+<style color=#00ffffff size=1>.</style>            that <action name=ssl(3)>ssl(3)</action> should not be used at all on a connection.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            This selection from /appl/cmd/mount.b illustrates
+<style color=#00ffffff size=1>.</style>            client-side use.
+
+<style color=#00ffffff size=1>.</style>            	au := load Auth Auth->PATH\;
+<style color=#00ffffff size=1>.</style>            	err := au->init()\;
+<style color=#00ffffff size=1>.</style>            	if(err != nil){
+<style color=#00ffffff size=1>.</style>            		sys->fprint(stderr, "mount: %s\n", err)\;
+<style color=#00ffffff size=1>.</style>            		exit\;
+<style color=#00ffffff size=1>.</style>            	}
+<style color=#00ffffff size=1>.</style>            	fd: ref Sys->FD\;
+<style color=#00ffffff size=1>.</style>            	(fd, err) = au->client("none", ai, c.dfd)\;
+<style color=#00ffffff size=1>.</style>            	if(fd == nil){
+<style color=#00ffffff size=1>.</style>            		sys->fprint(stderr, "mount: authentication failed: %s\n", err)\;
+<style color=#00ffffff size=1>.</style>            		exit\;
+<style color=#00ffffff size=1>.</style>            	}
+<style color=#00ffffff size=1>.</style>            	dir := hd argv\;
+<style color=#00ffffff size=1>.</style>            	ok = sys->mount(fd, dir, flags, "")\;
+<style color=#00ffffff size=1>.</style>            	if(ok < 0)
+<style color=#00ffffff size=1>.</style>            		sys->fprint(stderr, "mount: %r\n")\;
+
+<style color=#00ffffff size=1>.</style>            The following example from /appl/lib/styxd.b shows
+<style color=#00ffffff size=1>.</style>            server-side use\; note that readauthinfo is called first to
+<style color=#00ffffff size=1>.</style>            fetch the authentication data to pass to server.
+
+<style color=#00ffffff size=1>.</style>            	kr := load Keyring Keyring->PATH\;
+<style color=#00ffffff size=1>.</style>            	...
+<style color=#00ffffff size=1>.</style>            	ai := kr->readauthinfo("/usr/"+user+"/keyring/default")\;
+<style color=#00ffffff size=1>.</style>            	auth->init()\;
+<style color=#00ffffff size=1>.</style>            	(fd, info_or_err) := auth->server(argv, ai, stdin, 1)\;
+<style color=#00ffffff size=1>.</style>            	if(fd == nil){
+<style color=#00ffffff size=1>.</style>            		sys->fprint(stderr, "styxd: %s\n", info_or_err)\;
+<style color=#00ffffff size=1>.</style>            		exit\;
+<style color=#00ffffff size=1>.</style>            	}
+<style color=#00ffffff size=1>.</style>            	sys->pctl(Sys->FORKNS, nil)\;
+<style color=#00ffffff size=1>.</style>            	if(sys->export(fd, Sys->EXPASYNC) < 0)
+<style color=#00ffffff size=1>.</style>            		sys->fprint(stderr, "styxd: file export: %r\n")\;
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/auth.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=keyring-auth(2)>keyring-auth(2)</action>, <action name=security-ssl(2)>security-ssl(2)</action>, <action name=ssl(3)>ssl(3)</action>, <action name=auth(6)>auth(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

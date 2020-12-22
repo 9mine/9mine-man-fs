@@ -1,0 +1,58 @@
+<action name=ARCH(3)>ARCH(3)</action>                                                   <action name=ARCH(3)>ARCH(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            arch - x86 architecture-specific information and control
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a #P /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/cputype
+<style color=#00ffffff size=1>.</style>            /dev/ioalloc
+<style color=#00ffffff size=1>.</style>            /dev/iob
+<style color=#00ffffff size=1>.</style>            /dev/iol
+<style color=#00ffffff size=1>.</style>            /dev/iow
+<style color=#00ffffff size=1>.</style>            /dev/irqalloc
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This device presents textual information about PC hardware
+<style color=#00ffffff size=1>.</style>            and allows user-level control of the I/O ports on x86-class
+<style color=#00ffffff size=1>.</style>            machines.
+
+<style color=#00ffffff size=1>.</style>            Reads from cputype recover the processor type and clock
+<style color=#00ffffff size=1>.</style>            rate.
+
+<style color=#00ffffff size=1>.</style>            Reads from ioalloc return I/O ranges used by each device,
+<style color=#00ffffff size=1>.</style>            one line per range.  Each line contains three fields
+<style color=#00ffffff size=1>.</style>            separated by white space: first address in hexadecimal, last
+<style color=#00ffffff size=1>.</style>            address, name of device.
+
+<style color=#00ffffff size=1>.</style>            Reads from irqalloc return the enabled interrupts, one line
+<style color=#00ffffff size=1>.</style>            per interrupt.  Each line contains three fields separated by
+<style color=#00ffffff size=1>.</style>            white space: the trap number, the IRQ it is assigned to, and
+<style color=#00ffffff size=1>.</style>            the name of the device using it.
+
+<style color=#00ffffff size=1>.</style>            Reads and writes to iob, iow, and iol cause 8-bit wide,
+<style color=#00ffffff size=1>.</style>            16-bit wide, and 32-bit wide requests to I/O ports. The port
+<style color=#00ffffff size=1>.</style>            accessed is determined by the byte offset of the file
+<style color=#00ffffff size=1>.</style>            descriptor.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            The following Limbo code reads from an x86 byte I/O port.
+
+<style color=#00ffffff size=1>.</style>                 inportb(port: int): byte
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                     data := array\[1\] of byte\;
+
+<style color=#00ffffff size=1>.</style>                     if(iobfd == nil)
+<style color=#00ffffff size=1>.</style>                         iobfd = sys->open("#P/iob", Sys->ORDWR)\;
+
+<style color=#00ffffff size=1>.</style>                     sys->seek(iobfd, port, 0)\;
+<style color=#00ffffff size=1>.</style>                     if(sys->read(iobfd, data, len data) != len data)
+<style color=#00ffffff size=1>.</style>                         fatal(sys->sprint("inportb(16r%4.4x): %r\n", port))\;
+<style color=#00ffffff size=1>.</style>                     return data\[0\]\;
+<style color=#00ffffff size=1>.</style>                 }
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/pc/devarch.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

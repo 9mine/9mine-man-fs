@@ -1,0 +1,40 @@
+<action name=SH-TEST(1)>SH-TEST(1)</action>                                             <action name=SH-TEST(1)>SH-TEST(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            report - shell module for test reporting.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load test
+
+<style color=#00ffffff size=1>.</style>            report severity verbosity message\[...\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Its is a loadable module for <action name=sh(1)>sh(1)</action> that provides a simple
+<style color=#00ffffff size=1>.</style>            error reporting facility for tests which can be run by itest
+<style color=#00ffffff size=1>.</style>            (1). It provides one command, report, which is used by a
+<style color=#00ffffff size=1>.</style>            test to report a message with specified severity and
+<style color=#00ffffff size=1>.</style>            verbosity. Severity must be one of INF, WRN, ERR or FTL for
+<style color=#00ffffff size=1>.</style>            Information, warnings, errors and fatal errors respectively.
+<style color=#00ffffff size=1>.</style>            Verbosity is an integer between 0 and 9. For informatory
+<style color=#00ffffff size=1>.</style>            messages (severity INF), the message will only be displayed
+<style color=#00ffffff size=1>.</style>            if the current verbosity level is greater than or equal to
+<style color=#00ffffff size=1>.</style>            verbosity.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            #!/dis/sh
+
+<style color=#00ffffff size=1>.</style>            load std test
+
+<style color=#00ffffff size=1>.</style>            echo 1 > /tmp/a
+<style color=#00ffffff size=1>.</style>            echo 2 >/tmp/b
+<style color=#00ffffff size=1>.</style>            report INF 5 testing cmp command
+<style color=#00ffffff size=1>.</style>            if {cmp /tmp/a /tmp/b} {
+<style color=#00ffffff size=1>.</style>            	report ERR 0 'cmp failed - reported different files as the same'
+<style color=#00ffffff size=1>.</style>            }{
+<style color=#00ffffff size=1>.</style>            	report INF 6 'cmp ok - reported different files as different'
+<style color=#00ffffff size=1>.</style>            }
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=itest(1)>itest(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,39 @@
+<action name=LOGON(1)>LOGON(1)</action>                                                 <action name=LOGON(1)>LOGON(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            logon - log on to Inferno
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            \[ wm/wm \] wm/logon \[ -l \] \[ -n nsfile \] \[ -u user \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Logon logs a user in to the Inferno environment. It requires
+<style color=#00ffffff size=1>.</style>            wm (1) to be started first. If no user name is specified by
+<style color=#00ffffff size=1>.</style>            the -u option, logon displays a login panel to prompt for
+<style color=#00ffffff size=1>.</style>            one. The user name must have a directory /usr/user, which
+<style color=#00ffffff size=1>.</style>            will become the current directory. (Otherwise, logon will
+<style color=#00ffffff size=1>.</style>            display a diagnostic panel and prompt again.) The user name
+<style color=#00ffffff size=1>.</style>            is written to /dev/user (see <action name=cons(3)>cons(3)</action>), which is the name
+<style color=#00ffffff size=1>.</style>            presented on subsequent attaches to file servers.
+
+<style color=#00ffffff size=1>.</style>            Normally, logon expects keyboard input to provide a name,
+<style color=#00ffffff size=1>.</style>            but if the -l option is given, logon displays a list of the
+<style color=#00ffffff size=1>.</style>            names in /usr, allowing one to be selected using a mouse or
+<style color=#00ffffff size=1>.</style>            touch screen.
+
+<style color=#00ffffff size=1>.</style>            Once the current directory has been set, logon creates a new
+<style color=#00ffffff size=1>.</style>            name space for the user using the contents of nsfile
+<style color=#00ffffff size=1>.</style>            (default: namespace), as described in <action name=namespace(6)>namespace(6)</action>. It then
+<style color=#00ffffff size=1>.</style>            starts <action name=toolbar(1)>toolbar(1)</action> to provide the initial application
+<style color=#00ffffff size=1>.</style>            environment.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /dev/user    Inferno user name
+<style color=#00ffffff size=1>.</style>            /usr/user    user's home directory
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/logon.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=toolbar(1)>toolbar(1)</action>, <action name=wm(1)>wm(1)</action>, <action name=namespace(6)>namespace(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

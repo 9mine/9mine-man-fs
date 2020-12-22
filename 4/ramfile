@@ -1,0 +1,40 @@
+<action name=RAMFILE(4)>RAMFILE(4)</action>                                             <action name=RAMFILE(4)>RAMFILE(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ramfile - synthesise file
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ramfile file \[ data \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ramfile puts a virtual file in the name space at file, and
+<style color=#00ffffff size=1>.</style>            services file requests on it. Data written to the file is
+<style color=#00ffffff size=1>.</style>            stored in ramfile's memory\; read requests return the
+<style color=#00ffffff size=1>.</style>            previously stored data. If the optional data argument is
+<style color=#00ffffff size=1>.</style>            provided, the file will initially contain that text. The
+<style color=#00ffffff size=1>.</style>            parent directory of file must exist\; ramfile creates a union
+<style color=#00ffffff size=1>.</style>            mount on that directory, and if file previously existed, the
+<style color=#00ffffff size=1>.</style>            synthesised file will hide it.
+
+<style color=#00ffffff size=1>.</style>            Ramfile uses <action name=sys-file2chan(2)>sys-file2chan(2)</action>, which simplifies
+<style color=#00ffffff size=1>.</style>            implementation but prevents it from knowing when the file
+<style color=#00ffffff size=1>.</style>            has been truncated. Instead, it truncates the file on any
+<style color=#00ffffff size=1>.</style>            write to the start of the file (offset 0), allowing <action name=cp(1)>cp(1)</action> to
+<style color=#00ffffff size=1>.</style>            copy in new contents, and text editors to edit it. Indeed,
+<style color=#00ffffff size=1>.</style>            the file will be usable by all applications that do not rely
+<style color=#00ffffff size=1>.</style>            on updating parts of the file in place, or if they do, do
+<style color=#00ffffff size=1>.</style>            not update the start of the file.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ramfile.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bind(1)>bind(1)</action>, <action name=sys-file2chan(2)>sys-file2chan(2)</action>, <action name=srv(3)>srv(3)</action>, <action name=memfs(4)>memfs(4)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Ramfile cannot tell when the path has been unmounted\; the
+<style color=#00ffffff size=1>.</style>            only option is to <action name=kill(1)>kill(1)</action> it.
+<style color=#00ffffff size=1>.</style>            The file always appears to have zero length to <action name=sys-stat(2)>sys-stat(2)</action>,
+<style color=#00ffffff size=1>.</style>            which prevents loading a Dis file from it.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

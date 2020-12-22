@@ -1,0 +1,38 @@
+<action name=TKCMD(1)>TKCMD(1)</action>                                                 <action name=TKCMD(1)>TKCMD(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tkcmd - enter Tk commands interactively
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            tkcmd \[ -iu \] \[ tkarg \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Tkcmd allows interactive entry of Tk commands\; it is useful
+<style color=#00ffffff size=1>.</style>            for testing out features of Tk prior to incorporating them
+<style color=#00ffffff size=1>.</style>            in a Limbo program. It accepts two arguments:
+
+<style color=#00ffffff size=1>.</style>            -i   Force interactive mode. In interactive mode (the
+<style color=#00ffffff size=1>.</style>                 default if the standard input is directed at /dev/cons
+<style color=#00ffffff size=1>.</style>                 ), a prompt is printed before every tk command entered.
+
+<style color=#00ffffff size=1>.</style>            -u   Suppress the automatic tk update command after every
+<style color=#00ffffff size=1>.</style>                 entered command.
+
+<style color=#00ffffff size=1>.</style>            When tkcmd is started, a new top level window is created\;
+<style color=#00ffffff size=1>.</style>            tkcmd creates a titlebar and handles all the normal window
+<style color=#00ffffff size=1>.</style>            window manager interactions. When the window is closed,
+<style color=#00ffffff size=1>.</style>            tkcmd terminates. Each line typed to tkcmd is passed
+<style color=#00ffffff size=1>.</style>            directly to the function Tk->cmd (see <action name=tk(2)>tk(2)</action>) and executed in
+<style color=#00ffffff size=1>.</style>            the context of the top level window\; a Tk ``update'' command
+<style color=#00ffffff size=1>.</style>            is then issued. Any return value from the command is
+<style color=#00ffffff size=1>.</style>            printed. There is one predefined Tk channel, named
+<style color=#00ffffff size=1>.</style>            ``stdout''\; anything sent down this channel will be printed
+<style color=#00ffffff size=1>.</style>            to the standard output.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/tkcmd.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=tk(2)>tk(2)</action>, <action name=intro(9)>intro(9)</action>, <action name=sh-tk(1)>sh-tk(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

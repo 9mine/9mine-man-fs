@@ -1,0 +1,25 @@
+<action name=FPGALOAD(8)>FPGALOAD(8)</action>                                           <action name=FPGALOAD(8)>FPGALOAD(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            fpgaload - configure FPGA
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            auxi/fpgaload \[ -c clk \] file.rbf
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Fpgaload configures the directly-attached Altera Flex6000
+<style color=#00ffffff size=1>.</style>            FPGA on the Bright Star Engineering ip-Engine. It enables
+<style color=#00ffffff size=1>.</style>            the FPGA and output of the external system clocks, then
+<style color=#00ffffff size=1>.</style>            loads the FPGA with the contents of file.rbf which should be
+<style color=#00ffffff size=1>.</style>            in the `raw binary format' produced for example by the
+<style color=#00ffffff size=1>.</style>            Altera tools. After successful configuration, the BCLK is
+<style color=#00ffffff size=1>.</style>            set to clk MHz\; clk must be a divisor of the ip-Engine's
+<style color=#00ffffff size=1>.</style>            system clock (currently 48 MHz).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auxi/fpgaload.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=fpga(3)>fpga(3)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

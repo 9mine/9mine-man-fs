@@ -1,0 +1,115 @@
+<action name=MATH-MISC(1)>MATH-MISC(1)</action>                                         <action name=MATH-MISC(1)>MATH-MISC(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ack, crackerbarrel, factor, fibonacci, fit, genprimes,
+<style color=#00ffffff size=1>.</style>            mersenne, parts, perms, pi, powers, primes, sieve -
+<style color=#00ffffff size=1>.</style>            miscellaneous mathematical applications
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            math/ack \[ m \] \[ n \]
+<style color=#00ffffff size=1>.</style>            math/crackerbarrel \[ n \]
+<style color=#00ffffff size=1>.</style>            math/factor \[ n \]
+<style color=#00ffffff size=1>.</style>            math/fibonacci
+<style color=#00ffffff size=1>.</style>            math/fit \[ -ddeg \] \[ -v \] \[ file \]
+<style color=#00ffffff size=1>.</style>            math/genprimes \[ lim \]
+<style color=#00ffffff size=1>.</style>            math/mersenne \[ num \]
+<style color=#00ffffff size=1>.</style>            math/parts \[ -a \] \[ num... \]
+<style color=#00ffffff size=1>.</style>            math/perms \[ n \]
+<style color=#00ffffff size=1>.</style>            math/pi \[ dp \]
+<style color=#00ffffff size=1>.</style>            math/powers \[ -p num \] \[ -n num \] \[ -f num \] \[ -l num \] \[ -m
+<style color=#00ffffff size=1>.</style>            num \] \[ -v \]
+<style color=#00ffffff size=1>.</style>            math/primes \[ m \] \[ n \]
+<style color=#00ffffff size=1>.</style>            math/sieve \[ -a alg \] \[ lim \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A collection of simple mathematical utilities.
+
+<style color=#00ffffff size=1>.</style>            math/ack
+<style color=#00ffffff size=1>.</style>                 Calculates and times Ackermann's function A(m, n).
+
+<style color=#00ffffff size=1>.</style>            math/crackerbarrel
+<style color=#00ffffff size=1>.</style>                 Solves the crackerbarrel puzzle n times and outputs the
+<style color=#00ffffff size=1>.</style>                 time taken. See the source for details of the puzzle.
+
+<style color=#00ffffff size=1>.</style>            math/factor
+<style color=#00ffffff size=1>.</style>                 Factors the number n.
+
+<style color=#00ffffff size=1>.</style>            math/fibonacci
+<style color=#00ffffff size=1>.</style>                 Generates the first few terms of the Fibonacci series
+<style color=#00ffffff size=1>.</style>                 using recursion and user defined exceptions.
+
+<style color=#00ffffff size=1>.</style>            math/fit
+<style color=#00ffffff size=1>.</style>                 Fits a polynomial of degree deg to a set of points (x,
+<style color=#00ffffff size=1>.</style>                 y) where x is the independent variable, y the dependent
+<style color=#00ffffff size=1>.</style>                 one. All x and y values should be seperated by white
+<style color=#00ffffff size=1>.</style>                 space and can be real or integer. The values are read
+<style color=#00ffffff size=1>.</style>                 from file or standard input if none is given. The -v
+<style color=#00ffffff size=1>.</style>                 option prints a table of actual and expected y values.
+
+<style color=#00ffffff size=1>.</style>            math/genprimes
+<style color=#00ffffff size=1>.</style>                 Generates primes numbers up to and including lim using
+<style color=#00ffffff size=1>.</style>                 spawned processes and buffered channels.
+
+<style color=#00ffffff size=1>.</style>            math/mersenne
+<style color=#00ffffff size=1>.</style>                 Tests the primality of the Mersenne numbers ie numbers
+<style color=#00ffffff size=1>.</style>                 of the form 2^n-1. The argument num is the power of 2
+<style color=#00ffffff size=1>.</style>                 in the above.
+
+<style color=#00ffffff size=1>.</style>            math/parts
+<style color=#00ffffff size=1>.</style>                 Calculates the number of partitions of the given
+<style color=#00ffffff size=1>.</style>                 number(s). The -a option will print out a table of the
+<style color=#00ffffff size=1>.</style>                 number of partitions of all numbers up to  the given
+<style color=#00ffffff size=1>.</style>                 number(s).
+
+<style color=#00ffffff size=1>.</style>            math/perms
+<style color=#00ffffff size=1>.</style>                 Prints out all permutations of n elements.
+
+<style color=#00ffffff size=1>.</style>            math/pi
+<style color=#00ffffff size=1>.</style>                 Calculates the value of pi to dp decimal places.
+
+<style color=#00ffffff size=1>.</style>            math/powers
+<style color=#00ffffff size=1>.</style>                 Investigates the number of representations of an
+<style color=#00ffffff size=1>.</style>                 integer as a sum of powers. The -p option denotes the
+<style color=#00ffffff size=1>.</style>                 power of use (default 2). The -n option denotes the
+<style color=#00ffffff size=1>.</style>                 number of powers to sum (default 2). The -f option
+<style color=#00ffffff size=1>.</style>                 denotes the minimum number of such representations
+<style color=#00ffffff size=1>.</style>                 found before reporting them (default 2). The -l and -m
+<style color=#00ffffff size=1>.</style>                 options denote the smallest and largest numbers to
+<style color=#00ffffff size=1>.</style>                 consider respectively (defaults 0 and 8192). Finally
+<style color=#00ffffff size=1>.</style>                 the -v option prints various statistics during the
+<style color=#00ffffff size=1>.</style>                 search.
+
+<style color=#00ffffff size=1>.</style>            math/primes
+<style color=#00ffffff size=1>.</style>                 Prints out all primes between m and n .
+
+<style color=#00ffffff size=1>.</style>            math/sieve
+<style color=#00ffffff size=1>.</style>                 Prints out prime numbers up to lim using a sieve
+<style color=#00ffffff size=1>.</style>                 algorithm. The -a option indicates the level of
+<style color=#00ffffff size=1>.</style>                 sophistication of the algorithm (0-4).
+
+EXAMPLE
+
+<style color=#00ffffff size=1>.</style>            	math/powers -p 3 -m 30000
+<style color=#00ffffff size=1>.</style>            gives
+<style color=#00ffffff size=1>.</style>            	\[2\] 1729 = 1**3 + 12**3 = 9**3 + 10**3
+<style color=#00ffffff size=1>.</style>            	\[2\] 4104 = 2**3 + 16**3 = 9**3 + 15**3
+<style color=#00ffffff size=1>.</style>            	\[2\] 20683 = 10**3 + 27**3 = 19**3 + 24**3
+<style color=#00ffffff size=1>.</style>            The number of representations found for each integer is indicated in
+<style color=#00ffffff size=1>.</style>            square brackets.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/math/ack.b
+<style color=#00ffffff size=1>.</style>            /appl/math/crackerbarrel.b
+<style color=#00ffffff size=1>.</style>            /appl/math/factor.b
+<style color=#00ffffff size=1>.</style>            /appl/math/fibonacci.b
+<style color=#00ffffff size=1>.</style>            /appl/math/fit.b
+<style color=#00ffffff size=1>.</style>            /appl/math/genprimes.b
+<style color=#00ffffff size=1>.</style>            /appl/math/mersenne.b
+<style color=#00ffffff size=1>.</style>            /appl/math/parts.b
+<style color=#00ffffff size=1>.</style>            /appl/math/perms.b
+<style color=#00ffffff size=1>.</style>            /appl/math/pi.b
+<style color=#00ffffff size=1>.</style>            /appl/math/powers.b
+<style color=#00ffffff size=1>.</style>            /appl/math/primes.b
+<style color=#00ffffff size=1>.</style>            /appl/math/sieve.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

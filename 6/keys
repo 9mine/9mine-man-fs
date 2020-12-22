@@ -1,0 +1,38 @@
+<action name=KEYS(6)>KEYS(6)</action>                                                   <action name=KEYS(6)>KEYS(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            keys - secrets shared with signer
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The file /keydb/keys exists only on a host acting as a
+<style color=#00ffffff size=1>.</style>            `signer' (authentication server, Certifying Authority). It
+<style color=#00ffffff size=1>.</style>            holds a password entry for each user registered with an
+<style color=#00ffffff size=1>.</style>            Inferno server. Each entry contains a user name, a password,
+<style color=#00ffffff size=1>.</style>            the time at which the entry expires, and the entry's status.
+<style color=#00ffffff size=1>.</style>            The password is the secret shared between the user and
+<style color=#00ffffff size=1>.</style>            signer (authentication server), allowing the signer to sign
+<style color=#00ffffff size=1>.</style>            a certificate to authenticate a user's public key to others,
+<style color=#00ffffff size=1>.</style>            using the secret to check the user's identity. The actual
+<style color=#00ffffff size=1>.</style>            secret is not stored, but rather its SHA-1 hash.
+
+<style color=#00ffffff size=1>.</style>            The file is encrypted with a secret provided by the signer's
+<style color=#00ffffff size=1>.</style>            administrator\; normally that secret is entered once when
+<style color=#00ffffff size=1>.</style>            authentication services are started by svc/auth on the host
+<style color=#00ffffff size=1>.</style>            acting as signer (see <action name=svc(8)>svc(8)</action>). The file should also be
+<style color=#00ffffff size=1>.</style>            readable and writable only by the user identity that runs
+<style color=#00ffffff size=1>.</style>            the signing service (ie, mode 600, see <action name=chmod(1)>chmod(1)</action>). Entries
+<style color=#00ffffff size=1>.</style>            are usually accessed only through the name space provided by
+<style color=#00ffffff size=1>.</style>            <action name=keyfs(4)>keyfs(4)</action>, which decrypts the file into internal data
+<style color=#00ffffff size=1>.</style>            structures given the administrative key, and makes each
+<style color=#00ffffff size=1>.</style>            entry visible as a separate directory. Using that name
+<style color=#00ffffff size=1>.</style>            space, entries are added and updated by an administrator
+<style color=#00ffffff size=1>.</style>            using <action name=changelogin(8)>changelogin(8)</action>, a user can change a secret using
+<style color=#00ffffff size=1>.</style>            <action name=passwd(1)>passwd(1)</action> via <action name=keysrv(4)>keysrv(4)</action>, and it is accessed for signing by
+<style color=#00ffffff size=1>.</style>            <action name=logind(8)>logind(8)</action> to obtain the secret used to verify the identity
+<style color=#00ffffff size=1>.</style>            of a client requesting a certificate (typically via
+<style color=#00ffffff size=1>.</style>            <action name=security-login(2)>security-login(2)</action>).
+
+FILES
+<style color=#00ffffff size=1>.</style>            /keydb/keys
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

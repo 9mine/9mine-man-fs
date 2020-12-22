@@ -1,0 +1,50 @@
+<action name=IDEA(1)>IDEA(1)</action>                                                   <action name=IDEA(1)>IDEA(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            idea - encrypt/decrypt a file with the IDEA cipher
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            idea \[ -e \] \[ -d \] key \[ datafile \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Idea encrypts or decrypts data using the IDEA (International
+<style color=#00ffffff size=1>.</style>            Data Encryption Algorithm) cipher first proposed by Xuejia
+<style color=#00ffffff size=1>.</style>            Lai and James Massey in 1990.
+
+<style color=#00ffffff size=1>.</style>            The -e option encrypts the data and the -d option decrypts
+<style color=#00ffffff size=1>.</style>            the data. Exactly one of these must be specified on the
+<style color=#00ffffff size=1>.</style>            command line.
+
+<style color=#00ffffff size=1>.</style>            The key is any 16 character string which is used as the key
+<style color=#00ffffff size=1>.</style>            for both encryption and decryption.
+
+<style color=#00ffffff size=1>.</style>            The data to be encrypted/decrypted is either in datafile or
+<style color=#00ffffff size=1>.</style>            is read from standard input. If no input file is given, the
+<style color=#00ffffff size=1>.</style>            output from idea is always sent to standard output. For
+<style color=#00ffffff size=1>.</style>            encryption, if an input file is specified the output is sent
+<style color=#00ffffff size=1>.</style>            to a file with the name datafile.id. For decryption, if an
+<style color=#00ffffff size=1>.</style>            input file is specified it should have a .id extension and
+<style color=#00ffffff size=1>.</style>            the output is sent to a file whose name is that of datafile
+<style color=#00ffffff size=1>.</style>            without the .id extension.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Encrypt the data in the file A10076795.gz:
+
+<style color=#00ffffff size=1>.</style>                 idea -e 'abcd2345 $+*LMNO' A10076795.gz
+
+<style color=#00ffffff size=1>.</style>            The encrypted data is put in the file A10076795.gz.id. Once
+<style color=#00ffffff size=1>.</style>            this file is transmitted, the receiver can then decrypt it,
+<style color=#00ffffff size=1>.</style>            as long as he has the key, with:
+
+<style color=#00ffffff size=1>.</style>                 idea -d 'abcd2345 $+*LMNO' A10076795.gz.id
+
+<style color=#00ffffff size=1>.</style>            The decryped data is put in the file A10076795.gz.
+
+<style color=#00ffffff size=1>.</style>            Note that the quotes around the key are interpreted by the
+<style color=#00ffffff size=1>.</style>            shell and simply delimit the key string.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/idea.b
+<style color=#00ffffff size=1>.</style>            /utils/idea/idea.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,212 @@
+<action name=RFC822(2)>RFC822(2)</action>                                               <action name=RFC822(2)>RFC822(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            rfc822 - RFC822 mail format helpers
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "bufio.m"\;
+<style color=#00ffffff size=1>.</style>            include "rfc822.m"\;
+<style color=#00ffffff size=1>.</style>            rfc822 := load RFC822 RFC822->PATH\;
+<style color=#00ffffff size=1>.</style>            Content, Rfclex: import rfc822\;
+
+<style color=#00ffffff size=1>.</style>            Word, QString: con ...\;
+<style color=#00ffffff size=1>.</style>            Maxrequest: con 16*1024\;   # more than enough for anything sensible
+
+<style color=#00ffffff size=1>.</style>            init:         fn(b: Bufio)\;
+
+<style color=#00ffffff size=1>.</style>            Rfclex: adt {
+<style color=#00ffffff size=1>.</style>               tok:     int\;
+<style color=#00ffffff size=1>.</style>               wordval: string\;
+
+<style color=#00ffffff size=1>.</style>               mk:      fn(a: array of byte): ref Rfclex\;
+<style color=#00ffffff size=1>.</style>               getc:    fn(p: self ref Rfclex): int\;
+<style color=#00ffffff size=1>.</style>               ungetc:  fn(p: self ref Rfclex)\;
+<style color=#00ffffff size=1>.</style>               lex:     fn(p: self ref Rfclex): int\;
+<style color=#00ffffff size=1>.</style>               unlex:   fn(p: self ref Rfclex)\;
+<style color=#00ffffff size=1>.</style>               skipws:  fn(p: self ref Rfclex): int\;
+
+<style color=#00ffffff size=1>.</style>               line:    fn(p: self ref Rfclex): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            readheaders:  fn(fd: ref Bufio->Iobuf, limit: int):
+<style color=#00ffffff size=1>.</style>                              array of (string, array of byte)\;
+<style color=#00ffffff size=1>.</style>            parseparams:  fn(ps: ref Rfclex): list of (string, string)\;
+<style color=#00ffffff size=1>.</style>            parsecontent: fn(ps: ref Rfclex, multipart: int,
+<style color=#00ffffff size=1>.</style>                              head: list of ref Content): list of ref Content\;
+<style color=#00ffffff size=1>.</style>            mimefields:   fn(ps: ref Rfclex):
+<style color=#00ffffff size=1>.</style>                              list of (string, list of (string, string))\;
+
+<style color=#00ffffff size=1>.</style>            quotable:     fn(s: string): int\;
+<style color=#00ffffff size=1>.</style>            quote:        fn(s: string): string\;
+
+<style color=#00ffffff size=1>.</style>            sec2date:     fn(secs: int): string\;
+<style color=#00ffffff size=1>.</style>            date2sec:     fn(s: string): int\;
+<style color=#00ffffff size=1>.</style>            now:          fn(): int\;
+<style color=#00ffffff size=1>.</style>            time:         fn(): string\;
+
+<style color=#00ffffff size=1>.</style>            Content: adt{
+<style color=#00ffffff size=1>.</style>               generic:   string\;
+<style color=#00ffffff size=1>.</style>               specific:  string\;
+<style color=#00ffffff size=1>.</style>               params:    list of (string, string)\;
+
+<style color=#00ffffff size=1>.</style>               mk:        fn(specific: string, generic: string,
+<style color=#00ffffff size=1>.</style>                             params: list of (string, string)): ref Content\;
+<style color=#00ffffff size=1>.</style>               check:     fn(c: self ref Content, oks: list of ref Content): int\;
+<style color=#00ffffff size=1>.</style>               text:      fn(c: self ref Content): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            suffixclass:  fn(name: string): (ref Content, ref Content)\;
+<style color=#00ffffff size=1>.</style>            dataclass:    fn(a: array of byte): (ref Content, ref Content)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            RFC822 provides types and functions to help read and parse
+<style color=#00ffffff size=1>.</style>            RFC822 e-mail headers (following the more streamlined rules
+<style color=#00ffffff size=1>.</style>            of RFC2822, which has replaced RFC822), including some MIME
+<style color=#00ffffff size=1>.</style>            extensions. Currently the focus is on operations that
+<style color=#00ffffff size=1>.</style>            support HTTP and other W3C protocols, rather than mail
+<style color=#00ffffff size=1>.</style>            reading.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other operation in the
+<style color=#00ffffff size=1>.</style>            module. It must be given an instance of the Bufio module
+<style color=#00ffffff size=1>.</style>            (see <action name=bufio(2)>bufio(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            Readheaders reads a set of RFC822 header lines from fd,
+<style color=#00ffffff size=1>.</style>            ended by an empty line. It returns an array of tuples (
+<style color=#00ffffff size=1>.</style>            fieldname, value), one per header line. The string fieldname
+<style color=#00ffffff size=1>.</style>            is the header line's field name, in lower case. The value
+<style color=#00ffffff size=1>.</style>            gives the rest of the line, after removing any initial white
+<style color=#00ffffff size=1>.</style>            space and appending any continuation lines, uninterpreted,
+<style color=#00ffffff size=1>.</style>            as an array of bytes (not a string). Limit is the maximum
+<style color=#00ffffff size=1>.</style>            allowed size of the header in bytes\; usually that is
+<style color=#00ffffff size=1>.</style>            Maxrequest. Readheaders returns the tuple (nil, nil) on end
+<style color=#00ffffff size=1>.</style>            of file or if the header size limit is exceeded.
+
+<style color=#00ffffff size=1>.</style>            Rfclex takes a header line's value and produces a sequence
+<style color=#00ffffff size=1>.</style>            of tokens. It provides the following operations:
+
+<style color=#00ffffff size=1>.</style>            Rfclex.mk(a)
+<style color=#00ffffff size=1>.</style>                 Return a reference to a new Rfclex value that will
+<style color=#00ffffff size=1>.</style>                 produce tokens from the array of byte a, which is
+<style color=#00ffffff size=1>.</style>                 normally the value of one of the header lines returned
+<style color=#00ffffff size=1>.</style>                 by readheaders.
+
+<style color=#00ffffff size=1>.</style>            rfl.getc()
+<style color=#00ffffff size=1>.</style>                 Return the next character from the input stream, in the
+<style color=#00ffffff size=1>.</style>                 Latin-1 (ISO 8859-1) character set. Return a negative
+<style color=#00ffffff size=1>.</style>                 value (Bufio->EOF) on end-of-file.
+
+<style color=#00ffffff size=1>.</style>            rfl.ungetc()
+<style color=#00ffffff size=1>.</style>                 Put back the last character read, which will be
+<style color=#00ffffff size=1>.</style>                 returned again by the next call to rfl.getc.
+
+<style color=#00ffffff size=1>.</style>            rfl.lex()
+<style color=#00ffffff size=1>.</style>                 Return the next token from the input stream, ignoring
+<style color=#00ffffff size=1>.</style>                 any leading white space. Most tokens are single
+<style color=#00ffffff size=1>.</style>                 characters representing themselves. The token value is
+<style color=#00ffffff size=1>.</style>                 also assigned to rfl.tok. There are two special token
+<style color=#00ffffff size=1>.</style>                 values: Word, representing an unquoted word in the
+<style color=#00ffffff size=1>.</style>                 RFC2822 grammar\; and QString, representing a quoted
+<style color=#00ffffff size=1>.</style>                 string. In both cases rfl.wordval will contain the text
+<style color=#00ffffff size=1>.</style>                 of the word or string (without quotes).
+
+<style color=#00ffffff size=1>.</style>            rfl.unlex()
+<style color=#00ffffff size=1>.</style>                 Put back the last token read\; the next call to rfl.lex
+<style color=#00ffffff size=1>.</style>                 will return it again.
+
+<style color=#00ffffff size=1>.</style>            rfl.skipws()
+<style color=#00ffffff size=1>.</style>                 Skip over any white space at the current position\;
+<style color=#00ffffff size=1>.</style>                 return the initial character of the next token (which
+<style color=#00ffffff size=1>.</style>                 is not consumed).
+
+<style color=#00ffffff size=1>.</style>            rfl.line()
+<style color=#00ffffff size=1>.</style>                 Return a string giving the remainder of the input line.
+
+<style color=#00ffffff size=1>.</style>            Several functions take an Rfclex referring to a header
+<style color=#00ffffff size=1>.</style>            line's value, parse it, and return a higher-level
+<style color=#00ffffff size=1>.</style>            representation of its value.
+
+<style color=#00ffffff size=1>.</style>            Parseparams parses a sequence of parameter settings of the
+<style color=#00ffffff size=1>.</style>            form (\c \;attribute=value\c )* and returns a corresponding
+<style color=#00ffffff size=1>.</style>            list of tuples (attribute, value). It returns nil if no
+<style color=#00ffffff size=1>.</style>            parameters are found.
+
+<style color=#00ffffff size=1>.</style>            Parsecontent parses the values of fields such as
+<style color=#00ffffff size=1>.</style>            Content-Type and Accept. The syntax is (loosely) a sequence
+<style color=#00ffffff size=1>.</style>            of comma-separated elements of the form type, type/*, or
+<style color=#00ffffff size=1>.</style>            type/subtype followed by an optional sequence of parameters
+<style color=#00ffffff size=1>.</style>            of the form (\c )*. The type/subtype form is allowed only if
+<style color=#00ffffff size=1>.</style>            multipart is true (non-zero). It returns a corresponding
+<style color=#00ffffff size=1>.</style>            list of Content values followed by the initial list head.
+
+<style color=#00ffffff size=1>.</style>            Mimefields parses a sequence of comma-separated elements of
+<style color=#00ffffff size=1>.</style>            the form word(\c \;attr=val )* as used for instance in the
+<style color=#00ffffff size=1>.</style>            rule transfer-coding. It returns a corresponding list of
+<style color=#00ffffff size=1>.</style>            tuples (word, l) where l is an optional list of tuples (
+<style color=#00ffffff size=1>.</style>            attr, val).
+
+<style color=#00ffffff size=1>.</style>            When producing an RFC822 header line, words must be quoted
+<style color=#00ffffff size=1>.</style>            when they contain certain special characters. Quotable
+<style color=#00ffffff size=1>.</style>            returns true iff the string s contains any of those
+<style color=#00ffffff size=1>.</style>            characters. Quote returns the value of s with quotes added
+<style color=#00ffffff size=1>.</style>            as required.
+
+<style color=#00ffffff size=1>.</style>            RFC822 headers have a particular syntax for dates, different
+<style color=#00ffffff size=1>.</style>            from that of <action name=daytime(2)>daytime(2)</action>. The function sec2date returns a
+<style color=#00ffffff size=1>.</style>            string in RFC822 date format representing the time secs (in
+<style color=#00ffffff size=1>.</style>            seconds from the Epoch). Date2sec takes a string in RFC822
+<style color=#00ffffff size=1>.</style>            date format and returns the time in seconds from the Epoch.
+<style color=#00ffffff size=1>.</style>            Now returns the current time in seconds from the epoch (it
+<style color=#00ffffff size=1>.</style>            is equivalent to Daytime->now() from <action name=daytime(2)>daytime(2)</action>). Time
+<style color=#00ffffff size=1>.</style>            returns the current time in RFC822's date format.
+
+<style color=#00ffffff size=1>.</style>            The Multipurpose Internet Mail Extensions (see RFC2045-7)
+<style color=#00ffffff size=1>.</style>            include syntax for describing different types of media,
+<style color=#00ffffff size=1>.</style>            content, and content encodings. Content values represent
+<style color=#00ffffff size=1>.</style>            those descriptions. Its fields and operations are as
+<style color=#00ffffff size=1>.</style>            follows:
+
+<style color=#00ffffff size=1>.</style>            generic
+<style color=#00ffffff size=1>.</style>                 General class of content (eg, application, image, text,
+<style color=#00ffffff size=1>.</style>                 etc)
+
+<style color=#00ffffff size=1>.</style>            specific
+<style color=#00ffffff size=1>.</style>                 Optional particular type within that class (eg,
+<style color=#00ffffff size=1>.</style>                 octet-stream within application, or plain within text)
+
+<style color=#00ffffff size=1>.</style>            params
+<style color=#00ffffff size=1>.</style>                 Optional list of (attr, value) pairs giving parameters
+<style color=#00ffffff size=1>.</style>                 to the content type or encoding. The particular
+<style color=#00ffffff size=1>.</style>                 attribute q has a floating-point value that specifies
+<style color=#00ffffff size=1>.</style>                 the relative quality (utility) of a particular type or
+<style color=#00ffffff size=1>.</style>                 encoding to a client.
+
+<style color=#00ffffff size=1>.</style>            mk(generic, specific, params)
+<style color=#00ffffff size=1>.</style>                 Return a reference to a new Content value, initialised
+<style color=#00ffffff size=1>.</style>                 with the given parameters.
+
+<style color=#00ffffff size=1>.</style>            c.check(ok)
+<style color=#00ffffff size=1>.</style>                 Return true if c is acceptable content/media/encoding
+<style color=#00ffffff size=1>.</style>                 according to the list of allowable forms in ok. C is
+<style color=#00ffffff size=1>.</style>                 always acceptable if ok is nil (ie, there are no
+<style color=#00ffffff size=1>.</style>                 restrictions). Otherwise, at least one of the Content
+<style color=#00ffffff size=1>.</style>                 values in ok must match c. That is, an ok value must
+<style color=#00ffffff size=1>.</style>                 have the same generic and specific types as c, or
+<style color=#00ffffff size=1>.</style>                 specify `*' in one or both positions (to match any
+<style color=#00ffffff size=1>.</style>                 value in c). Any params are ignored.
+
+<style color=#00ffffff size=1>.</style>            c.text()
+<style color=#00ffffff size=1>.</style>                 Return the RFC822 syntax for c: generic/specific\;a=v...
+<style color=#00ffffff size=1>.</style>                 where the component words are quoted if necessary.
+
+<style color=#00ffffff size=1>.</style>            Given the name of a file, suffixclass returns a tuple (type,
+<style color=#00ffffff size=1>.</style>            enc) where type gives the MIME Content-Type of name (or nil,
+<style color=#00ffffff size=1>.</style>            if its type is not known), and enc gives the MIME
+<style color=#00ffffff size=1>.</style>            Content-Encoding of name (or nil, if it is not encoded).
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/mimetype  map between file suffix and MIME content
+<style color=#00ffffff size=1>.</style>                           types
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/rfc822.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

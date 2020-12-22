@@ -1,0 +1,72 @@
+<action name=READDIR(2)>READDIR(2)</action>                                             <action name=READDIR(2)>READDIR(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            readdir - read directory and sort files
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "readdir.m"\;
+<style color=#00ffffff size=1>.</style>            readdir := load Readdir Readdir->PATH\;
+
+<style color=#00ffffff size=1>.</style>            NAME, ATIME, MTIME, SIZE, NONE: con iota\;
+<style color=#00ffffff size=1>.</style>            COMPACT:    con (1<<4)\;
+<style color=#00ffffff size=1>.</style>            DESCENDING: con (1<<5)\;
+<style color=#00ffffff size=1>.</style>            init:    fn(path: string, sortkey: int): (array of ref Sys->Dir, int)\;
+<style color=#00ffffff size=1>.</style>            readall: fn(fd: ref Sys->FD, sortkey: int): (array of ref Sys->Dir, int)\;
+<style color=#00ffffff size=1>.</style>            sortdir: fn(a: array of ref Sys->Dir, key: int): (array of ref Sys->Dir, int)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Readdir provides functions to read and sort the contents of
+<style color=#00ffffff size=1>.</style>            a directory. Each function returns its result as a tuple
+<style color=#00ffffff size=1>.</style>            that represents the directory contents as an array of
+<style color=#00ffffff size=1>.</style>            references to Sys->Dir values, one per file (see <action name=sys-stat(2)>sys-stat(2)</action>
+<style color=#00ffffff size=1>.</style>            for a description of Dir). The integer element of the tuple
+<style color=#00ffffff size=1>.</style>            is the number of entries returned, or -1 if there was an
+<style color=#00ffffff size=1>.</style>            error reading the directory. Readdir differs from
+<style color=#00ffffff size=1>.</style>            sys-dirread (2) in returning the contents of the whole
+<style color=#00ffffff size=1>.</style>            directory, not just a chunk of it, and in allowing the
+<style color=#00ffffff size=1>.</style>            result to be sorted.
+
+<style color=#00ffffff size=1>.</style>            Init is most often used: it reads the contents of the
+<style color=#00ffffff size=1>.</style>            directory path and sorts the resulting array according to
+<style color=#00ffffff size=1>.</style>            sortkey.
+
+<style color=#00ffffff size=1>.</style>            The sorting criteria for the returned array are based on
+<style color=#00ffffff size=1>.</style>            sortkey as follows:
+
+<style color=#00ffffff size=1>.</style>            NAME   Sort files alphabetically by name.
+
+<style color=#00ffffff size=1>.</style>            ATIME  Sort files by access time, most recently accessed
+<style color=#00ffffff size=1>.</style>                   first.
+
+<style color=#00ffffff size=1>.</style>            MTIME  Sort files by modification time, most recently
+<style color=#00ffffff size=1>.</style>                   modified first.
+
+<style color=#00ffffff size=1>.</style>            SIZE   Sort files by size, largest file first.
+
+<style color=#00ffffff size=1>.</style>            NONE   Files are left in directory order, unsorted.
+
+<style color=#00ffffff size=1>.</style>            If the value DESCENDING is or'd into any of the values
+<style color=#00ffffff size=1>.</style>            above, except NONE, the order of sorting is reversed.
+
+<style color=#00ffffff size=1>.</style>            The sort used is stable, of particular importance in the
+<style color=#00ffffff size=1>.</style>            presence of duplicate names in a union mount. If the value
+<style color=#00ffffff size=1>.</style>            COMPACT is or'd into any of the values above, including NONE
+<style color=#00ffffff size=1>.</style>            , only the first (outermost) entry with a given name will be
+<style color=#00ffffff size=1>.</style>            returned from reading a union mount, if names are duplicated
+<style color=#00ffffff size=1>.</style>            in the union.
+
+<style color=#00ffffff size=1>.</style>            Readall reads file descriptor fd which must be open on a
+<style color=#00ffffff size=1>.</style>            directory, and returns the contents after applying sortkey
+<style color=#00ffffff size=1>.</style>            as described above for init.
+
+<style color=#00ffffff size=1>.</style>            Sortdir sorts the array a according to the given key, as
+<style color=#00ffffff size=1>.</style>            defined earlier, except that the COMPACT option has no
+<style color=#00ffffff size=1>.</style>            effect.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/readdir.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-dirread(2)>sys-dirread(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

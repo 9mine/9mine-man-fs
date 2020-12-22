@@ -1,0 +1,120 @@
+<action name=CS(8)>CS(8)</action>                                                       <action name=CS(8)>CS(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            cs, csquery - connection server
+
+SYNOPSYS
+<style color=#00ffffff size=1>.</style>            ndb/cs \[ -f database \] \[ -v \] \[ -x net \]
+
+<style color=#00ffffff size=1>.</style>            ndb/csquery \[ -x net \] \[ -s server \] \[ address ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Cs spawns a process that serves a single file /net/cs, in
+<style color=#00ffffff size=1>.</style>            the current name space, answering requests by client
+<style color=#00ffffff size=1>.</style>            processes to translate symbolic network and service names
+<style color=#00ffffff size=1>.</style>            into instructions for connecting to the given service. It is
+<style color=#00ffffff size=1>.</style>            normally accessed indirectly by calls to <action name=dial(2)>dial(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            The network data is taken from the network database files,
+<style color=#00ffffff size=1>.</style>            described in <action name=ndb(6)>ndb(6)</action>. By default, it is /lib/ndb/local but
+<style color=#00ffffff size=1>.</style>            the -f option can specify a different one.
+
+<style color=#00ffffff size=1>.</style>            Each write to /net/cs makes a query, expressed in one of two
+<style color=#00ffffff size=1>.</style>            forms. The first form is a network address of the same form
+<style color=#00ffffff size=1>.</style>            as the addr parameter to dial: network!netaddr!service where
+<style color=#00ffffff size=1>.</style>            service and network are optional for some networks. The
+<style color=#00ffffff size=1>.</style>            write returns an error if the address cannot be translated.
+<style color=#00ffffff size=1>.</style>            Otherwise, the file offset should be reset to 0 using
+<style color=#00ffffff size=1>.</style>            <action name=sys-seek(2)>sys-seek(2)</action> and each subsequent read will return either
+<style color=#00ffffff size=1>.</style>            end-of-file (if there are no further translations), or a
+<style color=#00ffffff size=1>.</style>            single line containing a translation of the form:
+
+<style color=#00ffffff size=1>.</style>                 /net/proto/clone address!port
+
+<style color=#00ffffff size=1>.</style>            The first field is the name of the clone file for a network
+<style color=#00ffffff size=1>.</style>            protocol or interface. To make a connection or announce a
+<style color=#00ffffff size=1>.</style>            service, open that file, and write the text in the second
+<style color=#00ffffff size=1>.</style>            field preceded by connect or announce as required. (All this
+<style color=#00ffffff size=1>.</style>            activity is normally encapsulated in a call to <action name=dial(2)>dial(2)</action>.) Cs
+<style color=#00ffffff size=1>.</style>            produces a translation for each network and for each network
+<style color=#00ffffff size=1>.</style>            address on which a symbolic netaddr is found. When
+<style color=#00ffffff size=1>.</style>            announcing a service, netaddr can be * to represent any
+<style color=#00ffffff size=1>.</style>            local interface, and the resulting recipes read from /net/cs
+<style color=#00ffffff size=1>.</style>            will not include an address! part.
+
+<style color=#00ffffff size=1>.</style>            Cs interprets a netaddr of the form $server specially: it
+<style color=#00ffffff size=1>.</style>            looks for an attribute server in the database in the entry
+<style color=#00ffffff size=1>.</style>            for the current host, then in the entry for each network
+<style color=#00ffffff size=1>.</style>            that contains it (if specified), and finally in a site-wide
+<style color=#00ffffff size=1>.</style>            entry labelled with the attribute infernosite. If found, the
+<style color=#00ffffff size=1>.</style>            value of the attribute replaces the netaddr before further
+<style color=#00ffffff size=1>.</style>            translation.
+
+<style color=#00ffffff size=1>.</style>            In the second form of query, the text written contains
+<style color=#00ffffff size=1>.</style>            space-separated attribute/value pairs following an initial
+<style color=#00ffffff size=1>.</style>            `!':
+
+<style color=#00ffffff size=1>.</style>                 ! attr1=val1 \[ attr2=val2  ... \]
+
+<style color=#00ffffff size=1>.</style>            Cs looks for an <action name=ndb(6)>ndb(6)</action> entry that contains attribute/value
+<style color=#00ffffff size=1>.</style>            pairs matching those in the query. Any value but val1 may be
+<style color=#00ffffff size=1>.</style>            `*', to signify that the entry must contain the given
+<style color=#00ffffff size=1>.</style>            attribute but with any value. As before, the write returns
+<style color=#00ffffff size=1>.</style>            an error if no entry matches. Otherwise, each subsequent
+<style color=#00ffffff size=1>.</style>            read returns the whole of the next matching entry, in <action name=ndb(6)>ndb(6)</action>
+<style color=#00ffffff size=1>.</style>            form.
+
+<style color=#00ffffff size=1>.</style>            The file /net/cs persists until it is removed or unmounted
+<style color=#00ffffff size=1>.</style>            from /net, or the cs process is killed (see <action name=kill(1)>kill(1)</action>). The -v
+<style color=#00ffffff size=1>.</style>            option causes cs to print each translation request and
+<style color=#00ffffff size=1>.</style>            results (if any) on standard error. The -x option gives an
+<style color=#00ffffff size=1>.</style>            alternative mount point for cs, when there is more than one
+<style color=#00ffffff size=1>.</style>            network stack (see <action name=ip(3)>ip(3)</action>). It causes it cs to serve net/cs
+<style color=#00ffffff size=1>.</style>            instead of /net/cs.
+
+<style color=#00ffffff size=1>.</style>            Cs is normally started  once, after <action name=dns(8)>dns(8)</action> if used, but
+<style color=#00ffffff size=1>.</style>            before most other applications including the various
+<style color=#00ffffff size=1>.</style>            listeners described in <action name=svc(8)>svc(8)</action>. If another instance of <action name=cs(8)>cs(8)</action>
+<style color=#00ffffff size=1>.</style>            is started on the same mount point, the file it serves
+<style color=#00ffffff size=1>.</style>            replaces the earlier one if permissions allow. (On Plan 9,
+<style color=#00ffffff size=1>.</style>            Plan 9's native connection service will be used by default
+<style color=#00ffffff size=1>.</style>            if Inferno's cs is not started.)
+
+<style color=#00ffffff size=1>.</style>            Csquery queries the given server (default: /net/cs) for a
+<style color=#00ffffff size=1>.</style>            translation of each address and prints the results, one per
+<style color=#00ffffff size=1>.</style>            line. If no address is given, csquery prompts for
+<style color=#00ffffff size=1>.</style>            address(es) to translate which it reads from the standard
+<style color=#00ffffff size=1>.</style>            input, printing the results of each translation on the
+<style color=#00ffffff size=1>.</style>            standard output. The -x option gives an alternative mount
+<style color=#00ffffff size=1>.</style>            point for cs, when there is more than one network stack (see
+<style color=#00ffffff size=1>.</style>            <action name=ip(3)>ip(3)</action>).
+
+<style color=#00ffffff size=1>.</style>            Cs uses <action name=ndb(6)>ndb(6)</action> to map protocol and service names to Internet
+<style color=#00ffffff size=1>.</style>            port numbers. When running hosted, if entries are not in ndb
+<style color=#00ffffff size=1>.</style>            (6), cs applies the built-in <action name=srv(2)>srv(2)</action>, if available, to have
+<style color=#00ffffff size=1>.</style>            the host system try the translation. Consequently, entries
+<style color=#00ffffff size=1>.</style>            in <action name=ndb(6)>ndb(6)</action> take precedence over the host's system-wide
+<style color=#00ffffff size=1>.</style>            configuration. (This is helpful for adding symbolic names
+<style color=#00ffffff size=1>.</style>            for Inferno services without requiring administrative
+<style color=#00ffffff size=1>.</style>            privileges on the host system.)
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Check the translation of the symbolic name $signer:
+
+<style color=#00ffffff size=1>.</style>                 ndb/csquery
+<style color=#00ffffff size=1>.</style>                 > net!$signer!inflogin
+<style color=#00ffffff size=1>.</style>                 /net/tcp/clone 200.1.1.67!6673
+
+FILES
+<style color=#00ffffff size=1>.</style>            #scs*             service directory
+<style color=#00ffffff size=1>.</style>            /net/cs           connection service
+<style color=#00ffffff size=1>.</style>            /net/dns          domain name service
+<style color=#00ffffff size=1>.</style>            /lib/ndb/local    map from symbolic service names to servers
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ndb/cs.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ndb/csquery.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=dial(2)>dial(2)</action>, <action name=ndb(6)>ndb(6)</action>, <action name=dns(8)>dns(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

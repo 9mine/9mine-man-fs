@@ -1,0 +1,45 @@
+<action name=SH-CSV(1)>SH-CSV(1)</action>                                               <action name=SH-CSV(1)>SH-CSV(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            csv, getcsv - parse ``comma-separated values''
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load csv
+
+<style color=#00ffffff size=1>.</style>            getcsv command
+<style color=#00ffffff size=1>.</style>            ${csv list}
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Csv is a loadable module for <action name=sh(1)>sh(1)</action> that provides the
+<style color=#00ffffff size=1>.</style>            facility to parse and generate ``comma-separated value''
+<style color=#00ffffff size=1>.</style>            lists, a widely used data exchange format. Data in this
+<style color=#00ffffff size=1>.</style>            format is usually in the form of a table, each row of which
+<style color=#00ffffff size=1>.</style>            contains one or more items, each separated by a comma (,).
+<style color=#00ffffff size=1>.</style>            Items that contain a comma or a newline are surrounded with
+<style color=#00ffffff size=1>.</style>            double-quotes ("). A double-quote within an item is
+<style color=#00ffffff size=1>.</style>            represented by a pair of double-quotes. Two primitives are
+<style color=#00ffffff size=1>.</style>            provided:
+
+<style color=#00ffffff size=1>.</style>            getcsv    Getcsv works similiarly to getlines in <action name=sh-std(1)>sh-std(1)</action>.
+<style color=#00ffffff size=1>.</style>                      It reads from the standard input, and for every
+<style color=#00ffffff size=1>.</style>                      line read, invokes command with $line set to the
+<style color=#00ffffff size=1>.</style>                      items found on that line (one element per item).
+<style color=#00ffffff size=1>.</style>                      Getcsv recognises the usual loop break and
+<style color=#00ffffff size=1>.</style>                      continue exceptions.
+
+<style color=#00ffffff size=1>.</style>            ${csv}    Csv yields a single element containing all the
+<style color=#00ffffff size=1>.</style>                      items in list, comma-separated and quoted as
+<style color=#00ffffff size=1>.</style>                      necessary.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sh/csv.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=sh-std(1)>sh-std(1)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Empty lines are ambiguous: csv treats an empty line as
+<style color=#00ffffff size=1>.</style>            containing a single, empty element\; there is thus no way of
+<style color=#00ffffff size=1>.</style>            representing a line containing no elements at all.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

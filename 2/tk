@@ -1,0 +1,155 @@
+<action name=TK(2)>TK(2)</action>                                                       <action name=TK(2)>TK(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Tk: toplevel, namechan, cmd, pointer, keyboard, imageget,
+<style color=#00ffffff size=1>.</style>            imageput, quote, rect - graphics toolkit
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            include "tk.m"\;
+<style color=#00ffffff size=1>.</style>            tk := load Tk Tk->PATH\;
+<style color=#00ffffff size=1>.</style>            Image:    import Draw\;
+
+<style color=#00ffffff size=1>.</style>            Toplevel: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                display:    ref Draw->Display\;
+<style color=#00ffffff size=1>.</style>                wreq:       chan of string\;
+<style color=#00ffffff size=1>.</style>                image:      ref Image\;
+<style color=#00ffffff size=1>.</style>                ctxt:       ref Draw->Wmcontext\;
+<style color=#00ffffff size=1>.</style>                screenr:    Draw->Rect\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            toplevel: fn(display: ref Draw->Display, arg: string): ref Toplevel\;
+<style color=#00ffffff size=1>.</style>            namechan: fn(top: ref Toplevel, c: chan of string, n: string): string\;
+<style color=#00ffffff size=1>.</style>            cmd:      fn(top: ref Toplevel, arg: string): string\;
+<style color=#00ffffff size=1>.</style>            pointer:    fn(top: ref Toplevel, p: Draw->Pointer)\;
+<style color=#00ffffff size=1>.</style>            keyboard: fn(top: ref Toplevel, key: int)\;
+<style color=#00ffffff size=1>.</style>            getimage: fn(top: ref Toplevel, name: string):
+<style color=#00ffffff size=1>.</style>                         (ref Image, ref Image, string)\;
+<style color=#00ffffff size=1>.</style>            putimage: fn(top: ref Toplevel, name: string, i, m: ref Image): string\;
+<style color=#00ffffff size=1>.</style>            rect:     fn(top: ref Toplevel, name: string, flags: int): Draw->Rect\;
+<style color=#00ffffff size=1>.</style>            quote:    fn(s: string): string\;
+<style color=#00ffffff size=1>.</style>            color:    fn(s: string): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Tk module provides primitives for building user
+<style color=#00ffffff size=1>.</style>            interfaces, based on Ousterhout's Tcl/TK. The interface to
+<style color=#00ffffff size=1>.</style>            the toolkit itself is primarily the passing of strings to
+<style color=#00ffffff size=1>.</style>            and from the elements of the toolkit using the cmd function\;
+<style color=#00ffffff size=1>.</style>            see section 9 of this manual for more information about the
+<style color=#00ffffff size=1>.</style>            syntax of those strings. <action name=Tkclient(2)>Tkclient(2)</action> is conventionally used
+<style color=#00ffffff size=1>.</style>            to create tk windows that interact correctly with a running
+<style color=#00ffffff size=1>.</style>            window manager.
+
+<style color=#00ffffff size=1>.</style>            Toplevel creates a new window called a Toplevel, which is
+<style color=#00ffffff size=1>.</style>            under the control of the Tk toolkit, on an existing display,
+<style color=#00ffffff size=1>.</style>            usually one inherited from the graphics Context (see
+<style color=#00ffffff size=1>.</style>            <action name=draw-context(2)>draw-context(2)</action>). The Toplevel is passed to cmd and namechan
+<style color=#00ffffff size=1>.</style>            (q.v.) to drive the widgets in the window. Arg is a string
+<style color=#00ffffff size=1>.</style>            containing creation options (such as -borderwidth 2) that
+<style color=#00ffffff size=1>.</style>            are applied when creating the toplevel window.
+
+<style color=#00ffffff size=1>.</style>            Cmd passes command strings to the widgets in the Toplevel t
+<style color=#00ffffff size=1>.</style>            and returns the string resulting from their execution. For
+<style color=#00ffffff size=1>.</style>            example, given a canvas .c in the Toplevel t,
+<style color=#00ffffff size=1>.</style>                x := int tk->cmd(t, ".c cget -actx")\;
+<style color=#00ffffff size=1>.</style>            returns the integer x coordinate of the canvas.
+
+<style color=#00ffffff size=1>.</style>            Bindings can be created in a Toplevel that trigger strings
+<style color=#00ffffff size=1>.</style>            to be sent on Limbo channels. Such channels must be declared
+<style color=#00ffffff size=1>.</style>            to the Tk module using namechan. For example, to create a
+<style color=#00ffffff size=1>.</style>            button that sends the word Ouch when it is pressed:
+<style color=#00ffffff size=1>.</style>                hitchannel := chan of string\;
+<style color=#00ffffff size=1>.</style>                tk->namechan(t, hitchannel, "channel")\;
+<style color=#00ffffff size=1>.</style>                tk->cmd(t,
+<style color=#00ffffff size=1>.</style>                     "button .b.Hit -text Hit -command {send channel Ouch}")\;
+<style color=#00ffffff size=1>.</style>                expl := <-hitchannel\;	# will see Ouch when button pressed
+
+<style color=#00ffffff size=1>.</style>            Pointer and keyboard pass mouse and keyboard events to a Tk
+<style color=#00ffffff size=1>.</style>            window for delivery to widgets\; they must be called by each
+<style color=#00ffffff size=1>.</style>            application, which usually receives them via a Wmcontext
+<style color=#00ffffff size=1>.</style>            structure (see <action name=draw-context(2)>draw-context(2)</action>) obtained from the window
+<style color=#00ffffff size=1>.</style>            manager, often via <action name=tkclient(2)>tkclient(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            Putimage passes an image and a mask into Tk. If name is the
+<style color=#00ffffff size=1>.</style>            name of a Tk widget, it must be either a <action name=panel(9)>panel(9)</action> widget, or
+<style color=#00ffffff size=1>.</style>            a top level widget (ie, ``.'') ``.'') or a menu widget, in
+<style color=#00ffffff size=1>.</style>            which case the associated image or window image is set to i.
+<style color=#00ffffff size=1>.</style>            (m is ignored for menu and top-level widgets.) Otherwise,
+<style color=#00ffffff size=1>.</style>            name must be the name of an existing <action name=image(9)>image(9)</action> which has its
+<style color=#00ffffff size=1>.</style>            image and mask set to copies of i and m respectively.
+
+<style color=#00ffffff size=1>.</style>            Initially, a Tk toplevel has no image to draw on. Tk uses
+<style color=#00ffffff size=1>.</style>            wreq to request new images of an external authority, and to
+<style color=#00ffffff size=1>.</style>            inform said authority when the images are to be deleted. The
+<style color=#00ffffff size=1>.</style>            requests are formatted as per quoted in <action name=string(2)>string(2)</action>, and hold
+<style color=#00ffffff size=1>.</style>            one of the following:
+
+<style color=#00ffffff size=1>.</style>            !reshape name reqid minx miny maxx maxy
+<style color=#00ffffff size=1>.</style>                 A new image for name is requested (name is either the
+<style color=#00ffffff size=1>.</style>                 toplevel widget or a menu). The desired rectangle for
+<style color=#00ffffff size=1>.</style>                 the new image is given by \[minx miny maxx maxy\], and
+<style color=#00ffffff size=1>.</style>                 the application should respond by creating a new image
+<style color=#00ffffff size=1>.</style>                 and using putimage to pass it to Tk. Reqid is used by
+<style color=#00ffffff size=1>.</style>                 Tk to filter out responses to out-of-date requests\;
+<style color=#00ffffff size=1>.</style>                 when responding to a reshape request, the name passed
+<style color=#00ffffff size=1>.</style>                 to putimage should have a space and reqid appended.
+<style color=#00ffffff size=1>.</style>                 <action name=Tkclient(2)>Tkclient(2)</action> usually deals with the details of this.
+
+<style color=#00ffffff size=1>.</style>            delete name
+<style color=#00ffffff size=1>.</style>                 The image name has been deleted. This is generated for
+<style color=#00ffffff size=1>.</style>                 <action name=menu(9)>menu(9)</action> widgets when they are unmapped.
+
+<style color=#00ffffff size=1>.</style>            raise name
+<style color=#00ffffff size=1>.</style>                 Tk widget name should be raised above other windows on
+<style color=#00ffffff size=1>.</style>                 the same screen.
+
+<style color=#00ffffff size=1>.</style>            lower name
+<style color=#00ffffff size=1>.</style>                 Tk widget name should be lowered beneath other windows
+<style color=#00ffffff size=1>.</style>                 on the same screen.
+
+<style color=#00ffffff size=1>.</style>            Wreq may be set to nil if an application is not prepared to
+<style color=#00ffffff size=1>.</style>            read requests sent on this channel.
+
+<style color=#00ffffff size=1>.</style>            Rect returns the bounding rectangle of widget name in top.
+<style color=#00ffffff size=1>.</style>            Flags determines the form of rectangle returned. If flags is
+<style color=#00ffffff size=1>.</style>            zero, the actual rectangle of name in screen coordinates,
+<style color=#00ffffff size=1>.</style>            not including its border, is returned. The bitmask flags
+<style color=#00ffffff size=1>.</style>            that can change this are:
+
+<style color=#00ffffff size=1>.</style>            Border
+<style color=#00ffffff size=1>.</style>                 Include the widget's border.
+
+<style color=#00ffffff size=1>.</style>            Required
+<style color=#00ffffff size=1>.</style>                 Return the rectangle required by the widget, rather
+<style color=#00ffffff size=1>.</style>                 than the rectangle that has been actually allocated to
+<style color=#00ffffff size=1>.</style>                 it.
+
+<style color=#00ffffff size=1>.</style>            Local
+<style color=#00ffffff size=1>.</style>                 Return the rectangle in coordinates relative to the
+<style color=#00ffffff size=1>.</style>                 logical origin of the actual top level image.
+
+<style color=#00ffffff size=1>.</style>            Quote returns a string that is the same as its arguments,
+<style color=#00ffffff size=1>.</style>            but enclosed in curly braces and with internal curly braces
+<style color=#00ffffff size=1>.</style>            escaped. This can be used to make an arbitrary string into a
+<style color=#00ffffff size=1>.</style>            word suitable as an argument to a Tk function.
+
+<style color=#00ffffff size=1>.</style>            Color returns a colour in 32-bit RGBA format corresponding
+<style color=#00ffffff size=1>.</style>            to the tk colour name s. (see <action name=types(9)>types(9)</action> for details).
+
+<style color=#00ffffff size=1>.</style>            Screenr gives the rectangle of the screen containing the
+<style color=#00ffffff size=1>.</style>            toplevel window. Tk has no a priori way of knowing what this
+<style color=#00ffffff size=1>.</style>            is\; it is initially set to the rectangle of the display
+<style color=#00ffffff size=1>.</style>            image, and may be set by the application if it knows better
+<style color=#00ffffff size=1>.</style>            (e.g. from the wmrect file served by <action name=wm(1)>wm(1)</action>).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/tk.c
+<style color=#00ffffff size=1>.</style>            /libtk/*.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=intro(9)>intro(9)</action>, <action name=image(9)>image(9)</action>, <action name=panel(9)>panel(9)</action>, <action name=tkcmd(1)>tkcmd(1)</action>, <action name=sh-tk(1)>sh-tk(1)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=draw-context(2)>draw-context(2)</action>, <action name=tkclient(2)>tkclient(2)</action>, <action name=wmlib(2)>wmlib(2)</action>
+<style color=#00ffffff size=1>.</style>            `An Overview of Limbo/Tk', this manual, Volume 2.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

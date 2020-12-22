@@ -1,0 +1,29 @@
+<action name=STREAM(1)>STREAM(1)</action>                                               <action name=STREAM(1)>STREAM(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            stream - stream data between source and sink
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            stream \[-a\] \[-b bufsize\] file1 \[ file2 \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Stream creates a process that uses stream (see <action name=sys-read(2)>sys-read(2)</action>)
+<style color=#00ffffff size=1>.</style>            to stream data in chunks of at most bufsize bytes (default:
+<style color=#00ffffff size=1>.</style>            `Sys->ATOMICIO', or 8192 bytes) from file1 to the standard
+<style color=#00ffffff size=1>.</style>            output. If file2 is provided, the two files are instead
+<style color=#00ffffff size=1>.</style>            cross-connected by two streaming processes: one process
+<style color=#00ffffff size=1>.</style>            streams data from file1 to file2, and the other streams data
+<style color=#00ffffff size=1>.</style>            from file2 to file1. In all cases, stream writes data to the
+<style color=#00ffffff size=1>.</style>            destination file in full buffers of bufsize bytes.
+
+<style color=#00ffffff size=1>.</style>            Stream waits for all streaming processes to stop before
+<style color=#00ffffff size=1>.</style>            returning, unless the -a (asynchronous) option is given,
+<style color=#00ffffff size=1>.</style>            which causes it to return after spawning the streamers.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/stream.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cat(1)>cat(1)</action>, <action name=sys-read(2)>sys-read(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

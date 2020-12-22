@@ -1,0 +1,181 @@
+<action name=WMSRV(2)>WMSRV(2)</action>                                                 <action name=WMSRV(2)>WMSRV(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Wmsrv - core window-manager functionality and helper
+<style color=#00ffffff size=1>.</style>            functions
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            include "wmsrv.m"\;
+<style color=#00ffffff size=1>.</style>            wmsrv := load Wmsrv Wmsrv->PATH\;
+<style color=#00ffffff size=1>.</style>            Client, Window: import wmsrv\;
+
+<style color=#00ffffff size=1>.</style>            init:   fn(): 
+<style color=#00ffffff size=1>.</style>                (chan of (string, chan of (string, ref Draw->Wmcontext)),
+<style color=#00ffffff size=1>.</style>                chan of (ref Client, chan of string),
+<style color=#00ffffff size=1>.</style>                chan of (ref Client, array of byte, Sys->Rwrite))\;
+<style color=#00ffffff size=1>.</style>            find:   fn(p: Draw->Point): ref Client\;
+<style color=#00ffffff size=1>.</style>            top:    fn(): ref Client\;
+
+<style color=#00ffffff size=1>.</style>            Window: adt {
+<style color=#00ffffff size=1>.</style>                tag:    string\;
+<style color=#00ffffff size=1>.</style>                r:  Rect\;
+<style color=#00ffffff size=1>.</style>                img:    ref Image\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Client: adt {
+<style color=#00ffffff size=1>.</style>                kbd:    chan of int\;
+<style color=#00ffffff size=1>.</style>                ptr:    chan of ref Draw->Pointer\;
+<style color=#00ffffff size=1>.</style>                ctl:    chan of string\;
+<style color=#00ffffff size=1>.</style>                stop:   chan of int\;
+<style color=#00ffffff size=1>.</style>                images: chan of (ref Draw->Point, ref Draw->Image, chan of int)\;
+<style color=#00ffffff size=1>.</style>                flags:  int\;
+<style color=#00ffffff size=1>.</style>                wins:   list of ref Window\;
+<style color=#00ffffff size=1>.</style>                znext:  cyclic ref Client\;
+<style color=#00ffffff size=1>.</style>                id:     int\;
+
+<style color=#00ffffff size=1>.</style>                window:   fn(c: self ref Client, tag: string): ref Window\;
+<style color=#00ffffff size=1>.</style>                contains: fn(c: self ref Client, p: Draw->Point): int\;
+<style color=#00ffffff size=1>.</style>                setimage: fn(c: self ref Client, tag: string, i: ref Draw->Image): int\;
+<style color=#00ffffff size=1>.</style>                setorigin:fn(c: self ref Client, tag: string, o: Draw->Point): int\;
+<style color=#00ffffff size=1>.</style>                top:      fn(c: self ref Client)\;
+<style color=#00ffffff size=1>.</style>                bottom:   fn(c: self ref Client)\;
+<style color=#00ffffff size=1>.</style>                remove:   fn(w: self ref Client)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Wmsrv acts as a kind of ``buffer'' module between an actual
+<style color=#00ffffff size=1>.</style>            window-manager implementation and possibly misbehaving
+<style color=#00ffffff size=1>.</style>            clients. It provides notification when clients arrive, make
+<style color=#00ffffff size=1>.</style>            window-manager requests, and leave. For each client, it
+<style color=#00ffffff size=1>.</style>            provides a set of channels that mirror those found in
+<style color=#00ffffff size=1>.</style>            Draw->Wmcontext, (see <action name=draw-context(2)>draw-context(2)</action>), except that writing
+<style color=#00ffffff size=1>.</style>            to the Client's channels is guaranteed not to block. Each
+<style color=#00ffffff size=1>.</style>            client holds zero or more Windows, each of which is tagged
+<style color=#00ffffff size=1>.</style>            with an identifying string and which can hold the image of
+<style color=#00ffffff size=1>.</style>            that window. A given client's windows are layered in strict
+<style color=#00ffffff size=1>.</style>            order, most recently created at the top. Most clients will
+<style color=#00ffffff size=1>.</style>            have only one window\; others are generally used only for
+<style color=#00ffffff size=1>.</style>            ephemeral purposes, such as pop-up menus.
+
+<style color=#00ffffff size=1>.</style>            A Client, say c, holds some channels directly equivalent to
+<style color=#00ffffff size=1>.</style>            their Wmcontext namesakes: c.kbd c.ptr, and c.ctl. The
+<style color=#00ffffff size=1>.</style>            behaviour of c.images is described below. Wmsrv starts a new
+<style color=#00ffffff size=1>.</style>            process to mediate interaction between the window manager
+<style color=#00ffffff size=1>.</style>            and its clients\; sending a value on c.stop causes this
+<style color=#00ffffff size=1>.</style>            process to exit. C.wins gives the list of all the windows
+<style color=#00ffffff size=1>.</style>            associated with this client\; c.flags is not used by wmsrv:
+<style color=#00ffffff size=1>.</style>            it may be used to store arbitrary information\; c.id holds a
+<style color=#00ffffff size=1>.</style>            unique identifier for the client\; it will be no larger than
+<style color=#00ffffff size=1>.</style>            the largest number of clients that have simultaneously
+<style color=#00ffffff size=1>.</style>            existed\; c.znext links clients together by window depth (see
+<style color=#00ffffff size=1>.</style>            top, below).
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other wmsrv function to
+<style color=#00ffffff size=1>.</style>            initialise the wmsrv module. It creates the virtual file
+<style color=#00ffffff size=1>.</style>            /chan/wm, and returns a tuple of channels, say (wm, join, rq
+<style color=#00ffffff size=1>.</style>            ). Wm is the channel that should be passed to prospective
+<style color=#00ffffff size=1>.</style>            clients in the Draw->Context structure\; communication on
+<style color=#00ffffff size=1>.</style>            this channel is used to establish a new client connection.
+<style color=#00ffffff size=1>.</style>            Join is used to receive notifications of new clients
+<style color=#00ffffff size=1>.</style>            arriving. The tuple received on this channel, say (c, rc)
+<style color=#00ffffff size=1>.</style>            holds the new client, and a channel on which a reply should
+<style color=#00ffffff size=1>.</style>            be sent acknowledging the new client. If the string sent is
+<style color=#00ffffff size=1>.</style>            non-empty, it represents an error message that will be
+<style color=#00ffffff size=1>.</style>            returned to the client, and the client will not be allowed
+<style color=#00ffffff size=1>.</style>            to join. c.ptr, c.kbd, and c.ctl are all direct equivalents
+<style color=#00ffffff size=1>.</style>            of their Wmcontext namesakes\; the behaviour of c.images is
+<style color=#00ffffff size=1>.</style>            described below. Rq is used to receive requests made by
+<style color=#00ffffff size=1>.</style>            clients to the window manager by writing to the file
+<style color=#00ffffff size=1>.</style>            /chan/wm. The tuple received on rq, say (c, data, reply)
+<style color=#00ffffff size=1>.</style>            holds the client that is making the request, the data that
+<style color=#00ffffff size=1>.</style>            has been sent, and a channel that can be used (as described
+<style color=#00ffffff size=1>.</style>            in <action name=sys-<action name=file2chan(2)>file2chan(2)</action>>sys-<action name=file2chan(2)>file2chan(2)</action></action>) to return a reply to the request, The
+<style color=#00ffffff size=1>.</style>            request is conventionally formatted as a utf8-encoded
+<style color=#00ffffff size=1>.</style>            string, holding a list of tokens quoted as described in
+<style color=#00ffffff size=1>.</style>            quoted in <action name=string(2)>string(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            If the first character of a window-manager request is an
+<style color=#00ffffff size=1>.</style>            exclamation mark (!), it should be a request to change the
+<style color=#00ffffff size=1>.</style>            image of a client's window (or create a new window). In this
+<style color=#00ffffff size=1>.</style>            case, the first three tokens should be the name of the
+<style color=#00ffffff size=1>.</style>            command (starting with an exclamation mark), the tag of the
+<style color=#00ffffff size=1>.</style>            window to which the request refers, and a tag used by
+<style color=#00ffffff size=1>.</style>            clients to match requests to replies. If such a request is
+<style color=#00ffffff size=1>.</style>            allowed to succeed, then clients expect that a new image
+<style color=#00ffffff size=1>.</style>            will be sent to them. The images channel in a client is used
+<style color=#00ffffff size=1>.</style>            to do this (normally accessed through the setimage and
+<style color=#00ffffff size=1>.</style>            setorigin methods, see below). Sending a tuple, say (o, i, 
+<style color=#00ffffff size=1>.</style>            rc) on images buffers an image to be returned to the client.
+<style color=#00ffffff size=1>.</style>            If o is non-nil, the request will change the physical origin
+<style color=#00ffffff size=1>.</style>            of i to o, otherwise i gives a new image (its logical origin
+<style color=#00ffffff size=1>.</style>            must match its physical origin). Only one such request is
+<style color=#00ffffff size=1>.</style>            allowed to be outstanding at any one time\; the channel
+<style color=#00ffffff size=1>.</style>            passed in rc will yield the value -1 if the image from a
+<style color=#00ffffff size=1>.</style>            previous request has not yet been consumed, in which case
+<style color=#00ffffff size=1>.</style>            the current request should be caused to fail.
+
+<style color=#00ffffff size=1>.</style>            Wmsrv can maintain a record of the current windows and their
+<style color=#00ffffff size=1>.</style>            stacking order relative to one other. Top returns a pointer
+<style color=#00ffffff size=1>.</style>            to the client at the top of the stack\; the other clients can
+<style color=#00ffffff size=1>.</style>            be accessed, in stacking order, via their znext references.
+<style color=#00ffffff size=1>.</style>            Find finds the top client that has a window containing the
+<style color=#00ffffff size=1>.</style>            point p. Wmsrv provides various Client methods that may be
+<style color=#00ffffff size=1>.</style>            used to help implement a window manager's interface:
+
+<style color=#00ffffff size=1>.</style>            c.window(tag)
+<style color=#00ffffff size=1>.</style>                      Yield the Window, w, corresponding to tag, or nil
+<style color=#00ffffff size=1>.</style>                      if there is none. Note that w.r holds the actual
+<style color=#00ffffff size=1>.</style>                      screen rectangle of the image\; the client is free
+<style color=#00ffffff size=1>.</style>                      to modify the image's logical coordinate system,
+<style color=#00ffffff size=1>.</style>                      so w.img.r cannot be relied upon to contain a
+<style color=#00ffffff size=1>.</style>                      value with a meaningful origin.
+
+<style color=#00ffffff size=1>.</style>            c.contains(p)
+<style color=#00ffffff size=1>.</style>                      Return non-zero if any of the client's windows
+<style color=#00ffffff size=1>.</style>                      contain the point p.
+
+<style color=#00ffffff size=1>.</style>            c.setimage(tag, i)
+<style color=#00ffffff size=1>.</style>                      Set the image associated with window tag to i. If
+<style color=#00ffffff size=1>.</style>                      this is in response to a window manager request, i
+<style color=#00ffffff size=1>.</style>                      must be non-nil, and wmsrv will arrange that the
+<style color=#00ffffff size=1>.</style>                      new image is sent to the client. If this is not
+<style color=#00ffffff size=1>.</style>                      possible, then setimage will return -1. If i is
+<style color=#00ffffff size=1>.</style>                      nil, no image will be sent to the client and the
+<style color=#00ffffff size=1>.</style>                      window will be deleted.
+
+<style color=#00ffffff size=1>.</style>            c.setorigin(tag, o)
+<style color=#00ffffff size=1>.</style>                      Similar to setimage, except that only the origin
+<style color=#00ffffff size=1>.</style>                      of the window is changed. In order to enable
+<style color=#00ffffff size=1>.</style>                      clients to maintain their own logical coordinate
+<style color=#00ffffff size=1>.</style>                      system, wmsrv first sends nil on the
+<style color=#00ffffff size=1>.</style>                      Wmcontext.images channel, allowing the client to
+<style color=#00ffffff size=1>.</style>                      suspend operations on the image momentarily\; it
+<style color=#00ffffff size=1>.</style>                      then sends to same channel, with its origin set to
+<style color=#00ffffff size=1>.</style>                      its actual screen origin. The client is then free
+<style color=#00ffffff size=1>.</style>                      to set the logical origin again.
+
+<style color=#00ffffff size=1>.</style>            c.top()   Raise the client's windows above the other
+<style color=#00ffffff size=1>.</style>                      clients' windows.
+
+<style color=#00ffffff size=1>.</style>            c.bottom()
+<style color=#00ffffff size=1>.</style>                      Send the client's windows below the other clients'
+<style color=#00ffffff size=1>.</style>                      windows.
+
+<style color=#00ffffff size=1>.</style>            c.remove()
+<style color=#00ffffff size=1>.</style>                      Remove the client and its windows from wmsrv's
+<style color=#00ffffff size=1>.</style>                      window stack.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /chan/wm  Created by wmsrv using <action name=file2chan(2)>file2chan(2)</action> to serve
+<style color=#00ffffff size=1>.</style>                      connection requests.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/wmsrv.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=wm(1)>wm(1)</action>, <action name=draw-screen(2)>draw-screen(2)</action>, <action name=wmlib(2)>wmlib(2)</action>, <action name=wmexport(1)>wmexport(1)</action>, <action name=wmclient(2)>wmclient(2)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=tkclient(2)>tkclient(2)</action>,
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

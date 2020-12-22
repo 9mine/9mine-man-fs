@@ -1,0 +1,72 @@
+INTRENABLE(10.2)                                 INTRENABLE(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            intrenable, intrdisable - enable (disable) an interrupt
+<style color=#00ffffff size=1>.</style>            handler
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            void intrenable(int v, void (*f)(Ureg*, void*), void* a, int
+<style color=#00ffffff size=1>.</style>            tbdf, char *name)
+
+<style color=#00ffffff size=1>.</style>            void intrdisable(int v, void (*f)(Ureg*, void*), void* a,
+<style color=#00ffffff size=1>.</style>            int tbdf, char *name)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Intrenable registers f to be called by the kernel's
+<style color=#00ffffff size=1>.</style>            interrupt controller driver each time an interrupt denoted
+<style color=#00ffffff size=1>.</style>            by v occurs, and unmasks the corresponding interrupt in the
+<style color=#00ffffff size=1>.</style>            interrupt controller. The encoding of v is
+<style color=#00ffffff size=1>.</style>            platform-dependent\; it is often an interrupt vector number,
+<style color=#00ffffff size=1>.</style>            but can be more complex. Tbdf is a platform-dependent value
+<style color=#00ffffff size=1>.</style>            that might further qualify v. It might for instance denote
+<style color=#00ffffff size=1>.</style>            the type of bus, bus instance, device number and function
+<style color=#00ffffff size=1>.</style>            (following the PCI device indexing scheme), hence its name,
+<style color=#00ffffff size=1>.</style>            but can have platform-dependent meaning. Name is a string
+<style color=#00ffffff size=1>.</style>            that should uniquely identify the corresponding device (eg, 
+<style color=#00ffffff size=1>.</style>            "uart0")\; again it is usually platform-dependent. Intrenable
+<style color=#00ffffff size=1>.</style>            supports sharing of interrupt levels when the hardware does.
+
+<style color=#00ffffff size=1>.</style>            Almost invariably f is a function defined in a device driver
+<style color=#00ffffff size=1>.</style>            to carry out the device-specific work associated with a
+<style color=#00ffffff size=1>.</style>            given interrupt. The pointer a is passed to f\; typically it
+<style color=#00ffffff size=1>.</style>            points to the driver's data for a given device or
+<style color=#00ffffff size=1>.</style>            controller. It also passes f a Ureg* value that contains the
+<style color=#00ffffff size=1>.</style>            registers saved by the interrupt handler (the contents are
+<style color=#00ffffff size=1>.</style>            platform specific\; see the platform's include file ureg.h).
+
+<style color=#00ffffff size=1>.</style>            F is invoked by underlying code in the kernel that is
+<style color=#00ffffff size=1>.</style>            invoked directly from the hardware vectors. It is therefore
+<style color=#00ffffff size=1>.</style>            not running in any process (see kproc(10.2)\; indeed, on many
+<style color=#00ffffff size=1>.</style>            platforms the current process pointer (up) will be nil.
+<style color=#00ffffff size=1>.</style>            There are many restrictions on kernel functions running
+<style color=#00ffffff size=1>.</style>            outside a process, but a fundamental one is that they must
+<style color=#00ffffff size=1>.</style>            not sleep(10.2), although they often call wakeup to signal
+<style color=#00ffffff size=1>.</style>            the occurrence of an event associated with the interrupt.
+<style color=#00ffffff size=1>.</style>            Qio(10.2) and other manual pages note which functions are
+<style color=#00ffffff size=1>.</style>            safe for f to call.
+
+<style color=#00ffffff size=1>.</style>            The interrupt controller driver does whatever is required to
+<style color=#00ffffff size=1>.</style>            acknowledge or dismiss the interrupt signal in the interrupt
+<style color=#00ffffff size=1>.</style>            controller, before calling f, for edge-triggered interrupts,
+<style color=#00ffffff size=1>.</style>            and after calling f for level-triggered ones. F is
+<style color=#00ffffff size=1>.</style>            responsible for deal with the cause of the interrupt in the
+<style color=#00ffffff size=1>.</style>            device, including any acknowledgement required in the
+<style color=#00ffffff size=1>.</style>            device, before it returns.
+
+<style color=#00ffffff size=1>.</style>            Intrdisable removes any registration previously made by
+<style color=#00ffffff size=1>.</style>            intrenable with matching parameters, and if no other
+<style color=#00ffffff size=1>.</style>            interrupt is active on v, it masks the interrupt in the
+<style color=#00ffffff size=1>.</style>            controller. Device drivers that are not dynamically
+<style color=#00ffffff size=1>.</style>            configured tend to call intrenable during reset or
+<style color=#00ffffff size=1>.</style>            initialisation (see dev(10.2)), but can call it at any
+<style color=#00ffffff size=1>.</style>            appropriate time, and instead of calling intrdisable they
+<style color=#00ffffff size=1>.</style>            can simply enable or disable interrupts in the device as
+<style color=#00ffffff size=1>.</style>            required.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/*/trap.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            malloc(10.2), qio(10.2), sleep(10.2), splhi(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

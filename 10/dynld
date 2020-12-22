@@ -1,0 +1,160 @@
+DYNLD(10.2)                                           DYNLD(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            dynfindsym, dynfreeimport, dynloadfd, dynloadgen,
+<style color=#00ffffff size=1>.</style>            dynobjfree, dyntabsize - load object file dynamically
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            #include <lib9.h>
+<style color=#00ffffff size=1>.</style>            #include <a.out.h>
+<style color=#00ffffff size=1>.</style>            #include <dynld.h>
+
+<style color=#00ffffff size=1>.</style>            Dynsym*	dynfindsym(char *name, Dynsym *syms, int nsym)
+
+<style color=#00ffffff size=1>.</style>            Dynobj*	dynloadfd(int fd, Dynsym *exports, int nexport,
+<style color=#00ffffff size=1>.</style>            	  ulong maxsize)
+
+<style color=#00ffffff size=1>.</style>            Dynobj*	dynloadgen(void *file, long
+<style color=#00ffffff size=1>.</style>            (*read)(void*,void*,long),
+<style color=#00ffffff size=1>.</style>            	  vlong (*seek)(void*,vlong,int), void (*err)(char*),
+<style color=#00ffffff size=1>.</style>            	  Dynsym *exports, int nexport, ulong maxsize)
+
+<style color=#00ffffff size=1>.</style>            void*	dynimport(Dynobj *o, char *name, ulong sig)
+
+<style color=#00ffffff size=1>.</style>            void	dynfreeimport(Dynobj *o)
+
+<style color=#00ffffff size=1>.</style>            void	dynobjfree(Dynobj *o)
+
+<style color=#00ffffff size=1>.</style>            int	dyntabsize(Dynsym *t)
+
+<style color=#00ffffff size=1>.</style>            extern Dynsym  _exporttab\[\]\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These functions allow a process to load further code and
+<style color=#00ffffff size=1>.</style>            data into the currently executing image. A
+<style color=#00ffffff size=1>.</style>            dynamically-loadable file, called a module here, is a
+<style color=#00ffffff size=1>.</style>            variant of the a.out(10.6) executable format with some extra
+<style color=#00ffffff size=1>.</style>            components. The loader for the architecture (see <action name=2l(1)>2l(1)</action>)
+<style color=#00ffffff size=1>.</style>            creates a module file from component object file(s) when
+<style color=#00ffffff size=1>.</style>            given the -u option. A module contains text and data
+<style color=#00ffffff size=1>.</style>            sections, an import table, an export table, and relocation
+<style color=#00ffffff size=1>.</style>            data. The import table lists the symbols the module needs
+<style color=#00ffffff size=1>.</style>            from the loading program\; the export table lists symbols the
+<style color=#00ffffff size=1>.</style>            module provides when loaded. A program that loads a module
+<style color=#00ffffff size=1>.</style>            provides a table of its own symbols to match the symbols in
+<style color=#00ffffff size=1>.</style>            the module's import table.
+
+<style color=#00ffffff size=1>.</style>            A symbol entry in a symbol table names a global function or
+<style color=#00ffffff size=1>.</style>            data item, and has an associated signature value
+<style color=#00ffffff size=1>.</style>            representing the type of the corresponding function or data
+<style color=#00ffffff size=1>.</style>            in the source code. The Dynsym structure defines a symbol:
+
+<style color=#00ffffff size=1>.</style>                 typedef struct {
+<style color=#00ffffff size=1>.</style>                 	ulong	sig\;
+<style color=#00ffffff size=1>.</style>                 	ulong	addr\;
+<style color=#00ffffff size=1>.</style>                 	char*	name\;
+<style color=#00ffffff size=1>.</style>                 } Dynsym\;
+
+<style color=#00ffffff size=1>.</style>            The structure is known to the loaders <action name=2l(1)>2l(1)</action>. Name is the
+<style color=#00ffffff size=1>.</style>            linkage name of the function or data. Addr is its address,
+<style color=#00ffffff size=1>.</style>            which is relative to the start of the module before loading,
+<style color=#00ffffff size=1>.</style>            and an address in the current address space after loading.
+<style color=#00ffffff size=1>.</style>            The signature sig is the value produced by the C compiler's
+<style color=#00ffffff size=1>.</style>            signof operator applied to the type. Symbol tables must be
+<style color=#00ffffff size=1>.</style>            sorted by name.
+
+<style color=#00ffffff size=1>.</style>            An executable that wishes to load modules will normally be
+<style color=#00ffffff size=1>.</style>            linked using the -x option to the appropriate loader <action name=2l(1)>2l(1)</action>.
+<style color=#00ffffff size=1>.</style>            The resulting executable contains an export table _exporttab
+<style color=#00ffffff size=1>.</style>            that lists all the exported symbols of the program (by
+<style color=#00ffffff size=1>.</style>            default, all external symbols). A nil name marks the end of
+<style color=#00ffffff size=1>.</style>            the table. See <action name=2l(1)>2l(1)</action> for details. The table can be given to
+<style color=#00ffffff size=1>.</style>            the functions below to allow a loaded module to access those
+<style color=#00ffffff size=1>.</style>            symbols.
+
+<style color=#00ffffff size=1>.</style>            A loaded module is described by a Dynobj structure:
+
+<style color=#00ffffff size=1>.</style>                 typedef struct {
+<style color=#00ffffff size=1>.</style>                 	ulong	size\;	/* total size in bytes */
+<style color=#00ffffff size=1>.</style>                 	ulong	text\;	/* bytes of text */
+<style color=#00ffffff size=1>.</style>                 	ulong	data\;	/* bytes of data */
+<style color=#00ffffff size=1>.</style>                 	ulong	bss\;		/* bytes of bss */
+<style color=#00ffffff size=1>.</style>                 	uchar*	base\;	/* start of text, data, bss */
+<style color=#00ffffff size=1>.</style>                 	int		nexport\;
+<style color=#00ffffff size=1>.</style>                 	Dynsym*	export\;	/* export table */
+<style color=#00ffffff size=1>.</style>                 	int		nimport\;
+<style color=#00ffffff size=1>.</style>                 	Dynsym**	import\;	/* import table */
+<style color=#00ffffff size=1>.</style>                 } Dynobj\;
+
+<style color=#00ffffff size=1>.</style>            Several fields give sizes of the module's components, as
+<style color=#00ffffff size=1>.</style>            noted in comments above. Base gives the address at which the
+<style color=#00ffffff size=1>.</style>            module has been loaded. All its internal references have
+<style color=#00ffffff size=1>.</style>            been adjusted where needed to reflect its current address.
+<style color=#00ffffff size=1>.</style>            Export points to a symbol table listing the symbols exported
+<style color=#00ffffff size=1>.</style>            by the module\; nexport gives the table's length. Import
+<style color=#00ffffff size=1>.</style>            points to a list of symbols imported by the module\; note
+<style color=#00ffffff size=1>.</style>            that each entry actually points to an entry in a symbol
+<style color=#00ffffff size=1>.</style>            table provided by the program that loaded the module (see
+<style color=#00ffffff size=1>.</style>            below). Nimport gives the import table's length. If the
+<style color=#00ffffff size=1>.</style>            import table is not required, call dynfreeimport on the
+<style color=#00ffffff size=1>.</style>            module pointer to free it.
+
+<style color=#00ffffff size=1>.</style>            Dynfindysm looks up the entry for the given name in symbol
+<style color=#00ffffff size=1>.</style>            table syms (of length nsym). It returns a pointer to the
+<style color=#00ffffff size=1>.</style>            entry if found\; nil otherwise. The symbol table must be
+<style color=#00ffffff size=1>.</style>            sorted by name in ascending order.
+
+<style color=#00ffffff size=1>.</style>            Dyntabsize returns the length of symbol table t, defined to
+<style color=#00ffffff size=1>.</style>            be the number of Dynsym values starting at t that have
+<style color=#00ffffff size=1>.</style>            non-nil name fields. It is used to find the length of
+<style color=#00ffffff size=1>.</style>            _exporttab.
+
+<style color=#00ffffff size=1>.</style>            Dynloadfd loads a module from the file open for reading on
+<style color=#00ffffff size=1>.</style>            fd, and returns the resulting module pointer on success, or
+<style color=#00ffffff size=1>.</style>            nil on error. If maxsize is non-zero the size of the
+<style color=#00ffffff size=1>.</style>            dynamically-loaded module's code and data is limited to
+<style color=#00ffffff size=1>.</style>            maxsize bytes. Exports is an array of nexport symbols in the
+<style color=#00ffffff size=1>.</style>            current program that can be imported by the current module.
+<style color=#00ffffff size=1>.</style>            It uses <action name=read(2)>read(2)</action> and <action name=seek(2)>seek(2)</action> to access fd, and calls werrstr
+<style color=#00ffffff size=1>.</style>            (see <action name=errstr(2)>errstr(2)</action>) to set the error string if necessary.
+
+<style color=#00ffffff size=1>.</style>            Dynloadgen is a more general function that can load a module
+<style color=#00ffffff size=1>.</style>            from an arbitrary source, not just an open file descriptor.
+<style color=#00ffffff size=1>.</style>            (In particular, it can be called by the kernel using
+<style color=#00ffffff size=1>.</style>            functions internal to the kernel instead of making system
+<style color=#00ffffff size=1>.</style>            calls.) Exports, nexport and maxsize are just as for
+<style color=#00ffffff size=1>.</style>            dynloadfd. File is a pointer to a structure defined by the
+<style color=#00ffffff size=1>.</style>            caller that represents the file containing the module. It is
+<style color=#00ffffff size=1>.</style>            passed to read and seek. Read is invoked as (*read)(file,buf
+<style color=#00ffffff size=1>.</style>            , nbytes). Read should read nbytes of data from file into
+<style color=#00ffffff size=1>.</style>            buf and return the number of bytes transferred. It should
+<style color=#00ffffff size=1>.</style>            return -1 on error. Seek is invoked as (*seek)(file,n, type)
+<style color=#00ffffff size=1>.</style>            where n and type are just as for <action name=seek(2)>seek(2)</action>\; it should seek to
+<style color=#00ffffff size=1>.</style>            the requested offset in file, or return -1 on error.
+<style color=#00ffffff size=1>.</style>            Dynloadgen returns a pointer to the loaded module on
+<style color=#00ffffff size=1>.</style>            success. On error, it returns nil after calling its err
+<style color=#00ffffff size=1>.</style>            parameter to set the error string.
+
+<style color=#00ffffff size=1>.</style>            Dynimport returns a pointer to the value of the symbol name
+<style color=#00ffffff size=1>.</style>            in loaded module o, or nil if o does not export a symbol
+<style color=#00ffffff size=1>.</style>            with the given name. If sig is non-zero, the exported
+<style color=#00ffffff size=1>.</style>            symbol's signature must equal sig, or dynimport again
+<style color=#00ffffff size=1>.</style>            returns nil. For example:
+
+<style color=#00ffffff size=1>.</style>                 Dev *d\;
+<style color=#00ffffff size=1>.</style>                 d = dynimport(obj, "XXXdevtab", signof(*d))\;
+<style color=#00ffffff size=1>.</style>                 if(d == nil)
+<style color=#00ffffff size=1>.</style>                 	error("not a dynamically-loadable driver")\;
+
+<style color=#00ffffff size=1>.</style>            Dynobjfree frees the module o. There is no reference
+<style color=#00ffffff size=1>.</style>            counting: it is the caller's responsibility to decide
+<style color=#00ffffff size=1>.</style>            whether a module is no longer needed.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            2l(10.1), a.out(10.6)
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Functions that return pointers return nil on error.
+<style color=#00ffffff size=1>.</style>            Dynloadfd sets the error string and returns nil.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

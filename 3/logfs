@@ -1,0 +1,168 @@
+<action name=LOGFS(3)>LOGFS(3)</action>                                                 <action name=LOGFS(3)>LOGFS(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            logfs - log-structured file system for flash devices
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -b '#ʟ' /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/logfsctl
+<style color=#00ffffff size=1>.</style>            /dev/logfsusers
+<style color=#00ffffff size=1>.</style>            /dev/logfsname
+<style color=#00ffffff size=1>.</style>            /dev/logfsnameboot
+
+<style color=#00ffffff size=1>.</style>            echo fsys name config flash-device > /dev/logfsctl
+<style color=#00ffffff size=1>.</style>            echo fsys name format boot-area-size > /dev/logfsctl
+<style color=#00ffffff size=1>.</style>            echo fsys name open > /dev/logfsctl
+<style color=#00ffffff size=1>.</style>            mount -Ac /dev/logfsname dir
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Logfs is a driver level implementation of the Inferno log
+<style color=#00ffffff size=1>.</style>            structured filesystem, a file system designed with modern
+<style color=#00ffffff size=1>.</style>            flash devices (such as NAND flash) in mind. Logfs is itself
+<style color=#00ffffff size=1>.</style>            hardware independent, requiring other devices to provide the
+<style color=#00ffffff size=1>.</style>            physical medium. Currently only <action name=flash(3)>flash(3)</action> devices are
+<style color=#00ffffff size=1>.</style>            supported.
+
+<style color=#00ffffff size=1>.</style>            The file system maintains two storage regions on the same
+<style color=#00ffffff size=1>.</style>            medium: a log-structured hierarchical file system that
+<style color=#00ffffff size=1>.</style>            implements all the functionality communicable by the 9P
+<style color=#00ffffff size=1>.</style>            protocol (see <action name=intro(5)>intro(5)</action>), and a boot partition that offers a
+<style color=#00ffffff size=1>.</style>            fixed amount of flat storage suitable for holding such
+<style color=#00ffffff size=1>.</style>            things as a kernel boot image, boot parameters etc.  The
+<style color=#00ffffff size=1>.</style>            boot partition can be accessed and updated without
+<style color=#00ffffff size=1>.</style>            understanding all but the simplest facts about the
+<style color=#00ffffff size=1>.</style>            hierarchical file system, making it easy to implement boot
+<style color=#00ffffff size=1>.</style>            loaders with small footprints.
+
+<style color=#00ffffff size=1>.</style>            The physical layout of the file system varies from medium to
+<style color=#00ffffff size=1>.</style>            medium, so that the specialised features of the medium can
+<style color=#00ffffff size=1>.</style>            be accounted for.
+
+<style color=#00ffffff size=1>.</style>            The user table is maintained in memory\; there is one table,
+<style color=#00ffffff size=1>.</style>            shared between all file systems supported by this driver.
+<style color=#00ffffff size=1>.</style>            There is no distinction between users and groups: a user is
+<style color=#00ffffff size=1>.</style>            a group with one member. The user table records a mapping
+<style color=#00ffffff size=1>.</style>            between uids and unames, as well as recording the leader and
+<style color=#00ffffff size=1>.</style>            members of each group. A uid is a string naming a user or
+<style color=#00ffffff size=1>.</style>            group that is stored in the file system. A uname is the
+<style color=#00ffffff size=1>.</style>            string naming a user or group that is used in file system
+<style color=#00ffffff size=1>.</style>            protocol messages (see <action name=intro(5)>intro(5)</action>). There is a distinction so
+<style color=#00ffffff size=1>.</style>            that unames can be safely reused, even though uids cannot.
+
+<style color=#00ffffff size=1>.</style>            Configuration and control of the file systems is by writing
+<style color=#00ffffff size=1>.</style>            commands to /dev/logfsctl:
+
+<style color=#00ffffff size=1>.</style>            fsys name
+<style color=#00ffffff size=1>.</style>                 Sets the current file system to name, which must be
+<style color=#00ffffff size=1>.</style>                 configured. Subsequent commands, not prefixed with fsys
+<style color=#00ffffff size=1>.</style>                 name, will by applied to the name file system.
+
+<style color=#00ffffff size=1>.</style>            \[fsys name\] config flash-device
+<style color=#00ffffff size=1>.</style>                 Configures file system name to be written to <action name=flash(3)>flash(3)</action>
+<style color=#00ffffff size=1>.</style>                 device flash-device. This does not initialise or format
+<style color=#00ffffff size=1>.</style>                 the filesystem, but simply bind name to flash-device.
+<style color=#00ffffff size=1>.</style>                 For each configured name, two files appear in the
+<style color=#00ffffff size=1>.</style>                 device name space, /dev/logfsname and /dev/logfsname
+<style color=#00ffffff size=1>.</style>                 boot. The former serves the 9P protocol giving access
+<style color=#00ffffff size=1>.</style>                 to the hierarchical file system\; the latter is a fixed
+<style color=#00ffffff size=1>.</style>                 size file that represents the boot partition.
+
+<style color=#00ffffff size=1>.</style>            \[fsys name\] format bootsize
+<style color=#00ffffff size=1>.</style>                 Formats the underlying medium as a logfs format file
+<style color=#00ffffff size=1>.</style>                 system. Sufficent storage is set aside to create a boot
+<style color=#00ffffff size=1>.</style>                 partition of at least bootsize bytes. Some medium
+<style color=#00ffffff size=1>.</style>                 implementations (eg, for NAND flash) store file system
+<style color=#00ffffff size=1>.</style>                 parameters (eg, location, size and boot partition size)
+<style color=#00ffffff size=1>.</style>                 to enable automatic location of file systems and
+<style color=#00ffffff size=1>.</style>                 improve bad block detection. These must be part of the
+<style color=#00ffffff size=1>.</style>                 boot partition so that they are easily accessible to
+<style color=#00ffffff size=1>.</style>                 boot loaders, so such medium implementations may also
+<style color=#00ffffff size=1>.</style>                 enforce a minimum size for the boot partition.
+
+<style color=#00ffffff size=1>.</style>            \[fsys name\] open \[-P\] \[-W\]
+<style color=#00ffffff size=1>.</style>                 Initialises the specified file system, and makes it
+<style color=#00ffffff size=1>.</style>                 available for use. The file system structure is
+<style color=#00ffffff size=1>.</style>                 verified, bad blocks are repaired and, in the case of
+<style color=#00ffffff size=1>.</style>                 the log structured file system, and the log replayed to
+<style color=#00ffffff size=1>.</style>                 regenerate the directory structure. The -W option
+<style color=#00ffffff size=1>.</style>                 reduces the permission control on <action name=wstat(5)>wstat(5)</action> requests.
+<style color=#00ffffff size=1>.</style>                 Specifically it allows the uid, gid, mtime, and perm to
+<style color=#00ffffff size=1>.</style>                 be changed by anyone. The -P option removes all file
+<style color=#00ffffff size=1>.</style>                 access controls, allowing anyone to open any file in
+<style color=#00ffffff size=1>.</style>                 any mode.
+
+<style color=#00ffffff size=1>.</style>            \[fsys name\] sweep
+<style color=#00ffffff size=1>.</style>                 Forces the log to be swept, if it has been written to
+<style color=#00ffffff size=1>.</style>                 since last being swept. The log is normally swept
+<style color=#00ffffff size=1>.</style>                 automatically when space is low.
+
+<style color=#00ffffff size=1>.</style>            \[fsys name\] sync
+<style color=#00ffffff size=1>.</style>                 Flush any buffered log or data to the underlying
+<style color=#00ffffff size=1>.</style>                 device. Use before shutting down the system if the
+<style color=#00ffffff size=1>.</style>                 device is not unmounted. (See notes below.)
+
+<style color=#00ffffff size=1>.</style>            \[fsys name\] trace \[level\]
+<style color=#00ffffff size=1>.</style>                 If level is non-zero, internal diagnostics for the log
+<style color=#00ffffff size=1>.</style>                 file system are enabled at the given level. If level is
+<style color=#00ffffff size=1>.</style>                 zero, or missing, tracing is disabled.
+
+<style color=#00ffffff size=1>.</style>            \[fsys name\] unconfig
+<style color=#00ffffff size=1>.</style>                 removes the configuration. The file system must not be
+<style color=#00ffffff size=1>.</style>                 mounted, or the boot partition open, before doing this.
+
+<style color=#00ffffff size=1>.</style>            uname uname uid
+
+<style color=#00ffffff size=1>.</style>            uname uname :uid
+<style color=#00ffffff size=1>.</style>                 adds the user with uname uname and uid uid to the
+<style color=#00ffffff size=1>.</style>                 in-memory table
+
+<style color=#00ffffff size=1>.</style>            uname uname %newname
+<style color=#00ffffff size=1>.</style>                 renames uname to newname, throughout the user table
+
+<style color=#00ffffff size=1>.</style>            uname uname =leader
+<style color=#00ffffff size=1>.</style>                 sets the group leader to the uname leader
+
+<style color=#00ffffff size=1>.</style>            uname uname =
+<style color=#00ffffff size=1>.</style>                 removes the group leader\; then all members are leaders
+
+<style color=#00ffffff size=1>.</style>            uname uname +member
+<style color=#00ffffff size=1>.</style>                 add the uname member to the group
+
+<style color=#00ffffff size=1>.</style>            uname uname -member
+<style color=#00ffffff size=1>.</style>                 removes the uname member from the group
+
+<style color=#00ffffff size=1>.</style>         Notes
+<style color=#00ffffff size=1>.</style>            The file system log may be subject to a small amount of
+<style color=#00ffffff size=1>.</style>            buffering for efficiency purposes\; therefore, it is
+<style color=#00ffffff size=1>.</style>            necessary to unmount the file system before disconnecting
+<style color=#00ffffff size=1>.</style>            the power to avoid losing recent updates. Failure to do this
+<style color=#00ffffff size=1>.</style>            does not result in inconsistencies in the file system, but
+<style color=#00ffffff size=1>.</style>            some recent changes will be lost. Equivalently, a <action name=wstat(5)>wstat(5)</action>
+<style color=#00ffffff size=1>.</style>            of any file or directory, with all fields set to no change
+<style color=#00ffffff size=1>.</style>            (also known as a wstat flush) will cause the log to be
+<style color=#00ffffff size=1>.</style>            written to disk. Note that during a dismount, and also a
+<style color=#00ffffff size=1>.</style>            wstat flush, a wstat flush is also applied to the underlying
+<style color=#00ffffff size=1>.</style>            <action name=flash(3)>flash(3)</action> device. Furthermore, since some buffering is used
+<style color=#00ffffff size=1>.</style>            on the log, needless use of wstat flush will consume log
+<style color=#00ffffff size=1>.</style>            space more rapidly than normal, although it will be
+<style color=#00ffffff size=1>.</style>            recovered during the next sweep.
+
+<style color=#00ffffff size=1>.</style>            The log is automatically swept when space is low, so there
+<style color=#00ffffff size=1>.</style>            is not normally any need to use the sweep command. 
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /liblogfs
+<style color=#00ffffff size=1>.</style>            /libnandfs
+<style color=#00ffffff size=1>.</style>            /emu/port/devlogfs.c
+<style color=#00ffffff size=1>.</style>            /os/port/devlogfs.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=flash(3)>flash(3)</action>, <action name=ftl(3)>ftl(3)</action>, <action name=kfs(4)>kfs(4)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The only medium currently supported is NAND flash. This is
+<style color=#00ffffff size=1>.</style>            detected by recognising the manufacturer and device ids
+<style color=#00ffffff size=1>.</style>            supplied by the status file of the <action name=flash(3)>flash(3)</action> device.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

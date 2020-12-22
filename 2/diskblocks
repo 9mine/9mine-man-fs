@@ -1,0 +1,78 @@
+<action name=DISKBLOCKS(2)>DISKBLOCKS(2)</action>                                       <action name=DISKBLOCKS(2)>DISKBLOCKS(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Diskblocks: Block, Disk, tempfile - temporary storage of
+<style color=#00ffffff size=1>.</style>            variable-sized blocks
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "diskblocks.m"\;
+<style color=#00ffffff size=1>.</style>            diskblocks := load Diskblocks Diskblocks->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Block: adt {
+<style color=#00ffffff size=1>.</style>               addr: big\;   # address on file
+<style color=#00ffffff size=1>.</style>               n:    int\;   # size in bytes
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Disk: adt {
+<style color=#00ffffff size=1>.</style>               init:    fn(fd: ref Sys->FD, gran: int, maxblock: int): ref Disk\;
+<style color=#00ffffff size=1>.</style>               new:     fn(d: self ref Disk, n: int): ref Block\;
+<style color=#00ffffff size=1>.</style>               release: fn(d: self ref Disk, b: ref Block)\;
+<style color=#00ffffff size=1>.</style>               read:    fn(d: self ref Disk, b: ref Block,
+<style color=#00ffffff size=1>.</style>                           a: array of byte, n: int): int\;
+<style color=#00ffffff size=1>.</style>               write:   fn(d: self ref Disk, b: ref Block,
+<style color=#00ffffff size=1>.</style>                           a: array of byte, n: int): ref Block\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:     fn()\;
+<style color=#00ffffff size=1>.</style>            tempfile: fn(): ref Sys->FD\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Diskblocks manages a set of variable-sized blocks on a
+<style color=#00ffffff size=1>.</style>            temporary file.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other function in the module.
+
+<style color=#00ffffff size=1>.</style>            Each block has an address and a size in bytes, represented
+<style color=#00ffffff size=1>.</style>            by a value of type Block.
+
+<style color=#00ffffff size=1>.</style>            Each file is represented by the type Disk, providing the
+<style color=#00ffffff size=1>.</style>            following operations:
+<style color=#00ffffff size=1>.</style>            init(fd, gran, maxblock)
+<style color=#00ffffff size=1>.</style>                 Initialises the file fd for use as temporary block
+<style color=#00ffffff size=1>.</style>                 storage and returns a reference to a Disk to describe
+<style color=#00ffffff size=1>.</style>                 it. Fd must be open for reading and writing, and must
+<style color=#00ffffff size=1>.</style>                 refer to a file that allows random access. Blocks are
+<style color=#00ffffff size=1>.</style>                 allocated in multiples of the granularity gran, in
+<style color=#00ffffff size=1>.</style>                 bytes\; the largest possible block is maxblock bytes,
+<style color=#00ffffff size=1>.</style>                 which must be a multiple of gran.
+<style color=#00ffffff size=1>.</style>            d.new(n)
+<style color=#00ffffff size=1>.</style>                 Allocate a block of n bytes on Disk d and return a
+<style color=#00ffffff size=1>.</style>                 reference to it.
+<style color=#00ffffff size=1>.</style>            d.release(b)
+<style color=#00ffffff size=1>.</style>                 Free the Block b, making it available for reallocation.
+<style color=#00ffffff size=1>.</style>            d.write(b, a, n)
+<style color=#00ffffff size=1>.</style>                 Write n bytes from array a to Block b on Disk d,
+<style color=#00ffffff size=1>.</style>                 returning a reference to the resulting Block. If b is
+<style color=#00ffffff size=1>.</style>                 nil or n exceeds b's current size, write allocates a
+<style color=#00ffffff size=1>.</style>                 new block (releasing b). Thus the returned value might
+<style color=#00ffffff size=1>.</style>                 differ from b, and must be used in subsequent IO
+<style color=#00ffffff size=1>.</style>                 requests.
+<style color=#00ffffff size=1>.</style>            d.read(b, a, n)
+<style color=#00ffffff size=1>.</style>                 Read n bytes from Block b on Disk d into array a,
+<style color=#00ffffff size=1>.</style>                 returning the number of bytes read. N must not exceed b
+<style color=#00ffffff size=1>.</style>                 .n.
+
+<style color=#00ffffff size=1>.</style>            Tempfile returns a file descriptor referring to a
+<style color=#00ffffff size=1>.</style>            newly-created temporary file, suitable for use by Disk.init.
+<style color=#00ffffff size=1>.</style>            The file will be removed automatically when the file
+<style color=#00ffffff size=1>.</style>            descriptor is closed.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/diskblocks.b
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            A function that returns an integer returns -1 on error\; a
+<style color=#00ffffff size=1>.</style>            function that returns a reference returns nil on error. The
+<style color=#00ffffff size=1>.</style>            system error string is set in either case.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

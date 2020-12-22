@@ -1,0 +1,159 @@
+<action name=SEXPRS(6)>SEXPRS(6)</action>                                               <action name=SEXPRS(6)>SEXPRS(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            sexprs - symbolic expressions
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            S-expressions (`symbolic expressions') provide a way for
+<style color=#00ffffff size=1>.</style>            programs to store and exchange tree-structured text and
+<style color=#00ffffff size=1>.</style>            binary data. The Limbo module <action name=sexprs(2)>sexprs(2)</action> provides the variant
+<style color=#00ffffff size=1>.</style>            defined by Rivest in Internet Draft
+<style color=#00ffffff size=1>.</style>            ``draft-rivest-sexp-00.txt'' (4 May 1997), as used for
+<style color=#00ffffff size=1>.</style>            instance by the Simple Public Key Infrastructure (SPKI). It
+<style color=#00ffffff size=1>.</style>            provides a `canonical' form of S-expression, and an
+<style color=#00ffffff size=1>.</style>            `advanced' form for display. They can convey binary data
+<style color=#00ffffff size=1>.</style>            directly and efficiently, unlike some other schemes such as
+<style color=#00ffffff size=1>.</style>            XML. The two forms are closely related and all can be read
+<style color=#00ffffff size=1>.</style>            or written by <action name=sexprs(2)>sexprs(2)</action>, including a variant sometimes used
+<style color=#00ffffff size=1>.</style>            for transport on links that are not 8-bit safe.
+
+<style color=#00ffffff size=1>.</style>            An S-expression is either a sequence of bytes (a byte string
+<style color=#00ffffff size=1>.</style>            ), or a parenthesised list of smaller S-expressions. All
+<style color=#00ffffff size=1>.</style>            forms start with the fundamental rules below, in extended
+<style color=#00ffffff size=1>.</style>            BNF:
+
+<style color=#00ffffff size=1>.</style>                 sexpr	::=	string | list
+<style color=#00ffffff size=1>.</style>                 list	::=	'(' sexpr* ')'
+
+<style color=#00ffffff size=1>.</style>            They give the recursive structure. The various
+<style color=#00ffffff size=1>.</style>            representations ultimately differ only in how the byte
+<style color=#00ffffff size=1>.</style>            string is represented and whether white space such as blanks
+<style color=#00ffffff size=1>.</style>            or newlines can appear.
+
+<style color=#00ffffff size=1>.</style>            Furthermore, the definition of string is also common to all
+<style color=#00ffffff size=1>.</style>            forms:
+
+<style color=#00ffffff size=1>.</style>                 string	::=	display? simple-string
+<style color=#00ffffff size=1>.</style>                 display	::=	'\[' simple-string '\]'
+
+<style color=#00ffffff size=1>.</style>            The optional bracketed display string provides information
+<style color=#00ffffff size=1>.</style>            on how to present the associated byte string to a user.
+<style color=#00ffffff size=1>.</style>            (``It has no other function.  Many of the MIME types work
+<style color=#00ffffff size=1>.</style>            here.'') Although supported by <action name=sexprs(2)>sexprs(2)</action>, it is largely
+<style color=#00ffffff size=1>.</style>            unused by Inferno applications and is usually left out. The
+<style color=#00ffffff size=1>.</style>            canonical and advanced forms differ in their definitions of
+<style color=#00ffffff size=1>.</style>            simple-string. They always denote sequences of 8-bit bytes,
+<style color=#00ffffff size=1>.</style>            but with different syntax (encodings). Two strings are equal
+<style color=#00ffffff size=1>.</style>            iff their simple-strings encode the same byte strings (for
+<style color=#00ffffff size=1>.</style>            both data and display).
+
+<style color=#00ffffff size=1>.</style>            Canonical form must be used when exchanging S-expressions
+<style color=#00ffffff size=1>.</style>            between computers, and when digitally signing an expression.
+<style color=#00ffffff size=1>.</style>            It is defined by the complete set of rules below:
+
+<style color=#00ffffff size=1>.</style>                 sexpr	::=	string | list
+<style color=#00ffffff size=1>.</style>                 list	::=	'(' sexpr* ')'
+<style color=#00ffffff size=1>.</style>                 string	::=	display? simple-string
+<style color=#00ffffff size=1>.</style>                 display	::=	'\[' simple-string '\]'
+<style color=#00ffffff size=1>.</style>                 simple-string	::=	raw
+<style color=#00ffffff size=1>.</style>                 raw	::=	nbytes ':' byte*
+<style color=#00ffffff size=1>.</style>                 nbytes	::=	\[1-9\]\[0-9\]+ |  0
+
+<style color=#00ffffff size=1>.</style>            Its simple-string is a raw byte string. The primitive byte
+<style color=#00ffffff size=1>.</style>            represents an 8-bit byte. The length of every byte string is
+<style color=#00ffffff size=1>.</style>            given explicitly by a preceding decimal value nbytes (with
+<style color=#00ffffff size=1>.</style>            no leading zeroes). There is no white space. It is
+<style color=#00ffffff size=1>.</style>            `canonical' because it is uniquely defined for each
+<style color=#00ffffff size=1>.</style>            S-expression. It is efficient to parse even on small
+<style color=#00ffffff size=1>.</style>            computers.
+
+<style color=#00ffffff size=1>.</style>            Advanced form is more elaborate, and has two main
+<style color=#00ffffff size=1>.</style>            differences: not all byte strings need an explicit length,
+<style color=#00ffffff size=1>.</style>            and binary data can be represented in printable form, either
+<style color=#00ffffff size=1>.</style>            using hexadecimal or base 64 encodings, or using quoted
+<style color=#00ffffff size=1>.</style>            strings (with escape sequences similar to those of Limbo or
+<style color=#00ffffff size=1>.</style>            C). Unquoted text is called a token, and is restricted by
+<style color=#00ffffff size=1>.</style>            the standard to a specific alphabet: it must contain only
+<style color=#00ffffff size=1>.</style>            letters, digits, or characters from the set `-./_:*+=', and
+<style color=#00ffffff size=1>.</style>            must not start with a digit. The latter restriction is
+<style color=#00ffffff size=1>.</style>            imposed to allow byte counts to be distinguished from tokens
+<style color=#00ffffff size=1>.</style>            without lookahead, but has the consequence that decimal
+<style color=#00ffffff size=1>.</style>            numbers must be quoted, as must non-ASCII characters in utf
+<style color=#00ffffff size=1>.</style>            (6) encoding. Upper- and lower-case letters are distinct.
+<style color=#00ffffff size=1>.</style>            The advanced transport syntax is defined by the complete set
+<style color=#00ffffff size=1>.</style>            of rules below:
+
+<style color=#00ffffff size=1>.</style>                 sexpr	::=	string | list
+<style color=#00ffffff size=1>.</style>                 list	::=	'(' ( sexpr | whitespace )* ')'
+<style color=#00ffffff size=1>.</style>                 string	::=	display? simple-string
+<style color=#00ffffff size=1>.</style>                 display	::=	'\[' simple-string '\]'
+<style color=#00ffffff size=1>.</style>                 simple-string	::=	raw | token | base-64 | hexadecimal |  quoted-string
+<style color=#00ffffff size=1>.</style>                 raw	::=	nbytes ':' byte*
+<style color=#00ffffff size=1>.</style>                 nbytes	::=	\[1-9\]\[0-9\]+ |  0
+<style color=#00ffffff size=1>.</style>                 token	::=	token-start token-char*
+<style color=#00ffffff size=1>.</style>                 base-64	::=	decimal? '|' ( base-64-char | whitespace )* '|'
+<style color=#00ffffff size=1>.</style>                 hexadecimal	::=	'#' ( hex-digit | whitespace )* '#'
+<style color=#00ffffff size=1>.</style>                 quoted-string	::=	nbytes? quoted-string-body  
+<style color=#00ffffff size=1>.</style>                 quoted-string-body	::=	'"' byte* '"'
+<style color=#00ffffff size=1>.</style>                 token-start	::=	\[-./_:*+=a-zA-Z\]
+<style color=#00ffffff size=1>.</style>                 token-char	::=	token-start | \[0-9\]
+<style color=#00ffffff size=1>.</style>                 hex-digit	::=	\[0-9a-fA-F\]
+<style color=#00ffffff size=1>.</style>                 base-64-char	::=	\[a-zA-Z0-9+/=\]
+
+<style color=#00ffffff size=1>.</style>            Whitespace is any sequence of blank, tab, newline or
+<style color=#00ffffff size=1>.</style>            carriage-return characters\; note that it can appear only at
+<style color=#00ffffff size=1>.</style>            the places shown. The bytes in a quoted-string-body are
+<style color=#00ffffff size=1>.</style>            interpreted according to the quoting rules for Limbo (or C).
+<style color=#00ffffff size=1>.</style>            That is, the bytes are enclosed in quotes, and may contain
+<style color=#00ffffff size=1>.</style>            the escape sequences for the following characters: backspace
+<style color=#00ffffff size=1>.</style>            (\b), form-feed (\f), newline (\n), carriage-return (\r),
+<style color=#00ffffff size=1>.</style>            tab (\t), and vertical tab (\v), octal escape \ooo (all
+<style color=#00ffffff size=1>.</style>            three digits must be given), hexadecimal escape \xhh (both
+<style color=#00ffffff size=1>.</style>            digits must be given), \\ for backslash, \' for single
+<style color=#00ffffff size=1>.</style>            quote, and and \" to include a quote in a string. Note that
+<style color=#00ffffff size=1>.</style>            a quoted string can have an optional nbytes, but it gives
+<style color=#00ffffff size=1>.</style>            the length of the byte string resulting after interpreting
+<style color=#00ffffff size=1>.</style>            character escapes.
+
+<style color=#00ffffff size=1>.</style>            Both canonical and advanced forms can contain binary data
+<style color=#00ffffff size=1>.</style>            verbatim. Sometimes that is troublesome for storage or
+<style color=#00ffffff size=1>.</style>            transport. At the lexical level any sexpr can therefore be
+<style color=#00ffffff size=1>.</style>            replaced by the following:
+
+<style color=#00ffffff size=1>.</style>                 '{' ( base-64-char | whitespace )* '}'
+
+<style color=#00ffffff size=1>.</style>            where the text between the braces is the base-64 encoding of
+<style color=#00ffffff size=1>.</style>            the sexpr expressed in canonical or advanced form. The
+<style color=#00ffffff size=1>.</style>            S-expression parser will replace the sequence by its
+<style color=#00ffffff size=1>.</style>            decoded, and resume parsing at the start of that byte
+<style color=#00ffffff size=1>.</style>            string. Note the difference in syntax and interpretation
+<style color=#00ffffff size=1>.</style>            from rule base-64 above, which encodes a simple-string, not
+<style color=#00ffffff size=1>.</style>            an sexpr.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            The following S-expression is in canonical form:
+
+<style color=#00ffffff size=1>.</style>                 (12:hello world!(5:inner0:))
+
+<style color=#00ffffff size=1>.</style>            It is a list of two elements: the string hello world!, and
+<style color=#00ffffff size=1>.</style>            another list also with two elements, the string inner and an
+<style color=#00ffffff size=1>.</style>            empty string. All the bytes in the example are printable
+<style color=#00ffffff size=1>.</style>            characters, but they could have been arbitrary binary
+<style color=#00ffffff size=1>.</style>            values.
+
+<style color=#00ffffff size=1>.</style>            The following is an S-expression in advanced form:
+
+<style color=#00ffffff size=1>.</style>                 (hello-world
+<style color=#00ffffff size=1>.</style>                     (* "3" "5.6")
+<style color=#00ffffff size=1>.</style>                     (best-of-3 (5:inner0:)))
+
+<style color=#00ffffff size=1>.</style>            Note that advanced form contains canonical form as a subset\;
+<style color=#00ffffff size=1>.</style>            here it is used for the innermost list.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sexprs(2)>sexprs(2)</action>, <action name=json(6)>json(6)</action>, <action name=ubfa(6)>ubfa(6)</action>
+
+<style color=#00ffffff size=1>.</style>            R. Rivest, ``S-expressions'', Network Working Group Internet
+<style color=#00ffffff size=1>.</style>            Draft (4 May 1997), reproduced in /lib/sexp.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

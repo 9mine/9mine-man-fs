@@ -1,0 +1,53 @@
+8(PING)                                                   8(PING)
+
+NAME
+<style color=#00ffffff size=1>.</style>            ping - probe the Internet
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ip/ping \[-alq\] \[ -i interval \] \[ -s size \] \[ -n nping \]
+<style color=#00ffffff size=1>.</style>            destination
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ping sends ICMP echo requests to a network destination
+<style color=#00ffffff size=1>.</style>            (which has the syntax accepted by <action name=dial(2)>dial(2)</action>). The target host,
+<style color=#00ffffff size=1>.</style>            if up, should send a corresponding reply. By default, one
+<style color=#00ffffff size=1>.</style>            line is printed for each reply, containing the sequence
+<style color=#00ffffff size=1>.</style>            number (starting at 0) of the message it answers, the round
+<style color=#00ffffff size=1>.</style>            trip time for that reply, the average round trip time so
+<style color=#00ffffff size=1>.</style>            far, and the `time to live' value from the reply packet.
+
+<style color=#00ffffff size=1>.</style>            The options are:
+
+<style color=#00ffffff size=1>.</style>            -a   include source and destination IP addresses in the
+<style color=#00ffffff size=1>.</style>                 output
+
+<style color=#00ffffff size=1>.</style>            -i interval
+<style color=#00ffffff size=1>.</style>                 send requests with the given interval between messages,
+<style color=#00ffffff size=1>.</style>                 in milliseconds (default: 1 second)
+
+<style color=#00ffffff size=1>.</style>            -l   list only lost messages
+
+<style color=#00ffffff size=1>.</style>            -n nping
+<style color=#00ffffff size=1>.</style>                 send nping messages in all (default: 32)
+
+<style color=#00ffffff size=1>.</style>            -q   suppress per-packet output, giving summary data only
+
+<style color=#00ffffff size=1>.</style>            -s size
+<style color=#00ffffff size=1>.</style>                 send request packets of the given size in bytes
+<style color=#00ffffff size=1>.</style>                 (default: 64, minimum 32)
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ip/ping.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=dial(2)>dial(2)</action>, <action name=ip(3)>ip(3)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Ping yields an error status if any request had no
+<style color=#00ffffff size=1>.</style>            corresponding reply.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Works only on native Inferno and when hosted on Plan 9,
+<style color=#00ffffff size=1>.</style>            owing to the lack of access to ICMP on other hosted systems.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

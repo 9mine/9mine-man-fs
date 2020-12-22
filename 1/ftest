@@ -1,0 +1,55 @@
+<action name=FTEST(1)>FTEST(1)</action>                                                 <action name=FTEST(1)>FTEST(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ftest, newer - test file attributes
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ftest test arg
+
+<style color=#00ffffff size=1>.</style>            newer file1 file2
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ftest checks the specified attribute of arg according to
+<style color=#00ffffff size=1>.</style>            test and yields an exit status signifying the result. For
+<style color=#00ffffff size=1>.</style>            all tests apart from -t, arg is the name of the file to be
+<style color=#00ffffff size=1>.</style>            tested\; for -t, it is the number of a file descriptor.
+<style color=#00ffffff size=1>.</style>            Available tests are:
+
+<style color=#00ffffff size=1>.</style>            -d   True if the file exists and is a directory.
+
+<style color=#00ffffff size=1>.</style>            -e   True if the file exists.
+
+<style color=#00ffffff size=1>.</style>            -f   True if the file exists and is a regular file.
+
+<style color=#00ffffff size=1>.</style>            -r   True if the file exists and is readable.
+
+<style color=#00ffffff size=1>.</style>            -s   True if the file exists and has non-zero size.
+
+<style color=#00ffffff size=1>.</style>            -t   True if the open file represented by the number arg
+<style color=#00ffffff size=1>.</style>                 represents the same file as /dev/cons.
+
+<style color=#00ffffff size=1>.</style>            -w   True if the file exists and is writable.
+
+<style color=#00ffffff size=1>.</style>            -x   True if the file exists and is executable.
+
+<style color=#00ffffff size=1>.</style>            Newer checks whether file1 exists and is no older than file2
+<style color=#00ffffff size=1>.</style>            , which must also exist\; if so, it yields a true exit
+<style color=#00ffffff size=1>.</style>            status. Otherwise, it yields an error status. Neither file
+<style color=#00ffffff size=1>.</style>            may be a directory.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/ftest.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/newer.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-stat(2)>sys-stat(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            These commands work only with <action name=sh(1)>sh(1)</action> as none of the other
+<style color=#00ffffff size=1>.</style>            Inferno shells can check the exit status of a command.
+
+<style color=#00ffffff size=1>.</style>            Checking for read, write and execute capabilities is
+<style color=#00ffffff size=1>.</style>            speculative - the file server has the last say. Group
+<style color=#00ffffff size=1>.</style>            permissions are ignored.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,67 @@
+<action name=REGEX(2)>REGEX(2)</action>                                                 <action name=REGEX(2)>REGEX(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            regex - regular expression recognizer module
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "regex.m"\;
+<style color=#00ffffff size=1>.</style>            regex := load Regex Regex->PATH\;
+
+<style color=#00ffffff size=1>.</style>            compile:   fn(e: string, flag: int): (Re, string)\;
+<style color=#00ffffff size=1>.</style>            execute:   fn(x: Re\; s: string): array of (int,int)\;
+<style color=#00ffffff size=1>.</style>            executese: fn(x: Re, s: string, se: (int, int), bol: int, eol: int):
+<style color=#00ffffff size=1>.</style>            			array of (int, int)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Regular expressions are defined by <action name=regexp(6)>regexp(6)</action>. Compile
+<style color=#00ffffff size=1>.</style>            returns (as the first element of the result tuple) a
+<style color=#00ffffff size=1>.</style>            compiled form of the regular expression given in string e.
+<style color=#00ffffff size=1>.</style>            If e is not a valid regular expression, compile returns the
+<style color=#00ffffff size=1>.</style>            tuple (nil, diag) where diag is a diagnostic string. The
+<style color=#00ffffff size=1>.</style>            effect of flag is described below.
+
+<style color=#00ffffff size=1>.</style>            Execute matches the compiled regular expression x against
+<style color=#00ffffff size=1>.</style>            string s. It returns nil on no match, otherwise it returns
+<style color=#00ffffff size=1>.</style>            an array. The element with index 0 gives the character
+<style color=#00ffffff size=1>.</style>            positions of the first character of some longest leftmost
+<style color=#00ffffff size=1>.</style>            match and the first character beyond the match. If the
+<style color=#00ffffff size=1>.</style>            compilation flag was 0, there are no more elements. If flag
+<style color=#00ffffff size=1>.</style>            was 1, there is one element for each pair of parentheses in
+<style color=#00ffffff size=1>.</style>            the regular expression, counting left parentheses left to
+<style color=#00ffffff size=1>.</style>            right starting at 1. The nth element gives the position of
+<style color=#00ffffff size=1>.</style>            the last match to the nth parenthesized subexpression, or
+<style color=#00ffffff size=1>.</style>            (-1,-1) if the subexpression does not participate in the
+<style color=#00ffffff size=1>.</style>            overall match.
+
+<style color=#00ffffff size=1>.</style>            Executese is similar to execute but allows the start and end
+<style color=#00ffffff size=1>.</style>            points in the string to be specified, as tuple se: (start ,
+<style color=#00ffffff size=1>.</style>            end), where start is the index in s of the initial character
+<style color=#00ffffff size=1>.</style>            to be matched, and end is the index in s of the first
+<style color=#00ffffff size=1>.</style>            character beyond the substring to be matched (and can be the
+<style color=#00ffffff size=1>.</style>            length of s). If bol is non-zero, the initial character is
+<style color=#00ffffff size=1>.</style>            at the beginning of a line, allowing an initial match by the
+<style color=#00ffffff size=1>.</style>            regular expression operator `^'\; if eol is non-zero, the
+<style color=#00ffffff size=1>.</style>            last character is at the end of a line, allowing a match by
+<style color=#00ffffff size=1>.</style>            the operator `$'.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            (re, nil) := regex->compile("(thick )*(chocolate |raspberry )?"+
+<style color=#00ffffff size=1>.</style>            			"(topp|fill)ing", 0)\;
+
+<style color=#00ffffff size=1>.</style>            (re, nil) := regex->compile("\[ABCb-z\]+", 0)\;
+<style color=#00ffffff size=1>.</style>            a := regex->execute(re, s:="aAbBcCdD")\;
+<style color=#00ffffff size=1>.</style>            (beg, end) := a\[0\]\;
+<style color=#00ffffff size=1>.</style>            s\[beg:end\] == "AbBcCd"\;
+
+<style color=#00ffffff size=1>.</style>            (re, nil) := regex->compile("a*b*", 0)\;
+<style color=#00ffffff size=1>.</style>            a := regex->execute(re, "bbaabb")\;
+<style color=#00ffffff size=1>.</style>            (beg, end) := a\[0\]\;
+<style color=#00ffffff size=1>.</style>            (beg, end) == (0,2)\;
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/regex.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=regexp(6)>regexp(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

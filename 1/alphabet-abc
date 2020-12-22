@@ -1,0 +1,86 @@
+<action name=ALPHABET-ABC(1)>ALPHABET-ABC(1)</action>                                   <action name=ALPHABET-ABC(1)>ALPHABET-ABC(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            abc - alphabet declarations
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load alphabet
+<style color=#00ffffff size=1>.</style>            typeset /abc
+<style color=#00ffffff size=1>.</style>            type /abc
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Grid is a typeset for alphabet (see <action name=sh-alphabet(1)>sh-alphabet(1)</action>) which
+<style color=#00ffffff size=1>.</style>            enables allows direct interconnection of remote and local
+<style color=#00ffffff size=1>.</style>            processing components. It defines one new type, endpoint,
+<style color=#00ffffff size=1>.</style>            which represents a place in the network to which two parties
+<style color=#00ffffff size=1>.</style>            can connect and exchange data.
+
+<style color=#00ffffff size=1>.</style>            In the following descriptions, if a type is not endpoint or
+<style color=#00ffffff size=1>.</style>            a type defined in the root typeset (see <action name=alphabet-main(1)>alphabet-main(1)</action>),
+<style color=#00ffffff size=1>.</style>            it is assumed to be of type /string.
+
+<style color=#00ffffff size=1>.</style>            Modules currently provided within the /grid typeset include:
+
+<style color=#00ffffff size=1>.</style>            farm \[-lnkavA\] endpoint addr tasktype \[arg...\] -> endpoint
+<style color=#00ffffff size=1>.</style>                      Farm connects to a grid labour exchange (see
+<style color=#00ffffff size=1>.</style>                      <action name=scheduler(4)>scheduler(4)</action>) at addr, starts a new job of type
+<style color=#00ffffff size=1>.</style>                      workflow, and passes all the data read from
+<style color=#00ffffff size=1>.</style>                      endpoint to be processed by the currently
+<style color=#00ffffff size=1>.</style>                      available labour. The data is split into records,
+<style color=#00ffffff size=1>.</style>                      each one of which will be processed on a worker
+<style color=#00ffffff size=1>.</style>                      node by tasktype, with its associated arguments.
+<style color=#00ffffff size=1>.</style>                      Other than -A, which specifies unauthenticated
+<style color=#00ffffff size=1>.</style>                      access to the scheduler, the various options are
+<style color=#00ffffff size=1>.</style>                      all passed verbatim to workflow: -l causes it to
+<style color=#00ffffff size=1>.</style>                      split its input on newline-separated records\; -n
+<style color=#00ffffff size=1>.</style>                      specifies that no record separation is necessary
+<style color=#00ffffff size=1>.</style>                      on output\; -k specifies that intermediate data for
+<style color=#00ffffff size=1>.</style>                      failed tasks should be kept around\; -a specifies
+<style color=#00ffffff size=1>.</style>                      that intermediate data for all tasks should be
+<style color=#00ffffff size=1>.</style>                      kept around, and -v specifies that workflow should
+<style color=#00ffffff size=1>.</style>                      produce a wordy description of what it is doing.
+
+<style color=#00ffffff size=1>.</style>            local endpoint -> /fd
+<style color=#00ffffff size=1>.</style>                      Local reads everything from endpoint, and writes
+<style color=#00ffffff size=1>.</style>                      it to fd.
+
+<style color=#00ffffff size=1>.</style>            remote \[-a addr\] fd -> endpoint
+<style color=#00ffffff size=1>.</style>                      Remote is the inverse of local: it reads data from
+<style color=#00ffffff size=1>.</style>                      fd and writes it to a newly created endpoint. If
+<style color=#00ffffff size=1>.</style>                      -a is given, addr specifies the network address of
+<style color=#00ffffff size=1>.</style>                      an endpoint server on which to create the new
+<style color=#00ffffff size=1>.</style>                      endpoint.
+
+<style color=#00ffffff size=1>.</style>            rexec \[-A\] endpoint addr cmd -> endpoint
+<style color=#00ffffff size=1>.</style>                      Rexec connects to a remote execution server at
+<style color=#00ffffff size=1>.</style>                      addr (unauthenticated if -A is specified), and
+<style color=#00ffffff size=1>.</style>                      arranges to execute the alphabet expression cmd
+<style color=#00ffffff size=1>.</style>                      there. The expression should be compatible with
+<style color=#00ffffff size=1>.</style>                      usage fd -> fd. Data from the argument endpoint
+<style color=#00ffffff size=1>.</style>                      will be piped through this expression, and made
+<style color=#00ffffff size=1>.</style>                      available as the resulting endpoint endpoint.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            The examples below that a local endpoint is available, and
+<style color=#00ffffff size=1>.</style>            the following alphabet declarations:
+<style color=#00ffffff size=1>.</style>            	load alphabet
+<style color=#00ffffff size=1>.</style>            	typeset /grid
+<style color=#00ffffff size=1>.</style>            	type /string /endpoint /fd
+<style color=#00ffffff size=1>.</style>            	import /grid/local /grid/remote
+<style color=#00ffffff size=1>.</style>            	autoconvert fd endpoint remote
+<style color=#00ffffff size=1>.</style>            Set up a rendering pipeline:
+<style color=#00ffffff size=1>.</style>            	-{/read /tmp/somedata |
+<style color=#00ffffff size=1>.</style>            		remote |
+<style color=#00ffffff size=1>.</style>            		rexec tcp!node1!rexec "{(/fd)\; /filter $1 "{os render_stage1}} |
+<style color=#00ffffff size=1>.</style>            		rexec tcp!node2!rexec "{(/fd)\; /filter $1 "{os render_stage2}} |
+<style color=#00ffffff size=1>.</style>            		/create /tmp/somedata.result
+<style color=#00ffffff size=1>.</style>            	}
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/alphabet/grid.b, /appl/alphabet/gridtypes.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/grid/*.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh-alphabet(1)>sh-alphabet(1)</action>, <action name=alphabet-main(1)>alphabet-main(1)</action>, <action name=sh(1)>sh(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

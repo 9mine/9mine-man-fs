@@ -1,0 +1,84 @@
+<action name=EIA(3)>EIA(3)</action>                                                     <action name=EIA(3)>EIA(3)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            eia - serial communication control
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind -a '#t' /dev
+
+<style color=#00ffffff size=1>.</style>            /dev/eia0
+<style color=#00ffffff size=1>.</style>            /dev/eia0ctl
+<style color=#00ffffff size=1>.</style>            /dev/eia0status
+<style color=#00ffffff size=1>.</style>            /dev/eia1
+<style color=#00ffffff size=1>.</style>            /dev/eia1ctl
+<style color=#00ffffff size=1>.</style>            /dev/eia1status
+<style color=#00ffffff size=1>.</style>            ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The serial line device serves a one-level directory that
+<style color=#00ffffff size=1>.</style>            gives access to the serial ports. Each file set eian ...
+<style color=#00ffffff size=1>.</style>            represents one serial port and includes a data file (eg,
+<style color=#00ffffff size=1>.</style>            eia0), a control file (eg, eia0ctl), and a status file (eg,
+<style color=#00ffffff size=1>.</style>            eia0status).
+
+<style color=#00ffffff size=1>.</style>            The data file can be read and written to access the
+<style color=#00ffffff size=1>.</style>            corresponding serial port. Reads will block until at least
+<style color=#00ffffff size=1>.</style>            one character is available.
+
+<style color=#00ffffff size=1>.</style>            The ctl file accepts textual commands, via write (see
+<style color=#00ffffff size=1>.</style>            <action name=sys-read(2)>sys-read(2)</action>), that control or condition the serial port for
+<style color=#00ffffff size=1>.</style>            subsequent IO:
+
+<style color=#00ffffff size=1>.</style>            bn   Set the baud rate to n.
+
+<style color=#00ffffff size=1>.</style>            cn   If n is non-zero, cause a hangup if the remote drops
+<style color=#00ffffff size=1>.</style>                 DCD.
+
+<style color=#00ffffff size=1>.</style>            dn   Set DTR if n is non-zero\; otherwise clear it.
+
+<style color=#00ffffff size=1>.</style>            en   If n is non-zero, cause a hangup if the remote drops
+<style color=#00ffffff size=1>.</style>                 DSR.
+
+<style color=#00ffffff size=1>.</style>            f    Flush the output queue.
+
+<style color=#00ffffff size=1>.</style>            h    Hangup both input and output queues.
+
+<style color=#00ffffff size=1>.</style>            kn   Send a break lasting n milliseconds.
+
+<style color=#00ffffff size=1>.</style>            ln   Set number of bits per byte to n. Legal values are 5,
+<style color=#00ffffff size=1>.</style>                 6, 7, or 8.
+
+<style color=#00ffffff size=1>.</style>            mn   Obey modem CTS signal if n is non-zero\; otherwise clear
+<style color=#00ffffff size=1>.</style>                 it.
+
+<style color=#00ffffff size=1>.</style>            nn   Set the output queue to non-blocking, if n is non-zero\;
+<style color=#00ffffff size=1>.</style>                 otherwise mark it as blocking (the default). In
+<style color=#00ffffff size=1>.</style>                 non-blocking mode, if the output queue is full, new
+<style color=#00ffffff size=1>.</style>                 output is discarded rather than block the writer until
+<style color=#00ffffff size=1>.</style>                 the queue drains.
+
+<style color=#00ffffff size=1>.</style>            pc   Set parity to odd if c is o, to even if c is e\;
+<style color=#00ffffff size=1>.</style>                 otherwise set no parity.
+
+<style color=#00ffffff size=1>.</style>            qn   Set the limit on input and output queues to n\; both
+<style color=#00ffffff size=1>.</style>                 queues are initially set to 4k bytes.
+
+<style color=#00ffffff size=1>.</style>            rn   Set RTS if n is non-zero\; otherwise clear it.
+
+<style color=#00ffffff size=1>.</style>            sn   Set number of stop bits to n. Legal values are 1 or 2.
+
+<style color=#00ffffff size=1>.</style>            xn   Enable XON/XOFF flow control if n is non-zero\;
+<style color=#00ffffff size=1>.</style>                 otherwise disable it (the default).
+
+<style color=#00ffffff size=1>.</style>            Changes to port settings persist between a subsequent close
+<style color=#00ffffff size=1>.</style>            and reopen.
+
+<style color=#00ffffff size=1>.</style>            The status file can be read for a report of the serial port
+<style color=#00ffffff size=1>.</style>            status.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/devns16552.c
+<style color=#00ffffff size=1>.</style>            /os/*/devuart.c
+<style color=#00ffffff size=1>.</style>            /os/*/devscc.c
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

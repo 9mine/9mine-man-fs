@@ -1,0 +1,203 @@
+<action name=SCALE(9)>SCALE(9)</action>                                                 <action name=SCALE(9)>SCALE(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            scale - Create and manipulate scale widgets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            scale pathName ?options?
+
+STANDARD OPTIONS
+<style color=#00ffffff size=1>.</style>            -activebackground -font               -orient
+<style color=#00ffffff size=1>.</style>            -background       -foreground         -relief
+<style color=#00ffffff size=1>.</style>            -borderwidth      -highlightcolor     -takefocus
+<style color=#00ffffff size=1>.</style>            -disabledcolor    -highlightthickness
+
+WIDGET-SPECIFIC OPTIONS
+<style color=#00ffffff size=1>.</style>            -bigincrement dist
+<style color=#00ffffff size=1>.</style>                 Some interactions with the scale cause its value to
+<style color=#00ffffff size=1>.</style>                 change by ``large'' increments\;  this option specifies
+<style color=#00ffffff size=1>.</style>                 the size of the large increments.  If specified as 0,
+<style color=#00ffffff size=1>.</style>                 the large increments default to 1/10 the range of the
+<style color=#00ffffff size=1>.</style>                 scale.
+
+<style color=#00ffffff size=1>.</style>            -command command
+<style color=#00ffffff size=1>.</style>                 Specifies the prefix of a Tk command to invoke whenever
+<style color=#00ffffff size=1>.</style>                 the scale's value is changed via a widget command. The
+<style color=#00ffffff size=1>.</style>                 actual command consists of this option followed by a
+<style color=#00ffffff size=1>.</style>                 space and a real number indicating the new value of the
+<style color=#00ffffff size=1>.</style>                 scale.
+
+<style color=#00ffffff size=1>.</style>            -from frac
+<style color=#00ffffff size=1>.</style>                 A real value corresponding to the left or top end of
+<style color=#00ffffff size=1>.</style>                 the scale.
+
+<style color=#00ffffff size=1>.</style>            -height dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired height for the scale. If this
+<style color=#00ffffff size=1>.</style>                 option isn't specified, the scale is given a default
+<style color=#00ffffff size=1>.</style>                 height.
+
+<style color=#00ffffff size=1>.</style>            -label string
+<style color=#00ffffff size=1>.</style>                 A string to display as a label for the scale. If the
+<style color=#00ffffff size=1>.</style>                 option is specified as an empty string, no label is
+<style color=#00ffffff size=1>.</style>                 displayed.
+
+<style color=#00ffffff size=1>.</style>            -resolution frac
+<style color=#00ffffff size=1>.</style>                 A real value specifying the resolution for the scale.
+<style color=#00ffffff size=1>.</style>                 If this value is greater than zero then the scale's
+<style color=#00ffffff size=1>.</style>                 value will always be rounded to an even multiple of
+<style color=#00ffffff size=1>.</style>                 this value, as will tick marks and the endpoints of the
+<style color=#00ffffff size=1>.</style>                 scale.  If the value is less than zero then no rounding
+<style color=#00ffffff size=1>.</style>                 occurs.  Defaults to 1 (i.e., the value will be
+<style color=#00ffffff size=1>.</style>                 integral).
+
+<style color=#00ffffff size=1>.</style>            -showvalue boolean
+<style color=#00ffffff size=1>.</style>                 Specifies a boolean value indicating whether or not the
+<style color=#00ffffff size=1>.</style>                 current value of the scale is to be displayed.
+
+<style color=#00ffffff size=1>.</style>            -sliderlength dist
+<style color=#00ffffff size=1>.</style>                 Specfies the size of the slider along the slider's long
+<style color=#00ffffff size=1>.</style>                 dimension..
+
+<style color=#00ffffff size=1>.</style>            -sliderrelief relief
+<style color=#00ffffff size=1>.</style>                 Specifies the relief to use when drawing the slider.
+
+<style color=#00ffffff size=1>.</style>            -state state
+<style color=#00ffffff size=1>.</style>                 Specifies one of three states for the scale:  normal,
+<style color=#00ffffff size=1>.</style>                 active, or disabled. If the scale is disabled then the
+<style color=#00ffffff size=1>.</style>                 value may not be changed and the scale won't activate.
+<style color=#00ffffff size=1>.</style>                 If the scale is active, the slider is displayed using
+<style color=#00ffffff size=1>.</style>                 the colour specified by the activebackground option.
+
+<style color=#00ffffff size=1>.</style>            -tickinterval frac
+<style color=#00ffffff size=1>.</style>                 Must be a real value. Determines the spacing between
+<style color=#00ffffff size=1>.</style>                 numerical tick marks displayed below or to the left of
+<style color=#00ffffff size=1>.</style>                 the slider. If 0, no tick marks will be displayed.
+
+<style color=#00ffffff size=1>.</style>            -to frac
+<style color=#00ffffff size=1>.</style>                 Specifies a real value corresponding to the right or
+<style color=#00ffffff size=1>.</style>                 bottom end of the scale. This value may be either less
+<style color=#00ffffff size=1>.</style>                 than or greater than the from option.
+
+<style color=#00ffffff size=1>.</style>            -width dist
+<style color=#00ffffff size=1>.</style>                 Specifies a desired width for the scale. If this option
+<style color=#00ffffff size=1>.</style>                 isn't specified, the scale is given a default width.
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The scale command creates a new window (given by the
+<style color=#00ffffff size=1>.</style>            pathName argument) and makes it into a scale widget.
+<style color=#00ffffff size=1>.</style>            Additional options, described above, may be specified on the
+<style color=#00ffffff size=1>.</style>            command line to configure aspects of the scale such as its
+<style color=#00ffffff size=1>.</style>            colours, orientation, and relief.  The scale command returns
+<style color=#00ffffff size=1>.</style>            its pathName argument.  At the time this command is invoked,
+<style color=#00ffffff size=1>.</style>            there must not exist a window named pathName.
+
+<style color=#00ffffff size=1>.</style>            A scale is a widget that displays a rectangular trough and a
+<style color=#00ffffff size=1>.</style>            small slider.  The trough corresponds to a range of real
+<style color=#00ffffff size=1>.</style>            values (determined by the from, to, and resolution options),
+<style color=#00ffffff size=1>.</style>            and the position of the slider selects a particular real
+<style color=#00ffffff size=1>.</style>            value. The slider's position (and hence the scale's value)
+<style color=#00ffffff size=1>.</style>            may be adjusted with the mouse or keyboard as described in
+<style color=#00ffffff size=1>.</style>            the BINDINGS section below.  Whenever the scale's value is
+<style color=#00ffffff size=1>.</style>            changed, a Tk command is invoked (using the command option)
+<style color=#00ffffff size=1>.</style>            to notify other interested widgets of the change.
+
+<style color=#00ffffff size=1>.</style>            Three annotations may be displayed in a scale widget:  a
+<style color=#00ffffff size=1>.</style>            label appearing at the top right of the widget (top left for
+<style color=#00ffffff size=1>.</style>            horizontal scales), a number displayed just to the left of
+<style color=#00ffffff size=1>.</style>            the slider (just above the slider for horizontal scales),
+<style color=#00ffffff size=1>.</style>            and a collection of numerical tick marks just to the right
+<style color=#00ffffff size=1>.</style>            of the trough (just below the trough for horizontal scales).
+<style color=#00ffffff size=1>.</style>            Each of these three annotations may be enabled or disabled
+<style color=#00ffffff size=1>.</style>            using the configuration options.
+
+WIDGET COMMAND
+<style color=#00ffffff size=1>.</style>            The scale command creates a new Tk command whose name is 
+<style color=#00ffffff size=1>.</style>            pathName.  This command may be used to invoke various
+<style color=#00ffffff size=1>.</style>            operations on the widget.  It has the following general
+<style color=#00ffffff size=1>.</style>            form:
+<style color=#00ffffff size=1>.</style>                 pathName option ?arg arg ...?
+<style color=#00ffffff size=1>.</style>            Option and the args determine the exact behaviour of the
+<style color=#00ffffff size=1>.</style>            command.  The following commands are possible for scale
+<style color=#00ffffff size=1>.</style>            widgets:
+
+<style color=#00ffffff size=1>.</style>            pathName cget option
+<style color=#00ffffff size=1>.</style>                 Returns the current value of the configuration option
+<style color=#00ffffff size=1>.</style>                 given by option. Option may have any of the values
+<style color=#00ffffff size=1>.</style>                 accepted by the scale command.
+
+<style color=#00ffffff size=1>.</style>            pathName configure ?option? ?value option value ...?
+<style color=#00ffffff size=1>.</style>                 Query or modify the configuration options of the
+<style color=#00ffffff size=1>.</style>                 widget. If no option is specified, returns a list of
+<style color=#00ffffff size=1>.</style>                 all of the available options for pathName.  If one or
+<style color=#00ffffff size=1>.</style>                 more option-value pairs are specified, then the command
+<style color=#00ffffff size=1>.</style>                 modifies the given widget option(s) to have the given
+<style color=#00ffffff size=1>.</style>                 value(s)\;  in this case the command returns an empty
+<style color=#00ffffff size=1>.</style>                 string. Option may have any of the values accepted by
+<style color=#00ffffff size=1>.</style>                 the scale command.
+
+<style color=#00ffffff size=1>.</style>            pathName coords ?value?
+<style color=#00ffffff size=1>.</style>                 Returns a list whose elements are the x and y
+<style color=#00ffffff size=1>.</style>                 coordinates of the point along the centreline of the
+<style color=#00ffffff size=1>.</style>                 trough that corresponds to value. If value is omitted
+<style color=#00ffffff size=1>.</style>                 then the scale's current value is used.
+
+<style color=#00ffffff size=1>.</style>            pathName get ?x y?
+<style color=#00ffffff size=1>.</style>                 If x and y are omitted, returns the current value of
+<style color=#00ffffff size=1>.</style>                 the scale.  If x and y are specified, they give pixel
+<style color=#00ffffff size=1>.</style>                 coordinates within the widget\;  the command returns the
+<style color=#00ffffff size=1>.</style>                 scale value corresponding to the given pixel. Only one
+<style color=#00ffffff size=1>.</style>                 of x or y is used:  for horizontal scales y is ignored,
+<style color=#00ffffff size=1>.</style>                 and for vertical scales x is ignored.
+
+<style color=#00ffffff size=1>.</style>            pathName identify x y
+<style color=#00ffffff size=1>.</style>                 Returns a string indicating what part of the scale lies
+<style color=#00ffffff size=1>.</style>                 under the coordinates given by x and y. A return value
+<style color=#00ffffff size=1>.</style>                 of slider means that the point is over the slider\;  
+<style color=#00ffffff size=1>.</style>                 trough1 means that the point is over the portion of the
+<style color=#00ffffff size=1>.</style>                 slider above  or to the left of the slider\; and trough2
+<style color=#00ffffff size=1>.</style>                 means that the point is over the portion of the slider
+<style color=#00ffffff size=1>.</style>                 below or to the right of the slider. If the point isn't
+<style color=#00ffffff size=1>.</style>                 over one of these elements, an empty string is
+<style color=#00ffffff size=1>.</style>                 returned.
+
+<style color=#00ffffff size=1>.</style>            pathName set value
+<style color=#00ffffff size=1>.</style>                 This command is invoked to change the current value of
+<style color=#00ffffff size=1>.</style>                 the scale, and hence the position at which the slider
+<style color=#00ffffff size=1>.</style>                 is displayed.  Value gives the new value for the scale.
+<style color=#00ffffff size=1>.</style>                 The command has no effect if the scale is disabled.
+
+BINDINGS
+<style color=#00ffffff size=1>.</style>            Tk automatically creates bindings for scales that give them
+<style color=#00ffffff size=1>.</style>            the following default behaviour. Where the behaviour is
+<style color=#00ffffff size=1>.</style>            different for vertical and horizontal scales, the horizontal
+<style color=#00ffffff size=1>.</style>            behaviour is described in parentheses.
+
+<style color=#00ffffff size=1>.</style>            \[1\]  If button 1 is pressed in the trough, the scale's value
+<style color=#00ffffff size=1>.</style>                 will be incremented or decremented by the value of the 
+<style color=#00ffffff size=1>.</style>                 bigincrement option so that the slider moves in the
+<style color=#00ffffff size=1>.</style>                 direction of the cursor. If the button is held down,
+<style color=#00ffffff size=1>.</style>                 the action auto-repeats.
+
+<style color=#00ffffff size=1>.</style>            \[2\]  If button 1 is pressed over the slider, the slider can
+<style color=#00ffffff size=1>.</style>                 be dragged with the mouse.
+
+<style color=#00ffffff size=1>.</style>            \[3\]  If the widget receives Up-arrow or Left-arrow key
+<style color=#00ffffff size=1>.</style>                 events, the scale's value will be incremented or
+<style color=#00ffffff size=1>.</style>                 decremented so as to adjust the value towards the from
+<style color=#00ffffff size=1>.</style>                 value.
+
+<style color=#00ffffff size=1>.</style>            \[4\]  If the widget receives Down-arrow or Right-arrow key
+<style color=#00ffffff size=1>.</style>                 events, the scale's value will be incremented or
+<style color=#00ffffff size=1>.</style>                 decremented so as to adjust the value towards the to
+<style color=#00ffffff size=1>.</style>                 value.
+
+<style color=#00ffffff size=1>.</style>            If the scale is disabled using the state option then none of
+<style color=#00ffffff size=1>.</style>            the above bindings have any effect.
+
+<style color=#00ffffff size=1>.</style>            The behaviour of scales can be changed by defining new
+<style color=#00ffffff size=1>.</style>            bindings for individual widgets.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=options(9)>options(9)</action>, <action name=types(9)>types(9)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

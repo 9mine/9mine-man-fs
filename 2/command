@@ -1,0 +1,84 @@
+<action name=COMMAND(2)>COMMAND(2)</action>                                             <action name=COMMAND(2)>COMMAND(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            command - command interface
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sh.m"\;
+<style color=#00ffffff size=1>.</style>            cmd := load Command path\;
+
+<style color=#00ffffff size=1>.</style>            PATH: con "/dis/sh.dis"\;
+<style color=#00ffffff size=1>.</style>            init: fn(ctxt: ref Draw->Context, args: list of string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Command defines the module interface for programs started by
+<style color=#00ffffff size=1>.</style>            the Inferno shells <action name=sh(1)>sh(1)</action> and <action name=ma<action name=sh(1)>sh(1)</action>>ma<action name=sh(1)>sh(1)</action></action>, and the window manager
+<style color=#00ffffff size=1>.</style>            <action name=wm(1)>wm(1)</action>. Applications to be run as commands must adhere to it,
+<style color=#00ffffff size=1>.</style>            and any application wishing to start another command may use
+<style color=#00ffffff size=1>.</style>            it.
+
+<style color=#00ffffff size=1>.</style>            Every command must have an init function with the signature
+<style color=#00ffffff size=1>.</style>            shown above. Note that Limbo rules allow a module to expose
+<style color=#00ffffff size=1>.</style>            a larger interface for use by other applications (see for
+<style color=#00ffffff size=1>.</style>            instance <action name=sh(2)>sh(2)</action>)\; provided it includes the form of init shown
+<style color=#00ffffff size=1>.</style>            above, the module can also be invoked as a command.
+
+<style color=#00ffffff size=1>.</style>            Ctxt provides the graphics context for a windowing
+<style color=#00ffffff size=1>.</style>            application, which typically passes it to <action name=wmlib(2)>wmlib(2)</action> (eg, to
+<style color=#00ffffff size=1>.</style>            titlebar) or directly to <action name=tk(2)>tk(2)</action>. It is nil for commands
+<style color=#00ffffff size=1>.</style>            started by the shells.
+
+<style color=#00ffffff size=1>.</style>            The arguments to the command are passed as a simple list of
+<style color=#00ffffff size=1>.</style>            strings, args. By convention, the name of the command or the
+<style color=#00ffffff size=1>.</style>            name of its .dis file heads the list.
+
+<style color=#00ffffff size=1>.</style>            PATH names the file containing <action name=sh(1)>sh(1)</action>, (on small systems,
+<style color=#00ffffff size=1>.</style>            this might actually name an instance of <action name=tiny(1)>tiny(1)</action>) but usually
+<style color=#00ffffff size=1>.</style>            the path name of another command will be given to the Limbo
+<style color=#00ffffff size=1>.</style>            load operator:
+
+<style color=#00ffffff size=1>.</style>                 include "sh.m"\;
+<style color=#00ffffff size=1>.</style>                 ...
+
+<style color=#00ffffff size=1>.</style>                 cmd := load Command "/dis/date.dis"\;
+<style color=#00ffffff size=1>.</style>                 cmd->init(nil, "date" :: nil)\;
+
+<style color=#00ffffff size=1>.</style>            In practice more care must be taken when invoking programs.
+<style color=#00ffffff size=1>.</style>            In the example above, the current process executes the body
+<style color=#00ffffff size=1>.</style>            of cmd->init and if that executes exit, raises an exception,
+<style color=#00ffffff size=1>.</style>            or otherwise modifies the state of the process, the caller
+<style color=#00ffffff size=1>.</style>            is affected. The following is more prudent:
+
+<style color=#00ffffff size=1>.</style>                 child(file: string, args: list of string, pidc: chan of int)
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                 	pidc <-= sys->pctl(Sys->NEWFD|Sys->FORKNS|Sys->NEWPGRP,
+<style color=#00ffffff size=1>.</style>                 		list of {0, 1, 2})\;
+<style color=#00ffffff size=1>.</style>                 	cmd := load Command file\;
+<style color=#00ffffff size=1>.</style>                 	if(cmd == nil){
+<style color=#00ffffff size=1>.</style>                 		sys->print("can't load %s: %r\n", file)\;
+<style color=#00ffffff size=1>.</style>                 		exit\;
+<style color=#00ffffff size=1>.</style>                 	}
+<style color=#00ffffff size=1>.</style>                 	cmd->init(nil, args)\;
+<style color=#00ffffff size=1>.</style>                 }
+<style color=#00ffffff size=1>.</style>                 parent()
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                 	pidc := chan of int\;
+<style color=#00ffffff size=1>.</style>                 	spawn child(disfile, args, pidc)\;
+<style color=#00ffffff size=1>.</style>                 	pid := <-pidc\;
+<style color=#00ffffff size=1>.</style>                 	...
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>            A new child process runs the command only after using
+<style color=#00ffffff size=1>.</style>            sys-pctl to insulate the caller from untoward changes to its
+<style color=#00ffffff size=1>.</style>            environment. Note the idiomatic use of a channel to return
+<style color=#00ffffff size=1>.</style>            the child's process ID to its parent, which can then if
+<style color=#00ffffff size=1>.</style>            desired use the wait file of <action name=prog(3)>prog(3)</action> to watch over the child
+<style color=#00ffffff size=1>.</style>            and wait for its demise. or use the ctl file of <action name=prog(3)>prog(3)</action> to
+<style color=#00ffffff size=1>.</style>            dispose of it. Furthermore, any state shared between parent
+<style color=#00ffffff size=1>.</style>            and child can safely be accessed by the child before it
+<style color=#00ffffff size=1>.</style>            sends the ID because the parent is blocked on the receive.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=ma<action name=sh(1)>sh(1)</action>>ma<action name=sh(1)>sh(1)</action></action>, <action name=sh(1)>sh(1)</action>, <action name=wm(1)>wm(1)</action>, <action name=sh(2)>sh(2)</action>, <action name=sys-pctl(2)>sys-pctl(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

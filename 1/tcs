@@ -1,0 +1,36 @@
+<action name=TCS(1)>TCS(1)</action>                                                     <action name=TCS(1)>TCS(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tcs - translate character sets
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            tcs -l \[-v\] \[ csname \]
+
+<style color=#00ffffff size=1>.</style>            tcs \[ -f ics \] \[ -t ocs \] \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Tcs converts its input from the ics character set encoding
+<style color=#00ffffff size=1>.</style>            into Unicode runes and then outputs the data in the encoding
+<style color=#00ffffff size=1>.</style>            of the ocs character set. The default values of ics and ocs
+<style color=#00ffffff size=1>.</style>            are both utf8. This is the standard Inferno Unicode text
+<style color=#00ffffff size=1>.</style>            encoding as described by <action name=utf(6)>utf(6)</action>. If no files are specified
+<style color=#00ffffff size=1>.</style>            tcs reads from its standard input.
+
+<style color=#00ffffff size=1>.</style>            The -l option causes tcs to output the list of character
+<style color=#00ffffff size=1>.</style>            sets that it understands. The -v option causes a more
+<style color=#00ffffff size=1>.</style>            detailed listing to be given. Giving a csname argument to
+<style color=#00ffffff size=1>.</style>            the -l option causes tcs to list the known aliases for that
+<style color=#00ffffff size=1>.</style>            name. The first name in the list is the standard (or
+<style color=#00ffffff size=1>.</style>            preferred) name.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/convcs/charsets  Specifies the supported character set
+<style color=#00ffffff size=1>.</style>                                  names, their aliases and the
+<style color=#00ffffff size=1>.</style>                                  implementation of their converters.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/tcs.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=convcs(2)>convcs(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

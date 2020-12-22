@@ -1,0 +1,69 @@
+<action name=VENTI(2)>VENTI(2)</action>                                                 <action name=VENTI(2)>VENTI(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Venti - access to Venti content-addressed filestore.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "venti.m"\;
+<style color=#00ffffff size=1>.</style>            venti := load Venti Venti->PATH\;
+<style color=#00ffffff size=1>.</style>            Session: import venti\;
+
+<style color=#00ffffff size=1>.</style>            init:			fn()\;
+
+<style color=#00ffffff size=1>.</style>            Session: adt {
+<style color=#00ffffff size=1>.</style>            	new:		fn(fd: ref Sys->FD): ref Session\;
+<style color=#00ffffff size=1>.</style>            	read:		fn(s: self ref Session, score: Venti->Score, etype: int, maxn: int): array of byte\;
+<style color=#00ffffff size=1>.</style>            	write:	fn(s: self ref Session, etype: int, buf: array of byte): (int, Venti->Score)\;
+<style color=#00ffffff size=1>.</style>            	sync:	fn(s: self ref Session): int\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            Score: adt {
+<style color=#00ffffff size=1>.</style>            	a: array of byte\;
+<style color=#00ffffff size=1>.</style>            	eq:		fn(a: self Score, b: Score): int\;
+<style color=#00ffffff size=1>.</style>            	text:		fn(a: self Score): string\;
+<style color=#00ffffff size=1>.</style>            	parse:	fn(s: string): (int, Score)\;
+<style color=#00ffffff size=1>.</style>            	zero:		fn(): Score\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Venti is a block storage server intended for archival
+<style color=#00ffffff size=1>.</style>            applications. The Venti module provides low-level access to
+<style color=#00ffffff size=1>.</style>            a Venti server. The module assumes that the physical
+<style color=#00ffffff size=1>.</style>            connection to the server has already been established (for
+<style color=#00ffffff size=1>.</style>            example, by <action name=dial(2)>dial(2)</action>). On a Venti server, a block is
+<style color=#00ffffff size=1>.</style>            addressed by the SHA1 hash of the contents of that block,
+<style color=#00ffffff size=1>.</style>            known as a score, and represented as a Score adt. Blocks are
+<style color=#00ffffff size=1>.</style>            additionally tagged with a type, facilitating recovery in
+<style color=#00ffffff size=1>.</style>            the event of corruption. A Session represents a session with
+<style color=#00ffffff size=1>.</style>            a Venti server.
+
+<style color=#00ffffff size=1>.</style>            s.new(fd)
+<style color=#00ffffff size=1>.</style>                 New performs the initial handshake with the Venti
+<style color=#00ffffff size=1>.</style>                 server, returning established Session.
+
+<style color=#00ffffff size=1>.</style>            s.read(score, etype, maxn)
+<style color=#00ffffff size=1>.</style>                 Read tries to retrieve the block corresponding to score
+<style color=#00ffffff size=1>.</style>                 , and of type etype. The block must be no longer than
+<style color=#00ffffff size=1>.</style>                 maxn bytes. Etype is conventionally one of the
+<style color=#00ffffff size=1>.</style>                 constants Roottype, Dirtype, Datatype or Pointertype
+<style color=#00ffffff size=1>.</style>                 \[0-9\], where the different Pointertypes represent
+<style color=#00ffffff size=1>.</style>                 different depth levels within a Venti tree.
+
+<style color=#00ffffff size=1>.</style>            s.write(etype, buf)
+<style color=#00ffffff size=1>.</style>                 Write writes the data in buf to the Venti server. The
+<style color=#00ffffff size=1>.</style>                 block will be tagged with type etype. It returns a
+<style color=#00ffffff size=1>.</style>                 tuple, say (ok, score)\; on error, ok is -1, otherwise
+<style color=#00ffffff size=1>.</style>                 ok is 0 and score contains the Venti score for the
+<style color=#00ffffff size=1>.</style>                 block that has been written.
+
+<style color=#00ffffff size=1>.</style>            s.sync()
+<style color=#00ffffff size=1>.</style>                 Sync tells the Venti server to make sure that all data
+<style color=#00ffffff size=1>.</style>                 is committed to active storage.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /module/venti.m
+<style color=#00ffffff size=1>.</style>            /appl/lib/venti.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

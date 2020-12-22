@@ -1,0 +1,44 @@
+<action name=FILTER-SLIP(2)>FILTER-SLIP(2)</action>                                     <action name=FILTER-SLIP(2)>FILTER-SLIP(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            slip - SLIP data framing protocol
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "filter.m"\;
+
+<style color=#00ffffff size=1>.</style>            slip := load Filter Filter->SLIPPATH\;
+
+<style color=#00ffffff size=1>.</style>            init:  fn()\;
+<style color=#00ffffff size=1>.</style>            start: fn(param: string): chan of ref Rq\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Slip provides the SLIP data framing protocol described by
+<style color=#00ffffff size=1>.</style>            RFC1055. The module is an implementation of the general
+<style color=#00ffffff size=1>.</style>            data-processing module type Filter\; see <action name=filter(2)>filter(2)</action> for
+<style color=#00ffffff size=1>.</style>            details of that general interface.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other operation of the
+<style color=#00ffffff size=1>.</style>            module.
+
+<style color=#00ffffff size=1>.</style>            Start begins SLIP line encoding or decoding via the channel
+<style color=#00ffffff size=1>.</style>            it returns, following the protocol of <action name=filter(2)>filter(2)</action>. Param is
+<style color=#00ffffff size=1>.</style>            one of the two following strings:
+
+<style color=#00ffffff size=1>.</style>            encode  The filter takes the block of data obtained by each
+<style color=#00ffffff size=1>.</style>                    Rq.Fill message, adds framing and escape characters
+<style color=#00ffffff size=1>.</style>                    as required, and returns the resulting data block in
+<style color=#00ffffff size=1>.</style>                    an Rq.Result message.
+
+<style color=#00ffffff size=1>.</style>            decode  The filter operates on the data in Rq.Fill messages
+<style color=#00ffffff size=1>.</style>                    as a single stream of bytes, providing an Rq.Result
+<style color=#00ffffff size=1>.</style>                    message for each framed message found in the stream,
+<style color=#00ffffff size=1>.</style>                    with escape characters processed to retrieve the
+<style color=#00ffffff size=1>.</style>                    original data.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/slip.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=filter(2)>filter(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

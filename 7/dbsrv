@@ -1,0 +1,41 @@
+<action name=DBSRV(7)>DBSRV(7)</action>                                                 <action name=DBSRV(7)>DBSRV(7)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dbsrv - ODBC database server
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            lib/dbsrv alg ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dbsrv is normally configured to be run by <action name=svc(8)>svc(8)</action> on a
+<style color=#00ffffff size=1>.</style>            machine that acts as database server, for access through the
+<style color=#00ffffff size=1>.</style>            module <action name=db(7)>db(7)</action>.
+
+<style color=#00ffffff size=1>.</style>            The incoming call is authenticated by <action name=security-auth(2)>security-auth(2)</action>.
+<style color=#00ffffff size=1>.</style>            After successful authorisation, the client can request that
+<style color=#00ffffff size=1>.</style>            a digest and/or encryption algorithm be applied to protect
+<style color=#00ffffff size=1>.</style>            the data exchanged with the server. Each alg names a digest
+<style color=#00ffffff size=1>.</style>            or encryption algorithm that the server will allow the
+<style color=#00ffffff size=1>.</style>            client to use, in any form accepted by <action name=ssl(3)>ssl(3)</action>\; the special
+<style color=#00ffffff size=1>.</style>            name none means that ssl need not be used.
+
+<style color=#00ffffff size=1>.</style>            The implementation of dbsrv relies on a program external to
+<style color=#00ffffff size=1>.</style>            Inferno, infdb, which translates between the <action name=db(7)>db(7)</action> internal
+<style color=#00ffffff size=1>.</style>            format for requests, and data base access calls on the host.
+<style color=#00ffffff size=1>.</style>            Dbsrv invokes infdb using the <action name=cmd(3)>cmd(3)</action> device. Currently infdb
+<style color=#00ffffff size=1>.</style>            is implemented only under Windows/NT, giving access via ODBC
+<style color=#00ffffff size=1>.</style>            to a Microsoft Access data base.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /cmd                       host command execution
+<style color=#00ffffff size=1>.</style>            /Nt/386/bin/infdb.exe      Windows executable for ODBC
+<style color=#00ffffff size=1>.</style>                                       interface
+<style color=#00ffffff size=1>.</style>            /usr/user/keyring/default  server's authentication data when
+<style color=#00ffffff size=1>.</style>                                       <action name=svc(8)>svc(8)</action> run as user
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/dbsrv.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=db(7)>db(7)</action>, <action name=svc(8)>svc(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

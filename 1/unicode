@@ -1,0 +1,50 @@
+<action name=UNICODE(1)>UNICODE(1)</action>                                             <action name=UNICODE(1)>UNICODE(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            unicode - interpret Unicode characters
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            unicode \[ -nt \] hexmin-hexmax
+
+<style color=#00ffffff size=1>.</style>            unicode \[ -t \] hex ...
+
+<style color=#00ffffff size=1>.</style>            unicode \[ -n \] char ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Unicode converts between UTF and character values from the
+<style color=#00ffffff size=1>.</style>            Unicode Standard (see <action name=utf(6)>utf(6)</action>).
+
+<style color=#00ffffff size=1>.</style>            If given a range of hexadecimal numbers, unicode prints a
+<style color=#00ffffff size=1>.</style>            table of the specified Unicode characters including their
+<style color=#00ffffff size=1>.</style>            values and UTF representations. Otherwise, it translates
+<style color=#00ffffff size=1>.</style>            from UTF to numeric value or numeric value to UTF, depending
+<style color=#00ffffff size=1>.</style>            on the appearance of the supplied text. If converting to
+<style color=#00ffffff size=1>.</style>            UTF, the characters are printed one per line.
+
+<style color=#00ffffff size=1>.</style>            The options are:
+
+<style color=#00ffffff size=1>.</style>            -n   Forces numeric output to avoid ambiguity with numeric
+<style color=#00ffffff size=1>.</style>                 characters.
+
+<style color=#00ffffff size=1>.</style>            -t   Output a single string containing the specified
+<style color=#00ffffff size=1>.</style>                 characters, rather than one per line.
+
+<style color=#00ffffff size=1>.</style>            The output of unicode might not be helpful if the characters
+<style color=#00ffffff size=1>.</style>            printed are not available in the current font.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            unicode p
+<style color=#00ffffff size=1>.</style>                 Print the hex value of p.
+
+<style color=#00ffffff size=1>.</style>            unicode 2200-22f1
+<style color=#00ffffff size=1>.</style>                 Print a table of miscellaneous mathematical symbols.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/unicode  Table of characters and descriptions.
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/unicode.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=tr(1)>tr(1)</action>, <action name=utf(6)>utf(6)</action>, <action name=font(6)>font(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

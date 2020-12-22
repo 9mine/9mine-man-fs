@@ -1,0 +1,32 @@
+<action name=SPREE-JOIN(1)>SPREE-JOIN(1)</action>                                       <action name=SPREE-JOIN(1)>SPREE-JOIN(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            join - join a spree clique.
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            spree/join \[ -d mntdir \] \[ -j joinrequest \] name
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            When a <action name=spree(4)>spree(4)</action> instance has been mounted from somewhere on
+<style color=#00ffffff size=1>.</style>            the network, join can be used to join a clique and fire up
+<style color=#00ffffff size=1>.</style>            the appropriate module to perform the client-side display.
+<style color=#00ffffff size=1>.</style>            Mntdir gives the directory where the spree instance is
+<style color=#00ffffff size=1>.</style>            mounted (default /n/remote)\; joinrequest gives the initial
+<style color=#00ffffff size=1>.</style>            join request to be passed to the clique (default join). Name
+<style color=#00ffffff size=1>.</style>            is the name of the clique's directory within the spree
+<style color=#00ffffff size=1>.</style>            directory.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            When spree is started, it creates a ``lobby'' engine that
+<style color=#00ffffff size=1>.</style>            keeps a record of what cliques have been started, who is a
+<style color=#00ffffff size=1>.</style>            member of which, etc.
+<style color=#00ffffff size=1>.</style>            	spree/join 0
+<style color=#00ffffff size=1>.</style>            will connect to this session.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/spree/join.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=spree(4)>spree(4)</action>, <action name=spree(2)>spree(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

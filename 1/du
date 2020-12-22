@@ -1,0 +1,48 @@
+<action name=DU(1)>DU(1)</action>                                                       <action name=DU(1)>DU(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            du - disk usage
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            du \[ -anstu \] \[ -b blocksize \] \[file ...\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Du writes to standard output the total size of files
+<style color=#00ffffff size=1>.</style>            specified as arguments. Directories are recursively tallied.
+<style color=#00ffffff size=1>.</style>            A summary line is produced for each argument file and
+<style color=#00ffffff size=1>.</style>            subdirectory. If no filenames are provided, the command
+<style color=#00ffffff size=1>.</style>            operates on the current directory.
+
+<style color=#00ffffff size=1>.</style>            Output sums are rounded up to the nearest 1k unit (1024
+<style color=#00ffffff size=1>.</style>            bytes). By default, storage is assumed to be quantised in
+<style color=#00ffffff size=1>.</style>            units of 1024 bytes. The -b option sets a different
+<style color=#00ffffff size=1>.</style>            blocksize for quantisation, optionally suffixed by k for
+<style color=#00ffffff size=1>.</style>            units of kilobytes\; output is still in 1k units.
+
+<style color=#00ffffff size=1>.</style>            Du accepts the following options:
+
+<style color=#00ffffff size=1>.</style>            -a   Output usage information for all subordinate files, not
+<style color=#00ffffff size=1>.</style>                 just directories.
+
+<style color=#00ffffff size=1>.</style>            -n   Output just the filenames (but see the -t option
+<style color=#00ffffff size=1>.</style>                 below)\; implies -a.
+
+<style color=#00ffffff size=1>.</style>            -s   Print only the summary line for each file.
+
+<style color=#00ffffff size=1>.</style>            -t   Display the last-modified time for each file, not its
+<style color=#00ffffff size=1>.</style>                 size\; when used with the -n option, outputs the
+<style color=#00ffffff size=1>.</style>                 filename, modification time (seconds since the epoch),
+<style color=#00ffffff size=1>.</style>                 size (in bytes), and checksum. The checksum field is
+<style color=#00ffffff size=1>.</style>                 always 0\; it is a place-holder for a value computed by
+<style color=#00ffffff size=1>.</style>                 another command in a pipeline.
+
+<style color=#00ffffff size=1>.</style>            -u   Display the last-accessed time for each file, not its
+<style color=#00ffffff size=1>.</style>                 size.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/du.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=sys-stat(2)>sys-stat(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

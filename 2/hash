@@ -1,0 +1,66 @@
+<action name=HASH(2)>HASH(2)</action>                                                   <action name=HASH(2)>HASH(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            hash, HashTable - hash table
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "hash.m"\;
+<style color=#00ffffff size=1>.</style>            hash := load Hash Hash->PATH\;
+
+<style color=#00ffffff size=1>.</style>            new: fn(size:int):ref HashTable\;
+
+<style color=#00ffffff size=1>.</style>            HashTable: adt{
+<style color=#00ffffff size=1>.</style>            	insert: fn(h:self ref HashTable, key:string, val:HashVal)\;
+<style color=#00ffffff size=1>.</style>            	find: fn(h:self ref HashTable, key:string):ref HashVal\;
+<style color=#00ffffff size=1>.</style>            	delete: fn(h:self ref HashTable, key:string)\;
+<style color=#00ffffff size=1>.</style>            	all: fn(h:self ref HashTable): list of HashNode\;
+<style color=#00ffffff size=1>.</style>            }\;
+<style color=#00ffffff size=1>.</style>            HashVal: adt{
+<style color=#00ffffff size=1>.</style>            	i: int\;
+<style color=#00ffffff size=1>.</style>            	r: real\;
+<style color=#00ffffff size=1>.</style>            	s: string\;
+<style color=#00ffffff size=1>.</style>            }\;
+<style color=#00ffffff size=1>.</style>            HashNode: adt{
+<style color=#00ffffff size=1>.</style>            	key: string\;
+<style color=#00ffffff size=1>.</style>            	val: ref HashVal\;
+<style color=#00ffffff size=1>.</style>            }\;
+<style color=#00ffffff size=1>.</style>            fun1, fun2: fn(s:string, n:int):int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The hash module provides support for arrays that are indexed
+<style color=#00ffffff size=1>.</style>            by keys of type string.
+
+<style color=#00ffffff size=1>.</style>            The values may be any combination of int, real, or string.
+<style color=#00ffffff size=1>.</style>            New creates and returns a new HashTable with size slots. The
+<style color=#00ffffff size=1>.</style>            hashing works best if size is a prime number. The HashVal
+<style color=#00ffffff size=1>.</style>            adt contains the data values of the hash. The HashNode adt
+<style color=#00ffffff size=1>.</style>            contains the key/value pair for each element in the table.
+
+<style color=#00ffffff size=1>.</style>            ht.insert(key, value)
+<style color=#00ffffff size=1>.</style>                 Adds a new key/value pair to the table. If an element
+<style color=#00ffffff size=1>.</style>                 with the same key already exists, it will acquire the
+<style color=#00ffffff size=1>.</style>                 new value.
+
+<style color=#00ffffff size=1>.</style>            ht.find(key)
+<style color=#00ffffff size=1>.</style>                 Search the table for an element with the given key and
+<style color=#00ffffff size=1>.</style>                 return the value found\; return nil if none was found.
+
+<style color=#00ffffff size=1>.</style>            ht.delete(key)
+<style color=#00ffffff size=1>.</style>                 Removes any element with the given key from the table.
+
+<style color=#00ffffff size=1>.</style>            ht.all()
+<style color=#00ffffff size=1>.</style>                 Returns a list of all key/value pairs stored in the
+<style color=#00ffffff size=1>.</style>                 table.
+
+<style color=#00ffffff size=1>.</style>            Fun1 and fun2 provide access to two different string hashing
+<style color=#00ffffff size=1>.</style>            functions. Fun1 is the function used internally\; fun2 is the
+<style color=#00ffffff size=1>.</style>            same as that used in the Limbo compiler. They each compute
+<style color=#00ffffff size=1>.</style>            the hash value of s and return a value between 0 and n-1.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/hash.b
+
+BUGS
+<style color=#00ffffff size=1>.</style>            HashVal should really be a pick.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,27 @@
+<action name=FREQ(1)>FREQ(1)</action>                                                   <action name=FREQ(1)>FREQ(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            freq - print histogram of character frequencies
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            freq \[ -dxocr \] \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Freq reads the given files (default standard input) and
+<style color=#00ffffff size=1>.</style>            prints histograms of the character frequencies. By default,
+<style color=#00ffffff size=1>.</style>            freq counts the value of each byte\; under the -r option it
+<style color=#00ffffff size=1>.</style>            instead counts UTF byte sequences, that is, runes.
+
+<style color=#00ffffff size=1>.</style>            Each non-zero entry of the table is printed preceded by the
+<style color=#00ffffff size=1>.</style>            byte value, in decimal, octal, hex, and Unicode character
+<style color=#00ffffff size=1>.</style>            (if printable). If any options are given, the -d, -x, -o, -c
+<style color=#00ffffff size=1>.</style>            flags specify a subset of value formats: decimal, hex,
+<style color=#00ffffff size=1>.</style>            octal, and character, respectively.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/freq.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=utf(6)>utf(6)</action>, <action name=wc(1)>wc(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

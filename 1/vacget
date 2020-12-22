@@ -1,0 +1,63 @@
+<action name=VACGET(1)>VACGET(1)</action>                                               <action name=VACGET(1)>VACGET(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            vacget, vacput - venti archive utilities
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            vacget \[ -vdpt \] \[ -a addr \] vac:score
+<style color=#00ffffff size=1>.</style>            vacput \[ -vd \] \[ -i | -x \] \[ -a addr \] \[ -b blocksize \] \[ -n
+<style color=#00ffffff size=1>.</style>            name \] \[ -u uid \] \[ -g gid \] path ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Vacget retrieves a venti archive from a venti server to the
+<style color=#00ffffff size=1>.</style>            current working directory.
+
+<style color=#00ffffff size=1>.</style>            Vacput writes a venti archive to a venti server.  The paths
+<style color=#00ffffff size=1>.</style>            are walked recursively and all files and directories written
+<style color=#00ffffff size=1>.</style>            to the archive.  Temporary files, i.e. those with the DMTMP
+<style color=#00ffffff size=1>.</style>            bit set, are skipped.  Writing only changed files relative
+<style color=#00ffffff size=1>.</style>            to a previously written archive is not implemented.
+
+<style color=#00ffffff size=1>.</style>            -d   Print debug messages.
+
+<style color=#00ffffff size=1>.</style>            -p   Try to preserve file permissions and owner/group.  Only
+<style color=#00ffffff size=1>.</style>                 for vacget.
+
+<style color=#00ffffff size=1>.</style>            -v   Be verbose.  Prints files as they are being retrieved
+<style color=#00ffffff size=1>.</style>                 or written.
+
+<style color=#00ffffff size=1>.</style>            -t   List files, do not write them.  Only for vacget.
+
+<style color=#00ffffff size=1>.</style>            -a address
+<style color=#00ffffff size=1>.</style>                 Dial address instead of the default venti server.
+
+<style color=#00ffffff size=1>.</style>            -b blocksize
+<style color=#00ffffff size=1>.</style>                 Use blocks with blocksize bytes instead of the default
+<style color=#00ffffff size=1>.</style>                 8192 byte blocks.  Only for vacput.
+
+<style color=#00ffffff size=1>.</style>            -n name
+<style color=#00ffffff size=1>.</style>                 Use name as the name in the root block.  Only for
+<style color=#00ffffff size=1>.</style>                 vacput.
+
+<style color=#00ffffff size=1>.</style>            -i or -x
+<style color=#00ffffff size=1>.</style>                 Read a list of files from stdin to include (-i) or
+<style color=#00ffffff size=1>.</style>                 exclude (-x) from the (recursively walked) paths
+<style color=#00ffffff size=1>.</style>                 specified on the command-line. Only for vacput.
+
+<style color=#00ffffff size=1>.</style>            -u uid
+<style color=#00ffffff size=1>.</style>                 Use uid for all files. Only for vacput.
+
+<style color=#00ffffff size=1>.</style>            -g gid
+<style color=#00ffffff size=1>.</style>                 Use gid for all files. Only for vacput.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/vacget.b
+<style color=#00ffffff size=1>.</style>            /appl/cmd/vacput.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=venti(2)>venti(2)</action>, <action name=vacfs(4)>vacfs(4)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            These tools need more testing.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

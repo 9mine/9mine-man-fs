@@ -1,0 +1,48 @@
+<action name=CSV(2)>CSV(2)</action>                                                     <action name=CSV(2)>CSV(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            csv - comma-separated values
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "bufio.m"\;
+<style color=#00ffffff size=1>.</style>            include "csv.m"\;
+<style color=#00ffffff size=1>.</style>            csv := load CSV CSV->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:    fn(bufio: Bufio)\;
+<style color=#00ffffff size=1>.</style>            getline: fn(fd: ref Bufio->Iobuf): list of string\;
+<style color=#00ffffff size=1>.</style>            quote:   fn(s: string): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            CSV provides a few functions to help read and write data in
+<style color=#00ffffff size=1>.</style>            ``comma-separated value'' format. The csv format has a
+<style color=#00ffffff size=1>.</style>            sequence of fields on a line (terminated by a newline,
+<style color=#00ffffff size=1>.</style>            carriage return, or carriage return and newline). Fields are
+<style color=#00ffffff size=1>.</style>            separated by commas, and may be empty. A field that starts
+<style color=#00ffffff size=1>.</style>            with a double-quote is a quoted field, continuing to the
+<style color=#00ffffff size=1>.</style>            next lone double-quote character, including commas and line
+<style color=#00ffffff size=1>.</style>            terminators, but taking two double-quotes to represent one
+<style color=#00ffffff size=1>.</style>            double-quote. Any text following quoted text, up to the next
+<style color=#00ffffff size=1>.</style>            comma or line terminator, is included in the field value.
+<style color=#00ffffff size=1>.</style>            Note that in a field that does not start with a
+<style color=#00ffffff size=1>.</style>            double-quote, double-quotes are not treated specially.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other operation of the
+<style color=#00ffffff size=1>.</style>            module. Bufio is the instance of the <action name=bufio(2)>bufio(2)</action> module that
+<style color=#00ffffff size=1>.</style>            will provide the open files to be read.
+
+<style color=#00ffffff size=1>.</style>            Getline reads a sequence of fields in csv format from Iobuf
+<style color=#00ffffff size=1>.</style>            fd, unquotes fields as required, and returns them in order
+<style color=#00ffffff size=1>.</style>            in a list. It returns nil on end-of-file (or read error). An
+<style color=#00ffffff size=1>.</style>            empty line is regarded as containing a single empty field.
+
+<style color=#00ffffff size=1>.</style>            Quote returns string s quoted as required by the csv format:
+<style color=#00ffffff size=1>.</style>            the result is quoted if s contains comma, newline, or a
+<style color=#00ffffff size=1>.</style>            quote (and all embedded quotes are doubled).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/csv.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh-csv(1)>sh-csv(1)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

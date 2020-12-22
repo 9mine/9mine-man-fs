@@ -1,0 +1,64 @@
+<action name=REGEXP(6)>REGEXP(6)</action>                                               <action name=REGEXP(6)>REGEXP(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            regexp, regex - regular expression notation
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A regular expression specifies a set of strings of
+<style color=#00ffffff size=1>.</style>            characters. A member of this set of strings is said to be
+<style color=#00ffffff size=1>.</style>            matched by the regular expression.  In many applications a
+<style color=#00ffffff size=1>.</style>            delimiter character, commonly `/', bounds a regular
+<style color=#00ffffff size=1>.</style>            expression. In the following specification for regular
+<style color=#00ffffff size=1>.</style>            expressions the word `character' means any character (rune)
+<style color=#00ffffff size=1>.</style>            but newline.
+
+<style color=#00ffffff size=1>.</style>            The syntax for a regular expression e0 is
+
+<style color=#00ffffff size=1>.</style>                 e3:  literal | charclass | '.' | '^' | '$' | '(' e0 ')'
+
+<style color=#00ffffff size=1>.</style>                 e2:  e3
+<style color=#00ffffff size=1>.</style>                   |  e2 REP
+
+<style color=#00ffffff size=1>.</style>                 REP: '*' | '+' | '?'
+
+<style color=#00ffffff size=1>.</style>                 e1:  e2
+<style color=#00ffffff size=1>.</style>                   |  e1 e2
+
+<style color=#00ffffff size=1>.</style>                 e0:  e1
+<style color=#00ffffff size=1>.</style>                   |  e0 '|' e1
+
+<style color=#00ffffff size=1>.</style>            A literal is any non-metacharacter, or a metacharacter (one
+<style color=#00ffffff size=1>.</style>            of .*+?\[\]()|\^$), or the delimiter preceded by `\e'.
+
+<style color=#00ffffff size=1>.</style>            A charclass is a nonempty string s bracketed \[s\] (or \[^s\])\;
+<style color=#00ffffff size=1>.</style>            it matches any character in (or not in) s. A negated
+<style color=#00ffffff size=1>.</style>            character class never matches newline. A substring a-b, with
+<style color=#00ffffff size=1>.</style>            a and b in ascending order, stands for the inclusive range
+<style color=#00ffffff size=1>.</style>            of characters between a and b. In s, the metacharacters `-',
+<style color=#00ffffff size=1>.</style>            `\]', an initial `^', and the regular expression delimiter
+<style color=#00ffffff size=1>.</style>            must be preceded by a `\e'\; other metacharacters have no
+<style color=#00ffffff size=1>.</style>            special meaning and may appear unescaped.
+
+<style color=#00ffffff size=1>.</style>            A ``.'' matches any character.
+
+<style color=#00ffffff size=1>.</style>            A ``^'' matches the beginning of a line\; ``$'' matches the
+<style color=#00ffffff size=1>.</style>            end of the line.
+
+<style color=#00ffffff size=1>.</style>            The REP operators match zero or more (*), one or more (+),
+<style color=#00ffffff size=1>.</style>            zero or one (?), instances respectively of the preceding
+<style color=#00ffffff size=1>.</style>            regular expression e2.
+
+<style color=#00ffffff size=1>.</style>            A concatenated regular expression, e1e2, matches a match to 
+<style color=#00ffffff size=1>.</style>            e1 followed by a match to e2.
+
+<style color=#00ffffff size=1>.</style>            An alternative regular expression, e0|e1, matches either a
+<style color=#00ffffff size=1>.</style>            match to e0 or a match to e1.
+
+<style color=#00ffffff size=1>.</style>            A match to any part of a regular expression extends as far
+<style color=#00ffffff size=1>.</style>            as possible without preventing a match to the remainder of
+<style color=#00ffffff size=1>.</style>            the regular expression.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=acme(1)>acme(1)</action>, <action name=sh-regex(1)>sh-regex(1)</action>, <action name=regex(2)>regex(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

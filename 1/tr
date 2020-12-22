@@ -1,0 +1,52 @@
+<action name=TR(1)>TR(1)</action>                                                       <action name=TR(1)>TR(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            tr - translate characters
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            tr \[ -cds \] \[ string1 \[ string2 \] \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Tr copies the standard input to the standard output with
+<style color=#00ffffff size=1>.</style>            substitution or deletion of selected characters (runes).
+<style color=#00ffffff size=1>.</style>            Input characters found in string1 are mapped into the
+<style color=#00ffffff size=1>.</style>            corresponding characters of string2. When string2 is short
+<style color=#00ffffff size=1>.</style>            it is padded to the length of string1 by duplicating its
+<style color=#00ffffff size=1>.</style>            last character. Any combination of the options -cds may be
+<style color=#00ffffff size=1>.</style>            used:
+
+<style color=#00ffffff size=1>.</style>            -c   Complement string1: replace it with a lexicographically
+<style color=#00ffffff size=1>.</style>                 ordered list of all other characters.
+
+<style color=#00ffffff size=1>.</style>            -d   Delete from input all characters in string1.
+
+<style color=#00ffffff size=1>.</style>            -s   Squeeze repeated output characters that occur in
+<style color=#00ffffff size=1>.</style>                 string2 to single characters.
+
+<style color=#00ffffff size=1>.</style>            In either string a noninitial sequence -x, where x is any
+<style color=#00ffffff size=1>.</style>            character (possibly quoted), stands for a range of
+<style color=#00ffffff size=1>.</style>            characters: a possibly empty sequence of codes running from
+<style color=#00ffffff size=1>.</style>            the successor of the previous code up through the code for x
+<style color=#00ffffff size=1>.</style>            . The character ``\e'' followed by 1, 2 or 3 octal digits
+<style color=#00ffffff size=1>.</style>            stands for the character whose 16-bit value is given by
+<style color=#00ffffff size=1>.</style>            those digits. The character sequence ``\ex'' followed by 1
+<style color=#00ffffff size=1>.</style>            to 6 hexadecimal digits stands for the character whose
+<style color=#00ffffff size=1>.</style>            21-bit value is given by those digits. A ``\e'' followed by
+<style color=#00ffffff size=1>.</style>            any other character stands for that character.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Replace all upper-case ASCII letters by lower-case.
+
+<style color=#00ffffff size=1>.</style>                 tr A-Z a-z <mixed >lower
+
+<style color=#00ffffff size=1>.</style>            Create a list of all the words in ``file1'' one per line in
+<style color=#00ffffff size=1>.</style>            `file2', where a word is taken to be a maximal string of
+<style color=#00ffffff size=1>.</style>            alphabetics. String2 is given as a quoted newline.
+
+<style color=#00ffffff size=1>.</style>                 tr -cs A-Za-z '
+<style color=#00ffffff size=1>.</style>                 ' <file1 >file2
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/tr.b
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

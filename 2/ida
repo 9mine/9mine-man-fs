@@ -1,0 +1,91 @@
+<action name=IDA(2)>IDA(2)</action>                                                     <action name=IDA(2)>IDA(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Ida: Frag, fragment, consistent, reconstruct - information
+<style color=#00ffffff size=1>.</style>            dispersal algorithm
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "ida.m"\;
+<style color=#00ffffff size=1>.</style>            ida := load Ida Ida->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Frag: adt {
+<style color=#00ffffff size=1>.</style>                dlen: int\;            # length of original data
+<style color=#00ffffff size=1>.</style>                m:    int\;            # minimum pieces for reconstruction
+<style color=#00ffffff size=1>.</style>                a:    array of int\;   # encoding array row for this fragment
+<style color=#00ffffff size=1>.</style>                enc:  array of int\;   # encoded data
+
+<style color=#00ffffff size=1>.</style>                tag:  array of byte\;  # user data, such as SHA1 hash
+<style color=#00ffffff size=1>.</style>                pack: fn(f: self ref Frag): array of byte\;
+<style color=#00ffffff size=1>.</style>                unpack: fn(d: array of byte): ref Frag\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:        fn()\;
+<style color=#00ffffff size=1>.</style>            fragment:    fn(data: array of byte, m: int): ref Frag\;
+<style color=#00ffffff size=1>.</style>            consistent:  fn(frags: array of ref Frag): array of ref Frag\;
+<style color=#00ffffff size=1>.</style>            reconstruct: fn(frags: array of ref Frag): (array of byte, string)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ida implements Rabin's Information Dispersal Algorithm
+<style color=#00ffffff size=1>.</style>            (IDA), an effective scheme for fault-tolerant storage and
+<style color=#00ffffff size=1>.</style>            message routing. The algorithm breaks an array of bytes (for
+<style color=#00ffffff size=1>.</style>            instance a file or a block of data) into n pieces, in such a
+<style color=#00ffffff size=1>.</style>            way that the original data can be recovered using only m of
+<style color=#00ffffff size=1>.</style>            them, where n and m are parameters. The module provides the
+<style color=#00ffffff size=1>.</style>            fundamental operations.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before invoking any other operation of
+<style color=#00ffffff size=1>.</style>            the module.
+
+<style color=#00ffffff size=1>.</style>            Fragment takes an array of data, and m, the minimum number
+<style color=#00ffffff size=1>.</style>            of pieces required for reconstruction, and returns a
+<style color=#00ffffff size=1>.</style>            reference to a Frag value representing one encoded fragment
+<style color=#00ffffff size=1>.</style>            of the data. At least m calls must be made to fragment to
+<style color=#00ffffff size=1>.</style>            obtain enough such fragments to be able to rebuild the data\;
+<style color=#00ffffff size=1>.</style>            invariably more fragments are generated to provide the
+<style color=#00ffffff size=1>.</style>            desired level of redundancy.
+
+<style color=#00ffffff size=1>.</style>            Each fragment Frag has the following components:
+
+<style color=#00ffffff size=1>.</style>            dlen The length in bytes of the data.
+
+<style color=#00ffffff size=1>.</style>            m    The minimum number of fragments for reconstruction.
+
+<style color=#00ffffff size=1>.</style>            a    The row of an m×m encoding matrix that corresponds to
+<style color=#00ffffff size=1>.</style>                 this fragment.
+
+<style color=#00ffffff size=1>.</style>            enc  The encoded data, represented by an array of integer
+<style color=#00ffffff size=1>.</style>                 values. For L bytes of input data, the array will have
+<style color=#00ffffff size=1>.</style>                 length \h'-\n(13u-\n(12u/2u'\v'-0.6m'\v'0.6m'
+<style color=#00ffffff size=1>.</style>                 \h'-\n(14u-\n(12u/2u+0.1m'\v'-0.3m'\l'\n(14u-0.2m'\h'0.1m'\v'0.3m'
+
+<style color=#00ffffff size=1>.</style>            All those values must be stored or transmitted for later
+<style color=#00ffffff size=1>.</style>            use, to reconstruct the data. The values in a are in the
+<style color=#00ffffff size=1>.</style>            interval \[ 1, 65536 \] and those in enc are in the interval \[
+<style color=#00ffffff size=1>.</style>            0, 65536 \].
+
+<style color=#00ffffff size=1>.</style>            Reconstruct takes an array frags of distinct fragments
+<style color=#00ffffff size=1>.</style>            previously produced by repeated calls to fragment(data, m)
+<style color=#00ffffff size=1>.</style>            and returns a tuple (data, err). Provided at least m
+<style color=#00ffffff size=1>.</style>            suitable fragments are found in frags, the data returned
+<style color=#00ffffff size=1>.</style>            will be that originally provided to fragment. If the
+<style color=#00ffffff size=1>.</style>            parameters of the various fragments in frags disagree, or
+<style color=#00ffffff size=1>.</style>            some other error occurs, data will be nil and err will
+<style color=#00ffffff size=1>.</style>            contain a diagnostic. Reconstruct assumes the fragments it
+<style color=#00ffffff size=1>.</style>            receives are consistent: they represent the same encoding
+<style color=#00ffffff size=1>.</style>            parameters, including the value of m. If it detects an
+<style color=#00ffffff size=1>.</style>            inconsistency, it returns a diagnostic.
+
+<style color=#00ffffff size=1>.</style>            Consistent checks the consistency of a set of fragments, and
+<style color=#00ffffff size=1>.</style>            returns a new subset containing only those fragments that
+<style color=#00ffffff size=1>.</style>            agree with the majority in frags on each parameter.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/ida/ida.b
+<style color=#00ffffff size=1>.</style>            /appl/lib/ida/idatab.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            M Rabin, ``Efficient Dispersal of Information for Security,
+<style color=#00ffffff size=1>.</style>            Load Balancing, and Fault Tolerance'', JACM <action name=36(2)>36(2)</action>, April
+<style color=#00ffffff size=1>.</style>            1989, pp. 335-348.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,11 @@
+<action name=INTRO(6)>INTRO(6)</action>                                                 <action name=INTRO(6)>INTRO(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            intro - introduction to file formats
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This section describes Inferno file formats that are meant
+<style color=#00ffffff size=1>.</style>            to be public (as opposed to formats that are for a program's
+<style color=#00ffffff size=1>.</style>            internal use). It also describes a few system conventions.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

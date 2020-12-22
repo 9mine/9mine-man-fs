@@ -1,0 +1,40 @@
+<action name=EXPORT(4)>EXPORT(4)</action>                                               <action name=EXPORT(4)>EXPORT(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            export - export name space on a connection
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            export \[ -a \] dir \[ file \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Export calls <action name=sys-export(2)>sys-export(2)</action> to serve the name space rooted at
+<style color=#00ffffff size=1>.</style>            dir over a connection to a 9P (Styx) client. Export opens
+<style color=#00ffffff size=1>.</style>            the connection on the given file, or uses the standard input
+<style color=#00ffffff size=1>.</style>            by default. It returns when the client closes the
+<style color=#00ffffff size=1>.</style>            connection. If the -a option is given, however, export
+<style color=#00ffffff size=1>.</style>            starts an Inferno kernel process to serve the name space and
+<style color=#00ffffff size=1>.</style>            returns immediately. Export serves the current name space
+<style color=#00ffffff size=1>.</style>            without forking it\; changes made to it will be visible to
+<style color=#00ffffff size=1>.</style>            clients.
+
+<style color=#00ffffff size=1>.</style>            Export starts serving 9P immediately\; it assumes that the
+<style color=#00ffffff size=1>.</style>            connection has been authenticated if required. Export is
+<style color=#00ffffff size=1>.</style>            typically called via <action name=listen(1)>listen(1)</action>, which can authenticate the
+<style color=#00ffffff size=1>.</style>            connection.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            Start a background process to serve the name space on the
+<style color=#00ffffff size=1>.</style>            serial port.
+
+<style color=#00ffffff size=1>.</style>                 export / /dev/eia0 &
+
+<style color=#00ffffff size=1>.</style>            Although useful when bootstrapping a system, this is unsafe
+<style color=#00ffffff size=1>.</style>            unless a transport protocol is run on the connection.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/export.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=cpu(1)>cpu(1)</action>, <action name=listen(1)>listen(1)</action>, <action name=dial(2)>dial(2)</action>, <action name=sys-export(2)>sys-export(2)</action>, <action name=intro(5)>intro(5)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

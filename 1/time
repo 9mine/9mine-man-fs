@@ -1,0 +1,29 @@
+<action name=TIME(1)>TIME(1)</action>                                                   <action name=TIME(1)>TIME(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            time - time command execution
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            time command \[ arg ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Time executes the command with the given arguments, and
+<style color=#00ffffff size=1>.</style>            reports on standard error the command's load time, real time
+<style color=#00ffffff size=1>.</style>            for execution, and the total, in seconds. The load time is
+<style color=#00ffffff size=1>.</style>            just the time for time itself to load command\; loads done
+<style color=#00ffffff size=1>.</style>            later by the command are included in the real time. To time
+<style color=#00ffffff size=1>.</style>            a pipeline, use the -c option to <action name=sh(1)>sh(1)</action>:
+
+<style color=#00ffffff size=1>.</style>                 time sh -c 'ps | grep Sh'
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/time.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh(1)>sh(1)</action>, <action name=sys-millisec(2)>sys-millisec(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            There is no way to measure CPU time (real or virtual) used
+<style color=#00ffffff size=1>.</style>            by a command.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

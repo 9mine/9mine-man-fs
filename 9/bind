@@ -1,0 +1,177 @@
+<action name=BIND(9)>BIND(9)</action>                                                   <action name=BIND(9)>BIND(9)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            bind - Arrange for events to invoke Tk scripts
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            bind tag sequence script
+
+<style color=#00ffffff size=1>.</style>            bind tag sequence +script
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The bind command associates Tk scripts with window events.
+<style color=#00ffffff size=1>.</style>            If all three arguments are specified, bind will arrange for 
+<style color=#00ffffff size=1>.</style>            script (a Tk script) to be evaluated whenever the event(s)
+<style color=#00ffffff size=1>.</style>            given by sequence occur in the window(s) identified by tag.
+<style color=#00ffffff size=1>.</style>            If script is prefixed with a ``+'', then it is appended to
+<style color=#00ffffff size=1>.</style>            any existing binding for sequence\;  otherwise script
+<style color=#00ffffff size=1>.</style>            replaces any existing binding. If script is an empty string
+<style color=#00ffffff size=1>.</style>            then the current binding for sequence is destroyed, leaving 
+<style color=#00ffffff size=1>.</style>            sequence unbound. In all of the cases where a script
+<style color=#00ffffff size=1>.</style>            argument is provided, bind returns an empty string. If 
+<style color=#00ffffff size=1>.</style>            script is prefixed with a ``-'', then any existing binding
+<style color=#00ffffff size=1>.</style>            for sequence, whose script is exactly the same as script, is
+<style color=#00ffffff size=1>.</style>            removed. The tag argument gives the pathname of the window
+<style color=#00ffffff size=1>.</style>            to which sequence is bound.
+
+<style color=#00ffffff size=1>.</style>         Event Patterns
+<style color=#00ffffff size=1>.</style>            The sequence argument specifies a sequence of one or more
+<style color=#00ffffff size=1>.</style>            event patterns, with optional white space between the
+<style color=#00ffffff size=1>.</style>            patterns.  Each event pattern may take one of two forms.  In
+<style color=#00ffffff size=1>.</style>            the simplest case it is a single printing ASCII character,
+<style color=#00ffffff size=1>.</style>            such as a or \[.  The character may not be a space character
+<style color=#00ffffff size=1>.</style>            or the character <.  This form of pattern matches a KeyPress
+<style color=#00ffffff size=1>.</style>            event for the particular character.  The second form of
+<style color=#00ffffff size=1>.</style>            pattern is longer but more general. It has the following
+<style color=#00ffffff size=1>.</style>            syntax:
+
+<style color=#00ffffff size=1>.</style>                 <event-event-...-event>
+
+<style color=#00ffffff size=1>.</style>            The following events are accepted:
+
+<style color=#00ffffff size=1>.</style>            Key or Keypress
+<style color=#00ffffff size=1>.</style>                 This represents the press of the character in the
+<style color=#00ffffff size=1>.</style>                 following event. If there is no following event, this
+<style color=#00ffffff size=1>.</style>                 represents the press of any key. The key letter may be
+<style color=#00ffffff size=1>.</style>                 escaped with a backslash (\) to prevent any character
+<style color=#00ffffff size=1>.</style>                 (e.g. >) from being treated specially.
+
+<style color=#00ffffff size=1>.</style>            Configure
+<style color=#00ffffff size=1>.</style>                 This event occurs whenever the widget is configured
+<style color=#00ffffff size=1>.</style>                 such that its requested size changes.
+
+<style color=#00ffffff size=1>.</style>            Control
+<style color=#00ffffff size=1>.</style>                 This represents the press of the character in the
+<style color=#00ffffff size=1>.</style>                 following event with the Control key pressed. The
+<style color=#00ffffff size=1>.</style>                 character may be quoted as for Key.
+
+<style color=#00ffffff size=1>.</style>            ButtonPress or Button
+<style color=#00ffffff size=1>.</style>                 This represents the pressed state of the mouse button
+<style color=#00ffffff size=1>.</style>                 given by the following event, which should be 1, 2, or
+<style color=#00ffffff size=1>.</style>                 3. If there is no following event, this represents the
+<style color=#00ffffff size=1>.</style>                 press of any button. If the mouse is moved with a
+<style color=#00ffffff size=1>.</style>                 button pressed, the Button event is delivered in
+<style color=#00ffffff size=1>.</style>                 combination with a Motion event so long as the button
+<style color=#00ffffff size=1>.</style>                 remains pressed.
+
+<style color=#00ffffff size=1>.</style>            ButtonRelease
+<style color=#00ffffff size=1>.</style>                 Like ButtonPress, but represents the release of any
+<style color=#00ffffff size=1>.</style>                 button.
+
+<style color=#00ffffff size=1>.</style>            Motion
+<style color=#00ffffff size=1>.</style>                 Mouse movement.
+
+<style color=#00ffffff size=1>.</style>            Double
+<style color=#00ffffff size=1>.</style>                 Any events in the sequence representing button presses
+<style color=#00ffffff size=1>.</style>                 must be double-clicked for the sequence to match.
+
+<style color=#00ffffff size=1>.</style>            Map  The event that a toplevel widget is mapped onto the
+<style color=#00ffffff size=1>.</style>                 screen.
+
+<style color=#00ffffff size=1>.</style>            Unmap
+<style color=#00ffffff size=1>.</style>                 The event that a toplevel widget is unmapped from the
+<style color=#00ffffff size=1>.</style>                 screen.
+
+<style color=#00ffffff size=1>.</style>            Enter
+<style color=#00ffffff size=1>.</style>                 The event of the mouse entering the widget from
+<style color=#00ffffff size=1>.</style>                 outside.
+
+<style color=#00ffffff size=1>.</style>            Leave
+<style color=#00ffffff size=1>.</style>                 The event of the mouse leaving the boundaries of the
+<style color=#00ffffff size=1>.</style>                 widget.
+
+<style color=#00ffffff size=1>.</style>            FocusIn
+<style color=#00ffffff size=1>.</style>                 The event of the widget getting the keyboard focus.
+
+<style color=#00ffffff size=1>.</style>            FocusOut
+<style color=#00ffffff size=1>.</style>                 The event of the widget losing the keyboard focus.
+
+<style color=#00ffffff size=1>.</style>            Destroy
+<style color=#00ffffff size=1>.</style>                 The event of the widget being destroyed. See <action name=destroy(9)>destroy(9)</action>
+<style color=#00ffffff size=1>.</style>                 for details of widget destruction.
+
+<style color=#00ffffff size=1>.</style>            The event sequence can contain any combination of the above
+<style color=#00ffffff size=1>.</style>            events. They are treated independently, and if any of the
+<style color=#00ffffff size=1>.</style>            events occur, the sequence matches. You cannot combine key
+<style color=#00ffffff size=1>.</style>            presses of more than one key. Events will not be combined on
+<style color=#00ffffff size=1>.</style>            delivery, except that Motion events may be combined with
+<style color=#00ffffff size=1>.</style>            button presses (possibly doubled).
+
+<style color=#00ffffff size=1>.</style>         Binding Scripts and Substitutions
+<style color=#00ffffff size=1>.</style>            The script argument to bind is a Tk script, which will be
+<style color=#00ffffff size=1>.</style>            executed whenever the given event sequence occurs. If script
+<style color=#00ffffff size=1>.</style>            contains any % characters, then the script will not be
+<style color=#00ffffff size=1>.</style>            executed directly.  Instead, a new script will be generated
+<style color=#00ffffff size=1>.</style>            by replacing each %, and the character following it, with
+<style color=#00ffffff size=1>.</style>            information from the current event.  The replacement depends
+<style color=#00ffffff size=1>.</style>            on the character following the %, as defined in the list
+<style color=#00ffffff size=1>.</style>            below.  Unless otherwise indicated, the replacement string
+<style color=#00ffffff size=1>.</style>            is the decimal value of the given field from the current
+<style color=#00ffffff size=1>.</style>            event. Some of the substitutions are only valid for certain
+<style color=#00ffffff size=1>.</style>            types of events\;  if they are used for other types of events
+<style color=#00ffffff size=1>.</style>            the value substituted is undefined.
+
+<style color=#00ffffff size=1>.</style>            %%   Replaced with a single percent.
+
+<style color=#00ffffff size=1>.</style>            %b   The number of the button that was pressed or released.
+<style color=#00ffffff size=1>.</style>                 Valid only for ButtonPress and ButtonRelease events.
+
+<style color=#00ffffff size=1>.</style>            %h   For Configure events, this is the old requested height
+<style color=#00ffffff size=1>.</style>                 of the widget.
+
+<style color=#00ffffff size=1>.</style>            %s   For mouse events, this is the logical OR of the mouse
+<style color=#00ffffff size=1>.</style>                 buttons\; for keyboard events, it is the decimal value
+<style color=#00ffffff size=1>.</style>                 of the pressed character.
+
+<style color=#00ffffff size=1>.</style>            %w   For Configure events, this is the old requested width
+<style color=#00ffffff size=1>.</style>                 of the widget.
+
+<style color=#00ffffff size=1>.</style>            %x   The x coordinate from the event, relative to the origin
+<style color=#00ffffff size=1>.</style>                 of the toplevel window. Valid only for Enter, Leave,
+<style color=#00ffffff size=1>.</style>                 and mouse events.
+
+<style color=#00ffffff size=1>.</style>            %y   The y coordinate from the event, relative to the origin
+<style color=#00ffffff size=1>.</style>                 of the toplevel window. Valid only for Enter, Leave,
+<style color=#00ffffff size=1>.</style>                 and mouse events.
+
+<style color=#00ffffff size=1>.</style>            %A   The ASCII character corresponding to a Key event.
+
+<style color=#00ffffff size=1>.</style>            %K   The pressed character for the event, as four
+<style color=#00ffffff size=1>.</style>                 hexadecimal digits. Valid only for Key events.
+
+<style color=#00ffffff size=1>.</style>            %W   The path name of the window to which the event was
+<style color=#00ffffff size=1>.</style>                 reported (the window field from the event).  Valid for
+<style color=#00ffffff size=1>.</style>                 all event types.
+
+<style color=#00ffffff size=1>.</style>            %X   Same as %x except that the screen coordinate system is
+<style color=#00ffffff size=1>.</style>                 used.
+
+<style color=#00ffffff size=1>.</style>            %Y   Same as %y except that the screen coordinate system is
+<style color=#00ffffff size=1>.</style>                 used.
+
+<style color=#00ffffff size=1>.</style>            The replacement string for a %-replacement is formatted as a
+<style color=#00ffffff size=1>.</style>            proper Tk list element. This means that it will be
+<style color=#00ffffff size=1>.</style>            surrounded with braces if it contains spaces, or special
+<style color=#00ffffff size=1>.</style>            characters such as $ and { may be preceded by backslashes.
+<style color=#00ffffff size=1>.</style>            This guarantees that the string will be passed through the
+<style color=#00ffffff size=1>.</style>            Tk parser when the binding script is evaluated.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            The above scheme is not ideal, and will probably be fixed in
+<style color=#00ffffff size=1>.</style>            the future. Quoting is a mess - in particular, the quoting
+<style color=#00ffffff size=1>.</style>            provided for the %A substitution does not work correctly
+<style color=#00ffffff size=1>.</style>            when a quoted character is re-interpreted by Tk.
+
+<style color=#00ffffff size=1>.</style>            The length of binding scripts is limited to 128 characters.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

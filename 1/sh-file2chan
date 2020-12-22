@@ -1,0 +1,136 @@
+<action name=SH-FILE2CHAN(1)>SH-FILE2CHAN(1)</action>                                   <action name=SH-FILE2CHAN(1)>SH-FILE2CHAN(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            file2chan, rblock, rdata, rerror, rget, rread, rreadone,
+<style color=#00ffffff size=1>.</style>            rwrite - shell interface to file2chan
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            load file2chan
+
+<style color=#00ffffff size=1>.</style>            file2chan filename readcmd writecmd \[ closecmd \]
+<style color=#00ffffff size=1>.</style>            rblock \[ tag \]
+<style color=#00ffffff size=1>.</style>            fetchwdata \[ tag \]
+<style color=#00ffffff size=1>.</style>            putrdata \[ tag \]
+<style color=#00ffffff size=1>.</style>            rerror \[ tag \] errmsg
+<style color=#00ffffff size=1>.</style>            rread \[ tag \] readdata
+<style color=#00ffffff size=1>.</style>            rreadone \[ tag \] readdata
+<style color=#00ffffff size=1>.</style>            rwrite \[ tag \[ count \] \]
+<style color=#00ffffff size=1>.</style>            ${rget (data|count|offset|fid) \[ tag \] }
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            File2chan is a loadable module for <action name=sh(1)>sh(1)</action> that provides
+<style color=#00ffffff size=1>.</style>            facilities to create a file in the namespace with properties
+<style color=#00ffffff size=1>.</style>            determined by a shell script. File2chan creates filename in
+<style color=#00ffffff size=1>.</style>            the namespace and spawns a new thread to serve the file. If
+<style color=#00ffffff size=1>.</style>            the creation succeeds and the thread is spawned
+<style color=#00ffffff size=1>.</style>            successfully, then the environment variable $apid is set to
+<style color=#00ffffff size=1>.</style>            the process id of the new thread\; otherwise an error
+<style color=#00ffffff size=1>.</style>            (non-nil) status is returned. Readcmd, writecmd and closecmd
+<style color=#00ffffff size=1>.</style>            should be executable <action name=sh(1)>sh(1)</action> command blocks. Subsequently,
+<style color=#00ffffff size=1>.</style>            whenever a process reads from filename, readcmd will be
+<style color=#00ffffff size=1>.</style>            invoked\; whenever a process writes to filename, writecmd
+<style color=#00ffffff size=1>.</style>            will be invoked\; whenever an open file on filename is
+<style color=#00ffffff size=1>.</style>            closed, then closecmd will be invoked, if present.
+
+<style color=#00ffffff size=1>.</style>            When a read or write request arrives, it is added to a list
+<style color=#00ffffff size=1>.</style>            of currently outstanding tags maintained by file2chan. If
+<style color=#00ffffff size=1>.</style>            the request is not replied to or acknowledged by the time
+<style color=#00ffffff size=1>.</style>            the invoked command has finished, then a reply will be made
+<style color=#00ffffff size=1>.</style>            automatically (the default is to accept all writes and to
+<style color=#00ffffff size=1>.</style>            give an error on all reads). Each tag is assigned a unique
+<style color=#00ffffff size=1>.</style>            tag id which is stored in the environment variable $tag for
+<style color=#00ffffff size=1>.</style>            the duration of the invoked command. Most commands take an
+<style color=#00ffffff size=1>.</style>            optional tag argument which should be the tag id of a
+<style color=#00ffffff size=1>.</style>            currently outstanding request\; if omitted, the value of $tag
+<style color=#00ffffff size=1>.</style>            will be used. The following commands are provided to reply
+<style color=#00ffffff size=1>.</style>            to requests and obtain information about requests:
+
+<style color=#00ffffff size=1>.</style>            rblock    Rblock marks tag as a blocking request - no
+<style color=#00ffffff size=1>.</style>                      automatic reply will be made when the currently
+<style color=#00ffffff size=1>.</style>                      invoked command has terminated\; the process making
+<style color=#00ffffff size=1>.</style>                      the request will block until a reply is made.
+
+<style color=#00ffffff size=1>.</style>            fetchwdata
+<style color=#00ffffff size=1>.</style>                      Fetchwdata writes the data associated with tag
+<style color=#00ffffff size=1>.</style>                      (which must be a write request) to its standard
+<style color=#00ffffff size=1>.</style>                      output. It is useful if an uncorrupted version of
+<style color=#00ffffff size=1>.</style>                      binary data is wanted, as it avoids the data being
+<style color=#00ffffff size=1>.</style>                      interpreted as a utf-8 string.
+
+<style color=#00ffffff size=1>.</style>            putrdata  Putrdata is the converse of fetchwdata: it reads
+<style color=#00ffffff size=1>.</style>                      data from its standard input and replies to tag
+<style color=#00ffffff size=1>.</style>                      (which must be a read request) with the data read.
+<style color=#00ffffff size=1>.</style>                      Any data in excess of that requested will be lost.
+
+<style color=#00ffffff size=1>.</style>            rerror    Rerror replies to tag with an error code\; the
+<style color=#00ffffff size=1>.</style>                      remote read or write request will return an error,
+<style color=#00ffffff size=1>.</style>                      with the description errmsg.
+
+<style color=#00ffffff size=1>.</style>            rread     Rread replies to the read request tag with the
+<style color=#00ffffff size=1>.</style>                      data in readdata. If readdata is longer than the
+<style color=#00ffffff size=1>.</style>                      number of bytes requested, then only the requested
+<style color=#00ffffff size=1>.</style>                      number of bytes of readdata will be sent. The
+<style color=#00ffffff size=1>.</style>                      offset of the read request is ignored.
+
+<style color=#00ffffff size=1>.</style>            rreadone  Rreadone is similar to rread except that it
+<style color=#00ffffff size=1>.</style>                      honours the offset of the client's read request,
+<style color=#00ffffff size=1>.</style>                      so the client can use consecutive reads to
+<style color=#00ffffff size=1>.</style>                      retrieve all of readdata.
+
+<style color=#00ffffff size=1>.</style>            rwrite    Rwrite replies to the write request tag. If count
+<style color=#00ffffff size=1>.</style>                      is given, then the client's write request will
+<style color=#00ffffff size=1>.</style>                      return that number (it is usually considered an
+<style color=#00ffffff size=1>.</style>                      error if the return from write (see <action name=sys-read(2)>sys-read(2)</action>)
+<style color=#00ffffff size=1>.</style>                      is not the same as the number of bytes written).
+<style color=#00ffffff size=1>.</style>                      If count is omitted, all the bytes are assumed to
+<style color=#00ffffff size=1>.</style>                      have been written.
+
+<style color=#00ffffff size=1>.</style>            ${rget}   Rget retrieves information associated with tag.
+<style color=#00ffffff size=1>.</style>                      The information it yields depends on its first
+<style color=#00ffffff size=1>.</style>                      argument, which must be one of:
+
+<style color=#00ffffff size=1>.</style>                      data The data associated with write request tag.
+
+<style color=#00ffffff size=1>.</style>                      count
+<style color=#00ffffff size=1>.</style>                           The number  of bytes requested by read
+<style color=#00ffffff size=1>.</style>                           request tag.
+
+<style color=#00ffffff size=1>.</style>                      fid  The client's file identifier associated with
+<style color=#00ffffff size=1>.</style>                           tag. A unique fid is associated with all
+<style color=#00ffffff size=1>.</style>                           client requests emanating from the same open
+<style color=#00ffffff size=1>.</style>                           file. This is the only rget request valid
+<style color=#00ffffff size=1>.</style>                           with the tag associated with a close
+<style color=#00ffffff size=1>.</style>                           operation.
+
+<style color=#00ffffff size=1>.</style>                      offset
+<style color=#00ffffff size=1>.</style>                           The file offset associated with the request
+<style color=#00ffffff size=1>.</style>                           tag.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            The following code creates a very simple memory-based file
+<style color=#00ffffff size=1>.</style>            called /tmp/memfile.
+<style color=#00ffffff size=1>.</style>            	file2chan /tmp/memfile {rreadone $data} {data = ${rget data}}
+<style color=#00ffffff size=1>.</style>            It is, however, very limited, as binary data stored in the
+<style color=#00ffffff size=1>.</style>            file will be corrupted, and the size of the file is limited
+<style color=#00ffffff size=1>.</style>            to the amount of data that can be transmitted in a single
+<style color=#00ffffff size=1>.</style>            write (see <action name=sys-read(2)>sys-read(2)</action>).
+
+<style color=#00ffffff size=1>.</style>            The following code implements a single-threaded logfile
+<style color=#00ffffff size=1>.</style>            which can support multiple concurrent writers:
+<style color=#00ffffff size=1>.</style>            	{file2chan /chan/log {} {fetchwdata}} >> /tmp/logfile
+
+<style color=#00ffffff size=1>.</style>            The following code makes the command cmd available to
+<style color=#00ffffff size=1>.</style>            external programs, and defines a shell function to use it.
+<style color=#00ffffff size=1>.</style>            Note that there's an approximate 8K limit on the size of the
+<style color=#00ffffff size=1>.</style>            argument list that can be passed in this way.
+<style color=#00ffffff size=1>.</style>            	load std
+<style color=#00ffffff size=1>.</style>            	file2chan /chan/cmdchan {} {cmd ${unquote ${rget data}}}
+<style color=#00ffffff size=1>.</style>            	fn runcmd {echo -n ${quote $*} > /chan/cmdchan}
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/sh/file2chan.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-file2chan(2)>sys-file2chan(2)</action>, <action name=sh(1)>sh(1)</action>, <action name=intro(5)>intro(5)</action>,
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

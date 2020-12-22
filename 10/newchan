@@ -1,0 +1,113 @@
+NEWCHAN(10.2)                                       NEWCHAN(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            newchan, chanfree, cclose, eqqid, eqchan, isdir, fdtochan,
+<style color=#00ffffff size=1>.</style>            namec - channel operations
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            Chan*	newchan(void)
+
+<style color=#00ffffff size=1>.</style>            void	chanfree(Chan *c)
+
+<style color=#00ffffff size=1>.</style>            int	eqqid(Qid a, Qid b)
+
+<style color=#00ffffff size=1>.</style>            int	eqchan(Chan *a, Chan *b, int pathonly)
+
+<style color=#00ffffff size=1>.</style>            void	isdir(Chan *c)
+
+<style color=#00ffffff size=1>.</style>            Chan*	fdtochan(Fgrp *f, int fd, int mode, int chkmnt, int
+<style color=#00ffffff size=1>.</style>            iref)
+
+<style color=#00ffffff size=1>.</style>            Chan*	namec(char *pathname, int amode, int omode, ulong
+<style color=#00ffffff size=1>.</style>            perm)
+
+<style color=#00ffffff size=1>.</style>            void	cclose(Chan *c)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A value of type Chan represents a kernel channel for I/O and
+<style color=#00ffffff size=1>.</style>            name space operations. It has the following public
+<style color=#00ffffff size=1>.</style>            structure:
+
+<style color=#00ffffff size=1>.</style>                 typedef struct Chan{
+<style color=#00ffffff size=1>.</style>                 	ushort    type\;       /* driver name */
+<style color=#00ffffff size=1>.</style>                 	ulong     dev\;        /* instance number */
+<style color=#00ffffff size=1>.</style>                 	ushort    mode\;       /* open mode */
+<style color=#00ffffff size=1>.</style>                 	ushort    flag\;       /* COPEN set once opened */
+<style color=#00ffffff size=1>.</style>                 	ulong     offset\;     /* current file offset */
+<style color=#00ffffff size=1>.</style>                 	Qid       qid\;        /* unique id (path, vers) */
+<style color=#00ffffff size=1>.</style>                 	Cname*     name\;	/* name by which it was accessed */
+
+<style color=#00ffffff size=1>.</style>            Newchan returns a pointer to a newly allocated channel
+<style color=#00ffffff size=1>.</style>            (sleeping if necessary until memory is available). Device
+<style color=#00ffffff size=1>.</style>            drivers do not normally call newchan directly, but instead
+<style color=#00ffffff size=1>.</style>            allocate channels using either devattach, when a process
+<style color=#00ffffff size=1>.</style>            attaches to the device's root, or devclone, when an existing
+<style color=#00ffffff size=1>.</style>            channel is cloned\; see devattach(10.2).
+
+<style color=#00ffffff size=1>.</style>            Chanfree frees the channel structure c for reuse.
+
+<style color=#00ffffff size=1>.</style>            Eqqid returns 1 if Qid values a and b are equal (ie, both
+<style color=#00ffffff size=1>.</style>            their path and vers members are equal)\; it returns 0
+<style color=#00ffffff size=1>.</style>            otherwise.
+
+<style color=#00ffffff size=1>.</style>            Eqchan returns 1 if a and b have the same qid, type and dev
+<style color=#00ffffff size=1>.</style>            members (ie, they represent the same file)\; it returns 0
+<style color=#00ffffff size=1>.</style>            otherwise. If pathonly is non-zero, the comparison of the
+<style color=#00ffffff size=1>.</style>            two qid members compares only their path values, ignoring
+<style color=#00ffffff size=1>.</style>            the version field vers.
+
+<style color=#00ffffff size=1>.</style>            Isdir checks that a given channel c is a directory. If so,
+<style color=#00ffffff size=1>.</style>            it returns\; otherwise, it generates an error(10.2), Enotdir.
+
+<style color=#00ffffff size=1>.</style>            The Fgrp structure represents an array of open files, each
+<style color=#00ffffff size=1>.</style>            represented by a Chan, indexed by integer file descriptors.
+<style color=#00ffffff size=1>.</style>            A given Fgrp can be shared between processes.
+
+<style color=#00ffffff size=1>.</style>            Fdtochan returns a pointer to the Chan corresponding to file
+<style color=#00ffffff size=1>.</style>            descriptor fd in file descriptor group f (almost invariably
+<style color=#00ffffff size=1>.</style>            up->env->fgrp, the file descriptor group for the current
+<style color=#00ffffff size=1>.</style>            process). If mode is a valid mode for <action name=sys-open(2)>sys-open(2)</action>, typically
+<style color=#00ffffff size=1>.</style>            OREAD, OWRITE or ORDWR, it must correspond to the mode with
+<style color=#00ffffff size=1>.</style>            which fd was originally opened\; if mode is -1, no check is
+<style color=#00ffffff size=1>.</style>            made. If chkmnt is non-zero, c must not be a channel in use
+<style color=#00ffffff size=1>.</style>            by the mount driver <action name=mnt(3)>mnt(3)</action>. On successful return, if iref is
+<style color=#00ffffff size=1>.</style>            non-zero, the channel's reference count has been
+<style color=#00ffffff size=1>.</style>            incremented. Fdtochan calls error(10.2) if it detects
+<style color=#00ffffff size=1>.</style>            invalid uses, in particular an invalid file descriptor fd.
+
+<style color=#00ffffff size=1>.</style>            Namec looks up a pathname in the current name space and
+<style color=#00ffffff size=1>.</style>            returns a channel. Amode determines the mode of look up, and
+<style color=#00ffffff size=1>.</style>            must be one of the constants below:
+
+<style color=#00ffffff size=1>.</style>            Aaccess  Access file for information, as in the stat command
+<style color=#00ffffff size=1>.</style>                     or call.
+
+<style color=#00ffffff size=1>.</style>            Atodir   Access file as directory (the QTDIR bit of its
+<style color=#00ffffff size=1>.</style>                     qid.type must be set).
+
+<style color=#00ffffff size=1>.</style>            Aopen    Access for I/O.
+
+<style color=#00ffffff size=1>.</style>            Amount   Access directory to be mounted upon.
+
+<style color=#00ffffff size=1>.</style>            Acreate  File is to be created.
+
+<style color=#00ffffff size=1>.</style>            If amode is Aopen or Acreate, omode should be a mode
+<style color=#00ffffff size=1>.</style>            suitable for <action name=sys-open(2)>sys-open(2)</action>\; if Acreate, perm should be valid
+<style color=#00ffffff size=1>.</style>            file permissions. In all other cases, omode and perm can be
+<style color=#00ffffff size=1>.</style>            zero.
+
+<style color=#00ffffff size=1>.</style>            Cclose decrements the reference count on c\; if no further
+<style color=#00ffffff size=1>.</style>            references remain, it calls the corresponding device's
+<style color=#00ffffff size=1>.</style>            Dev.close to close the channel, and frees c.
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Most functions call error(10.2) on any sort of error.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /os/port/chan.c
+<style color=#00ffffff size=1>.</style>            /emu/port/chan.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            ref(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

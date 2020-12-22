@@ -1,0 +1,42 @@
+<action name=SYS-DIRREAD(2)>SYS-DIRREAD(2)</action>                                     <action name=SYS-DIRREAD(2)>SYS-DIRREAD(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            dirread - read directory
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            dirread:  fn(fd: ref FD): (int, array of Dir)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Dirread reads the contents of the directory pointed to by
+<style color=#00ffffff size=1>.</style>            the open file descriptor fd, returning a tuple containing an
+<style color=#00ffffff size=1>.</style>            array with one Dir structure for each directory entry read.
+<style color=#00ffffff size=1>.</style>            These Dir structures are equivalent to the result of a stat
+<style color=#00ffffff size=1>.</style>            call on each file in the directory. See <action name=sys-stat(2)>sys-stat(2)</action> for a
+<style color=#00ffffff size=1>.</style>            description of stat and Dir.
+
+<style color=#00ffffff size=1>.</style>            A successful dirread returns a tuple giving the number of
+<style color=#00ffffff size=1>.</style>            entries read and the resulting array. A return of (0,nil)
+<style color=#00ffffff size=1>.</style>            indicates the end of the directory. Directory entries are
+<style color=#00ffffff size=1>.</style>            variable length in general\; the file offset is advanced by
+<style color=#00ffffff size=1>.</style>            the number of bytes actually read.
+
+<style color=#00ffffff size=1>.</style>            Seeks (see <action name=sys-seek(2)>sys-seek(2)</action>) are allowed on directories only to
+<style color=#00ffffff size=1>.</style>            seek to the start.
+
+<style color=#00ffffff size=1>.</style>            In general, several calls to dirread will be needed to read
+<style color=#00ffffff size=1>.</style>            the whole directory. Readdir (2) provides functions that
+<style color=#00ffffff size=1>.</style>            return all the directory entries at once, optionally sorted.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=readdir(2)>readdir(2)</action>, <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-open(2)>sys-open(2)</action>, <action name=sys-read(2)>sys-read(2)</action>, sys-seek
+<style color=#00ffffff size=1>.</style>            (2), <action name=sys-stat(2)>sys-stat(2)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            The integer in dirread's return tuple has a value of -1 on
+<style color=#00ffffff size=1>.</style>            error, and 0 on end of file. The array element of the tuple
+<style color=#00ffffff size=1>.</style>            is nil in both cases.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

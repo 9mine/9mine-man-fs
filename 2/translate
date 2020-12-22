@@ -1,0 +1,110 @@
+<action name=TRANSLATE(2)>TRANSLATE(2)</action>                                         <action name=TRANSLATE(2)>TRANSLATE(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            translate: opendict, opendicts, mkdictname - translation
+<style color=#00ffffff size=1>.</style>            dictionaries
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "translate.m"\;
+<style color=#00ffffff size=1>.</style>            translate := load Translate Translate->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Dict: adt {
+<style color=#00ffffff size=1>.</style>                new:    fn(): ref Dict\;
+<style color=#00ffffff size=1>.</style>                add:    fn(d: self ref Dict, file: string): string\;
+<style color=#00ffffff size=1>.</style>                xlate:  fn(d: self ref Dict, s: string): string\;
+<style color=#00ffffff size=1>.</style>                xlaten: fn(d: self ref Dict, s: string, note: string): string\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            init:       fn()\;
+<style color=#00ffffff size=1>.</style>            opendict:   fn(file: string): (ref Dict, string)\;
+<style color=#00ffffff size=1>.</style>            opendicts:  fn(files: list of string): (ref Dict, string)\;
+<style color=#00ffffff size=1>.</style>            mkdictname: fn(locale, app: string): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The Translate module provides access to the translation
+<style color=#00ffffff size=1>.</style>            dictionaries defined by <action name=translate(6)>translate(6)</action>, intended for the
+<style color=#00ffffff size=1>.</style>            translation of text from one natural language to another.
+
+<style color=#00ffffff size=1>.</style>            Init should be called before using any of these functions.
+
+<style color=#00ffffff size=1>.</style>            Opendict opens a dictionary file (of the format defined
+<style color=#00ffffff size=1>.</style>            below) and returns a tuple: a reference to a Dict that
+<style color=#00ffffff size=1>.</style>            represents it and a diagnostic string (which is nil if no
+<style color=#00ffffff size=1>.</style>            error occurred). Opendicts is similar, but loads each of the
+<style color=#00ffffff size=1>.</style>            files in turn into the same Dict, producing a composite
+<style color=#00ffffff size=1>.</style>            dictionary in which translations in later files can override
+<style color=#00ffffff size=1>.</style>            translations in earlier ones\; the diagnostic string
+<style color=#00ffffff size=1>.</style>            summarises all errors (if any).
+
+<style color=#00ffffff size=1>.</style>            Mkdictname returns the conventional name of a dictionary
+<style color=#00ffffff size=1>.</style>            file given locale and application names. The locale is
+<style color=#00ffffff size=1>.</style>            normally nil to use the current locale, which is formed by
+<style color=#00ffffff size=1>.</style>            binding the desired locale directory (or directories) onto
+<style color=#00ffffff size=1>.</style>            /lib/locale.
+
+<style color=#00ffffff size=1>.</style>            Dict.new returns an empty dictionary. Dict.add loads the
+<style color=#00ffffff size=1>.</style>            given dictionary file into an existing dictionary, returning
+<style color=#00ffffff size=1>.</style>            a non-nil diagnostic string on error. Translations are made
+<style color=#00ffffff size=1>.</style>            by Dict.xlate and Dict.xlaten: they look for a string s (eg,
+<style color=#00ffffff size=1>.</style>            text in one language), optionally qualified by a note, and
+<style color=#00ffffff size=1>.</style>            return the corresponding translation text from the
+<style color=#00ffffff size=1>.</style>            dictionary. If no such translation exists, they return the
+<style color=#00ffffff size=1>.</style>            original text s.
+
+EXAMPLE
+<style color=#00ffffff size=1>.</style>            The following shows one possible style of use:
+
+<style color=#00ffffff size=1>.</style>            include "translate.m"\;
+<style color=#00ffffff size=1>.</style>            	translate: Translate\;
+<style color=#00ffffff size=1>.</style>            	Dict: import translate\;
+
+<style color=#00ffffff size=1>.</style>            dict: ref Dict\;
+
+<style color=#00ffffff size=1>.</style>            X(s: string): string
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	if(dict == nil)
+<style color=#00ffffff size=1>.</style>            		return s\;
+<style color=#00ffffff size=1>.</style>            	return dict.xlate(s)\;
+<style color=#00ffffff size=1>.</style>            }
+
+<style color=#00ffffff size=1>.</style>            init(ctxt: ref Draw->Context, args: list of string)
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>            	...
+<style color=#00ffffff size=1>.</style>            	translate = load Translate Translate->PATH\;
+<style color=#00ffffff size=1>.</style>            	if(translate != nil){
+<style color=#00ffffff size=1>.</style>            		translate->init()\;
+<style color=#00ffffff size=1>.</style>            		(dict, nil) = translate->opendict(
+<style color=#00ffffff size=1>.</style>            					translate->mkdictname("", "vmail"))\;
+<style color=#00ffffff size=1>.</style>            	}
+<style color=#00ffffff size=1>.</style>            	...
+<style color=#00ffffff size=1>.</style>            	optioncfg := array \[\] of {
+<style color=#00ffffff size=1>.</style>            		"frame .op -relief flat -borderwidth 8",
+<style color=#00ffffff size=1>.</style>            		"frame .op.lbs",
+<style color=#00ffffff size=1>.</style>            		"label .op.lbs.a -text {" +
+<style color=#00ffffff size=1>.</style>            			X("Voice Mail Active") + ":}",
+<style color=#00ffffff size=1>.</style>            		"label .op.lbs.g -text {" +
+<style color=#00ffffff size=1>.</style>            			X("Answer Calls With") + ":}",
+<style color=#00ffffff size=1>.</style>            		"label .op.lbs.r -text {" +
+<style color=#00ffffff size=1>.</style>            			X("Rings before Answering") + ":}",
+<style color=#00ffffff size=1>.</style>            		"label .op.lbs.l -text {" +
+<style color=#00ffffff size=1>.</style>            			X("Length of Incoming Messages") + ":}}",
+<style color=#00ffffff size=1>.</style>            		...
+<style color=#00ffffff size=1>.</style>            	}\;
+<style color=#00ffffff size=1>.</style>            	...
+<style color=#00ffffff size=1>.</style>            	wmlib->tkcmds(top, optioncfg)\;
+<style color=#00ffffff size=1>.</style>            }
+
+<style color=#00ffffff size=1>.</style>            The intermediate function X is defined to allow the program
+<style color=#00ffffff size=1>.</style>            to be used (albeit with text in English) even when the
+<style color=#00ffffff size=1>.</style>            Translate module cannot be loaded.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /locale/locale/dict/app
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/translate.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=translate(6)>translate(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,251 @@
+DEV(10.2)                                               DEV(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            Dev - device driver interface
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            struct Dev
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                int dc\;
+<style color=#00ffffff size=1>.</style>                char*   name\;
+
+<style color=#00ffffff size=1>.</style>                void    (*reset)(void)\;        /* native only */
+<style color=#00ffffff size=1>.</style>                void    (*init)(void)\;
+<style color=#00ffffff size=1>.</style>                void    (*shutdown)(void)\;     /* native */
+<style color=#00ffffff size=1>.</style>                Chan*   (*attach)(char *spec)\;
+<style color=#00ffffff size=1>.</style>                Walkqid*  (*walk)(Chan *c, Chan *nc, char **name, int nname)\;
+<style color=#00ffffff size=1>.</style>                int     (*stat)(Chan *c, uchar *db, int dbsize)\;
+<style color=#00ffffff size=1>.</style>                Chan*   (*open)(Chan *c, int mode)\;
+<style color=#00ffffff size=1>.</style>                void    (*create)(Chan *c, char *name, int mode, ulong perm)\;
+<style color=#00ffffff size=1>.</style>                void    (*close)(Chan *c)\;
+<style color=#00ffffff size=1>.</style>                long    (*read)(Chan *c, void *buf, long nbytes, vlong offset)\;
+<style color=#00ffffff size=1>.</style>                Block*  (*bread)(Chan *c, long nbytes, ulong offset)\;
+<style color=#00ffffff size=1>.</style>                long    (*write)(Chan *c, void*, long, vlong offset)\;
+<style color=#00ffffff size=1>.</style>                long    (*bwrite)(Chan *c, Block *b, ulong offset)\;
+<style color=#00ffffff size=1>.</style>                void    (*remove)(Chan *c)\;
+<style color=#00ffffff size=1>.</style>                int     (*wstat)(Chan *c, uchar *db, int dbsize)\;
+<style color=#00ffffff size=1>.</style>                void    (*power)(int on)\;        /* native only */
+<style color=#00ffffff size=1>.</style>                int     (*config)(int on, char *spec, DevConf *cf)\; /* native */
+<style color=#00ffffff size=1>.</style>            }\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Every device driver serves a unique name space that
+<style color=#00ffffff size=1>.</style>            represents to the corresponding device(s). Applications act
+<style color=#00ffffff size=1>.</style>            on the space using the operations of <action name=sys-bind(2)>sys-bind(2)</action>, sys-open
+<style color=#00ffffff size=1>.</style>            (2), <action name=sys-read(2)>sys-read(2)</action>, <action name=sys-stat(2)>sys-stat(2)</action>, and other system calls.
+<style color=#00ffffff size=1>.</style>            Within the kernel, the Dev structure defines the interface
+<style color=#00ffffff size=1>.</style>            between the kernel and a device driver for all operations on
+<style color=#00ffffff size=1>.</style>            that driver's name space.
+
+<style color=#00ffffff size=1>.</style>            Dev identifies the driver, and lists a set of C functions
+<style color=#00ffffff size=1>.</style>            that are the driver's operations. Most are operations on the
+<style color=#00ffffff size=1>.</style>            Chan type that is the kernel representation of a file or
+<style color=#00ffffff size=1>.</style>            directory active in a name space. The kernel converts system
+<style color=#00ffffff size=1>.</style>            calls acting on file descriptors into calls to a device's
+<style color=#00ffffff size=1>.</style>            Dev operations acting on channel values. All channel values
+<style color=#00ffffff size=1>.</style>            presented through the Dev interface are associated with the
+<style color=#00ffffff size=1>.</style>            corresponding device driver: for channel c, c->type
+<style color=#00ffffff size=1>.</style>            specifies that driver. Within the driver, the c->qid.path of
+<style color=#00ffffff size=1>.</style>            a channel c identifies a file in the driver's name space, or
+<style color=#00ffffff size=1>.</style>            even a client-specific instance of a file (eg, for
+<style color=#00ffffff size=1>.</style>            multiplexors such as <action name=ip(3)>ip(3)</action>). The interpretation of the path
+<style color=#00ffffff size=1>.</style>            is completely determined by the driver.
+
+<style color=#00ffffff size=1>.</style>            A device driver in the source file devx.c exports an
+<style color=#00ffffff size=1>.</style>            initialised instance of Dev xdevtab. For instance, devcons.c
+<style color=#00ffffff size=1>.</style>            contains the global initialiser:
+
+<style color=#00ffffff size=1>.</style>                 Dev consdevtab = {
+<style color=#00ffffff size=1>.</style>                     'c',
+<style color=#00ffffff size=1>.</style>                     "cons",
+
+<style color=#00ffffff size=1>.</style>                     devreset,
+<style color=#00ffffff size=1>.</style>                     consinit,
+<style color=#00ffffff size=1>.</style>                     devshutdown,
+<style color=#00ffffff size=1>.</style>                     consattach,
+<style color=#00ffffff size=1>.</style>                     conswalk,
+<style color=#00ffffff size=1>.</style>                     consstat,
+<style color=#00ffffff size=1>.</style>                     consopen,
+<style color=#00ffffff size=1>.</style>                     devcreate,
+<style color=#00ffffff size=1>.</style>                     consclose,
+<style color=#00ffffff size=1>.</style>                     consread,
+<style color=#00ffffff size=1>.</style>                     devbread,
+<style color=#00ffffff size=1>.</style>                     conswrite,
+<style color=#00ffffff size=1>.</style>                     devbwrite,
+<style color=#00ffffff size=1>.</style>                     devremove,
+<style color=#00ffffff size=1>.</style>                     devwstat,
+<style color=#00ffffff size=1>.</style>                 }\;
+
+<style color=#00ffffff size=1>.</style>            The kernel accesses the driver only through its Dev
+<style color=#00ffffff size=1>.</style>            structure, and consequently entry points such as consinit,
+<style color=#00ffffff size=1>.</style>            consread, etc. can (and should) be declared static, and thus
+<style color=#00ffffff size=1>.</style>            local to the file.
+
+<style color=#00ffffff size=1>.</style>            The following elements of Dev identify the driver:
+
+<style color=#00ffffff size=1>.</style>            dc   The device's type, represented by a Unicode character
+<style color=#00ffffff size=1>.</style>                 (`rune') that must be unique amongst those in a given
+<style color=#00ffffff size=1>.</style>                 kernel (and ideally for a given platform). Its value is
+<style color=#00ffffff size=1>.</style>                 the value of Dir.dtype in the result of a <action name=sys-stat(2)>sys-stat(2)</action>
+<style color=#00ffffff size=1>.</style>                 applied to any file in the device.
+
+<style color=#00ffffff size=1>.</style>            name The name that identifies the driver in a kernel
+<style color=#00ffffff size=1>.</style>                 configuration file and in /dev/drivers (see <action name=cons(3)>cons(3)</action>).
+
+<style color=#00ffffff size=1>.</style>            All the other entries are functions. In many cases, the
+<style color=#00ffffff size=1>.</style>            values given in a device's Dev will be the default
+<style color=#00ffffff size=1>.</style>            operations provided by devattach(10.2).
+
+<style color=#00ffffff size=1>.</style>            reset()
+<style color=#00ffffff size=1>.</style>                 Called once during system initialisation by the native
+<style color=#00ffffff size=1>.</style>                 kernel's main after initialising all supporting
+<style color=#00ffffff size=1>.</style>                 subsystems, including memory allocation, traps, screen,
+<style color=#00ffffff size=1>.</style>                 MMU (if used), but with interrupts disabled, and before
+<style color=#00ffffff size=1>.</style>                 any kernel process environment has been established.
+<style color=#00ffffff size=1>.</style>                 Typically used on some platforms to force some devices
+<style color=#00ffffff size=1>.</style>                 into a sane state before interrupts are enabled.
+
+<style color=#00ffffff size=1>.</style>            init()
+<style color=#00ffffff size=1>.</style>                 Called once during system initialisation in the context
+<style color=#00ffffff size=1>.</style>                 of the first kernel process, with interrupts enabled,
+<style color=#00ffffff size=1>.</style>                 before the virtual machine has been started.
+
+<style color=#00ffffff size=1>.</style>            shutdown()
+<style color=#00ffffff size=1>.</style>                 Called once in native kernels during system shut down.
+<style color=#00ffffff size=1>.</style>                 Used on only a few platforms to force a device into a
+<style color=#00ffffff size=1>.</style>                 state that will allow it to function correctly during
+<style color=#00ffffff size=1>.</style>                 and after a soft reboot (eg, without doing a full
+<style color=#00ffffff size=1>.</style>                 system hardware reset).
+
+<style color=#00ffffff size=1>.</style>            attach(spec)
+<style color=#00ffffff size=1>.</style>                 Called on each new attach to the device (eg, a
+<style color=#00ffffff size=1>.</style>                 reference to #c by <action name=sys-bind(2)>sys-bind(2)</action>). Spec is the string
+<style color=#00ffffff size=1>.</style>                 following the device character and before a subsequent
+<style color=#00ffffff size=1>.</style>                 `/' in the bind request. It is the empty string for
+<style color=#00ffffff size=1>.</style>                 most devies. If the attach is successful, attach should
+<style color=#00ffffff size=1>.</style>                 return a Chan the refers to the root of the tree served
+<style color=#00ffffff size=1>.</style>                 by the device driver. Normally, it will suffice to
+<style color=#00ffffff size=1>.</style>                 return the value of devattach(10.2).
+
+<style color=#00ffffff size=1>.</style>            walk(c, nc, name, nname)
+<style color=#00ffffff size=1>.</style>                 Walks existing channel c from its current position in
+<style color=#00ffffff size=1>.</style>                 the device tree to that specified by the path
+<style color=#00ffffff size=1>.</style>                 represented by name\[0\], ... name\[nname-1\]. The driver
+<style color=#00ffffff size=1>.</style>                 must interpret `..' as a walk from the current position
+<style color=#00ffffff size=1>.</style>                 one level up towards the root of the device tree. The
+<style color=#00ffffff size=1>.</style>                 result is represented by a dynamically-allocated
+<style color=#00ffffff size=1>.</style>                 Walkqid value, with contents as described in devattach
+<style color=#00ffffff size=1>.</style>                 (10.2). Most drivers simply pass parameters on to
+<style color=#00ffffff size=1>.</style>                 devwalk in devattach(10.2) and return its result.
+
+<style color=#00ffffff size=1>.</style>            stat(c, db, nbytes)
+<style color=#00ffffff size=1>.</style>                 Fill db with <action name=stat(5)>stat(5)</action> data describing the file
+<style color=#00ffffff size=1>.</style>                 referenced by c. Nbytes gives the size of db\; if the
+<style color=#00ffffff size=1>.</style>                 data will not fit, return the value specified for
+<style color=#00ffffff size=1>.</style>                 convD2M in styx(10.2). Most drivers simply pass
+<style color=#00ffffff size=1>.</style>                 parameters on to devstat in devattach(10.2)\; a few fill
+<style color=#00ffffff size=1>.</style>                 a local copy of a Dir structure, and call convD2M to
+<style color=#00ffffff size=1>.</style>                 store the machine-independent representation in db.
+
+<style color=#00ffffff size=1>.</style>            open(c, mode)
+<style color=#00ffffff size=1>.</style>                 Open the file represented by Chan c, in the given mode
+<style color=#00ffffff size=1>.</style>                 (see <action name=sys-open(2)>sys-open(2)</action>), and if successful, return a Chan
+<style color=#00ffffff size=1>.</style>                 value representing the result (usually c). Many drivers
+<style color=#00ffffff size=1>.</style>                 simply apply devopen of devattach(10.2). Exclusive use
+<style color=#00ffffff size=1>.</style>                 drivers might check and increment a reference count.
+
+<style color=#00ffffff size=1>.</style>            create(c, name, mode, perm)
+<style color=#00ffffff size=1>.</style>                 C should be a directory. Create a new file name in that
+<style color=#00ffffff size=1>.</style>                 directory, with permissions perm, opened with the given
+<style color=#00ffffff size=1>.</style>                 mode. If successful, make c refer to the newly created
+<style color=#00ffffff size=1>.</style>                 file. Most drivers return an error on all creation
+<style color=#00ffffff size=1>.</style>                 attempts, by specifying devcreate of devattach(10.2) in
+<style color=#00ffffff size=1>.</style>                 the Dev table.
+
+<style color=#00ffffff size=1>.</style>            close(c)
+<style color=#00ffffff size=1>.</style>                 Close channel c. This must be implemented by all
+<style color=#00ffffff size=1>.</style>                 drivers\; there is no default, although the function
+<style color=#00ffffff size=1>.</style>                 often is a no-op. Exclusive use drivers might decrement
+<style color=#00ffffff size=1>.</style>                 a reference count.
+
+<style color=#00ffffff size=1>.</style>            read(c, buf, nbytes, offset)
+<style color=#00ffffff size=1>.</style>                 Implement a <action name=sys-read(2)>sys-read(2)</action> of nbytes of data from the
+<style color=#00ffffff size=1>.</style>                 given offset in file c, and if successful, place the
+<style color=#00ffffff size=1>.</style>                 data in buf, and return the number of bytes read, which
+<style color=#00ffffff size=1>.</style>                 must be no greater than nbytes. Devices sometimes
+<style color=#00ffffff size=1>.</style>                 ignore the offset. All device drivers must implement
+<style color=#00ffffff size=1>.</style>                 read\; there is no default. Note that if c is a
+<style color=#00ffffff size=1>.</style>                 directory, the data has an array of <action name=stat(5)>stat(5)</action> data
+<style color=#00ffffff size=1>.</style>                 listing the directory contents, in the format
+<style color=#00ffffff size=1>.</style>                 prescribed by <action name=read(5)>read(5)</action>. Most drivers have devdirread of
+<style color=#00ffffff size=1>.</style>                 devattach(10.2) do the work when c is the root
+<style color=#00ffffff size=1>.</style>                 directory of the device's tree.
+
+<style color=#00ffffff size=1>.</style>            bread(c, nbytes, offset)
+<style color=#00ffffff size=1>.</style>                 Implement a <action name=sys-read(2)>sys-read(2)</action> of nbytes of data from the
+<style color=#00ffffff size=1>.</style>                 given offset in file c, and if successful return the
+<style color=#00ffffff size=1>.</style>                 data in a Block (see allocb(10.2) and qio(10.2)). Most
+<style color=#00ffffff size=1>.</style>                 drivers use the default devbread provided by
+<style color=#00ffffff size=1>.</style>                 devattach(10.2), and nearly all ignore the offset in
+<style color=#00ffffff size=1>.</style>                 any case. Drivers that manipulate Blocks internally,
+<style color=#00ffffff size=1>.</style>                 such as <action name=ip(3)>ip(3)</action>, <action name=ssl(3)>ssl(3)</action> and similar protocol devices, and
+<style color=#00ffffff size=1>.</style>                 drivers that are likely to provide data to those
+<style color=#00ffffff size=1>.</style>                 devices, will provide a devbread implementation so as
+<style color=#00ffffff size=1>.</style>                 to reduce the number of times the data is copied.
+
+<style color=#00ffffff size=1>.</style>            write(c, buf, nbytes, offset)
+<style color=#00ffffff size=1>.</style>                 Implement a write of nbytes of data from buf to file c,
+<style color=#00ffffff size=1>.</style>                 which must not be a directory, starting at the given
+<style color=#00ffffff size=1>.</style>                 byte offset. Return the number of bytes actually
+<style color=#00ffffff size=1>.</style>                 written. There is no default, but drivers that do not
+<style color=#00ffffff size=1>.</style>                 implement writes to any of their files can simply call
+<style color=#00ffffff size=1>.</style>                 error(Eperm) to signal an error.
+
+<style color=#00ffffff size=1>.</style>            bwrite(c, b, offset)
+<style color=#00ffffff size=1>.</style>                 Similar to the write entry point, but the data is
+<style color=#00ffffff size=1>.</style>                 contained in a Block b (see allocb(10.2)). B should be
+<style color=#00ffffff size=1>.</style>                 freed before return, whether the driver signals an
+<style color=#00ffffff size=1>.</style>                 error or not. Most drivers use the default devbwrite
+<style color=#00ffffff size=1>.</style>                 from devattach(10.2), which calls the driver's write
+<style color=#00ffffff size=1>.</style>                 entry point using the data in b. Drivers that
+<style color=#00ffffff size=1>.</style>                 manipulate Blocks internally, such as <action name=ip(3)>ip(3)</action>, <action name=ssl(3)>ssl(3)</action> and
+<style color=#00ffffff size=1>.</style>                 similar protocol devices, will provide a devbwrite
+<style color=#00ffffff size=1>.</style>                 implementation so as to avoid copying the data
+<style color=#00ffffff size=1>.</style>                 needlessly.
+
+<style color=#00ffffff size=1>.</style>            remove(c)
+<style color=#00ffffff size=1>.</style>                 Remove the file referenced by c. Most drivers raise an
+<style color=#00ffffff size=1>.</style>                 error by using the default devremove from devattach
+<style color=#00ffffff size=1>.</style>                 (10.2).
+
+<style color=#00ffffff size=1>.</style>            wstat(c, db, dbsize)
+<style color=#00ffffff size=1>.</style>                 Change the attributes of file c, using the <action name=stat(5)>stat(5)</action> data
+<style color=#00ffffff size=1>.</style>                 in buffer db, which is dbsize bytes long. Usually a
+<style color=#00ffffff size=1>.</style>                 driver will use convM2D of styx(10.2) to convert the
+<style color=#00ffffff size=1>.</style>                 data to a Dir structure, then apply the rules of stat
+<style color=#00ffffff size=1>.</style>                 (5) to decide which attributes are to be changed (and
+<style color=#00ffffff size=1>.</style>                 whether the change is allowed). Most drivers simply
+<style color=#00ffffff size=1>.</style>                 return an error on all wstat requests by using the
+<style color=#00ffffff size=1>.</style>                 default devwstat from devattach(10.2).
+
+<style color=#00ffffff size=1>.</style>            power(on)
+<style color=#00ffffff size=1>.</style>                 Reserved for use in native kernels, to allow the kernel
+<style color=#00ffffff size=1>.</style>                 to power the device on and off for power-saving\; on is
+<style color=#00ffffff size=1>.</style>                 non-zero if the device is being powered up, and zero if
+<style color=#00ffffff size=1>.</style>                 it is being powered down. The device driver should save
+<style color=#00ffffff size=1>.</style>                 the device state if necessary. Leave the Dev entry null
+<style color=#00ffffff size=1>.</style>                 for now.
+
+<style color=#00ffffff size=1>.</style>            config(on, spec, cf)
+<style color=#00ffffff size=1>.</style>                 Reserved for use in native kernels to allow a device to
+<style color=#00ffffff size=1>.</style>                 be configured on and off dynamically. Leave the Dev
+<style color=#00ffffff size=1>.</style>                 entry null for now.
+
+<style color=#00ffffff size=1>.</style>            The elements reset, shutdown, power, and config are
+<style color=#00ffffff size=1>.</style>            currently present only in the native kernels.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=intro(2)>intro(2)</action>, <action name=intro(5)>intro(5)</action>, allocb(10.2), devattach(10.2), newchan
+<style color=#00ffffff size=1>.</style>            (10.2), qio(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

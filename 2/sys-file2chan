@@ -1,0 +1,83 @@
+<action name=SYS-FILE2CHAN(2)>SYS-FILE2CHAN(2)</action>                                 <action name=SYS-FILE2CHAN(2)>SYS-FILE2CHAN(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            file2chan - create file connected to Limbo channel
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            Rread:  type chan of (array of byte, string)\;
+<style color=#00ffffff size=1>.</style>            Rwrite: type chan of (int, string)\;
+<style color=#00ffffff size=1>.</style>            FileIO: adt
+<style color=#00ffffff size=1>.</style>            {
+<style color=#00ffffff size=1>.</style>                read:   chan of (int, int, int, Rread)\;
+<style color=#00ffffff size=1>.</style>                write:  chan of (int, array of byte, int, Rwrite)\;
+<style color=#00ffffff size=1>.</style>            }\;
+
+<style color=#00ffffff size=1>.</style>            file2chan:  fn(dir, file: string): ref FileIO\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            File2chan presents an interface for binding Limbo channels
+<style color=#00ffffff size=1>.</style>            to files in the file name space. A server program calls
+<style color=#00ffffff size=1>.</style>            file2chan to create a file in a directory dir, which must be
+<style color=#00ffffff size=1>.</style>            a directory on which device `#s' has been bound (see srv
+<style color=#00ffffff size=1>.</style>            (3)). A client program can open the file for reading or
+<style color=#00ffffff size=1>.</style>            writing (see <action name=sys-open(2)>sys-open(2)</action> and <action name=sys-read(2)>sys-read(2)</action>) to communicate
+<style color=#00ffffff size=1>.</style>            with the server.
+
+<style color=#00ffffff size=1>.</style>            File2chan returns a FileIO type holding two channels used to
+<style color=#00ffffff size=1>.</style>            deliver tuples representing the contents of the Tread and
+<style color=#00ffffff size=1>.</style>            Twrite 9P messages received by the system on the server's
+<style color=#00ffffff size=1>.</style>            behalf\; see <action name=intro(5)>intro(5)</action>.
+
+<style color=#00ffffff size=1>.</style>            When the client invokes the read system call on the file,
+<style color=#00ffffff size=1>.</style>            the server receives a tuple, say (offset, count, fid, rc),
+<style color=#00ffffff size=1>.</style>            on the read channel. The request asks for count bytes of
+<style color=#00ffffff size=1>.</style>            data, starting at offset bytes from the beginning of the
+<style color=#00ffffff size=1>.</style>            file associated with fid. The server sends its reply to the
+<style color=#00ffffff size=1>.</style>            client by transmitting a tuple, say (data, error), that
+<style color=#00ffffff size=1>.</style>            contains the data for the read, on the channel rc received
+<style color=#00ffffff size=1>.</style>            as part of the read tuple. If the request was successful,
+<style color=#00ffffff size=1>.</style>            the error string should be nil. If an error occurred, error
+<style color=#00ffffff size=1>.</style>            should be a diagnostic string, and the data array should be
+<style color=#00ffffff size=1>.</style>            nil. The client blocks in the read system call until the
+<style color=#00ffffff size=1>.</style>            server sends its reply. The client receives only count bytes
+<style color=#00ffffff size=1>.</style>            even if data is larger.
+
+<style color=#00ffffff size=1>.</style>            When the client does a write system call on the file, the
+<style color=#00ffffff size=1>.</style>            server receives a tuple, (offset, data, fid, wc), on the
+<style color=#00ffffff size=1>.</style>            write channel. A (count, error) response is sent back on the
+<style color=#00ffffff size=1>.</style>            wc channel received in the write tuple: count gives the
+<style color=#00ffffff size=1>.</style>            number of bytes written (zero if an error occurs), and error
+<style color=#00ffffff size=1>.</style>            is an empty or nil string or an explanation of the problem.
+
+<style color=#00ffffff size=1>.</style>            The fid received by the server can be used to manage the
+<style color=#00ffffff size=1>.</style>            multiplexing of multiple active clients sharing a single
+<style color=#00ffffff size=1>.</style>            file\; see <action name=intro(5)>intro(5)</action> for details. Each distinct open of the
+<style color=#00ffffff size=1>.</style>            file will yield a distinct fid, unique to that open, which
+<style color=#00ffffff size=1>.</style>            will appear in the read and write messages corresponding to
+<style color=#00ffffff size=1>.</style>            reads and writes on that open instance of the file.
+
+<style color=#00ffffff size=1>.</style>            When the client closes the file, the server will be sent a
+<style color=#00ffffff size=1>.</style>            read message with a nil rc, then a write message with a nil
+<style color=#00ffffff size=1>.</style>            wc. A server typically ignores the former and uses the
+<style color=#00ffffff size=1>.</style>            latter as a signal to stop processing for the given client
+<style color=#00ffffff size=1>.</style>            (more precisely, the given fid). Note that the fid can later
+<style color=#00ffffff size=1>.</style>            be re-used by another client.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/devsrv.c
+<style color=#00ffffff size=1>.</style>            /os/port/devsrv.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sh-file2chan(1)>sh-file2chan(1)</action>, <action name=sys-intro(2)>sys-intro(2)</action>, <action name=sys-open(2)>sys-open(2)</action>, <action name=sys-read(2)>sys-read(2)</action>,
+<style color=#00ffffff size=1>.</style>            <action name=sys-bind(2)>sys-bind(2)</action>, <action name=intro(5)>intro(5)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Read and write system calls for the file will not return
+<style color=#00ffffff size=1>.</style>            until the server sends its reply on the appropriate channel,
+<style color=#00ffffff size=1>.</style>            so the process doing the read or write cannot be the one
+<style color=#00ffffff size=1>.</style>            serving.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

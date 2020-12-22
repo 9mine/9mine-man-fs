@@ -1,0 +1,72 @@
+<action name=MATH-LINALG(2)>MATH-LINALG(2)</action>                                     <action name=MATH-LINALG(2)>MATH-LINALG(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            Math: dot, norm1, norm2, iamax, gemm, sort - linear algebra
+<style color=#00ffffff size=1>.</style>            primitives
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include	"math.m"\;
+<style color=#00ffffff size=1>.</style>            math := load Math Math->PATH\;
+
+<style color=#00ffffff size=1>.</style>            dot: fn(x, y: array of real): real\;
+<style color=#00ffffff size=1>.</style>            norm1, norm2: fn(x: array of real): real\;
+<style color=#00ffffff size=1>.</style>            iamax: fn(x: array of real): int\;
+<style color=#00ffffff size=1>.</style>            gemm: fn(transa, transb: int,  # upper case N or T
+<style color=#00ffffff size=1>.</style>            		m, n, k: int, alpha: real,
+<style color=#00ffffff size=1>.</style>            		a: array of real, lda: int,
+<style color=#00ffffff size=1>.</style>            		b: array of real, ldb: int, beta: real,
+<style color=#00ffffff size=1>.</style>            		c: array of real, ldc: int)\;
+
+<style color=#00ffffff size=1>.</style>            sort: fn(x: array of real, p: array of int)\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These routines implement the basic functions of linear
+<style color=#00ffffff size=1>.</style>            algebra. The standard vector inner product and norms are
+<style color=#00ffffff size=1>.</style>            defined as follows:
+
+<style color=#00ffffff size=1>.</style>                 dot(x , y) = sum(x\[i\]*y\[i\])
+
+<style color=#00ffffff size=1>.</style>                 norm1(x) = sum(fabs(x\[i \]))
+
+<style color=#00ffffff size=1>.</style>                 norm2(x) = sqrt(dot(x , x))
+
+<style color=#00ffffff size=1>.</style>            For the infinity norm, the function iamax(x) computes an
+<style color=#00ffffff size=1>.</style>            integer i such that fabs(x\[i\]) is maximal. These are all
+<style color=#00ffffff size=1>.</style>            standard BLAS (basic linear algebra subroutines) except that
+<style color=#00ffffff size=1>.</style>            in Inferno they apply only to contiguous (unit stride)
+<style color=#00ffffff size=1>.</style>            vectors.
+
+<style color=#00ffffff size=1>.</style>            We assume the convention that matrices are represented as
+<style color=#00ffffff size=1>.</style>            singly-subscripted arrays with Fortran storage order. So for
+<style color=#00ffffff size=1>.</style>            an m by n matrix A we use loops with 0≤i<m and 0≤j<n and
+<style color=#00ffffff size=1>.</style>            access A\[i+m*j\].
+
+<style color=#00ffffff size=1>.</style>            Rather than provide the huge number of entry points in BLAS2
+<style color=#00ffffff size=1>.</style>            and BLAS3, Inferno provides the matrix multiply primitive,
+<style color=#00ffffff size=1>.</style>            gemm, defined by
+
+<style color=#00ffffff size=1>.</style>                A = *A'*B' + β*C
+
+<style color=#00ffffff size=1>.</style>            where the apostrophes indicate an optional transposition. As
+<style color=#00ffffff size=1>.</style>            shown by the work of Kagstrom, Ling, and Van Loan, the other
+<style color=#00ffffff size=1>.</style>            BLAS functionality can be built efficiently on top of gemm.
+
+<style color=#00ffffff size=1>.</style>            Matrix a' is m by k, matrix b' is k by n, and matrix c is m
+<style color=#00ffffff size=1>.</style>            by n. Here a' means a (a') if transa is the constant 'N' (
+<style color=#00ffffff size=1>.</style>            'T'), and similarly for b'. The sizes m, n, and k denote the
+<style color=#00ffffff size=1>.</style>            `active' part of the matrix. The parameters lda, ldb, and
+<style color=#00ffffff size=1>.</style>            ldc denote the `leading dimension' or size for purposes of
+<style color=#00ffffff size=1>.</style>            indexing. So to loop over c use loops with 0≤i<m and 0≤j<n
+<style color=#00ffffff size=1>.</style>            and access a\[i+ldc*j\].
+
+<style color=#00ffffff size=1>.</style>            The sorting function sort(x,p) updates a 0-origin
+<style color=#00ffffff size=1>.</style>            permutation p so that x\[p\[i\]\] ≤ x\[p\[i+1\]\], leaving x
+<style color=#00ffffff size=1>.</style>            unchanged.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/math.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=math-intro(2)>math-intro(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

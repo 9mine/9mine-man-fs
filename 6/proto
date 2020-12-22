@@ -1,0 +1,82 @@
+<action name=PROTO(6)>PROTO(6)</action>                                                 <action name=PROTO(6)>PROTO(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            proto - file system prototype
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            A proto file defines a file system hierarchy, for programs
+<style color=#00ffffff size=1>.</style>            that create, copy or operate on them, such as <action name=fs(1)>fs(1)</action> or mkfs
+<style color=#00ffffff size=1>.</style>            (8). The proto file defines the hierarchy as a set of names
+<style color=#00ffffff size=1>.</style>            relative to an existing hierarchy, for instance in an
+<style color=#00ffffff size=1>.</style>            existing file system or a list of path names in an archive.
+<style color=#00ffffff size=1>.</style>            Files in the existing hierarchy that are not specified in
+<style color=#00ffffff size=1>.</style>            the proto file are ignored. <action name=Fsproto(2)>Fsproto(2)</action> provides functions to
+<style color=#00ffffff size=1>.</style>            read a prototype file and enumerate the names it selects in
+<style color=#00ffffff size=1>.</style>            an existing hierarchy.
+
+<style color=#00ffffff size=1>.</style>            Each line of the proto file specifies a file (where the term
+<style color=#00ffffff size=1>.</style>            `file' includes directories). Indentation is significant,
+<style color=#00ffffff size=1>.</style>            with each level of indentation corresponding to a level in
+<style color=#00ffffff size=1>.</style>            the file tree. Each line contains up to five fields
+<style color=#00ffffff size=1>.</style>            separated by white space:
+
+<style color=#00ffffff size=1>.</style>                 name perm uid gid source
+
+<style color=#00ffffff size=1>.</style>            Name is the last path element in the resulting file tree.
+<style color=#00ffffff size=1>.</style>            Perm specifies the permissions, as described below. Uid is
+<style color=#00ffffff size=1>.</style>            the owner of the file, and gid is the group owning the file.
+<style color=#00ffffff size=1>.</style>            Source is the name of a file in the current name space (not
+<style color=#00ffffff size=1>.</style>            the source file tree) from which to copy name's content. All
+<style color=#00ffffff size=1>.</style>            fields except name are optional. If a field such as perm or
+<style color=#00ffffff size=1>.</style>            uid is not given, or is given as `-', its value is taken
+<style color=#00ffffff size=1>.</style>            from the existing file.
+
+<style color=#00ffffff size=1>.</style>            A name starting with ``$'' is taken as a reference to an
+<style color=#00ffffff size=1>.</style>            environment variable (see <action name=sh(1)>sh(1)</action> and <action name=env(3)>env(3)</action>) and replaced by
+<style color=#00ffffff size=1>.</style>            the value of that variable. If the first name in a directory
+<style color=#00ffffff size=1>.</style>            is `+', all of the files are represented, and all
+<style color=#00ffffff size=1>.</style>            subdirectories recursively. If the first name is `*', all of
+<style color=#00ffffff size=1>.</style>            the names in the corresponding existing directory are
+<style color=#00ffffff size=1>.</style>            represented, but only the names of subdirectories, not their
+<style color=#00ffffff size=1>.</style>            content. If the first name is `%', only non-directory names
+<style color=#00ffffff size=1>.</style>            are represented excluding both the names and content of
+<style color=#00ffffff size=1>.</style>            subdirectories.
+
+<style color=#00ffffff size=1>.</style>            Perm has the form:
+
+<style color=#00ffffff size=1>.</style>                 \[d\] \[a\] \[l\] oct
+
+<style color=#00ffffff size=1>.</style>            where the optional letters set file attributes (`d'
+<style color=#00ffffff size=1>.</style>            directory, ``a'' append-only, and ``l'' exclusive-use), and
+<style color=#00ffffff size=1>.</style>            oct is an octal number giving the permissions for user,
+<style color=#00ffffff size=1>.</style>            group and others (see <action name=chmod(1)>chmod(1)</action>).
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Denote all files in a given file system:
+
+<style color=#00ffffff size=1>.</style>                 +
+
+<style color=#00ffffff size=1>.</style>            Denote all files in the current user's home directory:
+
+<style color=#00ffffff size=1>.</style>                 usr
+<style color=#00ffffff size=1>.</style>                 	$user
+
+<style color=#00ffffff size=1>.</style>            Specify a subset of files in /dis:
+
+<style color=#00ffffff size=1>.</style>                 dis
+<style color=#00ffffff size=1>.</style>                 	*
+<style color=#00ffffff size=1>.</style>                 	install
+<style color=#00ffffff size=1>.</style>                 		*
+<style color=#00ffffff size=1>.</style>                 	lib
+<style color=#00ffffff size=1>.</style>                 		arg.dis
+<style color=#00ffffff size=1>.</style>                 		names.dis
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/proto            directory of prototype files
+<style color=#00ffffff size=1>.</style>            /lib/proto/all        prototype for whole hierarchy (ie,
+<style color=#00ffffff size=1>.</style>                                  line containing `+')
+<style color=#00ffffff size=1>.</style>            /lib/proto/portproto  generic prototype file
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=fs(1)>fs(1)</action>, <action name=fsproto(2)>fsproto(2)</action>, <action name=kfs(4)>kfs(4)</action>, <action name=mkfs(8)>mkfs(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,53 @@
+<action name=WMLIB(2)>WMLIB(2)</action>                                                 <action name=WMLIB(2)>WMLIB(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            wmlib - low level access to window manager
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            include "draw.m"\;
+<style color=#00ffffff size=1>.</style>            include "wmlib.m"\;
+<style color=#00ffffff size=1>.</style>            wmlib := load Wmlib Wmlib->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:       fn()\;
+<style color=#00ffffff size=1>.</style>            connect:	fn(ctxt: ref Draw->Context): ref Draw->Wmcontext\;
+<style color=#00ffffff size=1>.</style>            startinput:	fn(w: ref Draw->Wmcontext, devs: list of string): string\;
+<style color=#00ffffff size=1>.</style>            wmctl:	fn(w: ref Draw->Wmcontext, request: string): (string, ref Draw->Image, string)\;
+<style color=#00ffffff size=1>.</style>            snarfput:	fn(buf: string)\;
+<style color=#00ffffff size=1>.</style>            snarfget:	fn(): string\;
+
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Wmlib provides basic routines to access the window manager,
+<style color=#00ffffff size=1>.</style>            It is used by higher level modules such as <action name=tkclient(2)>tkclient(2)</action> and
+<style color=#00ffffff size=1>.</style>            <action name=wmclient(2)>wmclient(2)</action> to provide window manager access to
+<style color=#00ffffff size=1>.</style>            applications.
+
+<style color=#00ffffff size=1>.</style>            Init should be called once to initialise the internal state
+<style color=#00ffffff size=1>.</style>            of Wmlib. Connect makes a connection to the window manager
+<style color=#00ffffff size=1>.</style>            through ctxt (see <action name=draw-context(2)>draw-context(2)</action>). Startinput tells the
+<style color=#00ffffff size=1>.</style>            window manager to start queuing events on the input streams
+<style color=#00ffffff size=1>.</style>            named in devs (e.g. ptr, kbd) so that they can be received
+<style color=#00ffffff size=1>.</style>            by the application.
+
+<style color=#00ffffff size=1>.</style>            Wmctl sends request to the window manager. It returns a
+<style color=#00ffffff size=1>.</style>            tuple, say (name, img, err). If a request fails, then name
+<style color=#00ffffff size=1>.</style>            and img will be nil and the non-empty err gives the reason.
+<style color=#00ffffff size=1>.</style>            If the request has resized or created an image, name gives
+<style color=#00ffffff size=1>.</style>            the tag name of the image and img holds the new image. Wmlib
+<style color=#00ffffff size=1>.</style>            interprets the exit request itself, by killing all processes
+<style color=#00ffffff size=1>.</style>            in the current process group, and exiting.
+
+<style color=#00ffffff size=1>.</style>            Snarfget and snarfput retrieve and replace the contents of
+<style color=#00ffffff size=1>.</style>            the window manager's snarf buffer.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /chan/snarf  snarf buffer maintained by <action name=wm(1)>wm(1)</action>
+<style color=#00ffffff size=1>.</style>            /chan/wm     channel for interaction with <action name=wm(1)>wm(1)</action>
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/wmclient.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=wm(1)>wm(1)</action>, <action name=wmclient(2)>wmclient(2)</action>, <action name=tkclient(2)>tkclient(2)</action>, <action name=tk(2)>tk(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

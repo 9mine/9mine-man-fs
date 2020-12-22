@@ -1,0 +1,58 @@
+<action name=TOOLBAR(1)>TOOLBAR(1)</action>                                             <action name=TOOLBAR(1)>TOOLBAR(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            toolbar - window manager toolbar
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wm/toolbar \[ -s \] \[ -p \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Toolbar is designed to be run as the controlling application
+<style color=#00ffffff size=1>.</style>            under an instance of <action name=wm(1)>wm(1)</action>. It runs an initialisation shell
+<style color=#00ffffff size=1>.</style>            script, provides a menu allowing the user to start new
+<style color=#00ffffff size=1>.</style>            programs. and shows icons representing windows that have
+<style color=#00ffffff size=1>.</style>            been hidden.
+
+<style color=#00ffffff size=1>.</style>            When toolbar is started, it configures itself by means of
+<style color=#00ffffff size=1>.</style>            the /lib/wmsetup shell script. Toolbar loads the shell sh
+<style color=#00ffffff size=1>.</style>            (1), and defines the following shell built-in commands
+<style color=#00ffffff size=1>.</style>            before executing the script:
+
+<style color=#00ffffff size=1>.</style>            menu title1 \[title2\] command
+<style color=#00ffffff size=1>.</style>                 Insert an item at the top of the start menu. Title1 is
+<style color=#00ffffff size=1>.</style>                 the text of the item on the main menu. If title2 is
+<style color=#00ffffff size=1>.</style>                 given then title1 is a sub-menu with title2 as the menu
+<style color=#00ffffff size=1>.</style>                 item. Command is executed by the shell whenever the
+<style color=#00ffffff size=1>.</style>                 item is selected. An item with an empty command is
+<style color=#00ffffff size=1>.</style>                 displayed as a separator.
+
+<style color=#00ffffff size=1>.</style>            delmenu
+<style color=#00ffffff size=1>.</style>                 Forget all menu items.
+
+<style color=#00ffffff size=1>.</style>            The standard /lib/wmsetup script executes the script /usr/
+<style color=#00ffffff size=1>.</style>            username/lib/wmsetup, enabling each user to have their own
+<style color=#00ffffff size=1>.</style>            window manager configuration.
+
+<style color=#00ffffff size=1>.</style>            Normally toolbar packs a menu button referring to the start
+<style color=#00ffffff size=1>.</style>            menu at the left hand side of the tool bar. The -s option
+<style color=#00ffffff size=1>.</style>            suppresses that.
+
+<style color=#00ffffff size=1>.</style>            Toolbar serves the shared snarf buffer used by cut and paste
+<style color=#00ffffff size=1>.</style>            in <action name=wm(1)>wm(1)</action> applications, except in hosted Inferno where the
+<style color=#00ffffff size=1>.</style>            host's standard clipboard system is used instead, via snarf
+<style color=#00ffffff size=1>.</style>            (3). If toolbar cannot find /chan/snarf or the -p option is
+<style color=#00ffffff size=1>.</style>            given, toolbar will create its own snarf buffer, private to
+<style color=#00ffffff size=1>.</style>            the set of applications running under the current instance
+<style color=#00ffffff size=1>.</style>            of <action name=wm(1)>wm(1)</action>.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /lib/wmsetup
+<style color=#00ffffff size=1>.</style>                 Initialisation shell-script.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/wm/toolbar.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=wm(1)>wm(1)</action>, <action name=tkclient(2)>tkclient(2)</action>, <action name=wmclient(2)>wmclient(2)</action>, <action name=toolbar(1)>toolbar(1)</action>, <action name=logon(1)>logon(1)</action>.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

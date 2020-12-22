@@ -1,0 +1,162 @@
+A.OUT(10.6)                                           A.OUT(10.6)
+
+NAME
+<style color=#00ffffff size=1>.</style>            a.out - native kernel object file format
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            #include <a.out.h>
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            An executable native binary file has up to six sections: a
+<style color=#00ffffff size=1>.</style>            header, the program text, the data, a symbol table, a PC/SP
+<style color=#00ffffff size=1>.</style>            offset table (MC680x0 only), and finally a PC/line number
+<style color=#00ffffff size=1>.</style>            table. The header, given by a structure in <a.out.h>,
+<style color=#00ffffff size=1>.</style>            contains 4-byte integers in big-endian order:
+
+<style color=#00ffffff size=1>.</style>            typedef struct Exec {
+<style color=#00ffffff size=1>.</style>                long    magic\;  /* magic number */
+<style color=#00ffffff size=1>.</style>                long    text\;   /* size of text segment */
+<style color=#00ffffff size=1>.</style>                long    data\;   /* size of initialized data */
+<style color=#00ffffff size=1>.</style>                long    bss\;    /* size of uninitialized data */
+<style color=#00ffffff size=1>.</style>                long    syms\;   /* size of symbol table */
+<style color=#00ffffff size=1>.</style>                long    entry\;  /* entry point */
+<style color=#00ffffff size=1>.</style>                long    spsz\;   /* size of pc/sp offset table */
+<style color=#00ffffff size=1>.</style>                long    pcsz\;   /* size of pc/line number table */
+<style color=#00ffffff size=1>.</style>            } Exec\;
+<style color=#00ffffff size=1>.</style>            #define _MAGIC(b)   ((((4*b)+0)*b)+7)
+<style color=#00ffffff size=1>.</style>            #define A_MAGIC     _<action name=MAGIC(8)>MAGIC(8)</action>   /* 68020 */
+<style color=#00ffffff size=1>.</style>            #define I_MAGIC     _MAGIC(11)  /* intel 386 */
+<style color=#00ffffff size=1>.</style>            #define J_MAGIC     _MAGIC(12)  /* intel 960 */
+<style color=#00ffffff size=1>.</style>            #define K_MAGIC     _MAGIC(13)  /* sparc */
+<style color=#00ffffff size=1>.</style>            #define V_MAGIC     _MAGIC(16)  /* mips 3000 */
+<style color=#00ffffff size=1>.</style>            #define X_MAGIC     _MAGIC(17)  /* att dsp 3210 */
+<style color=#00ffffff size=1>.</style>            #define M_MAGIC     _MAGIC(18)  /* mips 4000 */
+<style color=#00ffffff size=1>.</style>            #define D_MAGIC     _MAGIC(19)  /* amd 29000 */
+<style color=#00ffffff size=1>.</style>            #define E_MAGIC     _MAGIC(20)  /* arm 7-something */
+<style color=#00ffffff size=1>.</style>            #define Q_MAGIC     _MAGIC(21)  /* powerpc */
+<style color=#00ffffff size=1>.</style>            #define N_MAGIC     _MAGIC(22)  /* mips 4000-le */
+<style color=#00ffffff size=1>.</style>            #define L_MAGIC     _MAGIC(23)  /* dec alpha */
+
+<style color=#00ffffff size=1>.</style>            Sizes are expressed in bytes. The size of the header is not
+<style color=#00ffffff size=1>.</style>            included in any of the other sizes.
+
+<style color=#00ffffff size=1>.</style>            When a Plan 9 binary file is executed, a memory image of
+<style color=#00ffffff size=1>.</style>            three segments is set up: the text segment, the data
+<style color=#00ffffff size=1>.</style>            segment, and the stack. The text segment begins at a virtual
+<style color=#00ffffff size=1>.</style>            address which is a multiple of the machine-dependent page
+<style color=#00ffffff size=1>.</style>            size. The text segment consists of the header and the first
+<style color=#00ffffff size=1>.</style>            text bytes of the binary file. The entry field gives the
+<style color=#00ffffff size=1>.</style>            virtual address of the entry point of the program. The data
+<style color=#00ffffff size=1>.</style>            segment starts at the first page-rounded virtual address
+<style color=#00ffffff size=1>.</style>            after the text segment. It consists of the next data bytes
+<style color=#00ffffff size=1>.</style>            of the binary file, followed by bss bytes initialized to
+<style color=#00ffffff size=1>.</style>            zero. The stack occupies the highest possible locations in
+<style color=#00ffffff size=1>.</style>            the core image, automatically growing downwards.
+
+<style color=#00ffffff size=1>.</style>            The next syms (possibly zero) bytes of the file contain
+<style color=#00ffffff size=1>.</style>            symbol table entries, each laid out as:
+
+<style color=#00ffffff size=1>.</style>                 uchar value\[4\]\;
+<style color=#00ffffff size=1>.</style>                 char  type\;
+<style color=#00ffffff size=1>.</style>                 char  name\[n\]\;   /* NUL-terminated */
+
+<style color=#00ffffff size=1>.</style>            The value is in big-endian order and the size of the name
+<style color=#00ffffff size=1>.</style>            field is not pre-defined: it is a zero-terminated array of
+<style color=#00ffffff size=1>.</style>            variable length.
+
+<style color=#00ffffff size=1>.</style>            The type field is one of the following characters:
+
+<style color=#00ffffff size=1>.</style>            T    text segment symbol
+<style color=#00ffffff size=1>.</style>            t    static text segment symbol
+<style color=#00ffffff size=1>.</style>            L    leaf function text segment symbol
+<style color=#00ffffff size=1>.</style>            l    static leaf function text segment symbol
+<style color=#00ffffff size=1>.</style>            D    data segment symbol
+<style color=#00ffffff size=1>.</style>            d    static data segment symbol
+<style color=#00ffffff size=1>.</style>            B    bss segment symbol
+<style color=#00ffffff size=1>.</style>            b    static bss segment symbol
+<style color=#00ffffff size=1>.</style>            a    automatic (local) variable symbol
+<style color=#00ffffff size=1>.</style>            p    function parameter symbol
+
+<style color=#00ffffff size=1>.</style>            A few others are described below. The symbols in the symbol
+<style color=#00ffffff size=1>.</style>            table appear in the same order as the program components
+<style color=#00ffffff size=1>.</style>            they describe.
+
+<style color=#00ffffff size=1>.</style>            The Plan 9 compilers implement a virtual stack frame pointer
+<style color=#00ffffff size=1>.</style>            rather than dedicating a register\; moreover, on the MC680x0
+<style color=#00ffffff size=1>.</style>            there is a variable offset between the stack pointer and the
+<style color=#00ffffff size=1>.</style>            frame pointer. Following the symbol table, MC680x0
+<style color=#00ffffff size=1>.</style>            executable files contain a spsz-byte table encoding the
+<style color=#00ffffff size=1>.</style>            offset of the stack frame pointer as a function of program
+<style color=#00ffffff size=1>.</style>            location\; this section is not present for other
+<style color=#00ffffff size=1>.</style>            architectures. The PC/SP table is encoded as a byte stream.
+<style color=#00ffffff size=1>.</style>            By setting the PC to the base of the text segment and the
+<style color=#00ffffff size=1>.</style>            offset to zero and interpreting the stream, the offset can
+<style color=#00ffffff size=1>.</style>            be computed for any PC. A byte value of 0 is followed by
+<style color=#00ffffff size=1>.</style>            four bytes that hold, in big-endian order, a constant to be
+<style color=#00ffffff size=1>.</style>            added to the offset. A byte value of 1 to 64 is multiplied
+<style color=#00ffffff size=1>.</style>            by four and added, without sign extension, to the offset. A
+<style color=#00ffffff size=1>.</style>            byte value of 65 to 128 is reduced by 64, multiplied by
+<style color=#00ffffff size=1>.</style>            four, and subtracted from the offset. A byte value of 129 to
+<style color=#00ffffff size=1>.</style>            255 is reduced by 129, multiplied by the quantum of
+<style color=#00ffffff size=1>.</style>            instruction size (e.g. two on the MC680x0), and added to the
+<style color=#00ffffff size=1>.</style>            current PC without changing the offset. After any of these
+<style color=#00ffffff size=1>.</style>            operations, the instruction quantum is added to the PC.
+
+<style color=#00ffffff size=1>.</style>            A similar table, occupying pcsz-bytes, is the next section
+<style color=#00ffffff size=1>.</style>            in an executable\; it is present for all architectures. The
+<style color=#00ffffff size=1>.</style>            same algorithm may be run using this table to recover the
+<style color=#00ffffff size=1>.</style>            absolute source line number from a given program location.
+<style color=#00ffffff size=1>.</style>            The absolute line number (starting from zero) counts the
+<style color=#00ffffff size=1>.</style>            newlines in the C-preprocessed source seen by the compiler.
+<style color=#00ffffff size=1>.</style>            Three symbol types in the main symbol table facilitate
+<style color=#00ffffff size=1>.</style>            conversion of the absolute number to source file and line
+<style color=#00ffffff size=1>.</style>            number:
+
+<style color=#00ffffff size=1>.</style>            f    source file name components
+
+<style color=#00ffffff size=1>.</style>            z    source file name
+
+<style color=#00ffffff size=1>.</style>            Z    source file line offset
+
+<style color=#00ffffff size=1>.</style>            The f symbol associates an integer (the value field of the
+<style color=#00ffffff size=1>.</style>            `symbol') with a unique file path name component (the name
+<style color=#00ffffff size=1>.</style>            of the `symbol'). These path components are used by the z
+<style color=#00ffffff size=1>.</style>            symbol to represent a file name: the first byte of the name
+<style color=#00ffffff size=1>.</style>            field is always 0\; the remaining bytes hold a
+<style color=#00ffffff size=1>.</style>            zero-terminated array of 16-bit values (in big-endian order)
+<style color=#00ffffff size=1>.</style>            that represent file name components from f symbols. These
+<style color=#00ffffff size=1>.</style>            components, when separated by slashes, form a file name. The
+<style color=#00ffffff size=1>.</style>            initial slash of a file name is recorded in the symbol table
+<style color=#00ffffff size=1>.</style>            by an f symbol\; when forming file names from z symbols an
+<style color=#00ffffff size=1>.</style>            initial slash is not to be assumed. The z symbols are
+<style color=#00ffffff size=1>.</style>            clustered, one set for each object file in the program,
+<style color=#00ffffff size=1>.</style>            before any text symbols from that object file. The set of z
+<style color=#00ffffff size=1>.</style>            symbols for an object file form a history stack of the
+<style color=#00ffffff size=1>.</style>            included source files from which the object file was
+<style color=#00ffffff size=1>.</style>            compiled. The value associated with each z symbol is the
+<style color=#00ffffff size=1>.</style>            absolute line number at which that file was included in the
+<style color=#00ffffff size=1>.</style>            source\; if the name associated with the z symbol is null,
+<style color=#00ffffff size=1>.</style>            the symbol represents the end of an included file, that is,
+<style color=#00ffffff size=1>.</style>            a pop of the history stack. If the value of the z symbol is
+<style color=#00ffffff size=1>.</style>            1 (one), it represents the start of a new history stack. To
+<style color=#00ffffff size=1>.</style>            recover the source file and line number for a program
+<style color=#00ffffff size=1>.</style>            location, find the text symbol containing the location and
+<style color=#00ffffff size=1>.</style>            then the first history stack preceding the text symbol in
+<style color=#00ffffff size=1>.</style>            the symbol table. Next, interpret the PC/line offset table
+<style color=#00ffffff size=1>.</style>            to discover the absolute line number for the program
+<style color=#00ffffff size=1>.</style>            location. Using the line number, scan the history stack to
+<style color=#00ffffff size=1>.</style>            find the set of source files open at that location. The line
+<style color=#00ffffff size=1>.</style>            number within the file can be found using the line numbers
+<style color=#00ffffff size=1>.</style>            in the history stack. The Z symbols correspond to #line
+<style color=#00ffffff size=1>.</style>            directives in the source\; they specify an adjustment to the
+<style color=#00ffffff size=1>.</style>            line number to be printed by the above algorithm.  The
+<style color=#00ffffff size=1>.</style>            offset is associated with the first previous z symbol in the
+<style color=#00ffffff size=1>.</style>            symbol table.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            acid(10.1), 2a(10.1), 2l(10.1), inm(10.1)
+
+BUGS
+<style color=#00ffffff size=1>.</style>            There is no type information in the symbol table.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

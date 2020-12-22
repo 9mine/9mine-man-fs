@@ -1,0 +1,99 @@
+<action name=KFS(4)>KFS(4)</action>                                                     <action name=KFS(4)>KFS(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            kfs - disk file system
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            mount {disk/kfs \[-r \[ -b bsize \] \] \[-c\] \[-A\] \[-P\] \[-R\] \[-W\]
+<style color=#00ffffff size=1>.</style>            \[ -n name \]  file} dir
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Kfs implements a hierarchical Inferno file system within an
+<style color=#00ffffff size=1>.</style>            existing file, which is typically a disk or flash memory
+<style color=#00ffffff size=1>.</style>            partition. It gives access to it through the 9P protocol on
+<style color=#00ffffff size=1>.</style>            its standard input, and the contents can be mounted directly
+<style color=#00ffffff size=1>.</style>            on a given dir as shown above. The file system format is the
+<style color=#00ffffff size=1>.</style>            same as that used by the kfs command of Plan 9, except that
+<style color=#00ffffff size=1>.</style>            the modification user ID is implemented.
+
+<style color=#00ffffff size=1>.</style>            The -r option causes the file system to be reset to an
+<style color=#00ffffff size=1>.</style>            initially empty state (`reamed'). Permission checking is
+<style color=#00ffffff size=1>.</style>            turned off, to allow any desired permissions and file
+<style color=#00ffffff size=1>.</style>            ownership to be set. (In other words, the -W and -P options
+<style color=#00ffffff size=1>.</style>            are also set by default.) The file system block size is set
+<style color=#00ffffff size=1>.</style>            to the bsize given by the -b option (default: 1024 bytes),
+<style color=#00ffffff size=1>.</style>            which must be a multiple of 512 and not greater than 16k
+<style color=#00ffffff size=1>.</style>            bytes. The block size is stored in the file and need not be
+<style color=#00ffffff size=1>.</style>            given again. The storage representation is always
+<style color=#00ffffff size=1>.</style>            little-endian.
+
+<style color=#00ffffff size=1>.</style>            Otherwise, the file system is checked if required, unless
+<style color=#00ffffff size=1>.</style>            the -c option is given.
+
+<style color=#00ffffff size=1>.</style>            The contents of the file system can be provided by using
+<style color=#00ffffff size=1>.</style>            commands such as <action name=mkdir(1)>mkdir(1)</action>, <action name=cp(1)>cp(1)</action> and <action name=rm(1)>rm(1)</action> in dir, or built
+<style color=#00ffffff size=1>.</style>            from a description using <action name=mkfs(8)>mkfs(8)</action>.
+
+<style color=#00ffffff size=1>.</style>            The mapping between user names and internal IDs within the
+<style color=#00ffffff size=1>.</style>            file system is established by the file adm/users (within the
+<style color=#00ffffff size=1>.</style>            file system itself) as described by <action name=users(6)>users(6)</action>, which kfs
+<style color=#00ffffff size=1>.</style>            reads when it starts. If no such file exists, as for
+<style color=#00ffffff size=1>.</style>            instance when the file system is initially empty, kfs uses a
+<style color=#00ffffff size=1>.</style>            minimal set corresponding to the following <action name=users(6)>users(6)</action> file:
+
+<style color=#00ffffff size=1>.</style>                 -1:adm:adm:
+<style color=#00ffffff size=1>.</style>                 0:none:adm:
+<style color=#00ffffff size=1>.</style>                 9999:noworld::
+<style color=#00ffffff size=1>.</style>                 10000:sys::
+<style color=#00ffffff size=1>.</style>                 10001:upas:upas:
+<style color=#00ffffff size=1>.</style>                 10002:bootes:bootes:
+<style color=#00ffffff size=1>.</style>                 10006:inferno::
+
+<style color=#00ffffff size=1>.</style>            Any <action name=users(6)>users(6)</action> file used with kfs should include entries for
+<style color=#00ffffff size=1>.</style>            at least adm, none, and noworld as above (although group
+<style color=#00ffffff size=1>.</style>            membership can vary).
+
+<style color=#00ffffff size=1>.</style>            Kfs can optionally serve a control file, for use by kfscmd
+<style color=#00ffffff size=1>.</style>            (8). If the -n option is given, kfs creates a channel
+<style color=#00ffffff size=1>.</style>            /chan/kfs.name.cmd and accepts commands on it from the user
+<style color=#00ffffff size=1>.</style>            that started kfs.
+
+<style color=#00ffffff size=1>.</style>            Other options are:
+
+<style color=#00ffffff size=1>.</style>            -A   do not update access times\; useful when running a file
+<style color=#00ffffff size=1>.</style>                 system in flash over <action name=ftl(3)>ftl(3)</action>, to avoid excessive wear
+
+<style color=#00ffffff size=1>.</style>            -P   suppress permission checking
+
+<style color=#00ffffff size=1>.</style>            -R   file system is read only
+
+<style color=#00ffffff size=1>.</style>            -W   allow wstat (see <action name=sys-stat(2)>sys-stat(2)</action> or <action name=stat(5)>stat(5)</action>) to make
+<style color=#00ffffff size=1>.</style>                 arbitrary changes to user and group fields
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Create an empty file system in the file kfs.file. Because
+<style color=#00ffffff size=1>.</style>            the file system will be no larger than the existing file's
+<style color=#00ffffff size=1>.</style>            size, and the file is assumed not to be a device file, use
+<style color=#00ffffff size=1>.</style>            <action name=zeros(1)>zeros(1)</action> to prepare a file with 2048 blocks of 1024 bytes
+<style color=#00ffffff size=1>.</style>            each:
+
+<style color=#00ffffff size=1>.</style>                 zeros 1024 2048 >kfs.file
+<style color=#00ffffff size=1>.</style>                 mount -c {disk/kfs -r kfs.file} /n/local
+
+<style color=#00ffffff size=1>.</style>            The -c option to mount allows files to be created in
+<style color=#00ffffff size=1>.</style>            /n/local.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/disk/kfs.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=dd(1)>dd(1)</action>, <action name=zeros(1)>zeros(1)</action>, <action name=flash(3)>flash(3)</action>, <action name=ftl(3)>ftl(3)</action>, <action name=logfs(3)>logfs(3)</action>, <action name=sd(3)>sd(3)</action>, users
+<style color=#00ffffff size=1>.</style>            (6), <action name=kfscmd(8)>kfscmd(8)</action>, <action name=mkfs(8)>mkfs(8)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Because the file system format is the same as Plan 9's kfs,
+<style color=#00ffffff size=1>.</style>            this one also does not support file names longer than 27
+<style color=#00ffffff size=1>.</style>            bytes. It likewise cannot cope with files bigger than 2⁳ⁱ-1
+<style color=#00ffffff size=1>.</style>            bytes.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

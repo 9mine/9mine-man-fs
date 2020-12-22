@@ -1,0 +1,25 @@
+<action name=MANUFACTURE(8)>MANUFACTURE(8)</action>                                     <action name=MANUFACTURE(8)>MANUFACTURE(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            manufacture - command to emulate set-top-box-id in ROM
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            manufacturebox-id
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Manufacture initialises the file /nvfs/ID with the string
+<style color=#00ffffff size=1>.</style>            box-id. The file emulates the serial number that the
+<style color=#00ffffff size=1>.</style>            manufacturer of a real set top box would normally burn into
+<style color=#00ffffff size=1>.</style>            ROM (see also rtcid in <action name=rtc(3)>rtc(3)</action>). The box-id is used by
+<style color=#00ffffff size=1>.</style>            <action name=register(8)>register(8)</action>.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /nvfs/ID
+<style color=#00ffffff size=1>.</style>            /nvfs/default
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/manufacture.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=register(8)>register(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

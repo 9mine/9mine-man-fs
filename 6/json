@@ -1,0 +1,53 @@
+<action name=JSON(6)>JSON(6)</action>                                                   <action name=JSON(6)>JSON(6)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            json - javascript object notation
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            JSON is a textual data transport encoding for a small
+<style color=#00ffffff size=1>.</style>            collection of basic and structured values: null, booleans,
+<style color=#00ffffff size=1>.</style>            numbers, strings, arrays, and objects (property/value list).
+<style color=#00ffffff size=1>.</style>            It is a subset of JavaScript (ECMAScript). <action name=Json(2)>Json(2)</action> describes
+<style color=#00ffffff size=1>.</style>            a Limbo module that can read and write streams of
+<style color=#00ffffff size=1>.</style>            JSON-encoded data.
+
+<style color=#00ffffff size=1>.</style>            The encoding syntax and its interpretation is defined by
+<style color=#00ffffff size=1>.</style>            Internet RFC4627, but is briefly summarised here:
+
+<style color=#00ffffff size=1>.</style>                 text	::=	array | object
+
+<style color=#00ffffff size=1>.</style>                 value	::=	 null | true | false | number | string | array | object
+
+<style color=#00ffffff size=1>.</style>                 object	::=	'{' \[pair (',' pair)*\] '}'
+<style color=#00ffffff size=1>.</style>                 pair	::=	string ':' value
+
+<style color=#00ffffff size=1>.</style>                 array	::=	'\[' \[value (',' value)*\] '\]'
+
+<style color=#00ffffff size=1>.</style>                 number	::=	int frac? exp?
+<style color=#00ffffff size=1>.</style>                 int	::=	'-'? \[0-9\] | \[1-9\]\[0-9\]+
+<style color=#00ffffff size=1>.</style>                 frac	::=	'.' \[0-9\]+
+<style color=#00ffffff size=1>.</style>                 exp	::=	\[eE\]\[-+\]? \[0-9\]+
+
+<style color=#00ffffff size=1>.</style>                 string	::=	'"' char* '"'
+<style color=#00ffffff size=1>.</style>                 char	::=	\[^\x00-\x1F"\\\] |
+<style color=#00ffffff size=1>.</style>                 		 '\"' | '\/' | '\b' | '\f' | '\n' | '\r' | '\t' |
+<style color=#00ffffff size=1>.</style>                 		'\u' hex hex hex hex
+<style color=#00ffffff size=1>.</style>                 hex	::=	\[0-9a-fA-F\]
+
+<style color=#00ffffff size=1>.</style>            A sequence of blank, tab, newline or carriage-return
+<style color=#00ffffff size=1>.</style>            characters (`white space') can appear before or after
+<style color=#00ffffff size=1>.</style>            opening and closing brackets and braces, colons and commas,
+<style color=#00ffffff size=1>.</style>            and is ignored. The null represents a null value of any
+<style color=#00ffffff size=1>.</style>            type. The strings in the pairs of an object are intended to
+<style color=#00ffffff size=1>.</style>            represent member names, and should be unique within that
+<style color=#00ffffff size=1>.</style>            object. Note that array and object denotations can be empty.
+<style color=#00ffffff size=1>.</style>            Also note that the RFC wants applications to exchange a text
+<style color=#00ffffff size=1>.</style>            (ie, object or array) not an arbitrary value.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=json(2)>json(2)</action>, <action name=sexprs(6)>sexprs(6)</action>, <action name=ubfa(6)>ubfa(6)</action>
+<style color=#00ffffff size=1>.</style>            D Crockford, ``The application/json Media Type for
+<style color=#00ffffff size=1>.</style>            JavaScript Object Notation (JSON)'', RFC4627.
+<style color=#00ffffff size=1>.</style>            http://www.json.org/
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

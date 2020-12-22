@@ -1,0 +1,50 @@
+SECONDS(10.2)                                       SECONDS(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            seconds, ticks, HZ, MS2HZ, MS2TK, TK2MS, TK2SEC - kernel
+<style color=#00ffffff size=1>.</style>            times and time conversions
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            long	seconds(void)
+
+<style color=#00ffffff size=1>.</style>            ulong   	ticks(void)
+
+<style color=#00ffffff size=1>.</style>            #define	HZ          ...
+<style color=#00ffffff size=1>.</style>            #define	MS2HZ(t)    ...
+<style color=#00ffffff size=1>.</style>            #define	TK2SEC(t)   ...
+<style color=#00ffffff size=1>.</style>            #define	TK2MS(t)    ...
+<style color=#00ffffff size=1>.</style>            #define	MS2TK(m)    ...
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Seconds returns the system's idea of the current time as the
+<style color=#00ffffff size=1>.</style>            number of seconds since the start of the epoch (00:00:00
+<style color=#00ffffff size=1>.</style>            GMT, January 1, 1970).
+
+<style color=#00ffffff size=1>.</style>            Ticks returns the number of system-dependent clock ticks
+<style color=#00ffffff size=1>.</style>            since system boot.
+
+<style color=#00ffffff size=1>.</style>            The system clock frequency is platform-dependent. Several
+<style color=#00ffffff size=1>.</style>            symbolic constants and macro functions are defined by the
+<style color=#00ffffff size=1>.</style>            file mem.h to convert between different time units:
+
+<style color=#00ffffff size=1>.</style>            HZ         The number of clock ticks per second.
+
+<style color=#00ffffff size=1>.</style>            MS2HZ      Milliseconds per clock tick.
+
+<style color=#00ffffff size=1>.</style>            TK2SEC(t)  Convert t clock ticks to seconds and return the
+<style color=#00ffffff size=1>.</style>                       result (truncating not rounding).
+
+<style color=#00ffffff size=1>.</style>            TK2MS(t)   Convert t clock ticks to milliseconds and return
+<style color=#00ffffff size=1>.</style>                       the result.
+
+<style color=#00ffffff size=1>.</style>            MS2TK(m)   Convert m milliseconds to clock ticks and return
+<style color=#00ffffff size=1>.</style>                       the result (truncating).
+
+<style color=#00ffffff size=1>.</style>            The functions are often used to calculate delays for timing
+<style color=#00ffffff size=1>.</style>            functions, for instance:
+
+<style color=#00ffffff size=1>.</style>                 if(atactlrwait(dp->cp, DHmagic, 0, MS2TK(100))){
+<style color=#00ffffff size=1>.</style>                 	...
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,37 @@
+<action name=LOGFILE(4)>LOGFILE(4)</action>                                             <action name=LOGFILE(4)>LOGFILE(4)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            logfile - memory-based append-only circular storage buffer
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            logfile \[-size\] file
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Logfile creates a name at file (the containing directory
+<style color=#00ffffff size=1>.</style>            must already exist). Each write to file appends the written
+<style color=#00ffffff size=1>.</style>            data up to a maximum of size bytes\; subsequent writes erase
+<style color=#00ffffff size=1>.</style>            the existing data in a circular fashion. A read from file
+<style color=#00ffffff size=1>.</style>            will return any currently stored data, if any\; if there is
+<style color=#00ffffff size=1>.</style>            none, then it will block until more data becomes available.
+<style color=#00ffffff size=1>.</style>            Multiple readers will receive the data independently of one
+<style color=#00ffffff size=1>.</style>            another. If a writing process is consistently producing data
+<style color=#00ffffff size=1>.</style>            faster than a reading process, then the data read will have
+<style color=#00ffffff size=1>.</style>            some bytes elided\; a write is never blocked.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/logfile.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=wm-logwindow(1)>wm-logwindow(1)</action>, <action name=sys-file2chan(2)>sys-file2chan(2)</action>
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Restrictions on <action name=sys-file2chan(2)>sys-file2chan(2)</action> mean that the logfile
+<style color=#00ffffff size=1>.</style>            process will not terminate automatically when its file is
+<style color=#00ffffff size=1>.</style>            removed or unmounted.
+
+<style color=#00ffffff size=1>.</style>            There is no indication to a reader of any missing data.
+
+<style color=#00ffffff size=1>.</style>            It is not possible to do a non-blocking read of the log
+<style color=#00ffffff size=1>.</style>            file.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

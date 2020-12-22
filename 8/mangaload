@@ -1,0 +1,36 @@
+<action name=MANGALOAD(8)>MANGALOAD(8)</action>                                         <action name=MANGALOAD(8)>MANGALOAD(8)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            mangaload - send new kernel to MANGA bootstrap
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            auxi/mangaload \[ -48dr \] host image
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Mangaload uses an ICMP protocol unique to the Peplink MANGA™
+<style color=#00ffffff size=1>.</style>            firewall to send a new kernel image to the MANGA bootstrap
+<style color=#00ffffff size=1>.</style>            monitor to burn into flash, replacing the existing kernel
+<style color=#00ffffff size=1>.</style>            image. To start the loading process, connect to the device's
+<style color=#00ffffff size=1>.</style>            console on its serial port (38400 baud, 8 bits, no parity, 1
+<style color=#00ffffff size=1>.</style>            stop bit, no flow control), power the device off then on
+<style color=#00ffffff size=1>.</style>            again, and when the MANGA prompt appears, quickly type the
+<style color=#00ffffff size=1>.</style>            letter f. Then run mangaload to load the kernel\; the device
+<style color=#00ffffff size=1>.</style>            should give status updates as the kernel loads, and as it
+<style color=#00ffffff size=1>.</style>            burns the image into flash. When it has finished, power the
+<style color=#00ffffff size=1>.</style>            device off and on again to start the new kernel.
+
+<style color=#00ffffff size=1>.</style>            By default, mangaload assumes a 4 Mbyte flash on the device\;
+<style color=#00ffffff size=1>.</style>            the -8 option sets it to 8 Mbytes. The -r option causes the
+<style color=#00ffffff size=1>.</style>            image to be loaded into another, larger flash region, used
+<style color=#00ffffff size=1>.</style>            by Linux for its initial root, which can be used by Inferno
+<style color=#00ffffff size=1>.</style>            for general storage. The -d option prints a trace of the
+<style color=#00ffffff size=1>.</style>            protocol, for debugging.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/auxi/mangaload.b
+<style color=#00ffffff size=1>.</style>            /os/manga
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bootpd(8)>bootpd(8)</action>, <action name=tftpd(8)>tftpd(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

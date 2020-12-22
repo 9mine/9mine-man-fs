@@ -1,0 +1,80 @@
+5CV(10.1)                                               5CV(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            5cv, mkppcimage, sqz - convert kernel executable to boot
+<style color=#00ffffff size=1>.</style>            format
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            5cv \[ -Dn \] \[ -Hn \] \[ -s \] executable outfile
+
+<style color=#00ffffff size=1>.</style>            mkppcimage \[ -l loadaddr \] executable outfile
+
+<style color=#00ffffff size=1>.</style>            sqz \[ -w \] \[ -t \] executable
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These commands convert a kernel executable in Inferno/Plan 9
+<style color=#00ffffff size=1>.</style>            a.out(10.5) format into another format used by a third
+<style color=#00ffffff size=1>.</style>            party's boot loader. Most convert the input executable and
+<style color=#00ffffff size=1>.</style>            write the new format to outfile.
+
+<style color=#00ffffff size=1>.</style>            5cv converts an ARM executable into one of several
+<style color=#00ffffff size=1>.</style>            alternative formats. The output format is controlled by the
+<style color=#00ffffff size=1>.</style>            -H option:
+
+<style color=#00ffffff size=1>.</style>            -H1     AIF for RISCOS.
+
+<style color=#00ffffff size=1>.</style>            -H2     Plan 9.
+
+<style color=#00ffffff size=1>.</style>            -H3     Boot for NetBSD.
+
+<style color=#00ffffff size=1>.</style>            -H4     Headerless, stripped, and padded to 2K in length.
+<style color=#00ffffff size=1>.</style>                    Used for the ROM resident serial bootstrap loader in
+<style color=#00ffffff size=1>.</style>                    a Cirrus EP72xx.
+
+<style color=#00ffffff size=1>.</style>            -H5     Headerless, and stripped, for general use.
+
+<style color=#00ffffff size=1>.</style>            -H6     EPOC IMG format. Not a complete conversion,
+<style color=#00ffffff size=1>.</style>                    currently sufficient for use with some NT based
+<style color=#00ffffff size=1>.</style>                    downloaders which autosense the file type by the
+<style color=#00ffffff size=1>.</style>                    "EP" signature, and then ignore the contents of the
+<style color=#00ffffff size=1>.</style>                    header.
+
+<style color=#00ffffff size=1>.</style>            The other options are:
+
+<style color=#00ffffff size=1>.</style>            -s   Strip symbol table.
+
+<style color=#00ffffff size=1>.</style>            -Dn  Enables debug output.
+
+<style color=#00ffffff size=1>.</style>            Mkppcimage converts a PowerPC or ARM executable to a boot
+<style color=#00ffffff size=1>.</style>            image format used by PPCBOOT and UBOOT\c . The output file
+<style color=#00ffffff size=1>.</style>            has a PPCBOOT image with one component labelled as an `OS
+<style color=#00ffffff size=1>.</style>            kernel' for the appropriate architecture, containing the
+<style color=#00ffffff size=1>.</style>            a.out(10.6) header, text and initialised data, all
+<style color=#00ffffff size=1>.</style>            uncompressed. Symbols are not included. By default the load
+<style color=#00ffffff size=1>.</style>            address is deduced from the executable's entry point\; the -l
+<style color=#00ffffff size=1>.</style>            option allows loadaddr to be set explicitly, with the number
+<style color=#00ffffff size=1>.</style>            in C syntax (decimal by default). Other attributes are
+<style color=#00ffffff size=1>.</style>            deduced from the executable.
+
+<style color=#00ffffff size=1>.</style>            Sqz squeezes (compresses) the given ARM or PowerPC
+<style color=#00ffffff size=1>.</style>            executable using a method that achieves respectable
+<style color=#00ffffff size=1>.</style>            compression for executables but is much faster to decompress
+<style color=#00ffffff size=1>.</style>            than (say) gzip's. By default, both the program text and
+<style color=#00ffffff size=1>.</style>            initialised data are compressed\; the -t option causes sqz to
+<style color=#00ffffff size=1>.</style>            compress only the program text, leaving the data as-is. By
+<style color=#00ffffff size=1>.</style>            default, sqz prints compression statistics on its standard
+<style color=#00ffffff size=1>.</style>            error output\; the -w option causes it also to write the
+<style color=#00ffffff size=1>.</style>            compressed file on its standard output. Either the bootstrap
+<style color=#00ffffff size=1>.</style>            that loads it must decompress the result, or a small
+<style color=#00ffffff size=1>.</style>            uncompressed stub must also be loaded that decompresses the
+<style color=#00ffffff size=1>.</style>            remainder.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /utils/5cv
+<style color=#00ffffff size=1>.</style>            /utils/mkppcimage
+<style color=#00ffffff size=1>.</style>            /utils/sqz
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            2l(10.1), 5cv(10.1), ms2(10.1), a.out(10.5)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

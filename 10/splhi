@@ -1,0 +1,42 @@
+SPLHI(10.2)                                           SPLHI(10.2)
+
+NAME
+<style color=#00ffffff size=1>.</style>            splhi, spllo, splx, islo - enable and disable interrupts
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            int	spllo(void)
+
+<style color=#00ffffff size=1>.</style>            int	splhi(void)
+
+<style color=#00ffffff size=1>.</style>            void	splx(int x)
+
+<style color=#00ffffff size=1>.</style>            int	islo(void)
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            These primitives enable and disable maskable interrupts on
+<style color=#00ffffff size=1>.</style>            the current processor. Generally, device drivers should use
+<style color=#00ffffff size=1>.</style>            ilock (see lock(10.2)), sleep(10.2), or the functions in qio
+<style color=#00ffffff size=1>.</style>            (10.2) to control interaction between processes and
+<style color=#00ffffff size=1>.</style>            interrupt handlers. Those routines (but not these) provide
+<style color=#00ffffff size=1>.</style>            correct synchronisation on multiprocessors.
+
+<style color=#00ffffff size=1>.</style>            Spllo enables interrupts and returns a flag representing the
+<style color=#00ffffff size=1>.</style>            previous interrupt enable state. It must not normally be
+<style color=#00ffffff size=1>.</style>            called from interrupt level.
+
+<style color=#00ffffff size=1>.</style>            Splhi disables all maskable interrupts and returns the
+<style color=#00ffffff size=1>.</style>            previous interrupt enable state. The period during which
+<style color=#00ffffff size=1>.</style>            interrupts are disabled had best be short, or real-time
+<style color=#00ffffff size=1>.</style>            applications will suffer.
+
+<style color=#00ffffff size=1>.</style>            Splx restores the interrupt enable state state to x, which
+<style color=#00ffffff size=1>.</style>            must be a value returned by a previous call to splhi or
+<style color=#00ffffff size=1>.</style>            spllo.
+
+<style color=#00ffffff size=1>.</style>            Islo returns true (non-zero) if interrupts are currently
+<style color=#00ffffff size=1>.</style>            enabled, and 0 otherwise.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            lock(10.2), qio(10.2), sleep(10.2), intrenable(10.2)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

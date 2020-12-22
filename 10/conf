@@ -1,0 +1,162 @@
+CONF(10.6)                                             CONF(10.6)
+
+NAME
+<style color=#00ffffff size=1>.</style>            conf - native and hosted kernel configuration file
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Native and hosted Inferno kernels are built for a given
+<style color=#00ffffff size=1>.</style>            target platform in the host environment in directory /os/
+<style color=#00ffffff size=1>.</style>            platform or /emu/platform. Existing platforms include pc and
+<style color=#00ffffff size=1>.</style>            ipaq for native kernels and Plan9, Linux, Nt (for all
+<style color=#00ffffff size=1>.</style>            versions of Windows), and Solaris, amongst others. Each
+<style color=#00ffffff size=1>.</style>            platform can have different kernels with different
+<style color=#00ffffff size=1>.</style>            configurations. A given configuration is built in the
+<style color=#00ffffff size=1>.</style>            platform's directory using the mk(10.1) command:
+
+<style color=#00ffffff size=1>.</style>                 mk 'CONF=conf'
+
+<style color=#00ffffff size=1>.</style>            where conf is a text file that specifies drivers, protocols
+<style color=#00ffffff size=1>.</style>            and other parameters for that particular kernel: a parts
+<style color=#00ffffff size=1>.</style>            list. The result of a successful mk is an executable or
+<style color=#00ffffff size=1>.</style>            bootable file with a name determined by the platform's
+<style color=#00ffffff size=1>.</style>            mkfile, typically iconf for all native platforms, $O.conf
+<style color=#00ffffff size=1>.</style>            for Plan 9, Unix and clones, and iconf.exe for Windows.
+
+<style color=#00ffffff size=1>.</style>            A kernel configuration file has several sections of the form
+
+<style color=#00ffffff size=1>.</style>                 label
+<style color=#00ffffff size=1>.</style>                 	item \[ subitem ... \]
+<style color=#00ffffff size=1>.</style>                 	...
+
+<style color=#00ffffff size=1>.</style>            Each section begins with a label at the start of a line,
+<style color=#00ffffff size=1>.</style>            which names a configuration category, followed by a list of
+<style color=#00ffffff size=1>.</style>            each item to select from that category, one line per item,
+<style color=#00ffffff size=1>.</style>            with white space (ie, blank or tab) at the start of the
+<style color=#00ffffff size=1>.</style>            line. An item line can optionally list one or more subitems
+<style color=#00ffffff size=1>.</style>            that must be included in the kernel to support it. A line
+<style color=#00ffffff size=1>.</style>            that starts with a ``#'' is a comment. Empty lines are
+<style color=#00ffffff size=1>.</style>            ignored.
+
+<style color=#00ffffff size=1>.</style>            Labels are chosen from the following set, listed in the
+<style color=#00ffffff size=1>.</style>            order in which they conventionally appear in a configuration
+<style color=#00ffffff size=1>.</style>            file:
+<style color=#00ffffff size=1>.</style>            dev      Device drivers
+<style color=#00ffffff size=1>.</style>            ip       IP protocols (native kernels only) taken from ../ip
+<style color=#00ffffff size=1>.</style>            link     Hardware-specific parts of device drivers.
+<style color=#00ffffff size=1>.</style>            misc     Architecture-specific files\; specific VGA and SCSI
+<style color=#00ffffff size=1>.</style>                     interfaces
+<style color=#00ffffff size=1>.</style>            lib      Libraries to link with the kernel
+<style color=#00ffffff size=1>.</style>            mod      Builtin Dis modules
+<style color=#00ffffff size=1>.</style>            port     Portable components (other than drivers) from
+<style color=#00ffffff size=1>.</style>                     ../port
+<style color=#00ffffff size=1>.</style>            code     C code and declarations to include as-is in the
+<style color=#00ffffff size=1>.</style>                     generated configuration file
+<style color=#00ffffff size=1>.</style>            init     Dis init program
+<style color=#00ffffff size=1>.</style>            root     List of files and directories to put in the <action name=root(3)>root(3)</action>
+<style color=#00ffffff size=1>.</style>                     file system
+
+<style color=#00ffffff size=1>.</style>            When an item is listed under a given label it causes a
+<style color=#00ffffff size=1>.</style>            corresponding component to be included in the kernel. The
+<style color=#00ffffff size=1>.</style>            details depend on the label, as discussed below. Each
+<style color=#00ffffff size=1>.</style>            subitem represents a kernel subcomponent required by the
+<style color=#00ffffff size=1>.</style>            corresponding item. Both items and subitems can be either
+<style color=#00ffffff size=1>.</style>            portable (platform-independent) or platform-specific. The
+<style color=#00ffffff size=1>.</style>            source file for a given item or subitem is sought in the
+<style color=#00ffffff size=1>.</style>            platform-directory (for platform-specific code), and in
+<style color=#00ffffff size=1>.</style>            directories ../port and ../ip, under control of the
+<style color=#00ffffff size=1>.</style>            platform's mkfile and ../port/portmkfile (which is included
+<style color=#00ffffff size=1>.</style>            by mkfile). Resulting object files are left in the platform
+<style color=#00ffffff size=1>.</style>            directory.
+
+<style color=#00ffffff size=1>.</style>            Outside the dev section, each item and subitem x causes the
+<style color=#00ffffff size=1>.</style>            kernel image to include the code compiled from x.c, (or x.s
+<style color=#00ffffff size=1>.</style>            or x.S for assembly-language support), or portdir/x.c, where
+<style color=#00ffffff size=1>.</style>            portdir is one of the portable directories mentioned above.
+<style color=#00ffffff size=1>.</style>            In the dev section, an item x corresponds instead to the
+<style color=#00ffffff size=1>.</style>            driver source file devx.c in the current (platform-specific)
+<style color=#00ffffff size=1>.</style>            directory or a portable driver portdir/devx.c. Subitems are
+<style color=#00ffffff size=1>.</style>            handled as in any other section. Typically they are
+<style color=#00ffffff size=1>.</style>            auxiliary files that are needed by the associated driver.
+
+<style color=#00ffffff size=1>.</style>            For instance, in a native kernel the portable driver for the
+<style color=#00ffffff size=1>.</style>            draw device uses platform-specific code from screen.c. That
+<style color=#00ffffff size=1>.</style>            can be represented as follows:
+
+<style color=#00ffffff size=1>.</style>                 dev
+<style color=#00ffffff size=1>.</style>                 	draw	screen
+
+<style color=#00ffffff size=1>.</style>            Each item x in the ip section corresponds to a protocol
+<style color=#00ffffff size=1>.</style>            implementation compiled from ../ip/x.c. Any subitems are
+<style color=#00ffffff size=1>.</style>            dealt with in the same way as in the dev section.
+
+<style color=#00ffffff size=1>.</style>            The link section provides a way for hardware-specific parts
+<style color=#00ffffff size=1>.</style>            of drivers to link at runtime to the hardware-invariant part
+<style color=#00ffffff size=1>.</style>            of a device drivers. For each item x, the kernel will call
+<style color=#00ffffff size=1>.</style>            the function xlink during its initialisation. Typically that
+<style color=#00ffffff size=1>.</style>            function makes itself known to the device driver by calling
+<style color=#00ffffff size=1>.</style>            a function provided by that driver, passing the address of a
+<style color=#00ffffff size=1>.</style>            interface-specific data structure or linkage table. For
+<style color=#00ffffff size=1>.</style>            example, ethersmc is an interface-specific component:
+
+<style color=#00ffffff size=1>.</style>                 link
+<style color=#00ffffff size=1>.</style>                 	...
+<style color=#00ffffff size=1>.</style>                 	ethersmc
+
+<style color=#00ffffff size=1>.</style>            and its source file ethersmc.c provides a function
+<style color=#00ffffff size=1>.</style>            ethersmclink that calls addethercard in the
+<style color=#00ffffff size=1>.</style>            interface-invariant part of the driver, devether.c:
+
+<style color=#00ffffff size=1>.</style>                 void
+<style color=#00ffffff size=1>.</style>                 ethersmclink(void)
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                 	addethercard("smc91cXX", reset)\;
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>            Similarly, during kernel initialisation, for each item x in
+<style color=#00ffffff size=1>.</style>            the mod section, the kernel calls the function xinit, to
+<style color=#00ffffff size=1>.</style>            initialise the corresponding built-in Limbo module.
+
+<style color=#00ffffff size=1>.</style>            The init section selects the first Dis program run by the
+<style color=#00ffffff size=1>.</style>            system. For native kernels, a given item x refers to
+<style color=#00ffffff size=1>.</style>            ../init/x.dis, which is automatically built from ../init/x.b
+<style color=#00ffffff size=1>.</style>            . For hosted kernels, emuinit is normally used, referring to
+<style color=#00ffffff size=1>.</style>            /dis/emuinit.dis.
+
+<style color=#00ffffff size=1>.</style>            The lib section lists the libraries to include when linking
+<style color=#00ffffff size=1>.</style>            the kernel, in an order that satisfies any dependencies
+<style color=#00ffffff size=1>.</style>            amongst them. Each item x corresponds to
+<style color=#00ffffff size=1>.</style>            /$SYSTARG/$OBJTYPE/libx.a, a target-specific library
+<style color=#00ffffff size=1>.</style>            produced by compiling the C source code in /libitem, where
+<style color=#00ffffff size=1>.</style>            SYSTARG and OBJTYPE are set in mkfile to the target system
+<style color=#00ffffff size=1>.</style>            and object types.
+
+<style color=#00ffffff size=1>.</style>            An item in the root section has one of the forms:
+
+<style color=#00ffffff size=1>.</style>                 name
+<style color=#00ffffff size=1>.</style>                 name source
+
+<style color=#00ffffff size=1>.</style>            where name and source are both absolute path names rooted at
+<style color=#00ffffff size=1>.</style>            the Inferno source tree. The kernel's initial root file
+<style color=#00ffffff size=1>.</style>            system (see <action name=root(3)>root(3)</action>) will contain a file or directory with
+<style color=#00ffffff size=1>.</style>            the given name. Name must exist in the Inferno root, or an
+<style color=#00ffffff size=1>.</style>            existing source file must be named. In either case, if the
+<style color=#00ffffff size=1>.</style>            existing name refers to a file, the file in the root file
+<style color=#00ffffff size=1>.</style>            system will have that file's current contents. If it is a
+<style color=#00ffffff size=1>.</style>            directory, the root file file system will have a directory
+<style color=#00ffffff size=1>.</style>            with that name, but the directory will contain only those
+<style color=#00ffffff size=1>.</style>            names listed in the configuration file as belonging to that
+<style color=#00ffffff size=1>.</style>            directory. Source is often ``/'' to force a target name to
+<style color=#00ffffff size=1>.</style>            be a directory.
+
+FILES
+<style color=#00ffffff size=1>.</style>            /emu/port/mkdevc
+<style color=#00ffffff size=1>.</style>            /emu/port/mkdevlist
+<style color=#00ffffff size=1>.</style>            /emu/port/mkroot
+<style color=#00ffffff size=1>.</style>            /os/port/mkdevc
+<style color=#00ffffff size=1>.</style>            /os/port/mkdevlist
+<style color=#00ffffff size=1>.</style>            /os/port/mkroot
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            mk(10.1)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

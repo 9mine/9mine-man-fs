@@ -1,0 +1,68 @@
+<action name=IPINTS-GENPRIME(2)>IPINTS-GENPRIME(2)</action>                             <action name=IPINTS-GENPRIME(2)>IPINTS-GENPRIME(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            ipints: genprime, gensafeprime, genstrongprime, DSAprimes,
+<style color=#00ffffff size=1>.</style>            probably_prime  - prime number generation
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "ipints.m"\;
+<style color=#00ffffff size=1>.</style>            ipints := load IPints IPints->PATH\;
+<style color=#00ffffff size=1>.</style>            IPint: import ipints\;
+
+<style color=#00ffffff size=1>.</style>            probably_prime: fn(n: ref IPint, nrep: int): int\;
+
+<style color=#00ffffff size=1>.</style>            genprime: fn(nbits: int, nrep: int): ref IPint\;
+<style color=#00ffffff size=1>.</style>            gensafeprime: fn(nbits: int, nrep: int): (ref IPint, ref IPint)\;	# p, alpha
+<style color=#00ffffff size=1>.</style>            genstrongprime: fn(nbits: int, nrep: int): ref IPint\;
+<style color=#00ffffff size=1>.</style>            DSAprimes: fn(): (ref IPint, ref IPint, array of byte)\;	# q, p, seed
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            This set of functions in IPints (see <action name=ipints(2)>ipints(2)</action>) helps Limbo
+<style color=#00ffffff size=1>.</style>            applications generate and test large prime numbers with
+<style color=#00ffffff size=1>.</style>            relative efficiency. The numbers are all represented by
+<style color=#00ffffff size=1>.</style>            IPint.
+
+<style color=#00ffffff size=1>.</style>            Probably_prime uses the Miller-Rabin test to test n. It
+<style color=#00ffffff size=1>.</style>            returns true (non-zero) if P is probably prime.  The
+<style color=#00ffffff size=1>.</style>            probability of n not being prime is 1/4**nrep. If
+<style color=#00ffffff size=1>.</style>            probably_prime returns false (zero), n is certainly not
+<style color=#00ffffff size=1>.</style>            prime.
+
+<style color=#00ffffff size=1>.</style>            Genprime returns a random prime of length nbits. Since it
+<style color=#00ffffff size=1>.</style>            uses the Miller-Rabin test, nrep is the repetition count
+<style color=#00ffffff size=1>.</style>            passed to probably_prime.
+
+<style color=#00ffffff size=1>.</style>            Gensafeprime returns a tuple (p, alpha), where p is a prime
+<style color=#00ffffff size=1>.</style>            of length nbits and alpha is a generator of the
+<style color=#00ffffff size=1>.</style>            multiplicative group of integers mod p\; there is a prime q
+<style color=#00ffffff size=1>.</style>            such that p-1=2*q.
+
+<style color=#00ffffff size=1>.</style>            Genstrongprime returns a prime p with the following
+<style color=#00ffffff size=1>.</style>            properties:
+
+<style color=#00ffffff size=1>.</style>            -    (p-1)/2 is prime.  Therefore p-1 has a large prime
+<style color=#00ffffff size=1>.</style>                 factor, p'.
+
+<style color=#00ffffff size=1>.</style>            -    p'-1 has a large prime factor
+
+<style color=#00ffffff size=1>.</style>            -    p+1 has a large prime factor
+
+<style color=#00ffffff size=1>.</style>            DSAprimes uses the NIST recommended algorithm for generating
+<style color=#00ffffff size=1>.</style>            DSA primes and returns a tuple (q, p, seed), where p and q
+<style color=#00ffffff size=1>.</style>            are primes, and q divides p-1. The random seed used is also
+<style color=#00ffffff size=1>.</style>            returned, so that sceptics can later confirm the
+<style color=#00ffffff size=1>.</style>            computation.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /libinterp/ipint.c
+<style color=#00ffffff size=1>.</style>            /libsec/port/probably_prime.c
+<style color=#00ffffff size=1>.</style>            /libsec/port/dsaprimes.c
+<style color=#00ffffff size=1>.</style>            /libsec/port/genprime.c
+<style color=#00ffffff size=1>.</style>            /libsec/port/gensafeprime.c
+<style color=#00ffffff size=1>.</style>            /libsec/port/genstrongprime.c
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=crypt-intro(2)>crypt-intro(2)</action>, <action name=crypt-crypt(2)>crypt-crypt(2)</action>, <action name=crypt-dsagen(2)>crypt-dsagen(2)</action>, crypt-gensk
+<style color=#00ffffff size=1>.</style>            (2), <action name=ipints(2)>ipints(2)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

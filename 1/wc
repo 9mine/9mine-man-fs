@@ -1,0 +1,31 @@
+<action name=WC(1)>WC(1)</action>                                                       <action name=WC(1)>WC(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            wc - count lines, words, and characters
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            wc \[ -lwceb \] \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Wc writes to standard output a tally of lines, words, and
+<style color=#00ffffff size=1>.</style>            characters found in each file, assumed to be text in UTF
+<style color=#00ffffff size=1>.</style>            format. If no files are named, standard input is read. One
+<style color=#00ffffff size=1>.</style>            line is output per file. If several files are specified, an
+<style color=#00ffffff size=1>.</style>            additional line is written giving totals.
+
+<style color=#00ffffff size=1>.</style>            `Words' are maximal sequences of characters separated by
+<style color=#00ffffff size=1>.</style>            blanks, tabs and newlines.
+
+<style color=#00ffffff size=1>.</style>            Counts are output in the same order as the listing of the
+<style color=#00ffffff size=1>.</style>            option letters lwceb\; select lines, words, UTF characters,
+<style color=#00ffffff size=1>.</style>            erroneously-encoded characters, and bytes, respectively. If
+<style color=#00ffffff size=1>.</style>            no options are given, lines, words and characters are
+<style color=#00ffffff size=1>.</style>            counted.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/cmd/wc.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=tr(1)>tr(1)</action>, <action name=utf(6)>utf(6)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

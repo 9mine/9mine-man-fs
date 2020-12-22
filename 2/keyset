@@ -1,0 +1,54 @@
+<action name=KEYSET(2)>KEYSET(2)</action>                                               <action name=KEYSET(2)>KEYSET(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            keyset - find authentication keys matching a signer
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "keyset.m"\;
+<style color=#00ffffff size=1>.</style>            keyset := load Keyset Keyset->PATH\;
+
+<style color=#00ffffff size=1>.</style>            init:      fn(): string\;
+<style color=#00ffffff size=1>.</style>            keysforsigner: fn(signername: string, spkthumb: string,
+<style color=#00ffffff size=1>.</style>                              user: string, dir: string):
+<style color=#00ffffff size=1>.</style>                              (list of (string, string, string), string)\;
+<style color=#00ffffff size=1>.</style>            pkhash:    fn(pk: string): string\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Keyset looks through a set of certified public keys to find
+<style color=#00ffffff size=1>.</style>            one or more keys that have were certified by a given signer.
+
+<style color=#00ffffff size=1>.</style>            Init must be called before any other function in the module.
+<style color=#00ffffff size=1>.</style>            It returns nil on success or a diagnostic string on failure.
+
+<style color=#00ffffff size=1>.</style>            Keysforsigner looks for public keys that satisfy given
+<style color=#00ffffff size=1>.</style>            conditions: signername is either the name of a signer or nil
+<style color=#00ffffff size=1>.</style>            (don't care)\; spkthumb is either a thumbprint of the
+<style color=#00ffffff size=1>.</style>            signer's public key (as produced by pkhash, below), or nil
+<style color=#00ffffff size=1>.</style>            (don't care). User is the name of the user that owns the set
+<style color=#00ffffff size=1>.</style>            of keys\; if it is nil, the user's name is read from
+<style color=#00ffffff size=1>.</style>            /dev/user. Dir is the name of the directory holding a
+<style color=#00ffffff size=1>.</style>            collection of the user's signed keys as obtained for
+<style color=#00ffffff size=1>.</style>            instance using <action name=getauthinfo(8)>getauthinfo(8)</action>\; if it is nil, the directory
+<style color=#00ffffff size=1>.</style>            /usr/user/keyring is used by default. Only signed
+<style color=#00ffffff size=1>.</style>            (certified) unexpired keys are considered. Keysforsigner
+<style color=#00ffffff size=1>.</style>            returns a tuple (keys,err). Keys is list of tuples (keyfile,
+<style color=#00ffffff size=1>.</style>            owner, signername) where keyfile is the full name of a file
+<style color=#00ffffff size=1>.</style>            in dir that holds an apparently suitable key\; owner is the
+<style color=#00ffffff size=1>.</style>            name of the key's owner\; and signername is the name of the
+<style color=#00ffffff size=1>.</style>            signer in the certificate attached to the key. The list is
+<style color=#00ffffff size=1>.</style>            nil if no keys could be found that matched the criteria. On
+<style color=#00ffffff size=1>.</style>            an error, err is non-nil and gives a diagnostic.
+
+<style color=#00ffffff size=1>.</style>            Pkhash returns the hexadecimal representation of the SHA-1
+<style color=#00ffffff size=1>.</style>            hash of public key pk, which must be in the canonical
+<style color=#00ffffff size=1>.</style>            textual form produced by Keyring->pktostr (see
+<style color=#00ffffff size=1>.</style>            <action name=keyring-certtostr(2)>keyring-certtostr(2)</action>).
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /appl/lib/keyset.b
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=bind(1)>bind(1)</action>, <action name=keyring-gensk(2)>keyring-gensk(2)</action>, <action name=keyring-sha1(2)>keyring-sha1(2)</action>, security-auth
+<style color=#00ffffff size=1>.</style>            (2), <action name=logind(8)>logind(8)</action>
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

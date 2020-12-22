@@ -1,0 +1,23 @@
+KSIZE(10.1)                                           KSIZE(10.1)
+
+NAME
+<style color=#00ffffff size=1>.</style>            ksize - print size of kernel images
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            ksize \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Ksize prints the size of the segments for each of the
+<style color=#00ffffff size=1>.</style>            argument executable files (default 8.out). The format is
+
+<style color=#00ffffff size=1>.</style>                 textsizet + datasized + bsssizeb = total
+
+<style color=#00ffffff size=1>.</style>            where the numbers are in bytes.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /utils/ksize
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            kstrip(10.1), a.out(10.6)
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

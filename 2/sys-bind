@@ -1,0 +1,95 @@
+<action name=SYS-BIND(2)>SYS-BIND(2)</action>                                           <action name=SYS-BIND(2)>SYS-BIND(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            bind, mount, unmount - change file name space
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            bind:     fn(name, old: string, flag: int): int\;
+<style color=#00ffffff size=1>.</style>            mount:    fn(fd: ref FD\; afd: ref FD, old: string, flag: int, aname: string):
+<style color=#00ffffff size=1>.</style>                         int\;
+<style color=#00ffffff size=1>.</style>            unmount:  fn(name, old: string): int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Bind and mount modify the file name space of the current
+<style color=#00ffffff size=1>.</style>            process and its name space group. For both calls, old is the
+<style color=#00ffffff size=1>.</style>            name of an existing file or directory in the current name
+<style color=#00ffffff size=1>.</style>            space where the modification is to be made. The name old is
+<style color=#00ffffff size=1>.</style>            evaluated as described in <action name=sys-intro(2)>sys-intro(2)</action> except that no
+<style color=#00ffffff size=1>.</style>            translation of the final path element is done.
+
+<style color=#00ffffff size=1>.</style>            For bind, name is the name of another (or possibly the same)
+<style color=#00ffffff size=1>.</style>            existing file or directory in the current name space. After
+<style color=#00ffffff size=1>.</style>            a successful bind call, the file name old is an alias for
+<style color=#00ffffff size=1>.</style>            the object originally named by name\; if the modification
+<style color=#00ffffff size=1>.</style>            does not hide the original, name will also still refer to
+<style color=#00ffffff size=1>.</style>            its original file. The evaluation of name happens at the
+<style color=#00ffffff size=1>.</style>            time of the bind, not when the binding is later used.
+
+<style color=#00ffffff size=1>.</style>            The fd argument to mount is a file descriptor of an open
+<style color=#00ffffff size=1>.</style>            pipe or network connection to a file server ready to receive
+<style color=#00ffffff size=1>.</style>            9P messages. The old file must be a directory. After a
+<style color=#00ffffff size=1>.</style>            successful mount, the file tree served (see below) by fd
+<style color=#00ffffff size=1>.</style>            will be visible with its root directory having name old. If
+<style color=#00ffffff size=1>.</style>            the requested service requires authentication, the file
+<style color=#00ffffff size=1>.</style>            descriptor afd must be open on an authentication file for
+<style color=#00ffffff size=1>.</style>            the requested service\; otherwise it should be nil.
+
+<style color=#00ffffff size=1>.</style>            The flag controls details of the modification made to the
+<style color=#00ffffff size=1>.</style>            name space. In the following, new refers to the file as
+<style color=#00ffffff size=1>.</style>            defined by name or the root directory served by fd. Either
+<style color=#00ffffff size=1>.</style>            both old and new files must be directories, or both must not
+<style color=#00ffffff size=1>.</style>            be directories. Flag can be one of:
+<style color=#00ffffff size=1>.</style>            Sys->MREPL    Replace the old file by the new one.
+<style color=#00ffffff size=1>.</style>                          Henceforth, an evaluation of old will be
+<style color=#00ffffff size=1>.</style>                          translated to the new file. If they are
+<style color=#00ffffff size=1>.</style>                          directories (for mount, this condition is true
+<style color=#00ffffff size=1>.</style>                          by definition), old becomes a union directory
+<style color=#00ffffff size=1>.</style>                          consisting of one directory (the new file).
+<style color=#00ffffff size=1>.</style>            Sys->MBEFORE  Both the old and new files must be
+<style color=#00ffffff size=1>.</style>                          directories. Add the constituent files of the
+<style color=#00ffffff size=1>.</style>                          new directory to the union directory at old so
+<style color=#00ffffff size=1>.</style>                          its contents appear first in the union. After
+<style color=#00ffffff size=1>.</style>                          a Sys->MBEFORE bind or mount, the new
+<style color=#00ffffff size=1>.</style>                          directory will be searched first when
+<style color=#00ffffff size=1>.</style>                          evaluating file names in the union directory.
+<style color=#00ffffff size=1>.</style>            Sys->MAFTER   Like Sys->MBEFORE but the new directory goes
+<style color=#00ffffff size=1>.</style>                          at the end of the union.
+
+<style color=#00ffffff size=1>.</style>            In addition, there is a Sys->MCREATE flag that can be OR'd
+<style color=#00ffffff size=1>.</style>            with any of the above. When a create call (see <action name=sys-open(2)>sys-open(2)</action>)
+<style color=#00ffffff size=1>.</style>            attempts to create in a union directory, and the file does
+<style color=#00ffffff size=1>.</style>            not exist, the elements of the union are searched in order
+<style color=#00ffffff size=1>.</style>            until one is found with Sys->MCREATE set. The file is
+<style color=#00ffffff size=1>.</style>            created in that directory\; if that attempt fails, the create
+<style color=#00ffffff size=1>.</style>            fails.
+
+<style color=#00ffffff size=1>.</style>            With mount, the file descriptor fd must be open for reading
+<style color=#00ffffff size=1>.</style>            and writing and connected to a file server. After the mount,
+<style color=#00ffffff size=1>.</style>            the file tree starting at old is served by a kernel <action name=mnt(3)>mnt(3)</action>
+<style color=#00ffffff size=1>.</style>            device. That device will turn operations in the tree into
+<style color=#00ffffff size=1>.</style>            messages to the server on fd. Aname selects among different
+<style color=#00ffffff size=1>.</style>            file trees on the server\; the empty (or nil) string chooses
+<style color=#00ffffff size=1>.</style>            the default tree.
+
+<style color=#00ffffff size=1>.</style>            The effects of bind and mount can be undone by unmount. If
+<style color=#00ffffff size=1>.</style>            name is nil, everything bound to or mounted upon old is
+<style color=#00ffffff size=1>.</style>            unbound or unmounted. If name is not nil, it is evaluated as
+<style color=#00ffffff size=1>.</style>            described above for bind, and the effect of binding or
+<style color=#00ffffff size=1>.</style>            mounting that particular result on old is undone.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-intro(2)>sys-intro(2)</action>
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            The return value is a positive integer (a unique sequence
+<style color=#00ffffff size=1>.</style>            number) for success, -1 for failure.
+
+BUGS
+<style color=#00ffffff size=1>.</style>            Mount will not return until it has successfully attached to
+<style color=#00ffffff size=1>.</style>            the file server, so the thread doing a mount cannot be the
+<style color=#00ffffff size=1>.</style>            one serving.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

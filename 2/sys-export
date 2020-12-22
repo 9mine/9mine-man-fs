@@ -1,0 +1,72 @@
+<action name=SYS-EXPORT(2)>SYS-EXPORT(2)</action>                                       <action name=SYS-EXPORT(2)>SYS-EXPORT(2)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            export - export a name space
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            include "sys.m"\;
+<style color=#00ffffff size=1>.</style>            sys := load Sys Sys->PATH\;
+
+<style color=#00ffffff size=1>.</style>            export:   fn(fd: ref FD, dir: string, flag: int):   int\;
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            Export receives and replies to 9P requests from a client on
+<style color=#00ffffff size=1>.</style>            a connection represented by fd, for file operations on the
+<style color=#00ffffff size=1>.</style>            part of the current file name space rooted at dir, which is
+<style color=#00ffffff size=1>.</style>            thus exported. This is the server end of the client's mount
+<style color=#00ffffff size=1>.</style>            call. Names presented by the client are interpreted relative
+<style color=#00ffffff size=1>.</style>            to directory dir, which can be adjusted using <action name=sys-pctl(2)>sys-pctl(2)</action>
+<style color=#00ffffff size=1>.</style>            and <action name=sys-bind(2)>sys-bind(2)</action> before export. The file descriptor fd must
+<style color=#00ffffff size=1>.</style>            be open for reading and writing, and neither mounted
+<style color=#00ffffff size=1>.</style>            elsewhere nor already exported.
+
+<style color=#00ffffff size=1>.</style>            Commonly, export's first argument is a file descriptor open
+<style color=#00ffffff size=1>.</style>            on the data file in the dir of a Connection returned by
+<style color=#00ffffff size=1>.</style>            listen (see <action name=dial(2)>dial(2)</action>). Before calling export, the connection
+<style color=#00ffffff size=1>.</style>            on fd can optionally be authenticated and set for encryption
+<style color=#00ffffff size=1>.</style>            or digesting using the functions in <action name=security-auth(2)>security-auth(2)</action>.
+
+<style color=#00ffffff size=1>.</style>            The export function takes two mutually exclusive flags:
+
+<style color=#00ffffff size=1>.</style>            Sys->EXPWAIT
+<style color=#00ffffff size=1>.</style>                 Export blocks until all client requests are complete.
+
+<style color=#00ffffff size=1>.</style>            Sys->EXPASYNC
+<style color=#00ffffff size=1>.</style>                 Client requests are handled by a background (kernel)
+<style color=#00ffffff size=1>.</style>                 process. Export returns immediately. The serving
+<style color=#00ffffff size=1>.</style>                 process terminates when the client hangs up.
+
+EXAMPLES
+<style color=#00ffffff size=1>.</style>            Export a given directory on fd, protecting it from
+<style color=#00ffffff size=1>.</style>            subsequent changes:
+
+<style color=#00ffffff size=1>.</style>                 exportdir(fd: ref Sys->FD, dir: string, pid: chan of int)
+<style color=#00ffffff size=1>.</style>                 {
+<style color=#00ffffff size=1>.</style>                 	pid <-= sys->pctl(Sys->FORKNS|Sys->FORKENV|Sys->NEWFD, fd.fd :: nil)\;
+<style color=#00ffffff size=1>.</style>                 	sys->export(fd, dir, Sys->EXPWAIT)\;
+<style color=#00ffffff size=1>.</style>                 }
+
+<style color=#00ffffff size=1>.</style>            The FORKNS given to pctl forks the name space, and prevents
+<style color=#00ffffff size=1>.</style>            the sys->export from seeing the effects of subsequent mounts
+<style color=#00ffffff size=1>.</style>            by the process that calls or spawns exportdir. The exportdir
+<style color=#00ffffff size=1>.</style>            function above might be called using:
+
+<style color=#00ffffff size=1>.</style>                 pid := chan of int\;
+<style color=#00ffffff size=1>.</style>                 spawn exportdir(fd, "/", pid)\;
+<style color=#00ffffff size=1>.</style>                 expid := <-pid\;
+
+<style color=#00ffffff size=1>.</style>            Service will stop automatically when the connection fd
+<style color=#00ffffff size=1>.</style>            returns end-of-file (eg, when it hangs up), but it can also
+<style color=#00ffffff size=1>.</style>            be stopped locally by killing expid.
+
+SOURCE
+<style color=#00ffffff size=1>.</style>            /emu/port/inferno.c
+<style color=#00ffffff size=1>.</style>            /emu/port/exportfs.c
+<style color=#00ffffff size=1>.</style>            /os/port/inferno.c
+<style color=#00ffffff size=1>.</style>            /os/port/exportfs.c
+
+DIAGNOSTICS
+<style color=#00ffffff size=1>.</style>            Export returns a non-negative value on success and -1 on
+<style color=#00ffffff size=1>.</style>            error\; the system error string is set.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

@@ -1,0 +1,184 @@
+<action name=M4(1)>M4(1)</action>                                                       <action name=M4(1)>M4(1)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            m4 - macro processor
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            m4 \[ -pprefix \] \[ -t \] \[ -Dname=value \] \[ -Qname=value \] \[
+<style color=#00ffffff size=1>.</style>            -Uname \] \[ file ... \]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            M4 is a general-purpose macro processor. It copies text from
+<style color=#00ffffff size=1>.</style>            each of the input files in order (or standard input by
+<style color=#00ffffff size=1>.</style>            default), and writes the processed text to the standard
+<style color=#00ffffff size=1>.</style>            output.
+
+<style color=#00ffffff size=1>.</style>            Macro calls have the form
+
+<style color=#00ffffff size=1>.</style>                 name(arg1, arg2, ..., argn)
+
+<style color=#00ffffff size=1>.</style>            The `(' must immediately follow the name of the macro. If a
+<style color=#00ffffff size=1>.</style>            defined macro name is not followed by a `(', it is deemed to
+<style color=#00ffffff size=1>.</style>            have no arguments. Leading unquoted blanks, tabs, and
+<style color=#00ffffff size=1>.</style>            newlines are ignored while collecting arguments. A comma
+<style color=#00ffffff size=1>.</style>            within a nested parenthesis is part of an argument value,
+<style color=#00ffffff size=1>.</style>            not an argument separator. Potential macro names consist of
+<style color=#00ffffff size=1>.</style>            alphabetic letters, Unicode characters, digits, and
+<style color=#00ffffff size=1>.</style>            underscore `\_', where the first character is not a digit.
+
+<style color=#00ffffff size=1>.</style>            Comments begin with the # character and extend to the end of
+<style color=#00ffffff size=1>.</style>            that line\; the characters in a comment are copied to the
+<style color=#00ffffff size=1>.</style>            current output stream unchanged. The comment start and end
+<style color=#00ffffff size=1>.</style>            sequences may be changed using the changecom call described
+<style color=#00ffffff size=1>.</style>            below.
+
+<style color=#00ffffff size=1>.</style>            The left and right single quotes (ie, grave and acute
+<style color=#00ffffff size=1>.</style>            accents \`\' ) are used to quote strings. Because the left
+<style color=#00ffffff size=1>.</style>            and right quotes are distinct, quoted strings may nest. The
+<style color=#00ffffff size=1>.</style>            value of a quoted string is the string stripped of the
+<style color=#00ffffff size=1>.</style>            outermost quotes. The left and right quote characters may be
+<style color=#00ffffff size=1>.</style>            changed using the changequote call described below.
+
+<style color=#00ffffff size=1>.</style>            When m4 recognises a macro name, followed by a `(', it
+<style color=#00ffffff size=1>.</style>            collects arguments up to a matching right parenthesis. Macro
+<style color=#00ffffff size=1>.</style>            evaluation proceeds normally during this collection, and the
+<style color=#00ffffff size=1>.</style>            text produced by those macro calls is interpreted exactly as
+<style color=#00ffffff size=1>.</style>            if it had been in the original input stream (in place of the
+<style color=#00ffffff size=1>.</style>            corresponding macro call). Thus, any commas or right
+<style color=#00ffffff size=1>.</style>            parentheses within the value of a nested call are as
+<style color=#00ffffff size=1>.</style>            effective as those in the original input text. (Remember
+<style color=#00ffffff size=1>.</style>            however that commas within nested parentheses are not
+<style color=#00ffffff size=1>.</style>            argument separators.) After argument collection, the value
+<style color=#00ffffff size=1>.</style>            of the macro is pushed back onto the input stream and
+<style color=#00ffffff size=1>.</style>            rescanned.
+
+<style color=#00ffffff size=1>.</style>            M4 makes available the following built-in macros. They may
+<style color=#00ffffff size=1>.</style>            be redefined, but once this is done the original meaning is
+<style color=#00ffffff size=1>.</style>            lost. Their values are null unless otherwise stated.
+<style color=#00ffffff size=1>.</style>            changecom    Change the starting and ending delimiters for
+<style color=#00ffffff size=1>.</style>                         subsequent comments to the first and second
+<style color=#00ffffff size=1>.</style>                         arguments. If the second argument is missing or
+<style color=#00ffffff size=1>.</style>                         an empty string, comments will be ended by
+<style color=#00ffffff size=1>.</style>                         newline. If there are no arguments, there are
+<style color=#00ffffff size=1>.</style>                         no comments.
+<style color=#00ffffff size=1>.</style>            changequote  Change quote characters to the first and second
+<style color=#00ffffff size=1>.</style>                         arguments. Changequote without arguments
+<style color=#00ffffff size=1>.</style>                         restores the original values of `'.
+<style color=#00ffffff size=1>.</style>            copydef      The second argument is installed with the value
+<style color=#00ffffff size=1>.</style>                         of the macro named by the first argument, which
+<style color=#00ffffff size=1>.</style>                         may be a built-in macro. Typically both
+<style color=#00ffffff size=1>.</style>                         arguments are quoted to prevent too early
+<style color=#00ffffff size=1>.</style>                         expansion. A macro can be renamed using copydef
+<style color=#00ffffff size=1>.</style>                         followed by undefine.
+<style color=#00ffffff size=1>.</style>            define       The second argument is installed as the value
+<style color=#00ffffff size=1>.</style>                         of the macro named by the first argument. When
+<style color=#00ffffff size=1>.</style>                         the macro is later called (expanded), each
+<style color=#00ffffff size=1>.</style>                         occurrence in the replacement text of $n, where
+<style color=#00ffffff size=1>.</style>                         n is a digit, is replaced by the n-th argument
+<style color=#00ffffff size=1>.</style>                         of that macro call. Argument 0 is the name of
+<style color=#00ffffff size=1>.</style>                         the macro\; missing arguments are replaced by
+<style color=#00ffffff size=1>.</style>                         the null string. If the macro value is the same
+<style color=#00ffffff size=1>.</style>                         as its name, or the value is $0, the result is
+<style color=#00ffffff size=1>.</style>                         the macro name. To prevent expansion of a name
+<style color=#00ffffff size=1>.</style>                         when redefining a macro, quote the first
+<style color=#00ffffff size=1>.</style>                         argument.
+<style color=#00ffffff size=1>.</style>            divert       M4 maintains 10 output streams, numbered 0-9.
+<style color=#00ffffff size=1>.</style>                         The final output is the concatenation of the
+<style color=#00ffffff size=1>.</style>                         streams in numerical order\; initially stream 0
+<style color=#00ffffff size=1>.</style>                         is the current stream. The divert macro changes
+<style color=#00ffffff size=1>.</style>                         the current output stream to its (digit-string)
+<style color=#00ffffff size=1>.</style>                         argument. Output diverted to a stream other
+<style color=#00ffffff size=1>.</style>                         than 0 through 9 is discarded.
+<style color=#00ffffff size=1>.</style>            divnum       Returns the value of the current output stream.
+<style color=#00ffffff size=1>.</style>            dnl          Reads and discards characters up to and
+<style color=#00ffffff size=1>.</style>                         including the next newline.
+<style color=#00ffffff size=1>.</style>            dumpdef      Prints current names and definitions, for the
+<style color=#00ffffff size=1>.</style>                         named items, or for all if no arguments are
+<style color=#00ffffff size=1>.</style>                         given.
+<style color=#00ffffff size=1>.</style>            errprint     Prints its argument on the diagnostic output
+<style color=#00ffffff size=1>.</style>                         file.
+<style color=#00ffffff size=1>.</style>            eval         Evaluates its argument as an arithmetic
+<style color=#00ffffff size=1>.</style>                         expression, using 32-bit arithmetic, and
+<style color=#00ffffff size=1>.</style>                         returns the result as a signed decimal integer.
+<style color=#00ffffff size=1>.</style>                         The only literals are decimal integers.
+<style color=#00ffffff size=1>.</style>                         Operators are those of Limbo: the binary
+<style color=#00ffffff size=1>.</style>                         operators ||, &&, |, ^, &, == !=, < > >= <=, <<
+<style color=#00ffffff size=1>.</style>                         >> (arithmetic shifts), + -, * / %, ** (power)\;
+<style color=#00ffffff size=1>.</style>                         the unary operators +, -, ~, !\; and
+<style color=#00ffffff size=1>.</style>                         parenthesis. Operator precedence is the same as
+<style color=#00ffffff size=1>.</style>                         in Limbo. Right shifts are signed.
+<style color=#00ffffff size=1>.</style>            ifdef        If the first argument is defined, the value is
+<style color=#00ffffff size=1>.</style>                         the second argument, otherwise the third. If
+<style color=#00ffffff size=1>.</style>                         there is no third argument, the value is null.
+<style color=#00ffffff size=1>.</style>                         The word inferno is predefined with `inferno'
+<style color=#00ffffff size=1>.</style>                         as its replacement text.
+<style color=#00ffffff size=1>.</style>            ifelse       Has three or more arguments. If the first
+<style color=#00ffffff size=1>.</style>                         argument is the same string as the second, then
+<style color=#00ffffff size=1>.</style>                         the value is the third argument. If not, the
+<style color=#00ffffff size=1>.</style>                         process is repeated with arguments 4, 5, 6 and
+<style color=#00ffffff size=1>.</style>                         so on, in groups of three. If no match is
+<style color=#00ffffff size=1>.</style>                         found, the result is the remaining argument
+<style color=#00ffffff size=1>.</style>                         (not part of a group of three), or null if none
+<style color=#00ffffff size=1>.</style>                         is present.
+<style color=#00ffffff size=1>.</style>            include      Returns the contents of the file named in the
+<style color=#00ffffff size=1>.</style>                         argument.
+<style color=#00ffffff size=1>.</style>            incr         Returns the value of its argument incremented
+<style color=#00ffffff size=1>.</style>                         by 1. The value of the argument is calculated
+<style color=#00ffffff size=1>.</style>                         by interpreting an initial digit-string as a
+<style color=#00ffffff size=1>.</style>                         decimal number.
+<style color=#00ffffff size=1>.</style>            index        Returns the position in its first argument
+<style color=#00ffffff size=1>.</style>                         where the second argument begins (zero origin),
+<style color=#00ffffff size=1>.</style>                         or -1 if the second argument does not occur.
+<style color=#00ffffff size=1>.</style>            len          Returns the number of characters in its
+<style color=#00ffffff size=1>.</style>                         argument.
+<style color=#00ffffff size=1>.</style>            maketemp     Returns its first argument after replacing any
+<style color=#00ffffff size=1>.</style>                         trailing XXXs by the current host name, process
+<style color=#00ffffff size=1>.</style>                         ID, and a unique letter. Normally used to
+<style color=#00ffffff size=1>.</style>                         create unique temporary file names.
+<style color=#00ffffff size=1>.</style>            sinclude     The same as include, except that it says
+<style color=#00ffffff size=1>.</style>                         nothing if the file is inaccessible.
+<style color=#00ffffff size=1>.</style>            substr       Returns a substring of its first argument. The
+<style color=#00ffffff size=1>.</style>                         second argument is a zero origin number
+<style color=#00ffffff size=1>.</style>                         selecting the first character\; the third
+<style color=#00ffffff size=1>.</style>                         argument indicates the length of the substring.
+<style color=#00ffffff size=1>.</style>                         A missing third argument is taken to be large
+<style color=#00ffffff size=1>.</style>                         enough to extend to the end of the first
+<style color=#00ffffff size=1>.</style>                         string.
+<style color=#00ffffff size=1>.</style>            syscmd       Runs the first argument as an <action name=sh(1)>sh(1)</action> command. No
+<style color=#00ffffff size=1>.</style>                         value is returned. Note that the output of a
+<style color=#00ffffff size=1>.</style>                         command can be redirected to a temporary file
+<style color=#00ffffff size=1>.</style>                         named by maketemp, included, and then removed.
+<style color=#00ffffff size=1>.</style>            translit     Transliterates the characters in its first
+<style color=#00ffffff size=1>.</style>                         argument from the set given by the second
+<style color=#00ffffff size=1>.</style>                         argument to the set given by the third. No
+<style color=#00ffffff size=1>.</style>                         abbreviations are permitted.
+<style color=#00ffffff size=1>.</style>            undefine     Removes the definition of the macro named in
+<style color=#00ffffff size=1>.</style>                         its argument.
+<style color=#00ffffff size=1>.</style>            undivert     Causes immediate output of text from diversions
+<style color=#00ffffff size=1>.</style>                         named as arguments, or all diversions if no
+<style color=#00ffffff size=1>.</style>                         argument. Text may be undiverted into another
+<style color=#00ffffff size=1>.</style>                         diversion. Undiverting discards the diverted
+<style color=#00ffffff size=1>.</style>                         text.
+
+<style color=#00ffffff size=1>.</style>            The -p option causes m4 to add the given prefix character to
+<style color=#00ffffff size=1>.</style>            the names of predefined macros\; typically the prefix is a
+<style color=#00ffffff size=1>.</style>            Unicode character, to reduce the chance of a clash with
+<style color=#00ffffff size=1>.</style>            macro names in the input text. The -t option produces a
+<style color=#00ffffff size=1>.</style>            trace on standard error.
+
+<style color=#00ffffff size=1>.</style>            M4 otherwise interprets its command line options after
+<style color=#00ffffff size=1>.</style>            installing the predefined macro set. The -D option defines
+<style color=#00ffffff size=1>.</style>            name as a macro with the given value\; -Q defines name as a
+<style color=#00ffffff size=1>.</style>            macro with the given value that is regarded as always quoted
+<style color=#00ffffff size=1>.</style>            (ie, is never rescanned). Neither -D nor -Q may change a
+<style color=#00ffffff size=1>.</style>            predefined macro. The -U option undefines the given macro
+<style color=#00ffffff size=1>.</style>            name, which may be one of the predefined macros.
+
+<style color=#00ffffff size=1>.</style>            M4 in Inferno is more closely related to the original m4 in
+<style color=#00ffffff size=1>.</style>            Seventh Edition UNIX than its more elaborate relatives in
+<style color=#00ffffff size=1>.</style>            System V and POSIX.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            B. W. Kernighan and D. M. Ritchie, The M4 Macro Processor
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual

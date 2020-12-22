@@ -1,0 +1,172 @@
+<action name=STAT(5)>STAT(5)</action>                                                   <action name=STAT(5)>STAT(5)</action>
+
+NAME
+<style color=#00ffffff size=1>.</style>            stat, wstat - inquire or change file attributes
+
+SYNOPSIS
+<style color=#00ffffff size=1>.</style>            size\[4\] Tstat tag\[2\] fid\[4\]
+<style color=#00ffffff size=1>.</style>            size\[4\] Rstat tag\[2\] stat\[n\]
+
+<style color=#00ffffff size=1>.</style>            size\[4\] Twstat tag\[2\] fid\[4\] stat\[n\]
+<style color=#00ffffff size=1>.</style>            size\[4\] Rwstat tag\[2\]
+
+DESCRIPTION
+<style color=#00ffffff size=1>.</style>            The stat transaction inquires about the file identified by
+<style color=#00ffffff size=1>.</style>            fid. The reply will contain a machine-independent directory
+<style color=#00ffffff size=1>.</style>            entry, stat, laid out as follows:
+
+<style color=#00ffffff size=1>.</style>            size\[2\]
+<style color=#00ffffff size=1>.</style>                 total byte count of the following data
+
+<style color=#00ffffff size=1>.</style>            type\[2\]
+<style color=#00ffffff size=1>.</style>                 for kernel use
+
+<style color=#00ffffff size=1>.</style>            dev\[4\]
+<style color=#00ffffff size=1>.</style>                 for kernel use
+
+<style color=#00ffffff size=1>.</style>            qid.type\[1\]
+<style color=#00ffffff size=1>.</style>                 the type of the file (directory, etc.), represented as
+<style color=#00ffffff size=1>.</style>                 a bit vector corresponding to the high 8 bits of the
+<style color=#00ffffff size=1>.</style>                 file's mode word.
+
+<style color=#00ffffff size=1>.</style>            qid.vers\[4\]
+<style color=#00ffffff size=1>.</style>                 version number for given path
+
+<style color=#00ffffff size=1>.</style>            qid.path\[8\]
+<style color=#00ffffff size=1>.</style>                 the file server's unique identification for the file
+
+<style color=#00ffffff size=1>.</style>            mode\[4\]
+<style color=#00ffffff size=1>.</style>                 permissions and flags
+
+<style color=#00ffffff size=1>.</style>            atime\[4\]
+<style color=#00ffffff size=1>.</style>                 last access time
+
+<style color=#00ffffff size=1>.</style>            mtime\[4\]
+<style color=#00ffffff size=1>.</style>                 last modification time
+
+<style color=#00ffffff size=1>.</style>            length\[8\]
+<style color=#00ffffff size=1>.</style>                 length of file in bytes
+
+<style color=#00ffffff size=1>.</style>            name\[ s \]
+<style color=#00ffffff size=1>.</style>                 file name\; must be / if the file is the root directory
+<style color=#00ffffff size=1>.</style>                 of the server
+
+<style color=#00ffffff size=1>.</style>            uid\[ s \]
+<style color=#00ffffff size=1>.</style>                 owner name
+
+<style color=#00ffffff size=1>.</style>            gid\[ s \]
+<style color=#00ffffff size=1>.</style>                 group name
+
+<style color=#00ffffff size=1>.</style>            muid\[ s \]
+<style color=#00ffffff size=1>.</style>                 name of the user who last modified the file
+
+<style color=#00ffffff size=1>.</style>            Integers in this encoding are in little-endian order (least
+<style color=#00ffffff size=1>.</style>            significant byte first). The unpackdir and packdir functions
+<style color=#00ffffff size=1>.</style>            of <action name=styx(2)>styx(2)</action> convert between directory entries and the Limbo
+<style color=#00ffffff size=1>.</style>            adt Sys->Dir. For C implementations, the convM2D and convD2M
+<style color=#00ffffff size=1>.</style>            routines (see styx(10.2)) convert between directory entries
+<style color=#00ffffff size=1>.</style>            and a C structure called Dir.
+
+<style color=#00ffffff size=1>.</style>            The mode contains permission bits as described in <action name=intro(5)>intro(5)</action>
+<style color=#00ffffff size=1>.</style>            and the following: 16r80000000 (DMDIR, this file is a
+<style color=#00ffffff size=1>.</style>            directory), 16r40000000 (DMAPPEND, append only), 16r20000000
+<style color=#00ffffff size=1>.</style>            (DMEXCL, exclusive use), 16r04000000 (DMTMP, temporary)\;
+<style color=#00ffffff size=1>.</style>            these are echoed in Qid.type. Writes to append-only files
+<style color=#00ffffff size=1>.</style>            always place their data at the end of the file\; the offset
+<style color=#00ffffff size=1>.</style>            in the write message is ignored, as is the OTRUNC bit in an
+<style color=#00ffffff size=1>.</style>            open. Exclusive use files may be open for I/O by only one
+<style color=#00ffffff size=1>.</style>            fid at a time across all clients of the server.  If a second
+<style color=#00ffffff size=1>.</style>            open is attempted, it draws an error.  Servers may implement
+<style color=#00ffffff size=1>.</style>            a timeout on the lock on an exclusive use file: if the fid
+<style color=#00ffffff size=1>.</style>            holding the file open has been unused for an extended period
+<style color=#00ffffff size=1>.</style>            (of order at least minutes), it is reasonable to break the
+<style color=#00ffffff size=1>.</style>            lock and deny the initial fid further I/O. Temporary files
+<style color=#00ffffff size=1>.</style>            are not included in any automatic archives or dumps a server
+<style color=#00ffffff size=1>.</style>            might create.
+
+<style color=#00ffffff size=1>.</style>            The two time fields are measured in seconds since the epoch
+<style color=#00ffffff size=1>.</style>            (Jan 1 00:00 1970 GMT). The mtime field reflects the time of
+<style color=#00ffffff size=1>.</style>            the last change of content (except when later changed by
+<style color=#00ffffff size=1>.</style>            wstat). For a plain file, mtime is the time of the most
+<style color=#00ffffff size=1>.</style>            recent create, open with truncation, or write\; for a
+<style color=#00ffffff size=1>.</style>            directory it is the time of the most recent remove, create,
+<style color=#00ffffff size=1>.</style>            or wstat of a file in the directory. Similarly, the atime
+<style color=#00ffffff size=1>.</style>            field records the last read of the contents\; also it is set
+<style color=#00ffffff size=1>.</style>            whenever mtime is set. In addition, for a directory, it is
+<style color=#00ffffff size=1>.</style>            set by an attach, walk, or create, all whether successful or
+<style color=#00ffffff size=1>.</style>            not.
+
+<style color=#00ffffff size=1>.</style>            The muid field names the user whose actions most recently
+<style color=#00ffffff size=1>.</style>            changed the mtime of the file.
+
+<style color=#00ffffff size=1>.</style>            The length records the number of bytes in the file.
+<style color=#00ffffff size=1>.</style>            Directories and most files representing devices have a
+<style color=#00ffffff size=1>.</style>            conventional length of 0.
+
+<style color=#00ffffff size=1>.</style>            The stat request requires no special permissions.
+
+<style color=#00ffffff size=1>.</style>            The wstat request can change some of the file status
+<style color=#00ffffff size=1>.</style>            information. The name can be changed by anyone with write
+<style color=#00ffffff size=1>.</style>            permission in the parent directory\; it is an error to change
+<style color=#00ffffff size=1>.</style>            the name to that of an existing file. The length can be
+<style color=#00ffffff size=1>.</style>            changed (affecting the actual length of the file) by anyone
+<style color=#00ffffff size=1>.</style>            with write permission on the file. It is an error to attempt
+<style color=#00ffffff size=1>.</style>            to set the length of a directory to a non-zero value, and
+<style color=#00ffffff size=1>.</style>            servers may decide to reject length changes for other
+<style color=#00ffffff size=1>.</style>            reasons. The mode and mtime can be changed by the owner of
+<style color=#00ffffff size=1>.</style>            the file or the group leader of the file's current group.
+<style color=#00ffffff size=1>.</style>            The directory bit cannot be changed by a wstat\; the other
+<style color=#00ffffff size=1>.</style>            defined permission and mode bits can. The gid can be
+<style color=#00ffffff size=1>.</style>            changed: by the owner if also a member of the new group\; or
+<style color=#00ffffff size=1>.</style>            by the group leader of the file's current group if also
+<style color=#00ffffff size=1>.</style>            leader of the new group (see <action name=intro(5)>intro(5)</action> for more information
+<style color=#00ffffff size=1>.</style>            about permissions and <action name=users(6)>users(6)</action> for users and groups). None
+<style color=#00ffffff size=1>.</style>            of the other data can be altered by a wstat and attempts to
+<style color=#00ffffff size=1>.</style>            change them will trigger an error. In particular, it is
+<style color=#00ffffff size=1>.</style>            illegal to attempt to change the owner of a file. (These
+<style color=#00ffffff size=1>.</style>            conditions may be relaxed when establishing the initial
+<style color=#00ffffff size=1>.</style>            state of a file server.)
+
+<style color=#00ffffff size=1>.</style>            Either all the changes in wstat request happen, or none of
+<style color=#00ffffff size=1>.</style>            them does: if the request succeeds, all changes were made\;
+<style color=#00ffffff size=1>.</style>            if it fails, none were.
+
+<style color=#00ffffff size=1>.</style>            A wstat request can avoid modifying some properties of the
+<style color=#00ffffff size=1>.</style>            file by providing explicit ``don't touch'' values in the
+<style color=#00ffffff size=1>.</style>            stat data that is sent: zero-length strings for text values
+<style color=#00ffffff size=1>.</style>            and the maximum unsigned value of appropriate size for
+<style color=#00ffffff size=1>.</style>            integral values. As a special case, if all the elements of
+<style color=#00ffffff size=1>.</style>            the directory entry in a Twstat message are ``don't touch''
+<style color=#00ffffff size=1>.</style>            values, the server may interpret it as a request to
+<style color=#00ffffff size=1>.</style>            guarantee that the contents of the associated file are
+<style color=#00ffffff size=1>.</style>            committed to stable storage before the Rwstat message is
+<style color=#00ffffff size=1>.</style>            returned. (Consider the message to mean, ``make the state of
+<style color=#00ffffff size=1>.</style>            the file exactly what it claims to be.'')
+
+<style color=#00ffffff size=1>.</style>            A read of a directory yields an integral number of directory
+<style color=#00ffffff size=1>.</style>            entries in the machine independent encoding given above (see
+<style color=#00ffffff size=1>.</style>            <action name=read(5)>read(5)</action>).
+
+<style color=#00ffffff size=1>.</style>            Note that since the stat information is sent as a 9P
+<style color=#00ffffff size=1>.</style>            variable-length datum, it is limited to a maximum of 65535
+<style color=#00ffffff size=1>.</style>            bytes.
+
+ENTRY POINTS
+<style color=#00ffffff size=1>.</style>            Stat messages are generated by fstat and stat.
+
+<style color=#00ffffff size=1>.</style>            Wstat messages are generated by fwstat and wstat.
+
+SEE ALSO
+<style color=#00ffffff size=1>.</style>            <action name=sys-stat(2)>sys-stat(2)</action>, <action name=intro(5)>intro(5)</action>, <action name=read(5)>read(5)</action>, intro(10), styx(10.2)
+
+BUGS
+<style color=#00ffffff size=1>.</style>            To make the contents of a directory, such as returned by
+<style color=#00ffffff size=1>.</style>            <action name=read(5)>read(5)</action>, easy to parse, each directory entry begins with a
+<style color=#00ffffff size=1>.</style>            size field. For consistency, the entries in Twstat and Rstat
+<style color=#00ffffff size=1>.</style>            messages also contain their size, which means the size
+<style color=#00ffffff size=1>.</style>            appears twice. For example, the Rstat message is formatted
+<style color=#00ffffff size=1>.</style>            as ``(4+1+2+2+n)\[4\] Rstat tag\[2\] n\[2\] (n-2)\[2\] type\[2\] dev
+<style color=#00ffffff size=1>.</style>            \[4\]...,'' where n is the length of the array returned by
+<style color=#00ffffff size=1>.</style>            Styx->packdir.
+
+<style color=#00ffffff size=1>.</style>                                Inferno Manual
